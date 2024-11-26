@@ -27,8 +27,14 @@ public class Partie {
         this.nbQuestion = 0;
     }
 
-    public Indice poserQuestion(Lieu l, Personnage p, Temps t){
-        // TODO : A implémenter
+    public Indice poserQuestion(Lieu l, Personnage p, Temps t) {
+        if (p == null){
+            // poser question sur indice temps
+        }
+        else {
+            // poser question sur indice personnage
+        }
+        nbQuestion++;
         return null;
     }
 

@@ -3,6 +3,8 @@
   "nomEnquete" : "Poison Mondain",
   "synopsis" : "17 octobre 1922, au petit matin, Denis, le célèbre Détective est retrouvé mort dans son lit, manifestement empoisonné ! La veille, il enquêtait à l'Opéra de Paris où se déroulait un gala de bienfaisance. Retracez sa soirée ainsi que celle des suspects de cette enquête, pour identifier l'assassin.",
   "enigme" : "L'assassin a dû se retrouver seul(e) avec le Détective pour l'empoisonner. Qui a empoisonné le Détective ? Dans quel Lieu ? A quel Temps ?",
+  "loupeOr" : 12,
+  "loupeBronze": 19,
   "Grand foyer" : [
             {
               "Temps 1" : [

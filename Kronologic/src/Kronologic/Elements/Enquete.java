@@ -12,15 +12,33 @@ public class Enquete {
     private final Personnage meurtrier;
     private final Lieu lieuDuCrime;
     private final Temps tempsDuCrime;
+    private final int loupeOr;
+    private final int loupeBronze;
 
-    public Enquete(List<Personnage> lp, List<Lieu> ll, List<Indice> li, Personnage m, Lieu l, Temps t) {
+    public Enquete(List<Personnage> lp, List<Lieu> ll, List<Indice> li, Personnage m, Lieu l, Temps t, int lo, int lb) {
         this.personnages = lp;
         this.lieux = ll;
         this.indices = li;
         this.meurtrier = m;
         this.lieuDuCrime = l;
         this.tempsDuCrime = t;
+        this.loupeOr = lo;
+        this.loupeBronze = lb;
     }
+
+    public String verifierLoupe(int nbQuestion){
+        if (nbQuestion <= loupeOr){
+            return "Loupe Or en " + nbQuestion + "coups !";
+        }
+        else if (nbQuestion >= loupeBronze){
+            return "Loupe Bronze en " + nbQuestion + "coups !";
+        }
+        else {
+            return "Loupe Argent en " + nbQuestion + "coups !";
+        }
+    }
+
+    // Getters
 
     public List<Personnage> getPersonnages() {
         return personnages;
@@ -44,5 +62,13 @@ public class Enquete {
 
     public Temps getTempsDuCrime() {
         return tempsDuCrime;
+    }
+
+    public int getLoupeOr() {
+        return loupeOr;
+    }
+
+    public int getLoupeBronze() {
+        return loupeBronze;
     }
 }
