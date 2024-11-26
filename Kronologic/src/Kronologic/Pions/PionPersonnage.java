@@ -12,4 +12,20 @@ public class PionPersonnage extends Pion {
         this.absences = a;
         this.personnage = p;
     }
+
+    public boolean getAbsences() {
+        return absences;
+    }
+
+    public Personnage getPersonnage() {
+        return personnage;
+    }
+
+    public void setAbsences(boolean absences) {
+        this.absences = absences;
+    }
+
+    public void setPersonnage(Personnage personnage) {
+        this.personnage = personnage;
+    }
 }

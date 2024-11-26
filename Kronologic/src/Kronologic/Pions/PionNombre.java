@@ -7,11 +7,17 @@ public class PionNombre extends Pion {
     public PionNombre(int i, boolean h) {
         super(i, h);
         this.nombre = 0;
-        // OU
-        this.nombre = 0;
     }
 
     public void modifierNombre(int n) {
         this.nombre = n;
+    }
+
+    public int getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(int nombre) {
+        this.nombre = nombre;
     }
 }

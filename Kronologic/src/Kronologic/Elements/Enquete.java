@@ -21,4 +21,28 @@ public class Enquete {
         this.lieuDuCrime = l;
         this.tempsDuCrime = t;
     }
+
+    public List<Personnage> getPersonnages() {
+        return personnages;
+    }
+
+    public List<Lieu> getLieux() {
+        return lieux;
+    }
+
+    public List<Indice> getIndices() {
+        return indices;
+    }
+
+    public Personnage getMeurtrier() {
+        return meurtrier;
+    }
+
+    public Lieu getLieuDuCrime() {
+        return lieuDuCrime;
+    }
+
+    public Temps getTempsDuCrime() {
+        return tempsDuCrime;
+    }
 }

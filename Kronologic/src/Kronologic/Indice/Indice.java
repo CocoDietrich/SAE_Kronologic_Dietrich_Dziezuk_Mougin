@@ -4,12 +4,20 @@ import Kronologic.Elements.Lieu;
 
 public class Indice {
 
-    private Lieu lieu;
-    private int infoPublic;
+    private final Lieu lieu;
+    private final int infoPublic;
 
     public Indice(Lieu l, int p) {
         this.lieu = l;
         this.infoPublic = p;
+    }
+
+    public Lieu getLieu() {
+        return lieu;
+    }
+
+    public int getInfoPublic() {
+        return infoPublic;
     }
 }
 
