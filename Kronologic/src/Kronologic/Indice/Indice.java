@@ -12,6 +12,8 @@ public class Indice {
         this.infoPublic = p;
     }
 
+    // Getters
+
     public Lieu getLieu() {
         return lieu;
     }

@@ -5,6 +5,8 @@ import Kronologic.Elements.Lieu;
 import Kronologic.Elements.Personnage;
 import Kronologic.Elements.Temps;
 import Kronologic.Indice.Indice;
+import Kronologic.Indice.IndicePersonnage;
+import Kronologic.Indice.IndiceTemps;
 import Kronologic.Pions.Pion;
 
 import java.util.ArrayList;
@@ -28,19 +30,47 @@ public class Partie {
     }
 
     public Indice poserQuestion(Lieu l, Personnage p, Temps t) {
+        nbQuestion++;
         if (p == null){
-            // poser question sur indice temps
+            // Trouver l'indice relatif au temps
+            for (Indice i : enquete.getIndices()){
+                if (i instanceof IndiceTemps){
+                    if (i.getLieu().equals(l) && ((IndiceTemps) i).getTemps().equals(t)){
+                        indicesTrouves.add(i);
+                        return i;
+                    }
+                }
+            }
         }
         else {
-            // poser question sur indice personnage
+            // Trouver l'indice relatif au personnage
+            for (Indice i : enquete.getIndices()){
+                if (i instanceof IndicePersonnage){
+                    if (i.getLieu().equals(l) && ((IndicePersonnage) i).getNomPersonnage().equals(p.getName())){
+                        indicesTrouves.add(i);
+                        return i;
+                    }
+                }
+            }
         }
-        nbQuestion++;
         return null;
     }
 
     public boolean faireDeduction(Lieu l, Personnage p, Temps t) {
-        // TODO : A implémenter
-        return false;
+        if (enquete.getMeurtrier() == p && enquete.getLieuDuCrime() == l && enquete.getTempsDuCrime() == t){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public String historiqueQuestions(){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 1; i <= indicesTrouves.size(); i++){
+            sb.insert(0, indicesTrouves.get(i-1).toString()).insert(0, " : ").insert(0, i).insert(0, "Tour ");
+        }
+        return sb.toString();
     }
 
     public Indice demanderIndice(){
