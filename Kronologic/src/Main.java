@@ -13,7 +13,6 @@ public class Main {
         Enquete enquete = JsonReader.lireEnqueteDepuisJson("data/enquete_base.json");
 
         Partie partie = new Partie(enquete);
-        partie.lancerEnquete();
         Indice i = partie.poserQuestion(new Lieu("Salle", 3, null), new Personnage("Détective", null), null);
         System.out.println(i);
         Indice i2 = partie.poserQuestion(new Lieu("Salle", 3, null), null, new Temps(2));

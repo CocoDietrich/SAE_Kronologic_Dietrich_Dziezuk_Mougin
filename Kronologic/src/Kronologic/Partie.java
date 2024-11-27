@@ -16,9 +16,6 @@ public class Partie {
 
     public Partie(Enquete e) {
         this.enquete = e;
-    }
-
-    public void lancerEnquete(){
         this.listePions = new ArrayList<>();
         this.indicesTrouves = new ArrayList<>();
         this.nbQuestion = 0;
@@ -71,10 +68,6 @@ public class Partie {
     public Indice demanderIndice(){
         // TODO : A implémenter
         return null;
-    }
-
-    public void quitterPartie(){
-        // TODO : A implémenter
     }
 
     public Enquete getEnquete() {
