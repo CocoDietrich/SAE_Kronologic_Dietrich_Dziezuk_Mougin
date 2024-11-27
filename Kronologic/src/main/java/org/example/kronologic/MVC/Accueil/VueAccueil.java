@@ -41,7 +41,6 @@ public class VueAccueil extends Vue implements Observateur {
 
     private Button creerBouton(String texte) {
         Button bouton = new Button(texte);
-        bouton.setStyle("-fx-background-color: #FFCC66; -fx-text-fill: #800000;");
         return bouton;
     }
 

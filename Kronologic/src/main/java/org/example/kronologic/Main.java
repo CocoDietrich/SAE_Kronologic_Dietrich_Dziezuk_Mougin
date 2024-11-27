@@ -1,12 +1,12 @@
-import Data.JsonReader;
-import Kronologic.Elements.Lieu;
-import Kronologic.Elements.Temps;
-import Kronologic.Enquete;
-import Kronologic.Elements.Personnage;
-import Kronologic.Indice.Indice;
-import Kronologic.Partie;
+package org.example.kronologic;
 
-import java.util.List;
+import org.example.kronologic.Data.JsonReader;
+import org.example.kronologic.Kronologic.Elements.Lieu;
+import org.example.kronologic.Kronologic.Elements.Temps;
+import org.example.kronologic.Kronologic.Enquete;
+import org.example.kronologic.Kronologic.Elements.Personnage;
+import org.example.kronologic.Kronologic.Indice.Indice;
+import org.example.kronologic.Kronologic.Partie;
 
 public class Main {
     public static void main(String[] args){
