@@ -1,6 +1,6 @@
 package Kronologic.Pions;
 
-public class Pion {
+public abstract class Pion {
 
     private final int id;
     private boolean hypothese;
@@ -33,7 +33,7 @@ public class Pion {
         return id;
     }
 
-    public boolean isHypothese() {
+    public boolean getHypothese() {
         return hypothese;
     }
 
