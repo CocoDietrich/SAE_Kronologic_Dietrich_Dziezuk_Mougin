@@ -17,11 +17,11 @@ public class IndiceTemps extends Indice{
     @Override
     public String toString() {
         if (infoPrive.equals("Rejouer")) {
-            return "Il y a " + getInfoPublic() + " personnes dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getTemps() + ".";
+            return "Il y a " + getInfoPublic() + " personnes dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getValeur() + ".";
         }
         else {
-            return "Il y a " + getInfoPublic() + " personnes dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getTemps() + "."
-                    + "\n De plus, " + infoPrive + " est dans ce lieu à ce pas de temps.";
+            return "Il y a " + getInfoPublic() + " personnes dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getValeur() + "."
+                    + "\n De plus, le " + infoPrive + " est dans ce lieu à ce pas de temps.";
         }
     }
 

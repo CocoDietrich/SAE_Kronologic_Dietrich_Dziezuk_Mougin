@@ -30,7 +30,7 @@ public class Partie {
             // Trouver l'indice relatif au temps
             for (Indice i : enquete.getIndices()){
                 if (i instanceof IndiceTemps){
-                    if (i.getLieu().equals(l) && ((IndiceTemps) i).getTemps().equals(t)){
+                    if (i.getLieu().getId() == l.getId() && ((IndiceTemps) i).getTemps().getValeur() == t.getValeur()){
                         indicesTrouves.add(i);
                         return i;
                     }
@@ -41,7 +41,7 @@ public class Partie {
             // Trouver l'indice relatif au personnage
             for (Indice i : enquete.getIndices()){
                 if (i instanceof IndicePersonnage){
-                    if (i.getLieu().equals(l) && ((IndicePersonnage) i).getNomPersonnage().equals(p.getNom())){
+                    if (i.getLieu().getId() == l.getId() && ((IndicePersonnage) i).getNomPersonnage().equals(p.getNom())){
                         indicesTrouves.add(i);
                         return i;
                     }

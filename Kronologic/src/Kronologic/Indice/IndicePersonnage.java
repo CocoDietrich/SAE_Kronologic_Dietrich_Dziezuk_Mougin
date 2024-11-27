@@ -20,7 +20,7 @@ public class IndicePersonnage extends Indice {
         }
         else {
             return "Le personnage " + nomPersonnage + " est passé " + getInfoPublic() + " fois dans le lieu " + getLieu().getNom() + "."
-                    + "\n De plus, " + nomPersonnage + " était présent dans ce le lieu au pas de temps " + infoPrive + ".";
+                    + "\n De plus, le " + nomPersonnage + " était présent dans ce le lieu au pas de temps " + infoPrive + ".";
         }
     }
 
