@@ -25,8 +25,6 @@ public class VueTableau extends Vue implements Observateur {
         // TODO : implémenter afficherFilm
     }
 
-
-
     @Override
     public void actualiser() {
         // TODO : implémenter actualiser

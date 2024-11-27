@@ -3,14 +3,13 @@ package MVC.Jeu.Vue;
 import MVC.Observateur;
 import MVC.Vue;
 
-public class VuePopUps extends Vue implements Observateur {
-
-    public void afficherPopUp() {
-        // TODO : implémenter afficherPopUps
+public class VueDeduction extends Vue implements Observateur {
+    public void afficherDeduction() {
+        // TODO : implémenter afficherPoseQuestion
     }
 
-    public void afficherMessage() {
-        // TODO : implémenter afficherMessage
+    public void afficherBouton() {
+        // TODO : implémenter afficherBouton
     }
 
     @Override
@@ -22,5 +21,4 @@ public class VuePopUps extends Vue implements Observateur {
     public void afficher() {
         // TODO : implémenter afficher
     }
-
 }
