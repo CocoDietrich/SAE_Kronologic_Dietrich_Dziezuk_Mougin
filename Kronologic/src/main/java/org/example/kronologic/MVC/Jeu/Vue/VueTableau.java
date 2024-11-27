@@ -1,0 +1,38 @@
+package org.example.kronologic.MVC.Jeu.Vue;
+
+import org.example.kronologic.MVC.Observateur;
+import org.example.kronologic.MVC.Vue;
+import javafx.stage.Stage;
+
+public class VueTableau extends Vue implements Observateur {
+
+    public void afficherTableaux() {
+        // TODO : implémenter afficherTableau
+    }
+
+    public void afficherBoutons() {
+        // TODO : implémenter afficherBoutons
+    }
+
+    public void afficherHistorique() {
+        // TODO : implémenter afficherHistorique
+    }
+
+    public void afficherRegle() {
+        // TODO : implémenter afficherRegle
+    }
+
+    public void afficherFilm() {
+        // TODO : implémenter afficherFilm
+    }
+
+    @Override
+    public void actualiser() {
+        // TODO : implémenter actualiser
+    }
+
+    @Override
+    public void afficher(Stage stage) {
+        // TODO : implémenter afficher
+    }
+}
