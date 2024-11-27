@@ -2,13 +2,14 @@ package Kronologic.Elements;
 
 public class Temps {
 
-    private final int temps;
+    private final int valeur;
 
     public Temps(int t) {
-        this.temps = t;
+        this.valeur = t;
     }
 
-    public int getTemps() {
-        return temps;
+    public int getValeur() {
+        return valeur;
     }
+
 }

@@ -16,9 +16,6 @@ public class Partie {
 
     public Partie(Enquete e) {
         this.enquete = e;
-    }
-
-    public void lancerEnquete(){
         this.listePions = new ArrayList<>();
         this.indicesTrouves = new ArrayList<>();
         this.nbQuestion = 0;
@@ -30,7 +27,7 @@ public class Partie {
             // Trouver l'indice relatif au temps
             for (Indice i : enquete.getIndices()){
                 if (i instanceof IndiceTemps){
-                    if (i.getLieu().equals(l) && ((IndiceTemps) i).getTemps().equals(t)){
+                    if (i.getLieu().getId() == l.getId() && ((IndiceTemps) i).getTemps().getValeur() == t.getValeur()){
                         indicesTrouves.add(i);
                         return i;
                     }
@@ -41,7 +38,7 @@ public class Partie {
             // Trouver l'indice relatif au personnage
             for (Indice i : enquete.getIndices()){
                 if (i instanceof IndicePersonnage){
-                    if (i.getLieu().equals(l) && ((IndicePersonnage) i).getNomPersonnage().equals(p.getNom())){
+                    if (i.getLieu().getId() == l.getId() && ((IndicePersonnage) i).getNomPersonnage().equals(p.getNom())){
                         indicesTrouves.add(i);
                         return i;
                     }
@@ -71,10 +68,6 @@ public class Partie {
     public Indice demanderIndice(){
         // TODO : A implémenter
         return null;
-    }
-
-    public void quitterPartie(){
-        // TODO : A implémenter
     }
 
     public Enquete getEnquete() {
