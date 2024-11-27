@@ -1,5 +1,8 @@
-package Kronologic.Elements;
+package Kronologic;
 
+import Kronologic.Elements.Lieu;
+import Kronologic.Elements.Personnage;
+import Kronologic.Elements.Temps;
 import Kronologic.Indice.Indice;
 
 import java.util.List;
