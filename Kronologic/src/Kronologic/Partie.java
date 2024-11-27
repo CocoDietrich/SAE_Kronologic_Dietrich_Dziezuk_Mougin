@@ -1,12 +1,7 @@
 package Kronologic;
 
-import Kronologic.Elements.Enquete;
-import Kronologic.Elements.Lieu;
-import Kronologic.Elements.Personnage;
-import Kronologic.Elements.Temps;
-import Kronologic.Indice.Indice;
-import Kronologic.Indice.IndicePersonnage;
-import Kronologic.Indice.IndiceTemps;
+import Kronologic.Elements.*;
+import Kronologic.Indice.*;
 import Kronologic.Pions.Pion;
 
 import java.util.ArrayList;
