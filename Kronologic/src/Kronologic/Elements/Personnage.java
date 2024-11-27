@@ -4,16 +4,16 @@ import java.util.List;
 
 public class Personnage {
 
-    private final String name;
+    private final String nom;
     private final List<Lieu> listeDeplacements;
 
     public Personnage(String n, List<Lieu> l) {
-        this.name = n;
+        this.nom = n;
         this.listeDeplacements = l;
     }
 
-    public String getName() {
-        return name;
+    public String getNom() {
+        return nom;
     }
 
     public List<Lieu> getListeDeplacements() {

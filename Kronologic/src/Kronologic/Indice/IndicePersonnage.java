@@ -16,10 +16,10 @@ public class IndicePersonnage extends Indice {
     @Override
     public String toString() {
         if (infoPrive == 0) {
-            return "Le personnage " + nomPersonnage + " est passé " + getInfoPublic() + " fois dans le lieu " + getLieu().getName() + ".";
+            return "Le personnage " + nomPersonnage + " est passé " + getInfoPublic() + " fois dans le lieu " + getLieu().getNom() + ".";
         }
         else {
-            return "Le personnage " + nomPersonnage + " est passé " + getInfoPublic() + " fois dans le lieu " + getLieu().getName() + "."
+            return "Le personnage " + nomPersonnage + " est passé " + getInfoPublic() + " fois dans le lieu " + getLieu().getNom() + "."
                     + "\n De plus, " + nomPersonnage + " était présent dans ce le lieu au pas de temps " + infoPrive + ".";
         }
     }

@@ -41,7 +41,7 @@ public class Partie {
             // Trouver l'indice relatif au personnage
             for (Indice i : enquete.getIndices()){
                 if (i instanceof IndicePersonnage){
-                    if (i.getLieu().equals(l) && ((IndicePersonnage) i).getNomPersonnage().equals(p.getName())){
+                    if (i.getLieu().equals(l) && ((IndicePersonnage) i).getNomPersonnage().equals(p.getNom())){
                         indicesTrouves.add(i);
                         return i;
                     }

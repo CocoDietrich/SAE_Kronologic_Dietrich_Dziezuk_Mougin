@@ -4,18 +4,18 @@ import java.util.List;
 
 public class Lieu {
 
-        private final String name;
+        private final String nom;
         private final int id;
         private final List<Lieu> listeLieuxAdjacents;
 
         public Lieu(String n, int i, List<Lieu> l) {
-            this.name = n;
+            this.nom = n;
             this.id = i;
             this.listeLieuxAdjacents = l;
         }
 
-        public String getName() {
-            return name;
+        public String getNom() {
+            return nom;
         }
 
         public int getId() {
