@@ -2,6 +2,7 @@ package MVC.Jeu.Vue;
 
 import MVC.Observateur;
 import MVC.Vue;
+import javafx.stage.Stage;
 
 public class VuePresenceAbsence extends Vue implements Observateur {
     public void afficherPresenceAbsence() {
@@ -14,7 +15,7 @@ public class VuePresenceAbsence extends Vue implements Observateur {
     }
 
     @Override
-    public void afficher() {
+    public void afficher(Stage stage) {
         // TODO : implémenter afficher
     }
 }

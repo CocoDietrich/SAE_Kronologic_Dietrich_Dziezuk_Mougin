@@ -2,6 +2,7 @@ package MVC.Jeu.Vue;
 
 import MVC.Observateur;
 import MVC.Vue;
+import javafx.stage.Stage;
 
 public class VuePoseQuestion extends Vue implements Observateur {
 
@@ -19,7 +20,7 @@ public class VuePoseQuestion extends Vue implements Observateur {
         }
 
         @Override
-        public void afficher() {
+        public void afficher(Stage stage) {
             // TODO : implémenter afficher
         }
 }

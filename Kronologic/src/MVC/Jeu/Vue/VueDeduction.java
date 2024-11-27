@@ -2,6 +2,7 @@ package MVC.Jeu.Vue;
 
 import MVC.Observateur;
 import MVC.Vue;
+import javafx.stage.Stage;
 
 public class VueDeduction extends Vue implements Observateur {
     public void afficherDeduction() {
@@ -18,7 +19,7 @@ public class VueDeduction extends Vue implements Observateur {
     }
 
     @Override
-    public void afficher() {
+    public void afficher(Stage stage) {
         // TODO : implémenter afficher
     }
 }
