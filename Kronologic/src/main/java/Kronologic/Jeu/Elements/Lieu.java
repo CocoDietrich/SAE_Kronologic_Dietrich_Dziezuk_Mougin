@@ -1,4 +1,4 @@
-package org.example.kronologic.Kronologic.Elements;
+package Kronologic.Jeu.Elements;
 
 import java.util.List;
 

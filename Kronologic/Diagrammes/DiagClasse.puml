@@ -2,95 +2,121 @@
 
 /' Définition des classes '/
 package "Kronologic" {
+    class Personnage {
+        - nom: String
+        + Personnage(n: String, l: List<Lieu>)
+        + getNom(): String
+    }
 
-    package "Elements"{
+    class Lieu {
+        - nom: String
+        - Id : Integer
+        + Lieu(n: String, i: Integer, l: List<Lieu>)
+        + getNom(): String
+        + getId(): Integer
+        + getListeLieuxAdjacents(): List<Lieu>
+    }
 
-        class Deroulement {
-            - {final} nomPersonnage: String
-            - {final} listeDeplacement: List<Lieu>
-            + Deroulement(n: String, l: List<Lieu>)
-        }
-
-        [Temps 1 [(Salle : A, B), (Scène : C, D)], Temps 2 [] ]
-
-        class Lieu {
-            - {final} nom: String
-            - {final} Id : Integer
-            - {final} listeLieuxAdjacents : List<Lieu>
-            + Lieu(n: String, i: Integer, l: List<Lieu>)
-        }
-
-        class Temps {
-            - {final} temps : Integer
-            + Temps(t: Integer)
-        }
-
-        class Enquete {
-            - {final} listePersonnages: List<Personnage>
-            - {final} listeLieux: List<Lieu>
-            - {final} meurtrier: Personnage
-            - {final} lieuDuCrime: Lieu
-            - {final} tempsDuCrime: Temps
-            - {final} loupeBronze: Int
-            - {final} loupeOr: Int
-            + Enquete(lp: List<Personnage>, ll: List<Lieu>, li: List<Indice>, m: Personnage, l: Lieu, t: Temps)
-            + verifierLoupe(int: nbQuestion): String
-        }
+    class Temps {
+        - temps : Integer
+        + Temps(t: Integer)
     }
 
     package Indice{
-        interface Indice {
-            + getLieu(): Lieu
-            + toString(): String
-        }
-
-        class IndiceTemps implements Indice {
-            - {final} temps: Temps
-            - {final} prive: String
-            + IndiceTemps(l: Lieu, p: Integer, t: Temps, p: String)
-            + obtenirIndice(l: Lieu, t: Temps): Int
-            + toString(): String
-        }
-
-        class IndicePersonnage implements Indice {
-            - {final} personnage : Personnage
-            - {final} prive: int
-            + IndicePersonnage(l: Lieu, p: Integer, n: String, p: String)
-            + obtenirIndice(l: Lieu, p: Personnage): Int
-            + toString(): String
-        }
-
-        class GestionnaireIndice {
-            - {final} listeIndices: List<Indice>
-            + GestionnaireIndice(li: List<Indice>)
+        class GestionnaireIndices {
+            + GestionnaireIndices(l : List<Indice>)
             + poserQuestion(l: Lieu, p: Personnage, t: Temps): Indice
         }
+
+        abstract class Indice {
+            - lieu: Lieu
+            - public: Integer
+            + Indice(l: Lieu, p: Integer)
+            + toString(): String
+            + getLieu(): Lieu
+            + getInfoPublic(): Integer
+        }
+
+        class IndiceTemps extends Indice {
+            - prive: String
+            + IndiceTemps(l: Lieu, p: Integer, t: Temps, p: String)
+        }
+
+        class IndicePersonnage extends Indice {
+            - prive: String
+            + IndicePersonnage(l: Lieu, p: Integer, perso: Personnage, p: String)
+        }
+    }
+
+    abstract class Position {
+        + Position(l: Lieu, t: Temps, p: Personnage)
+        + getLieu(): Lieu
+        + getTemps(): Temps
+        + getPersonnage(): Personnage
+    }
+
+    class Realite extends Position {
+        + Realite(l: Lieu, t: Temps, p: Personnage)
+        + getLieu(): Lieu
+        + getTemps(): Temps
+        + getPersonnage(): Personnage
+    }
+
+    class Deroulement {
+        + Deroulement(lp: List<Position>)
+        + positionsAuTemps(t: Temps): List<Position>
+        + positionsDansLieu(l: Lieu): List<Position>
+        + positionsDuPersonnage(p: Personnage): List<Position>
+    }
+
+    class Hypothese extends Position {
+        Servira à la gestion des notes du joueur (qu'on développera dans l'itération2)
+    }
+
+    class Enquete {
+        - idEnquete : int
+        - nomEnquete : String
+        - synopsis : String
+        - enigme : String
+        - loupeOr : int
+        - loupeBronze : int
+        + Enquete(id: int, n: String, s: String, e: String, lo: int, lb: int)
+        + getIdEnquete(): int
+        + getNomEnquete(): String
+        + getSynopsis(): String
+        + getEnigme(): String
+        + getMeurtrier(): Personnage
+        + getLieuMeurtre(): Lieu
+        + getTempsMeurtre(): Temps
+        + getLoupeOr(): int
+        + getLoupeBronze(): int
     }
 
     class Partie {
-        - {final} enquete : Enquete
-        - indicesTrouves: List<Indice>
-        - listePions: List<Pion>
         - nbQuestion: Integer
-        + Partie(e: Enquete)
+        + Partie(e: Enquete, d: Deroulement, gn: GestionnaireNotes, gi: GestionnaireIndices)
         + poserQuestion(l: Lieu, p: Personnage, t: Temps): Indice
         + faireDeduction(p: Personnage, l: Lieu, t: Temps): boolean
-        + historiqueQuestion(): String
         + demanderIndice(): Indice
     }
-
-    class JsonReader {
-        - jsonData: String
-        + JsonReader(json: String)
-        + construireEnquete(): Enquete
-        + construirePersonnages(data: List<Map<String, Object>>): List<Personnage>
-        + construireLieux(data: List<Map<String, Object>>): List<Lieu>
-        + construireIndices(data: Map<String, Object>, lieux: List<Lieu>, personnages: List<Personnage>): List<Indice>
-    }
 }
 
-package "IAInterface" {
-}
+/' Relations entre les classes de Kronologic '/
+Lieu "1" -- "2..*" Lieu : - listeLieuxAdjacents
+Partie "1" --> "1" Enquete : - enquete
+Partie "1" -- "1" Kronologic.Indice.GestionnaireIndices : - gestionnaireIndices
+Partie "1" -- "0..*" Kronologic.Indice.Indice : - indicesDecouverts
+Partie "1" --> "1" Deroulement : - deroulement
+Enquete "1" --> "1" Personnage : - meurtrier
+Enquete "1" --> "1" Lieu : - lieuMeurtre
+Enquete "1" --> "1" Temps : - tempsMeurtre
+GestionnaireIndices "1" --> "*" Kronologic.Indice.Indice : - listeIndices
+IndiceTemps "1" --> "1" Temps : - temps
+IndicePersonnage "1" --> "1" Personnage : - personnage
+Position "1" --> "1" Lieu : - lieu
+Position "1" --> "1" Temps : - temps
+Position "1" --> "1" Personnage : - personnage
+Deroulement "1" --> "*" Realite : - listePositions
 
 /'package Pions {
         abstract class Pion {
@@ -113,200 +139,244 @@ package "IAInterface" {
             + PionNombre(i: Integer, h: boolean)
             + modifierNombre(n: Integer): void
         }
+    }
+
+
+    package "Pions" {
+        class Pion {
+            - {final} id: Integer
+            - {final} perso: Personnage
+            - lieu: Lieu
+            - temps: Temps
+            - x: Integer
+            - y: Integer
+            -
+        }
     }'/
 
 /' MVC '/
 package "MVC" {
 
-    interface Observateur {
-        + actualiser(sujet: Sujet): void
-    }
-
-    interface Sujet {
-        + enregistrerObservateur(o: Observateur): void
-        + supprimerObservateur(o: Observateur): void
-        + notifierObservateurs(): void
-    }
-
-    abstract class Vue {
-        + afficher(): void
-    }
-
-    /' Accueil '/
-    package Accueil{
-        class ModeleAccueil implements MVC.Sujet {
-            - options: List<String>
-            + obtenirOptions(): List<String>
-        }
-
-        class VueAccueil extends MVC.Vue implements MVC.Observateur{
-            + afficherAccueil(): void
-            + afficherOptions(): void
-        }
-
-        class ControleurAccueil {
-            - modele: ModeleAccueil
-            - vue: VueAccueil
-            + gererChoix(option: String): void
-        }
-    }
-
-    /' Jeu '/
-    package Jeu{
-        class ModeleJeu implements MVC.Sujet {
-            - partie: Partie
-            - observateurs: List<Observateur>
+    package "Modele" {
+        interface Sujet {
             + enregistrerObservateur(o: Observateur): void
             + supprimerObservateur(o: Observateur): void
             + notifierObservateurs(): void
-            + initialiserPartie(): void
-            + poserQuestion(l: Lieu, p: Personnage, t: Integer): Indice
-            + faireDeduction(l: Lieu, p: Personnage, t: Integer): boolean
-            + demanderIndice(): Indice
-            + quitterPartie(): void
         }
 
-        class VueCarte extends MVC.Vue implements MVC.Observateur {
+        class ModeleAccueil implements MVC.Modele.Sujet {
+            + enregistrerObservateur(o: Observateur): void
+            + supprimerObservateur(o: Observateur): void
+            + notifierObservateurs(): void
+            + initialiserPartie(s: String): void
+            + quitterJeu(): void
+        }
+
+        class ModeleJeu implements MVC.Modele.Sujet {
+            - partie: Partie
+            - vueCarte : boolean
+            - deductionLieu : Lieu
+            - deductionPersonnage : Personnage
+            - deductionTemps : Integer
+            + enregistrerObservateur(o: Observateur): void
+            + supprimerObservateur(o: Observateur): void
+            + notifierObservateurs(): void
+            + changerAffichage(): void
+            + poserQuestion(l: Lieu, p: Personnage, t: Integer): Indice
+            + visualiserPoseQuestion(): void
+            + choix(l: Lieu, p: Personnage, t: Temps): void
+            + faireDeduction(l: Lieu, p: Personnage, t: Integer): boolean
+            + visualiserDeduction(): void
+            + voirDeductionIA(): void
+            + demanderIndice(): Indice
+            + visualiserFilm(): void
+            + visualiserRegle(): void
+            + valider(): void
+            + quitter(): void
+            + afficherPionsDeplacables(): void
+            + activerDragAndDropPions(): void
+            + afficherPositionPion(p: Pion): void
+        }
+    }
+
+    package "Vue" {
+        interface Observateur {
+            + actualiser(sujet: Sujet): void
+        }
+
+        class VueAccueil extends GridPane implements MVC.Vue.Observateur{
+            + afficher(s: Stage): void
+            + actualiser(): void
+        }
+
+        class VueCarte extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
             + afficherCarte(): void
             + afficherPions(): void
-            + afficherBouton(): void
+            + afficherBoutons(): void
             + afficherHistorique() : void
             + afficherRegle(): void
             + afficherFilm(): void
             + afficherPresenceAbsence(): void
             + afficherHypothese(): void
+            + actualiser(): void
         }
 
-        class VueTableau extends MVC.Vue implements MVC.Observateur {
+        class VueTableau extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
             + afficherTableaux(): void
-            + afficherBouton(): void
+            + afficherBoutons(): void
             + afficherHistorique() : void
             + afficherRegle(): void
             + afficherFilm(): void
+            + actualiser(): void
         }
 
-        class VueHypothese extends MVC.Vue implements MVC.Observateur {
-            + afficherHypothese(): void
-            + afficherBouton(): void
+        class VueRegle extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
+            + actualiser(): void
         }
 
-        class VueBouton extends MVC.Vue implements MVC.Observateur {
-            + afficherBouton(): void
+        class VueFilm extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
+            + actualiser(): void
         }
 
-        class VuePresenceAbsence extends MVC.Vue implements MVC.Observateur {
-            + afficherPresenceAbsence(): void
+        class VuePoseQuestion extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
+            + afficherPionsSelectionnables(): void
+            + afficherValiderQuitter(): void
+            + actualiser(): void
         }
 
-        class VueHistorique extends MVC.Vue implements MVC.Observateur {
-            + afficherHistorique(): void
+        class VueDeduction extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
+            + afficherPionsSelectionnables(): void
+            + afficherValiderQuitter(): void
+            + actualiser(): void
         }
 
-        class VueRegle extends MVC.Vue implements MVC.Observateur {
-            + afficherRegle(): void
+        class VuePopUp extends GridPane implements MVC.Vue.Observateur {
+            + afficher(s: Stage): void
+            + afficherMessage(s: String): void
+            + afficherValiderQuitter(): void
+            + actualiser(): void
         }
+    }
 
-        class VueFilm extends MVC.Vue implements MVC.Observateur {
-            + afficherFilmJoueur(): void
-            + afficherFilmPartie(): void
-        }
+    package "Controleur" {
+            class ControleurInitialisation extends EventHandler<ActionEvent>{
+                + ControleurInitialisation(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class VuePopUps extends MVC.Vue implements MVC.Observateur {
-            + afficherPopUp(): void
-            + afficherMessage(message: String): void
-        }
+            class ControleurQuitterJeu extends EventHandler<ActionEvent> {
+                + ControleurQuitterJeu(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class VuePoseQuestion extends MVC.Vue implements MVC.Observateur {
-            + afficherPoseQuestion(): void
-            + afficherBouton(): void
-        }
+            class ControleurAffichage extends EventHandler<ActionEvent> {
+                + ControleurAffichage(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class VueDeduction extends MVC.Vue implements MVC.Observateur {
-            + afficherDeduction(): void
-            + afficherBouton(): void
-        }
+            class ControleurPoseQuestion extends EventHandler<ActionEvent> {
+                + ControleurPoseQuestion(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurPoseQuestion {
-            - modele: ModeleJeu
-            - vue: Vue
-            + gererSelectionLieuTempsPersonnage(l: Lieu, t: Temps, p: Personnage): void
-            + validerQuestion(l: Lieu, t: Temps, p: Personnage): void
-            + quitterPoseQuestion(): void
-        }
+            class ControleurChoixPoseQuestion extends EventHandler<ActionEvent> {
+                + ControleurChoixPoseQuestion(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurCarte {
-            - modele: ModeleJeu
-            - vue: Vue
-            + activerDragAndDrop(): void
-            + desactiverDragAndDrop(): void
-            + afficherRetourVisuel(lieu: Lieu): void
-            + detecterInteractionSouris(): void
-        }
+            class ControleurVisualiserPoseQuestion extends EventHandler<ActionEvent> {
+                + ControleurVisualiserPoseQuestion(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurDeduction {
-            - modele: ModeleJeu
-            - vue: Vue
-            + gererSelectionLieuTempsPersonnage(l: Lieu, t: Temps, p: Personnage): void
-            + validerHypothese(l: Lieu, t: Temps, p: Personnage): boolean
-            + quitterDeduction(): void
-        }
+            class ControleurDeduction extends EventHandler<ActionEvent>{
+                + ControleurDeduction(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurHypothese {
-            - modele: ModeleJeu
-            - vue: Vue
-            + masquerHypothese(): void
-        }
+            class ControleurChoixDeduction extends EventHandler<ActionEvent> {
+                + ControleurChoixDeduction(m: ModeleAccueil): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurPresenceAbsence {
-            - modele: ModeleJeu
-            - vue: Vue
-            + gererPresenceAbsence(): void
-        }
+            class ControleurVisualiserDeduction extends EventHandler<ActionEvent> {
+                + ControleurVisualiserDeduction(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurPopUps {
-            - modele: ModeleJeu
-            - vue: Vue
-            + validerPopUp(): void
-            + quitterPopUp(): void
-        }
+            class ControleurVoirDeductionIA extends EventHandler<ActionEvent> {
+                + ControleurVoirDeductionIA(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurRegle {
-            - modele: ModeleJeu
-            - vue: Vue
-            + quitterRegle(): void
-        }
+            class ControleurDemanderIndice extends EventHandler<ActionEvent> {
+                + ControleurDemanderIndice(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurPions {
-            - modele: ModeleJeu
-            - vue: Vue
-            + gererPions(): void
-            + activerHypothese(): void
-            + activerAbsence(): void
-        }
+            class ControleurVisualiserFilm extends EventHandler<ActionEvent> {
+                + ControleurVisualiserFilm(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurDragAndDrop {
-            - modele: ModeleJeu
-            - vue: Vue
-            + detecterDrag(pion: Pion): void
-            + detecterDrop(lieu: Lieu): void
-            + verifierPosition(lieu: Lieu, temps: Temps): boolean
-            + deposerPion(lieu: Lieu, temps: Temps, pion: Pion): void
-        }
+            class ControleurVisualiserRegle extends EventHandler<ActionEvent> {
+                + ControleurVisualiserRegle(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurFilm {
-            - modele: ModeleJeu
-            - vue: Vue
-            + quitterFilm(): void
-        }
+            /' Comment savoir qu'est ce qu'on quitte et qu'est ce qu'on valide'/
+            class ControleurValider extends EventHandler<ActionEvent> {
+                + ControleurValider(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
 
-        class ControleurJeu {
-            - modele: ModeleJeu
-            - vue: Vue
-            + gererAction(action: String): void
-            + changerVue(nouvelleVue: Vue): void
-        }
-        }
+            class ControleurQuitter extends EventHandler<ActionEvent> {
+                + ControleurQuitter(s: Stage): void
+                + handle(e: ActionEvent): void
+            }
+    }
 }
+
+/' Association MVC '/
+
+/' Modele '/
+ModeleJeu "1" --> "*" MVC.Vue.Observateur : - observateurs: List<Observateur>
+ModeleAccueil "1" --> "*" MVC.Vue.Observateur : - observateurs: List<Observateur>
+
+/' Vue '/
+
+/' Controleur Accueil '/
+ControleurInitialisation "1" --> "1" ModeleAccueil : - modele: ModeleAccueil
+ControleurQuitterJeu "1" --> "1" ModeleAccueil : - modele: ModeleAccueil
+
+/' Controleur Jeu '/
+ControleurAffichage "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurPoseQuestion "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurChoixPoseQuestion "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurVisualiserPoseQuestion "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurDeduction "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurChoixDeduction "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurVisualiserDeduction "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurVoirDeductionIA "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurDemanderIndice "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurVisualiserFilm "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurVisualiserRegle "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurValider "1" --> "1" ModeleJeu : - modele: ModeleJeu
+ControleurQuitter "1" --> "1" ModeleJeu : - modele: ModeleJeu
+
+remove MVC.Controleur
+remove MVC.Vue.VueAccueil
+remove MVC.Vue.VueFilm
+remove MVC.Vue.VueRegle
+remove MVC.Vue.VuePoseQuestion
+remove MVC.Vue.VuePopUp
+
 
 
 @enduml

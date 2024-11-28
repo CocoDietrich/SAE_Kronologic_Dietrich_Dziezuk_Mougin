@@ -1,6 +1,6 @@
-package org.example.kronologic.Kronologic.Indice;
+package Kronologic.Jeu.Indice;
 
-import org.example.kronologic.Kronologic.Elements.Lieu;
+import Kronologic.Jeu.Elements.Lieu;
 
 public abstract class Indice {
 
