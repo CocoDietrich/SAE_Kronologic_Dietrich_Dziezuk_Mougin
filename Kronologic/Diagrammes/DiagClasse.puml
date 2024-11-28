@@ -82,6 +82,8 @@ package "Kronologic" {
         - loupeOr : int
         - loupeBronze : int
         + Enquete(id: int, n: String, s: String, e: String, lo: int, lb: int)
+        + verifierLoupe(int nbQuestion): String
+        + faireDeduction(l: Lieu, p: Personnage, t: Temps): boolean
         + getIdEnquete(): int
         + getNomEnquete(): String
         + getSynopsis(): String
@@ -98,7 +100,7 @@ package "Kronologic" {
         + Partie(e: Enquete, d: Deroulement, gn: GestionnaireNotes, gi: GestionnaireIndices)
         + poserQuestionPersonnage(l: Lieu, p: Personnage): Indice
         + poserQuestionTemps(l: Lieu, t: Temps): Indice
-        + faireDeduction(p: Personnage, l: Lieu, t: Temps): boolean
+        + faireDeduction(l: Lieu, p: Personnage, t: Temps): boolean
         + demanderIndice(): Indice
     }
 }
