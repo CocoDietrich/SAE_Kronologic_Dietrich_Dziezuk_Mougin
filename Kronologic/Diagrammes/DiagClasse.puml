@@ -25,7 +25,8 @@ package "Kronologic" {
     package Indice{
         class GestionnaireIndices {
             + GestionnaireIndices(l : List<Indice>)
-            + poserQuestion(l: Lieu, p: Personnage, t: Temps): Indice
+            + poserQuestionPersonnage(l: Lieu, p: Personnage): Indice
+            + poserQuestionTemps(l: Lieu, t: Temps): Indice
         }
 
         abstract class Indice {
@@ -95,7 +96,8 @@ package "Kronologic" {
     class Partie {
         - nbQuestion: Integer
         + Partie(e: Enquete, d: Deroulement, gn: GestionnaireNotes, gi: GestionnaireIndices)
-        + poserQuestion(l: Lieu, p: Personnage, t: Temps): Indice
+        + poserQuestionPersonnage(l: Lieu, p: Personnage): Indice
+        + poserQuestionTemps(l: Lieu, t: Temps): Indice
         + faireDeduction(p: Personnage, l: Lieu, t: Temps): boolean
         + demanderIndice(): Indice
     }
