@@ -39,5 +39,51 @@ public class Enquete {
         }
     }
 
-    // Getter et setter pour chaque attribut
+    // Méthode permettant de faire une déduction
+    public boolean faireDeduction(Lieu lieu, Personnage personnage, Temps temps) {
+        if (personnage.getNom().equals(meurtrier.getNom()) && lieu.getId() == lieuMeurtre.getId() && temps.getValeur() == tempsMeurtre.getValeur()) {
+            System.out.println("Bravo, votre déduction est correcte !");
+            return true;
+        } else {
+            System.out.println("Désolé, votre déduction est incorrecte.");
+            return false;
+        }
+    }
+
+    // Getter pour chaque attribut
+    public int getIdEnquete() {
+        return idEnquete;
+    }
+
+    public String getNomEnquete() {
+        return nomEnquete;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public String getEnigme() {
+        return enigme;
+    }
+
+    public int getLoupeOr() {
+        return loupeOr;
+    }
+
+    public int getLoupeBronze() {
+        return loupeBronze;
+    }
+
+    public Personnage getMeurtrier() {
+        return meurtrier;
+    }
+
+    public Lieu getLieuMeurtre() {
+        return lieuMeurtre;
+    }
+
+    public Temps getTempsMeurtre() {
+        return tempsMeurtre;
+    }
 }

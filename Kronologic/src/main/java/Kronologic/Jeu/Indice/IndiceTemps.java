@@ -20,8 +20,8 @@ public class IndiceTemps extends Indice{
             return "Il y a " + getInfoPublic() + " personnes dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getValeur() + ".";
         }
         else {
-            return "Il y a " + getInfoPublic() + " personnes dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getValeur() + "."
-                    + "\n De plus, le " + infoPrive + " est dans ce lieu à ce pas de temps.";
+            return "Il y a " + getInfoPublic() + " personne(s) dans le lieu " + getLieu().getNom() + " au pas de temps " + temps.getValeur() + "."
+                    + "\n De plus, le personnage " + infoPrive + " est dans ce lieu à ce pas de temps.";
         }
     }
 

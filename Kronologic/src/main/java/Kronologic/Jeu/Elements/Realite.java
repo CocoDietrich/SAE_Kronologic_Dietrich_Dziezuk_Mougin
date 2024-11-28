@@ -1,15 +1,24 @@
 package Kronologic.Jeu.Elements;
 
-public class Realite {
+public class Realite extends Position {
     private Lieu lieu;
     private Temps temps;
     private Personnage personnage;
 
     public Realite(Lieu lieu, Temps temps, Personnage personnage) {
-        this.lieu = lieu;
-        this.temps = temps;
-        this.personnage = personnage;
+        super(lieu, temps, personnage);
     }
 
-    // Getter et setter pour chaque attribut
+    // Getter pour chaque attribut
+    public Lieu getLieu() {
+        return lieu;
+    }
+
+    public Temps getTemps() {
+        return temps;
+    }
+
+    public Personnage getPersonnage() {
+        return personnage;
+    }
 }

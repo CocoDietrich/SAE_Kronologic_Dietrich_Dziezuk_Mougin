@@ -1,6 +1,6 @@
 package Kronologic.Jeu.Elements;
 
-public class Position {
+public abstract class Position {
     private Lieu lieu;
     private Temps temps;
     private Personnage personnage;
@@ -11,5 +11,17 @@ public class Position {
         this.personnage = personnage;
     }
 
-    // Getter et setter pour chaque attribut
+    // Getter pour chaque attribut
+
+    public Lieu getLieu() {
+        return lieu;
+    }
+
+    public Temps getTemps() {
+        return temps;
+    }
+
+    public Personnage getPersonnage() {
+        return personnage;
+    }
 }

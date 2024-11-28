@@ -1,17 +1,20 @@
 package Kronologic.Data;
 
+import Kronologic.Jeu.Deroulement;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Position;
 import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Enquete;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Indice.IndiceTemps;
-import org.example.kronologic.Jeu.Elements.*;
-import org.example.kronologic.Jeu.Indice.*;
+import Kronologic.Jeu.Elements.*;
+import Kronologic.Jeu.Indice.*;
 import com.google.gson.*;
 import Kronologic.Jeu.Partie;
 
 import java.io.FileReader;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class JsonReader {
@@ -34,23 +37,46 @@ public class JsonReader {
                 }
             }
 
+            // Charger les temps
+            List<Temps> tempsList = new ArrayList<>();
+            for (int i = 1; i <= 6; i++) {
+                tempsList.add(new Temps(i));
+            }
+
             // Charger les personnages
             List<Personnage> personnages = new ArrayList<>();
             Map<String, Personnage> personnageMap = new HashMap<>();
+            for (String personnageNom : getAllPersonnagesFromJson(jsonObject)) {
+                Personnage personnage = new Personnage(personnageNom);
+                personnages.add(personnage);
+                personnageMap.put(personnageNom, personnage);
+            }
+
+            // Charger les positions
+            ArrayList<Realite> positions = new ArrayList<>();
             for (Lieu lieu : lieux) {
                 JsonArray lieuData = jsonObject.getAsJsonArray(lieu.getNom());
-                for (JsonElement element : lieuData) {
-                    JsonObject tempsObj = element.getAsJsonObject();
-                    for (String key : tempsObj.keySet()) {
-                        if (key.startsWith("Temps")) {
-                            JsonArray tempsData = tempsObj.getAsJsonArray(key);
-                            for (JsonElement tData : tempsData) {
-                                String[] personnagesArray = tData.getAsJsonObject().get("personnages").getAsString().split(",");
-                                for (String nomPerso : personnagesArray) {
-                                    if (!personnageMap.containsKey(nomPerso)) {
-                                        Personnage personnage = new Personnage(nomPerso, new ArrayList<>());
-                                        personnages.add(personnage);
-                                        personnageMap.put(nomPerso, personnage);
+                if (lieuData != null) {
+                    for (JsonElement element : lieuData) {
+                        JsonObject tempsObj = element.getAsJsonObject();
+                        for (String key : tempsObj.keySet()) {
+                            if (key.startsWith("Temps")) {
+                                int tempsId = Integer.parseInt(key.split(" ")[1]);
+                                Temps temps = tempsList.stream().filter(t -> t.getValeur() == tempsId).findFirst().orElse(null);
+                                if (temps != null) {
+                                    JsonArray tempsData = tempsObj.getAsJsonArray(key);
+                                    if (tempsData != null) {
+                                        for (JsonElement tData : tempsData) {
+                                            JsonObject tDataObj = tData.getAsJsonObject();
+                                            String[] personnagesArray = tDataObj.get("personnages").getAsString().split(",");
+                                            for (String nomPerso : personnagesArray) {
+                                                nomPerso = nomPerso.trim();
+                                                if (!nomPerso.isEmpty() && personnageMap.containsKey(nomPerso)) {
+                                                    // Ajouter uniquement les positions valides
+                                                    positions.add(new Realite(lieu, temps, personnageMap.get(nomPerso)));
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -59,51 +85,39 @@ public class JsonReader {
                 }
             }
 
-            // Charger les temps
-            List<Temps> tempsList = new ArrayList<>();
-            for (int i = 1; i <= 6; i++) {
-                tempsList.add(new Temps(i));
-            }
-
             // Charger les indices
             List<Indice> indices = new ArrayList<>();
             for (Lieu lieu : lieux) {
                 JsonArray lieuData = jsonObject.getAsJsonArray(lieu.getNom());
-                for (JsonElement element : lieuData) {
-                    JsonObject tempsObj = element.getAsJsonObject();
-                    for (String key : tempsObj.keySet()) {
-                        if (key.startsWith("Temps")) {
-                            int tempsId = Integer.parseInt(key.split(" ")[1]);
-                            Temps temps = tempsList.stream().filter(t -> t.getTemps() == tempsId).findFirst().orElse(null);
-                            JsonArray tempsData = tempsObj.getAsJsonArray(key);
-                            for (JsonElement tData : tempsData) {
-                                JsonObject tDataObj = tData.getAsJsonObject();
-                                int nombrePersonnages = tDataObj.get("nombrePersonnages").getAsInt();
-                                String personnagePrive = tDataObj.get("personnagePrive").getAsString();
-                                IndiceTemps indice = new IndiceTemps(lieu, nombrePersonnages, temps, personnagePrive);
-                                indices.add(indice);
+                if (lieuData != null) {
+                    for (JsonElement element : lieuData) {
+                        JsonObject tempsObj = element.getAsJsonObject();
+                        for (String key : tempsObj.keySet()) {
+                            if (key.startsWith("Temps")) {
+                                int tempsId = Integer.parseInt(key.split(" ")[1]);
+                                Temps temps = tempsList.stream().filter(t -> t.getValeur() == tempsId).findFirst().orElse(null);
+                                if (temps != null) {
+                                    JsonArray tempsData = tempsObj.getAsJsonArray(key);
+                                    if (tempsData != null) {
+                                        for (JsonElement tData : tempsData) {
+                                            JsonObject tDataObj = tData.getAsJsonObject();
+                                            int nombrePersonnages = tDataObj.get("nombrePersonnages").getAsInt();
+                                            String infoPrive = tDataObj.has("personnagePrive") ? tDataObj.get("personnagePrive").getAsString() : "Rejouer";
+                                            indices.add(new IndiceTemps(lieu, nombrePersonnages, temps, infoPrive));
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    }
-                }
-            }
-
-            // Charger les positions
-            List<Position> positions = new ArrayList<>();
-            for (Lieu lieu : lieux) {
-                JsonArray lieuData = jsonObject.getAsJsonArray(lieu.getNom());
-                for (JsonElement element : lieuData) {
-                    JsonObject tempsObj = element.getAsJsonObject();
-                    for (String key : tempsObj.keySet()) {
-                        if (key.startsWith("Temps")) {
-                            int tempsId = Integer.parseInt(key.split(" ")[1]);
-                            Temps temps = tempsList.stream().filter(t -> t.getTemps() == tempsId).findFirst().orElse(null);
-                            JsonArray tempsData = tempsObj.getAsJsonArray(key);
-                            for (JsonElement tData : tempsData) {
-                                JsonObject tDataObj = tData.getAsJsonObject();
-                                String personnageNom = tDataObj.get("personnagePrive").getAsString();
-                                Personnage personnage = personnageMap.get(personnageNom);
-                                positions.add(new Position(lieu, temps, personnage));
+                            if (personnageMap.containsKey(key)) {
+                                JsonArray persoData = tempsObj.getAsJsonArray(key);
+                                if (persoData != null) {
+                                    for (JsonElement pData : persoData) {
+                                        JsonObject pDataObj = pData.getAsJsonObject();
+                                        int nombrePassages = pDataObj.get("nombrePassages").getAsInt();
+                                        int tempsPrive = pDataObj.get("tempsPrive").getAsInt();
+                                        indices.add(new IndicePersonnage(lieu, nombrePassages, personnageMap.get(key), tempsPrive));
+                                    }
+                                }
                             }
                         }
                     }
@@ -116,9 +130,9 @@ public class JsonReader {
             int idLieuCrime = solution.get("idLieu").getAsInt();
             int tempsCrimeId = solution.get("temps").getAsInt();
 
-            Personnage meurtrier = personnageMap.get(nomMeurtrier);
+            Personnage meurtrier = personnageMap.getOrDefault(nomMeurtrier, new Personnage("Inconnu"));
             Lieu lieuMeurtre = lieux.stream().filter(l -> l.getId() == idLieuCrime).findFirst().orElse(null);
-            Temps tempsMeurtre = tempsList.stream().filter(t -> t.getTemps() == tempsCrimeId).findFirst().orElse(null);
+            Temps tempsMeurtre = tempsList.stream().filter(t -> t.getValeur() == tempsCrimeId).findFirst().orElse(null);
 
             // Créer l'enquête
             Enquete enquete = new Enquete(
@@ -136,7 +150,6 @@ public class JsonReader {
             // Créer le déroulement
             Deroulement deroulement = new Deroulement(positions);
 
-            // Créer le gestionnaire d'indices
             GestionnaireIndices gestionnaireIndices = new GestionnaireIndices(indices);
 
             // Créer la partie
@@ -148,9 +161,42 @@ public class JsonReader {
         }
     }
 
+    private static Set<String> getAllPersonnagesFromJson(JsonObject jsonObject) {
+        Set<String> personnages = new HashSet<>();
+        for (String key : jsonObject.keySet()) {
+            if (!isMetaKey(key)) {
+                JsonArray lieuData = jsonObject.getAsJsonArray(key);
+                if (lieuData != null) {
+                    for (JsonElement element : lieuData) {
+                        JsonObject tempsObj = element.getAsJsonObject();
+                        for (String tempsKey : tempsObj.keySet()) {
+                            if (tempsKey.startsWith("Temps")) {
+                                JsonArray tempsData = tempsObj.getAsJsonArray(tempsKey);
+                                if (tempsData != null) {
+                                    for (JsonElement tData : tempsData) {
+                                        JsonObject tDataObj = tData.getAsJsonObject();
+                                        String[] personnagesArray = tDataObj.get("personnages").getAsString().split(",");
+                                        for (String personnage : personnagesArray) {
+                                            personnage = personnage.trim();
+                                            if (!personnage.isEmpty()) {
+                                                personnages.add(personnage);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return personnages;
+    }
+
     private static boolean isMetaKey(String key) {
         return key.equals("idEnquete") || key.equals("nomEnquete") || key.equals("synopsis") ||
                 key.equals("enigme") || key.equals("loupeOr") || key.equals("loupeBronze") ||
                 key.equals("solution");
     }
+
 }
