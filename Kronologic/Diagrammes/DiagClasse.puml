@@ -184,10 +184,10 @@ package "MVC" {
             + supprimerObservateur(o: Observateur): void
             + notifierObservateurs(): void
             + changerAffichage(): void
-            + poserQuestion(l: Lieu, p: Personnage, t: Integer): Indice
+            + poserQuestion(): Indice
             + visualiserPoseQuestion(): void
             + choix(l: Lieu, p: Personnage, t: Temps): void
-            + faireDeduction(l: Lieu, p: Personnage, t: Integer): boolean
+            + faireDeduction(): boolean
             + visualiserDeduction(): void
             + voirDeductionIA(): void
             + demanderIndice(): Indice
@@ -195,9 +195,6 @@ package "MVC" {
             + visualiserRegle(): void
             + valider(): void
             + quitter(): void
-            + afficherPionsDeplacables(): void
-            + activerDragAndDropPions(): void
-            + afficherPositionPion(p: Pion): void
         }
     }
 
@@ -267,78 +264,77 @@ package "MVC" {
     }
 
     package "Controleur" {
-            class ControleurInitialisation extends EventHandler<ActionEvent>{
+            class ControleurInitialisation implements EventHandler<ActionEvent>{
                 + ControleurInitialisation(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurQuitterJeu extends EventHandler<ActionEvent> {
+            class ControleurQuitterJeu implements EventHandler<ActionEvent> {
                 + ControleurQuitterJeu(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurAffichage extends EventHandler<ActionEvent> {
+            class ControleurAffichage implements EventHandler<ActionEvent> {
                 + ControleurAffichage(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurPoseQuestion extends EventHandler<ActionEvent> {
+            class ControleurPoseQuestion implements EventHandler<ActionEvent> {
                 + ControleurPoseQuestion(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurChoixPoseQuestion extends EventHandler<ActionEvent> {
+            class ControleurChoixPoseQuestion implements EventHandler<ActionEvent> {
                 + ControleurChoixPoseQuestion(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurVisualiserPoseQuestion extends EventHandler<ActionEvent> {
+            class ControleurVisualiserPoseQuestion implements EventHandler<ActionEvent> {
                 + ControleurVisualiserPoseQuestion(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurDeduction extends EventHandler<ActionEvent>{
+            class ControleurDeduction implements EventHandler<ActionEvent>{
                 + ControleurDeduction(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurChoixDeduction extends EventHandler<ActionEvent> {
+            class ControleurChoixDeduction implements EventHandler<ActionEvent> {
                 + ControleurChoixDeduction(m: ModeleAccueil): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurVisualiserDeduction extends EventHandler<ActionEvent> {
+            class ControleurVisualiserDeduction implements EventHandler<ActionEvent> {
                 + ControleurVisualiserDeduction(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurVoirDeductionIA extends EventHandler<ActionEvent> {
+            class ControleurVoirDeductionIA implements EventHandler<ActionEvent> {
                 + ControleurVoirDeductionIA(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurDemanderIndice extends EventHandler<ActionEvent> {
+            class ControleurDemanderIndice implements EventHandler<ActionEvent> {
                 + ControleurDemanderIndice(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurVisualiserFilm extends EventHandler<ActionEvent> {
+            class ControleurVisualiserFilm implements EventHandler<ActionEvent> {
                 + ControleurVisualiserFilm(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurVisualiserRegle extends EventHandler<ActionEvent> {
+            class ControleurVisualiserRegle implements EventHandler<ActionEvent> {
                 + ControleurVisualiserRegle(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            /' Comment savoir qu'est ce qu'on quitte et qu'est ce qu'on valide'/
-            class ControleurValider extends EventHandler<ActionEvent> {
+            class ControleurValider implements EventHandler<ActionEvent> {
                 + ControleurValider(s: Stage): void
                 + handle(e: ActionEvent): void
             }
 
-            class ControleurQuitter extends EventHandler<ActionEvent> {
+            class ControleurQuitter implements EventHandler<ActionEvent> {
                 + ControleurQuitter(s: Stage): void
                 + handle(e: ActionEvent): void
             }

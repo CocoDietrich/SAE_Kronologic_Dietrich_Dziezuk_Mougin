@@ -1,10 +1,9 @@
-module org.example.kronologic {
+module kronologic.kronologic {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.desktop;
-    requires com.google.gson;
 
 
-    opens org.example.kronologic to javafx.fxml;
-    exports org.example.kronologic;
+    opens Kronologic.kronologic to javafx.fxml;
+    exports Kronologic.kronologic;
 }
