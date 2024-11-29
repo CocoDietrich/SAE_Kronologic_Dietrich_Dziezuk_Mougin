@@ -6,15 +6,18 @@ import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.GestionnaireIndices;
 import Kronologic.Jeu.Indice.Indice;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class Partie {
     private int nbQuestion;
+    private ArrayList<Indice> indicesDecouverts;
     private Enquete enquete;
     private Deroulement deroulement;
     private GestionnaireIndices gestionnaireIndices;
 
     public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices) {
+        this.indicesDecouverts = new ArrayList<>();
         this.enquete = enquete;
         this.deroulement = deroulement;
         this.gestionnaireIndices = gestionnaireIndices;
@@ -24,13 +27,22 @@ public class Partie {
     // Méthode permettant de poser une question sur un lieu et un personnage
     public Indice poserQuestionPersonnage(Lieu l, Personnage p) {
         nbQuestion++;
-        return gestionnaireIndices.poserQuestionPersonnage(l, p);
+        Indice i = gestionnaireIndices.poserQuestionPersonnage(l, p);
+        ajouterIndice(i);
+        return i;
     }
 
     // Méthode permettant de poser une question sur un lieu et un temps
     public Indice poserQuestionTemps(Lieu l, Temps t) {
         nbQuestion++;
-        return gestionnaireIndices.poserQuestionTemps(l, t);
+        Indice i = gestionnaireIndices.poserQuestionTemps(l, t);
+        ajouterIndice(i);
+        return i;
+    }
+
+    // Méthode permettant d'ajouter un indice à la liste des indices découverts
+    public void ajouterIndice(Indice i) {
+        indicesDecouverts.add(i);
     }
 
     // Méthode permettant de faire une déduction
@@ -47,6 +59,10 @@ public class Partie {
     // Getter pour chaque attribut
     public int getNbQuestion() {
         return nbQuestion;
+    }
+
+    public ArrayList<Indice> getIndicesDecouverts() {
+        return indicesDecouverts;
     }
 
     public Enquete getEnquete() {
