@@ -1,4 +1,4 @@
-package Kronologic.MVC.Controleur;
+package Kronologic.MVC.Controleur.Accueil;
 
 import Kronologic.MVC.Modele.ModeleAccueil;
 import javafx.event.EventHandler;
@@ -14,6 +14,6 @@ public class ControleurQuitterJeu implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // TODO
+        this.modele.quitterJeu();
     }
 }

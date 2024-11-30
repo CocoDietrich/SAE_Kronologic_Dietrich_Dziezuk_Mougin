@@ -14,6 +14,6 @@ public class ControleurVoirDeductionIA implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        this.modele.voirDeductionIA();
+        // TODO
     }
 }

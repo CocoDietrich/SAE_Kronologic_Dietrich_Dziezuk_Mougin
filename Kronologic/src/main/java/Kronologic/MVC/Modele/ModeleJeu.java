@@ -5,7 +5,13 @@ import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Partie;
+import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
+import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Vue.Observateur;
+import Kronologic.MVC.Vue.VueAccueil;
+import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +25,16 @@ public class ModeleJeu implements Sujet {
     private Lieu deduLieu;
     private Temps deduTemps;
 
-    public ModeleJeu(){
+    public ModeleJeu(Partie partie){
         this.observateurs = new ArrayList<>();
-        this.partie = null;
+        this.partie = partie;
         this.vueCarte = true;
         this.deduPersonnage = null;
         this.deduLieu = null;
         this.deduTemps = null;
     }
 
-    public void changerAffiichage(){
+    public void changerAffichage(){
         //TODO
     }
 
@@ -74,8 +80,33 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
-    public void quitter() {
-        // TODO
+    public void quitter(String idBouton, Stage stage) {
+        switch (idBouton) {
+            case "retour":
+                ModeleAccueil modeleAccueil = new ModeleAccueil();
+
+                VueAccueil vueAccueil = new VueAccueil();
+
+                modeleAccueil.enregistrerObservateur(vueAccueil);
+
+                BorderPane bp = new BorderPane();
+                bp.setCenter(vueAccueil);
+
+                ControleurInitialisation controleurInitialisation = new ControleurInitialisation(modeleAccueil);
+                vueAccueil.jouer.setOnAction(controleurInitialisation);
+                vueAccueil.IAJoueuse.setOnAction(controleurInitialisation);
+
+                ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
+                vueAccueil.quitter.setOnAction(controleurQuitterJeu);
+
+
+                Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+                stage.setScene(scene);
+                break;
+            case "quitter":
+                System.exit(0);
+                break;
+        }
     }
 
     @Override

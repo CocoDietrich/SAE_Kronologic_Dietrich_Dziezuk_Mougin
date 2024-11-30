@@ -3,7 +3,6 @@ package Kronologic.Data;
 import Kronologic.Jeu.Deroulement;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
-import Kronologic.Jeu.Elements.Position;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Enquete;
 import Kronologic.Jeu.Indice.Indice;
@@ -14,7 +13,6 @@ import com.google.gson.*;
 import Kronologic.Jeu.Partie;
 
 import java.io.FileReader;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class JsonReader {
