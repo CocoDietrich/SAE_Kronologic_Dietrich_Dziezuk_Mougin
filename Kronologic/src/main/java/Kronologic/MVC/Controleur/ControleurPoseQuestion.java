@@ -72,6 +72,17 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
             modele.setTempsChoisi(temps);
 
         } else if (id.equals("Valider")) {
+            // On réactive tous les boutons pour les prichaines questions
+            for (Button b : vuePoseQuestion.lieuButtons) {
+                b.setDisable(false);
+            }
+            for (Button b : vuePoseQuestion.tempsButtons) {
+                b.setDisable(false);
+            }
+            for (Button b : vuePoseQuestion.personnageButtons) {
+                b.setDisable(false);
+            }
+            // On pose la question
             modele.poserQuestion(stage);
 
         } else if (id.equals("Annuler mes choix")) {

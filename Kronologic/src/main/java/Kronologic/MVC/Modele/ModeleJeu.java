@@ -21,7 +21,7 @@ import java.util.List;
 public class ModeleJeu implements Sujet {
 
     private List<Observateur> observateurs;
-    private Partie partie;
+    public static Partie partie;
     private boolean vueCarte;
     private Personnage deduPersonnage;
     private Lieu deduLieu;
@@ -29,7 +29,7 @@ public class ModeleJeu implements Sujet {
 
     public ModeleJeu(Partie partie){
         this.observateurs = new ArrayList<>();
-        this.partie = partie;
+        ModeleJeu.partie = partie;
         this.vueCarte = true;
         this.deduPersonnage = null;
         this.deduLieu = null;
@@ -63,7 +63,6 @@ public class ModeleJeu implements Sujet {
         }
         assert vuePoseQuestion != null;
         vuePoseQuestion.lieuChoisi = lieu;
-        notifierObservateurs();
     }
 
     // Méthode permettant de stocker le temps choisi pour la question posée par le joueur
@@ -77,7 +76,6 @@ public class ModeleJeu implements Sujet {
         }
         assert vuePoseQuestion != null;
         vuePoseQuestion.tempsChoisi = temps;
-        notifierObservateurs();
     }
 
     // Méthode permettant de stocker le personnage choisi pour la question posée par le joueur
@@ -91,7 +89,6 @@ public class ModeleJeu implements Sujet {
         }
         assert vuePoseQuestion != null;
         vuePoseQuestion.personnageChoisi = personnage;
-        notifierObservateurs();
     }
 
     public void changerAffichage(){

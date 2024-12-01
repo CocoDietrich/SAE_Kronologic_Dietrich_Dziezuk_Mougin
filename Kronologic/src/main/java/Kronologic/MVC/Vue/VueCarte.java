@@ -1,5 +1,7 @@
 package Kronologic.MVC.Vue;
 
+import Kronologic.Jeu.Indice.Indice;
+import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -26,6 +28,7 @@ public class VueCarte extends BorderPane implements Observateur {
     public Button demanderIndice;
     public Button changerAffichage;
     public Button deductionIA;
+    public TextArea historique;
 
     public VueCarte() {
         super();
@@ -90,7 +93,7 @@ public class VueCarte extends BorderPane implements Observateur {
         optionsDroite.setAlignment(Pos.CENTER_RIGHT);
 
         // Récupération de l'historique
-        TextArea historique = afficherHistorique();
+        historique = afficherHistorique();
         historique.setWrapText(true); // Texte ajusté
 
         HBox hBox = new HBox();
@@ -327,6 +330,11 @@ public class VueCarte extends BorderPane implements Observateur {
 
     @Override
     public void actualiser() {
-
+        // On actualise l'historique des indices en ajoutant le dernier indice découvert
+        if (historique.getText().equals("")) {
+            historique.setText("" + ModeleJeu.partie.getIndicesDecouverts().getLast());
+        } else {
+            historique.setText(historique.getText() + "\n" + ModeleJeu.partie.getIndicesDecouverts().getLast());
+        }
     }
 }
