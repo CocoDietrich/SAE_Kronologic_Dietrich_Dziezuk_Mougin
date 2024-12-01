@@ -135,10 +135,6 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    public void choix(Lieu l, Personnage p, Temps t){
-        //TODO
-    }
-
     public boolean faireDeduction(){
         //TODO
         return false;

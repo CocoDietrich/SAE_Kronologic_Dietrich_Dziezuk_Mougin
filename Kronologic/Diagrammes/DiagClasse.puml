@@ -173,7 +173,7 @@ package "MVC" {
             + enregistrerObservateur(o: Observateur): void
             + supprimerObservateur(o: Observateur): void
             + notifierObservateurs(): void
-            + initialiserPartie(s: String): void
+            + initialiserPartie(s: String, stage : Stage): void
             + quitterJeu(): void
         }
 
@@ -183,13 +183,17 @@ package "MVC" {
             - deductionLieu : Lieu
             - deductionPersonnage : Personnage
             - deductionTemps : Integer
+            + ModeleJeu(partie: Partie)
             + enregistrerObservateur(o: Observateur): void
             + supprimerObservateur(o: Observateur): void
             + notifierObservateurs(): void
+            + retourVueCarte(stage : Stage): void
             + changerAffichage(): void
-            + poserQuestion(): Indice
-            + visualiserPoseQuestion(): void
-            + choix(l: Lieu, p: Personnage, t: Temps): void
+            + setLieuChoisi(l: Lieu): void
+            + setPersonnageChoisi(p: Personnage): void
+            + setTempsChoisi(t: Temps): void
+            + poserQuestion(stage : Stage): Indice
+            + visualiserPoseQuestion(stage : Stage): void
             + faireDeduction(): boolean
             + visualiserDeduction(): void
             + voirDeductionIA(): void
@@ -198,6 +202,7 @@ package "MVC" {
             + visualiserRegle(): void
             + valider(): void
             + quitter(): void
+            + getObservateurs(): List<Observateur>
         }
     }
 
@@ -211,20 +216,23 @@ package "MVC" {
             + actualiser(): void
         }
 
-        class VueCarte extends GridPane implements MVC.Vue.Observateur {
-            + afficher(s: Stage): void
-            + afficherCarte(): void
+        class VueCarte extends BorderPane implements MVC.Vue.Observateur {
+            + VueCarte()
+            + afficherMilieu(): BorderPane
+            + afficherCarte(): List<HBox>
             + afficherPions(): void
-            + afficherBoutons(): void
-            + afficherHistorique() : void
-            + afficherRegle(): void
-            + afficherFilm(): void
-            + afficherPresenceAbsence(): void
-            + afficherHypothese(): void
+            + afficherBoutonsBas(): HBox
+            + afficherBoutonsDroite(): VBox
+            + afficherHistorique() : TextArea
+            + afficherRegle(): StackPane
+            + afficherRetour(): HBox
+            + afficherFilm(): HBox
+            + afficherPresenceAbsence(): List<CheckBox>
             + actualiser(): void
         }
 
         class VueTableau extends GridPane implements MVC.Vue.Observateur {
+            + VueTableau()
             + afficher(s: Stage): void
             + afficherTableaux(): void
             + afficherBoutons(): void
@@ -252,6 +260,7 @@ package "MVC" {
         }
 
         class VueDeduction extends GridPane implements MVC.Vue.Observateur {
+            + VueDeduction()
             + afficher(s: Stage): void
             + afficherPionsSelectionnables(): void
             + afficherValiderQuitter(): void
