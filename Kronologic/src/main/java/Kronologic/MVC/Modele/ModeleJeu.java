@@ -9,6 +9,8 @@ import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueAccueil;
+import Kronologic.MVC.Vue.VueCarte;
+import Kronologic.MVC.Vue.VuePoseQuestion;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -34,17 +36,106 @@ public class ModeleJeu implements Sujet {
         this.deduTemps = null;
     }
 
+    // Méthode permettant de retourner à la vue de la carte
+    public void retourVueCarte(Stage stage){
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VueCarte){
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vueCarte);
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // Méthode permettant de stocker le lieu choisi pour la question posée par le joueur
+    public void setLieuChoisi(Lieu lieu){
+        VuePoseQuestion vuePoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePoseQuestion){
+                vuePoseQuestion = (VuePoseQuestion) o;
+                break;
+            }
+        }
+        assert vuePoseQuestion != null;
+        vuePoseQuestion.lieuChoisi = lieu;
+        notifierObservateurs();
+    }
+
+    // Méthode permettant de stocker le temps choisi pour la question posée par le joueur
+    public void setTempsChoisi(Temps temps){
+        VuePoseQuestion vuePoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePoseQuestion){
+                vuePoseQuestion = (VuePoseQuestion) o;
+                break;
+            }
+        }
+        assert vuePoseQuestion != null;
+        vuePoseQuestion.tempsChoisi = temps;
+        notifierObservateurs();
+    }
+
+    // Méthode permettant de stocker le personnage choisi pour la question posée par le joueur
+    public void setPersonnageChoisi(Personnage personnage){
+        VuePoseQuestion vuePoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePoseQuestion){
+                vuePoseQuestion = (VuePoseQuestion) o;
+                break;
+            }
+        }
+        assert vuePoseQuestion != null;
+        vuePoseQuestion.personnageChoisi = personnage;
+        notifierObservateurs();
+    }
+
     public void changerAffichage(){
         //TODO
     }
 
-    public Indice poserQuestion(){
-        //TODO
-        return null;
+    public Indice poserQuestion(Stage stage){
+        VuePoseQuestion vuePoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePoseQuestion){
+                vuePoseQuestion = (VuePoseQuestion) o;
+                break;
+            }
+        }
+        assert vuePoseQuestion != null;
+        Indice i;
+        if (vuePoseQuestion.personnageChoisi != null){
+            i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
+        } else {
+            i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
+        }
+        partie.ajouterIndice(i);
+        notifierObservateurs();
+        System.out.println("Réponse à la question posée : " + i);
+        retourVueCarte(stage);
+        return i;
     }
 
-    public void visualiserPoseQuestion(){
-        //TODO
+    // Méthode permettant d'afficher la vue de pose de question
+    public void visualiserPoseQuestion(Stage stage){
+        // On récupère la vuePoseQuestion dans la liste des observateurs
+        VuePoseQuestion vuePoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePoseQuestion){
+                vuePoseQuestion = (VuePoseQuestion) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vuePoseQuestion);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void choix(Lieu l, Personnage p, Temps t){
@@ -111,16 +202,22 @@ public class ModeleJeu implements Sujet {
 
     @Override
     public void enregistrerObservateur(Observateur o) {
-
+        this.observateurs.add(o);
     }
 
     @Override
     public void supprimerObservateur(Observateur o) {
-
+        this.observateurs.remove(o);
     }
 
     @Override
     public void notifierObservateurs() {
+        for (Observateur o : observateurs){
+            o.actualiser();
+        }
+    }
 
+    public List<Observateur> getObservateurs() {
+        return observateurs;
     }
 }

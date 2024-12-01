@@ -3,6 +3,8 @@ package Kronologic.MVC.Vue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -57,7 +59,8 @@ public class VueAccueil extends BorderPane implements Observateur {
             bouton.setStyle(
                     "-fx-background-color: #E6B85C; " +
                             "-fx-text-fill: #800000; " +
-                            "-fx-background-radius: 20px; "
+                            "-fx-background-radius: 20px; " +
+                            "-fx-cursor: hand;"
             );
             bouton.setScaleX(1.1);
             bouton.setScaleY(1.1);
@@ -68,6 +71,33 @@ public class VueAccueil extends BorderPane implements Observateur {
                             "-fx-text-fill: #800000; " +
                             "-fx-background-radius: 20px;"
             );
+            bouton.setScaleX(1);
+            bouton.setScaleY(1);
+        });
+        return bouton;
+    }
+
+    public static Button creerButtonAvecImage(String imagePath){
+        Image image = new Image(imagePath);
+        ImageView imageView = new ImageView(image);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(60);
+
+        Button bouton = creerButton("");
+        String idBouton = imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.lastIndexOf("."));
+        bouton.setId(idBouton);
+        bouton.setGraphic(imageView);
+        bouton.setPrefSize(80, 80);
+
+        // L'arrière-plan des boutons avec image est transparent en toutes circonstances
+        bouton.setStyle("-fx-background-color: transparent;");
+        bouton.setOnMouseEntered(e -> {
+            bouton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+            bouton.setScaleX(1.1);
+            bouton.setScaleY(1.1);
+        });
+        bouton.setOnMouseExited(e -> {
+            bouton.setStyle("-fx-background-color: transparent;");
             bouton.setScaleX(1);
             bouton.setScaleY(1);
         });

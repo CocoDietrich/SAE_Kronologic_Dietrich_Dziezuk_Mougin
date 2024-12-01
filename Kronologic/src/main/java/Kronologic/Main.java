@@ -18,8 +18,7 @@ public class Main {
         Temps tempsMeurtre = enquete.getTempsMeurtre();
 
         GestionnaireIndices gestionnaireIndices = partie.getGestionnaireIndices();
-        System.out.println(partie.poserQuestionPersonnage(new Lieu("Salle", 3, null), new Personnage("Détective")));
-        System.out.println(partie.poserQuestionTemps(new Lieu("Salle", 3, null), new Temps(3)));
-        partie.faireDeduction(new Lieu("Salle", 3, null), new Personnage("Chauffeur"), new Temps(6));
+        // Afficher tous les indices
+        System.out.println(gestionnaireIndices.getListeIndices());
     }
 }

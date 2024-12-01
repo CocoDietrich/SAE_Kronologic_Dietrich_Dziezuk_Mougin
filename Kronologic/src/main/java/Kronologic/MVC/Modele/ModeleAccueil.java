@@ -2,9 +2,12 @@ package Kronologic.MVC.Modele;
 
 
 import Kronologic.Data.JsonReader;
+import Kronologic.MVC.Controleur.ControleurPoseQuestion;
 import Kronologic.MVC.Controleur.ControleurQuitter;
+import Kronologic.MVC.Controleur.ControleurVisualiserPoseQuestion;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueCarte;
+import Kronologic.MVC.Vue.VuePoseQuestion;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -32,12 +35,29 @@ public class ModeleAccueil implements Sujet {
                 ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson("data/enquete_base.json"));
 
                 VueCarte vueCarte = new VueCarte();
+                VuePoseQuestion vuePoseQuestion = new VuePoseQuestion();
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
+                ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
+                ControleurPoseQuestion controleurPoseQuestion = new ControleurPoseQuestion(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
+                vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
+                vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);
+                vuePoseQuestion.annuler.setOnAction(controleurPoseQuestion);
+                vuePoseQuestion.valider.setOnAction(controleurPoseQuestion);
+                for (Button b : vuePoseQuestion.lieuButtons){
+                    b.setOnAction(controleurPoseQuestion);
+                }
+                for (Button b : vuePoseQuestion.tempsButtons){
+                    b.setOnAction(controleurPoseQuestion);
+                }
+                for (Button b : vuePoseQuestion.personnageButtons){
+                    b.setOnAction(controleurPoseQuestion);
+                }
 
                 modeleJeu.enregistrerObservateur(vueCarte);
+                modeleJeu.enregistrerObservateur(vuePoseQuestion);
 
                 BorderPane bp = new BorderPane(vueCarte);
 
