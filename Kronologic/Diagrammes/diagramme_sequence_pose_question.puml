@@ -1,0 +1,91 @@
+@startuml
+actor Utilisateur
+participant VueCarte
+participant ControleurVisualiserPoseQuestion
+participant ModeleJeu
+participant VuePoseQuestion
+participant ControleurPoseQuestion
+participant Partie
+participant GestionnaireIndices
+participant Indice
+
+Utilisateur -> VueCarte: clique sur "Poser une question"
+activate VueCarte
+
+VueCarte -> ControleurVisualiserPoseQuestion: handle(ActionEvent)
+activate ControleurVisualiserPoseQuestion
+
+ControleurVisualiserPoseQuestion -> ModeleJeu: visualiserPoseQuestion(Stage)
+activate ModeleJeu
+ModeleJeu --> ControleurVisualiserPoseQuestion: affiche la vue de pose de question
+deactivate ModeleJeu
+ControleurVisualiserPoseQuestion --> VueCarte : void
+deactivate ControleurVisualiserPoseQuestion
+VueCarte --> Utilisateur : la VueCarte laisse place à la VuePoseQuestion
+deactivate VueCarte
+
+Utilisateur -> VuePoseQuestion: sélectionne un lieu, ainsi qu'un temps ou un personnage
+activate VuePoseQuestion
+VuePoseQuestion -> ControleurPoseQuestion: transmet les choix (Lieu, Temps, Personnage) via la méthode handle()
+activate ControleurPoseQuestion
+
+ControleurPoseQuestion -> ModeleJeu: setLieuChoisi(Lieu)
+activate ModeleJeu
+ModeleJeu --> ControleurPoseQuestion: void
+deactivate ModeleJeu
+alt Le joueur a choisi un temps
+    ControleurPoseQuestion -> ModeleJeu: setTempsChoisi(Temps)
+    activate ModeleJeu
+    ModeleJeu --> ControleurPoseQuestion: void
+    deactivate ModeleJeu
+else Le joueur a choisi un personnage
+    ControleurPoseQuestion -> ModeleJeu: setPersonnageChoisi(Personnage)
+    activate ModeleJeu
+    ModeleJeu --> ControleurPoseQuestion: void
+    deactivate ModeleJeu
+end
+ControleurPoseQuestion --> VuePoseQuestion : void
+deactivate ControleurPoseQuestion
+VuePoseQuestion --> Utilisateur : les choix de l'utilisateur ont bien été pris en compte
+deactivate VuePoseQuestion
+
+Utilisateur -> VuePoseQuestion: clique sur "Valider"
+activate VuePoseQuestion
+VuePoseQuestion -> ControleurPoseQuestion: transmet l'option de validation via la méthode handle()
+activate ControleurPoseQuestion
+
+ControleurPoseQuestion -> ModeleJeu: poserQuestion(Stage)
+activate ModeleJeu
+alt Le joueur a choisi un temps
+    ModeleJeu -> Partie: poserQuestionTemps(Lieu, Temps)
+    activate Partie
+    Partie -> GestionnaireIndices: poserQuestionTemps(Lieu, Temps)
+    activate GestionnaireIndices
+    GestionnaireIndices -> Partie : Indice
+    deactivate GestionnaireIndices
+    Partie -> Partie: ajouterIndice(Indice)
+    Partie --> ModeleJeu : Indice
+    deactivate Partie
+else Le joueur a choisi un personnage
+    ModeleJeu -> Partie: poserQuestionPersonnage(Lieu, Personnage)
+    activate Partie
+    Partie -> GestionnaireIndices: poserQuestionPersonnage(Lieu, Personnage)
+    activate GestionnaireIndices
+    GestionnaireIndices -> Partie : Indice
+    deactivate GestionnaireIndices
+    Partie -> Partie: ajouterIndice(Indice)
+    Partie --> ModeleJeu : Indice
+    deactivate Partie
+end
+ModeleJeu --> VueCarte : notifierObservateurs()
+activate VueCarte
+VueCarte -> VueCarte: actualiser() (On actualise l'historique des indices)
+deactivate VueCarte
+ModeleJeu --> ModeleJeu : retourVueCarte(Stage)
+ModeleJeu --> ControleurPoseQuestion : Indice
+deactivate ModeleJeu
+ControleurPoseQuestion --> VuePoseQuestion : void
+deactivate ControleurPoseQuestion
+VuePoseQuestion --> Utilisateur : la question a bien été posée et un indice a été découvert et ajouté à l'historique
+deactivate VuePoseQuestion
+@enduml
