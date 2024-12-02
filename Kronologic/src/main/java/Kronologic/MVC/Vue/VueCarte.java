@@ -332,9 +332,9 @@ public class VueCarte extends BorderPane implements Observateur {
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
         if (historique.getText().equals("")) {
-            historique.setText("" + ModeleJeu.partie.getIndicesDecouverts().getLast());
+            historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
         } else {
-            historique.setText(historique.getText() + "\n" + ModeleJeu.partie.getIndicesDecouverts().getLast());
+            historique.setText(historique.getText() + "Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
         }
     }
 }

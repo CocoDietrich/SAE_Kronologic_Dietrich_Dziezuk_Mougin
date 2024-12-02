@@ -21,7 +21,7 @@ import java.util.List;
 public class ModeleJeu implements Sujet {
 
     private List<Observateur> observateurs;
-    public static Partie partie;
+    private static Partie partie;
     private boolean vueCarte;
     private Personnage deduPersonnage;
     private Lieu deduLieu;
@@ -212,5 +212,9 @@ public class ModeleJeu implements Sujet {
 
     public List<Observateur> getObservateurs() {
         return observateurs;
+    }
+
+    public static Partie getPartie() {
+        return partie;
     }
 }
