@@ -334,7 +334,7 @@ public class VueCarte extends BorderPane implements Observateur {
         if (historique.getText().equals("")) {
             historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
         } else {
-            historique.setText(historique.getText() + "Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
+            historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n" + historique.getText());
         }
     }
 }
