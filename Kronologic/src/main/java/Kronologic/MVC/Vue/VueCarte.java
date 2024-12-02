@@ -280,6 +280,16 @@ public class VueCarte extends BorderPane implements Observateur {
         retour.setGraphic(imageView);
         retour.setStyle("-fx-background-color: transparent;");
 
+        retour.setOnMouseEntered(e -> {
+            retour.setStyle("-fx-background-color: #800000; " +
+                    "-fx-cursor: hand;"); // Agrandir le bouton
+        });
+
+        retour.setOnMouseExited(e -> {
+            retour.setStyle("-fx-background-color: #800000; " +
+                    "-fx-cursor: hand;");
+        });
+        
         // Création de la zone pour le bouton retour (alignée à gauche)
         HBox retourBox = new HBox();
         retourBox.getChildren().add(retour);
