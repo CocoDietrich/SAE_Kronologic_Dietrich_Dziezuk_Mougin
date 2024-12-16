@@ -3,6 +3,7 @@ package Kronologic.MVC.Vue;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
+import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -57,7 +58,6 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
 
         this.setCenter(centre);
     }
-
 
     private VBox afficherContenu() {
         VBox contenu = new VBox(30);
@@ -127,6 +127,10 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
             Button lieuButton = creerButtonAvecImage(path);
             lieuButtons.add(lieuButton);
             lieuxBox.getChildren().add(lieuButton);
+
+            // Définir une taille relative (en pourcentage) basée sur la taille de la scène ou d'un conteneur parent stable
+            DoubleBinding largeurConteneur = this.widthProperty().multiply(0.15); // 15% de la largeur de la scène
+            lieuButton.prefWidthProperty().bind(largeurConteneur);
         }
 
         return lieuxBox;
@@ -153,6 +157,10 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
             Button tempsButton = creerButtonAvecImage(path);
             tempsButtons.add(tempsButton);
             tempsGrid.add(tempsButton, i % 2, i / 2);
+
+            // Lier les tailles des boutons à un pourcentage de la largeur du conteneur parent
+            DoubleBinding largeurConteneur = tempsGrid.widthProperty().multiply(0.2); // 20% de la largeur
+            tempsButton.prefWidthProperty().bind(largeurConteneur);
         }
 
         return tempsGrid;
@@ -179,6 +187,10 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
             Button personnageButton = creerButtonAvecImage(path);
             personnageButtons.add(personnageButton);
             persosGrid.add(personnageButton, i % 2, i / 2);
+
+            // Lier les tailles des boutons à un pourcentage de la largeur du conteneur parent
+            DoubleBinding largeurConteneur = persosGrid.widthProperty().multiply(0.2); // 20% de la largeur
+            personnageButton.prefWidthProperty().bind(largeurConteneur);
         }
 
         return persosGrid;
@@ -201,8 +213,6 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         boutonsBox.getChildren().addAll(retour, annuler, valider);
         return boutonsBox;
     }
-
-
 
     @Override
     public void actualiser() {

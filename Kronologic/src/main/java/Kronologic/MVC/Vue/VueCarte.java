@@ -1,11 +1,8 @@
 package Kronologic.MVC.Vue;
 
-import Kronologic.Jeu.Indice.Indice;
 import Kronologic.MVC.Modele.ModeleJeu;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
@@ -62,13 +59,10 @@ public class VueCarte extends BorderPane implements Observateur {
         // Positionner la vue supérieure dans la scène
         this.setTop(topPane);
 
-
-
         // Positionner la vue centrale
         this.setCenter(afficherMilieu());
 
         // Affichage des boutons d'action
-
         this.setBottom(afficherBoutonsBas());
     }
 
@@ -107,8 +101,6 @@ public class VueCarte extends BorderPane implements Observateur {
 
         grille.setBottom(cartesBas);
 
-
-
         // Retourner la grille
         return grille;
     }
@@ -127,30 +119,36 @@ public class VueCarte extends BorderPane implements Observateur {
         );
 
         HBox hBoxHaut = new HBox(5);
-        hBoxHaut.setSpacing(120);
+        hBoxHaut.setSpacing(180);  // Espacement ajusté pour une meilleure adaptation
         HBox hBoxBas = new HBox(5);
-        hBoxBas.setSpacing(120);
+        hBoxBas.setSpacing(180);
 
         // Ajout des six cartes 3 en lignes pour 2 en colonnes
         for (int i = 0; i < 6; i++) {
             VBox vBox = new VBox(5);
+
             // carte
             ImageView imageViewCarte = new ImageView(carte);
             imageViewCarte.setPreserveRatio(true);
-            imageViewCarte.setFitHeight(220);
+
+            // Ajuster la taille de l'image carte en fonction de l'espace disponible dans le conteneur parent
+            imageViewCarte.setFitHeight(200); // 100% de la hauteur disponible
+            imageViewCarte.setFitWidth(Double.MAX_VALUE); // Limite à 100% de la largeur disponible
 
             // temps
             ImageView imageViewTemps = new ImageView(Temps.get(i));
             imageViewTemps.setPreserveRatio(true);
-            imageViewTemps.setFitHeight(40);
+
+            // Ajuster la taille de l'image temps en fonction de l'espace disponible
+            imageViewTemps.setFitHeight(40); // 20% de la hauteur disponible
+            imageViewTemps.setFitWidth(Double.MAX_VALUE); // Limite à 100% de la largeur disponible
 
             vBox.getChildren().addAll(imageViewTemps, imageViewCarte);
             vBox.setAlignment(Pos.CENTER);
 
-            if (i < 3){
+            if (i < 3) {
                 hBoxHaut.getChildren().add(vBox);
-            }
-            else {
+            } else {
                 hBoxBas.getChildren().add(vBox);
             }
         }
@@ -190,8 +188,6 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return optionsDroite;
     }
-
-
 
     public TextArea afficherHistorique() {
         // Création d'une zone de texte non éditable
@@ -253,9 +249,6 @@ public class VueCarte extends BorderPane implements Observateur {
             );
         });
 
-
-
-
         // Positionnement dans le coin supérieur droit
         StackPane stackPane = new StackPane(regle);
         stackPane.setAlignment(Pos.TOP_RIGHT);
@@ -289,12 +282,12 @@ public class VueCarte extends BorderPane implements Observateur {
             retour.setStyle("-fx-background-color: #800000; " +
                     "-fx-cursor: hand;");
         });
-        
+
         // Création de la zone pour le bouton retour (alignée à gauche)
         HBox retourBox = new HBox();
         retourBox.getChildren().add(retour);
         retourBox.setAlignment(Pos.CENTER_LEFT);
-        retourBox.setPadding(new Insets(10));
+        retourBox.setPadding(new Insets(2, 0, 2, 0));
 
         return retourBox;
     }

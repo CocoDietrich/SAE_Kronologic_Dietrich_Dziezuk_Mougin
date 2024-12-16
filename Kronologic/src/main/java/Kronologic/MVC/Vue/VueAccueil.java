@@ -1,5 +1,6 @@
 package Kronologic.MVC.Vue;
 
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -27,9 +28,13 @@ public class VueAccueil extends BorderPane implements Observateur {
 
         VBox titreBox = new VBox(titre);
         titreBox.setAlignment(Pos.CENTER);
-        titreBox.setPadding(new Insets(50, 0, 0, 0));
-        this.setTop(titreBox);
 
+        // Utilisation de Bindings pour un padding en %
+        titreBox.paddingProperty().bind(Bindings.createObjectBinding(
+                () -> new Insets(getHeight() * 0.05, 0, 0, 0),
+                heightProperty()
+        ));
+        this.setTop(titreBox);
 
         jouer = creerButton("Jouer");
         IAJoueuse = creerButton("IAJoueuse");
@@ -37,14 +42,23 @@ public class VueAccueil extends BorderPane implements Observateur {
 
         VBox boutonsBox = new VBox(20);
         boutonsBox.setAlignment(Pos.CENTER);
-        boutonsBox.setPadding(new Insets(20));
-        boutonsBox.getChildren().addAll(jouer, IAJoueuse, quitter);
 
+        // Padding en fonction de la hauteur de la fenêtre
+        boutonsBox.paddingProperty().bind(Bindings.createObjectBinding(
+                () -> new Insets(getHeight() * 0.02),
+                heightProperty()
+        ));
+
+        boutonsBox.spacingProperty().bind(Bindings.createDoubleBinding(
+                () -> getHeight() * 0.03,
+                heightProperty()
+        ));
+
+        boutonsBox.getChildren().addAll(jouer, IAJoueuse, quitter);
         this.setCenter(boutonsBox);
     }
 
-
-    public static Button creerButton(String s){
+    public static Button creerButton(String s) {
         Button bouton = new Button(s);
         bouton.setId(s);
         bouton.setFont(Font.font("Arial", 18));
@@ -74,22 +88,34 @@ public class VueAccueil extends BorderPane implements Observateur {
             bouton.setScaleX(1);
             bouton.setScaleY(1);
         });
+
+        // Laisser JavaFX gérer la taille en fonction du texte
+        bouton.setMinWidth(Button.USE_COMPUTED_SIZE);
+        bouton.setPrefWidth(Button.USE_COMPUTED_SIZE);
+        bouton.setMaxWidth(Button.USE_COMPUTED_SIZE);
+
+        bouton.setMinHeight(Button.USE_COMPUTED_SIZE);
+        bouton.setPrefHeight(Button.USE_COMPUTED_SIZE);
+        bouton.setMaxHeight(Button.USE_COMPUTED_SIZE);
+
         return bouton;
     }
 
-    public static Button creerButtonAvecImage(String imagePath){
+
+    public static Button creerButtonAvecImage(String imagePath) {
         Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
-        imageView.setFitHeight(60);
+        imageView.fitHeightProperty().bind(Bindings.createDoubleBinding(
+                () -> imageView.getScene() == null ? 60 : imageView.getScene().getHeight() * 0.1,
+                imageView.sceneProperty()
+        ));
 
         Button bouton = creerButton("");
         String idBouton = imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.lastIndexOf("."));
         bouton.setId(idBouton);
         bouton.setGraphic(imageView);
-        bouton.setPrefSize(80, 80);
 
-        // L'arrière-plan des boutons avec image est transparent en toutes circonstances
         bouton.setStyle("-fx-background-color: transparent;");
         bouton.setOnMouseEntered(e -> {
             bouton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
@@ -101,6 +127,17 @@ public class VueAccueil extends BorderPane implements Observateur {
             bouton.setScaleX(1);
             bouton.setScaleY(1);
         });
+
+        bouton.prefWidthProperty().bind(Bindings.createDoubleBinding(
+                () -> bouton.getScene() == null ? 80 : bouton.getScene().getWidth() * 0.1,
+                bouton.sceneProperty()
+        ));
+
+        bouton.prefHeightProperty().bind(Bindings.createDoubleBinding(
+                () -> bouton.getScene() == null ? 80 : bouton.getScene().getHeight() * 0.1,
+                bouton.sceneProperty()
+        ));
+
         return bouton;
     }
 
