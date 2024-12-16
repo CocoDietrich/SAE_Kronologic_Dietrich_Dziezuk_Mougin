@@ -93,7 +93,7 @@ public class VueCarte extends BorderPane implements Observateur {
         HBox hBox = new HBox();
         hBox.getChildren().addAll(historique, optionsDroite);
         hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(800);
+        hBox.setSpacing(500);
 
         grille.setTop(cartesHaut); // Partie haute des cartes
 
@@ -119,9 +119,9 @@ public class VueCarte extends BorderPane implements Observateur {
         );
 
         HBox hBoxHaut = new HBox(5);
-        hBoxHaut.setSpacing(180);  // Espacement ajusté pour une meilleure adaptation
+        hBoxHaut.setSpacing(150);  // Espacement ajusté pour une meilleure adaptation
         HBox hBoxBas = new HBox(5);
-        hBoxBas.setSpacing(180);
+        hBoxBas.setSpacing(150);
 
         // Ajout des six cartes 3 en lignes pour 2 en colonnes
         for (int i = 0; i < 6; i++) {
@@ -132,7 +132,7 @@ public class VueCarte extends BorderPane implements Observateur {
             imageViewCarte.setPreserveRatio(true);
 
             // Ajuster la taille de l'image carte en fonction de l'espace disponible dans le conteneur parent
-            imageViewCarte.setFitHeight(200); // 100% de la hauteur disponible
+            imageViewCarte.setFitHeight(160); // 100% de la hauteur disponible
             imageViewCarte.setFitWidth(Double.MAX_VALUE); // Limite à 100% de la largeur disponible
 
             // temps
@@ -140,7 +140,7 @@ public class VueCarte extends BorderPane implements Observateur {
             imageViewTemps.setPreserveRatio(true);
 
             // Ajuster la taille de l'image temps en fonction de l'espace disponible
-            imageViewTemps.setFitHeight(40); // 20% de la hauteur disponible
+            imageViewTemps.setFitHeight(32); // 20% de la hauteur disponible
             imageViewTemps.setFitWidth(Double.MAX_VALUE); // Limite à 100% de la largeur disponible
 
             vBox.getChildren().addAll(imageViewTemps, imageViewCarte);
