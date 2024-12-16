@@ -32,11 +32,7 @@
 
 ### 4. Mode d’Emploi
 
-Afin de lancer l’application, il faut dans un premier temps cloner le dépôt.
-
-Cela se fait grâce à la commande git clone https://github.com/CocoDietrich/SAE_Kronologic_Dietrich_Dziezuk_Mougin.git.
-
-Ensuite, lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponibles.
+Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponibles.
 
 #### Fonctionnalités Disponibles :
 
