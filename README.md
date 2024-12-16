@@ -2,57 +2,35 @@
 
 ## Itération 1
 
-### 1. Partage du Travail
+### 1. Répartition des Tâches
 
-Équipe de Développement
+Mathieu : - Suivre un tutoriel complet sur Choco-Solver afin de se familiariser avec l’outil.
+          - Réaliser des prototypes pour résoudre des problèmes simples. Cela a pour objectif de saisir le fonctionnement de la programmation par contraintes.
+          - Comprendre comment intégrer Choco-Solver au projet.
+          
+Enzo et Corentin : - Encoder les données du jeu et créer des classes Java permettant de les modéliser (lieux, personnages, indices, temps).
+                   - Développer une architecture MVC afin de lier les données de jeu avec l’interface graphique de l’application.
+                   - Commencer le développement de l’interface graphique (page d’accueil et redirection vers la feuille de jeu).
 
-Développeur 1 : Responsable de l’implémentation de l’interface graphique (Vues et contrôleurs).
+### 2. Fonctionnalités Développées
 
-Développeur 2 : Responsable de la logique métier (Modèles et gestion des indices).
+- Créer une page d'accueil
+- Création de l'interface de jeu (éléments visuels de la feuille de jeu et de la pose de question)
+- Permettre au joueur de poser une question (sans le placement automatique des pions)
 
-Développeur 3 : Responsable de l’architecture globale et de l’intégration du modèle MVC.
+### 3. Dépendances
 
-Répartition des Tâches par Itération
+#### Bibliothèques Utilisées
 
-Itération 1 :
+- JavaFX : Pour la gestion de l’interface graphique.
 
-Développeur 1 : Création de VueAccueil, VueCarte, VuePoseQuestion.
+- PlantUML : Utilisé pour la génération des diagrammes UML.
 
-Développeur 2 : Développement de Partie, GestionnaireIndices, Indice.
+- Choco-Solver : Cette bibliothèque servira à développer les IA dans la suite du projet. Durant cette première itération, elle n'a été utilisée uniquement adin qu'on la comprenne et qu'on la prenne en main grâce à la réalisation des prototypes.
 
-Développeur 3 : Intégration des composants et mise en place de MainMVC.
+### 4. Mode d’Emploi
 
-2. Fonctionnalités Développées
-
-Itération 1 :
-
-Affichage de l’écran d’accueil avec options de lancement.
-
-Gestion de la vue des indices.
-
-Interaction utilisateur via boutons cliquables.
-
-Fonctionnalité "Poser une question" (sélection de lieu, temps et personnage).
-
-Mise à jour de l'historique des indices.
-
-3. Dépendances
-
-Bibliothèques Utilisées
-
-JavaFX : Pour la gestion de l’interface graphique.
-
-PlantUML : Utilisé pour la génération des diagrammes UML.
-
-JUnit 5 (prévu) : Pour les tests unitaires.
-
-4. Mode d’Emploi
-
-Lancer l’Application
-
-Cloner le dépôt :
-
-git clone <url_du_projet>
+Afin de lancer l’epplication, il faut dans un premier cloner le dépôt grâce à la commande git clone <url_du_projet>.
 
 Compiler le Projet :
 
