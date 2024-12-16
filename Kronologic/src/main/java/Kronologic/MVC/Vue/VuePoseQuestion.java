@@ -114,12 +114,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         lieuxBox.setAlignment(Pos.CENTER);
 
         List<String> lieuxImagesPaths = List.of(
-                "file:src/main/resources/Icons/Lieu_Salle_3.png",
-                "file:src/main/resources/Icons/Lieu_Scène_4.png",
-                "file:src/main/resources/Icons/Lieu_Foyer de la danse_5.png",
-                "file:src/main/resources/Icons/Lieu_Foyer du chant_6.png",
-                "file:src/main/resources/Icons/Lieu_Grand escalier_2.png",
-                "file:src/main/resources/Icons/Lieu_Grand foyer_1.png"
+                "file:img/Lieu_Salle_3.png",
+                "file:img/Lieu_Scène_4.png",
+                "file:img/Lieu_Foyer de la danse_5.png",
+                "file:img/Lieu_Foyer du chant_6.png",
+                "file:img/Lieu_Grand escalier_2.png",
+                "file:img/Lieu_Grand foyer_1.png"
         );
 
         lieuButtons = new ArrayList<>();
@@ -139,12 +139,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         tempsGrid.setVgap(10);
 
         List<String> tempsImagesPaths = List.of(
-                "file:src/main/resources/Icons/temps1.png",
-                "file:src/main/resources/Icons/temps2.png",
-                "file:src/main/resources/Icons/temps3.png",
-                "file:src/main/resources/Icons/temps4.png",
-                "file:src/main/resources/Icons/temps5.png",
-                "file:src/main/resources/Icons/temps6.png"
+                "file:img/temps1.png",
+                "file:img/temps2.png",
+                "file:img/temps3.png",
+                "file:img/temps4.png",
+                "file:img/temps5.png",
+                "file:img/temps6.png"
         );
 
         tempsButtons = new ArrayList<>();
@@ -165,12 +165,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         persosGrid.setVgap(10);
 
         List<String> personnagesImagesPaths = List.of(
-                "file:src/main/resources/Icons/Journaliste.png",
-                "file:src/main/resources/Icons/Baronne.png",
-                "file:src/main/resources/Icons/Servante.png",
-                "file:src/main/resources/Icons/Aventurière.png",
-                "file:src/main/resources/Icons/Chauffeur.png",
-                "file:src/main/resources/Icons/Détective.png"
+                "file:img/Journaliste.png",
+                "file:img/Baronne.png",
+                "file:img/Servante.png",
+                "file:img/Aventurière.png",
+                "file:img/Chauffeur.png",
+                "file:img/Détective.png"
         );
 
         personnageButtons = new ArrayList<>();
