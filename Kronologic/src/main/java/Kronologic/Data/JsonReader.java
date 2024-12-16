@@ -25,13 +25,11 @@ public class JsonReader {
 
             // Charger les lieux
             List<Lieu> lieux = new ArrayList<>();
-            Map<String, Lieu> lieuMap = new HashMap<>();
             int lieuId = 1;
             for (String key : jsonObject.keySet()) {
-                if (!isMetaKey(key)) {
+                if (isMetaKey(key)) {
                     Lieu lieu = new Lieu(key, lieuId++, new ArrayList<>());
                     lieux.add(lieu);
-                    lieuMap.put(key, lieu);
                 }
             }
 
@@ -42,11 +40,9 @@ public class JsonReader {
             }
 
             // Charger les personnages
-            List<Personnage> personnages = new ArrayList<>();
             Map<String, Personnage> personnageMap = new HashMap<>();
             for (String personnageNom : getAllPersonnagesFromJson(jsonObject)) {
                 Personnage personnage = new Personnage(personnageNom);
-                personnages.add(personnage);
                 personnageMap.put(personnageNom, personnage);
             }
 
@@ -162,7 +158,7 @@ public class JsonReader {
     private static Set<String> getAllPersonnagesFromJson(JsonObject jsonObject) {
         Set<String> personnages = new HashSet<>();
         for (String key : jsonObject.keySet()) {
-            if (!isMetaKey(key)) {
+            if (isMetaKey(key)) {
                 JsonArray lieuData = jsonObject.getAsJsonArray(key);
                 if (lieuData != null) {
                     for (JsonElement element : lieuData) {
@@ -192,9 +188,9 @@ public class JsonReader {
     }
 
     private static boolean isMetaKey(String key) {
-        return key.equals("idEnquete") || key.equals("nomEnquete") || key.equals("synopsis") ||
-                key.equals("enigme") || key.equals("loupeOr") || key.equals("loupeBronze") ||
-                key.equals("solution");
+        return !key.equals("idEnquete") && !key.equals("nomEnquete") && !key.equals("synopsis") &&
+                !key.equals("enigme") && !key.equals("loupeOr") && !key.equals("loupeBronze") &&
+                !key.equals("solution");
     }
 
 }

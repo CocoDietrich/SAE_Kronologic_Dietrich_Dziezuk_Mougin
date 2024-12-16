@@ -115,15 +115,15 @@ public class VueCarte extends BorderPane implements Observateur {
 
 
     public List<HBox> afficherCarte() {
-        Image carte = new Image("file:src/main/resources/Icons/plateau.png");
+        Image carte = new Image("file:img/plateau.png");
 
         List<Image> Temps = List.of(
-                new Image("file:src/main/resources/Icons/temps1.png"),
-                new Image("file:src/main/resources/Icons/temps2.png"),
-                new Image("file:src/main/resources/Icons/temps3.png"),
-                new Image("file:src/main/resources/Icons/temps4.png"),
-                new Image("file:src/main/resources/Icons/temps5.png"),
-                new Image("file:src/main/resources/Icons/temps6.png")
+                new Image("file:img/temps1.png"),
+                new Image("file:img/temps2.png"),
+                new Image("file:img/temps3.png"),
+                new Image("file:img/temps4.png"),
+                new Image("file:img/temps5.png"),
+                new Image("file:img/temps6.png")
         );
 
         HBox hBoxHaut = new HBox(5);
@@ -220,7 +220,7 @@ public class VueCarte extends BorderPane implements Observateur {
         regle.setId("boutonRegle");
 
         // Ajout de l'image (icône du livre)
-        Image regleImage = new Image("file:src/main/resources/Icons/regle.png");
+        Image regleImage = new Image("file:img/regle.png");
         ImageView imageViewRegle = new ImageView(regleImage);
         imageViewRegle.setPreserveRatio(true);
         imageViewRegle.setFitHeight(30); // Ajustez la taille si nécessaire
@@ -266,7 +266,7 @@ public class VueCarte extends BorderPane implements Observateur {
 
     public HBox afficherRetour(){
         // Bouton retour
-        Image flecheRetour = new Image("file:src/main/resources/Icons/flecheRetour.png");
+        Image flecheRetour = new Image("file:img/flecheRetour.png");
         ImageView imageView = new ImageView(flecheRetour);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(20);
@@ -304,7 +304,7 @@ public class VueCarte extends BorderPane implements Observateur {
         Button filmJoueur = creerButton("Film du joueur");
         Button filmPartie = creerButton("Film de la partie");
 
-        Image film = new Image("file:src/main/resources/Icons/film.png");
+        Image film = new Image("file:img/film.png");
         ImageView imageViewFilm = new ImageView(film);
         imageViewFilm.setPreserveRatio(true);
         imageViewFilm.setFitHeight(20);
