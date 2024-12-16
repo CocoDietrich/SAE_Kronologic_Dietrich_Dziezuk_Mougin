@@ -30,21 +30,12 @@ Enzo et Corentin : - Encoder les données du jeu et créer des classes Java perm
 
 ### 4. Mode d’Emploi
 
-Afin de lancer l’epplication, il faut dans un premier cloner le dépôt grâce à la commande git clone <url_du_projet>.
+Afin de lancer l’epplication, il faut dans un premier cloner le dépôt grâce à la commande git clone https://github.com/CocoDietrich/SAE_Kronologic_Dietrich_Dziezuk_Mougin.git.
+Ensuite, lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponibles.
 
-Compiler le Projet :
+#### Fonctionnalités Disponibles :
 
-javac -cp .;javafx-sdk/lib/* Kronologic/MainMVC.java
-
-Exécuter l’Application :
-
-java -cp .;javafx-sdk/lib/* Kronologic.MainMVC
-
-Fonctionnalités Disponibles
-
-Accueil : Lancer une partie ou quitter le jeu.
-
-Poser une Question : Sélectionner un lieu, un temps et un personnage.
-
-Affichage des Indices : Visualiser l’historique des indices découverts.
+- Accueil : Lancer une partie ou quitter le jeu.
+- Poser une Question : Sélectionner un lieu, un temps et un personnage.
+- Affichage des Indices : Visualiser l’historique des indices découverts.
 
