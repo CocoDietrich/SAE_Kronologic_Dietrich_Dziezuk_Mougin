@@ -4,13 +4,15 @@
 
 ### 1. Répartition des Tâches
 
-Mathieu : - Suivre un tutoriel complet sur Choco-Solver afin de se familiariser avec l’outil.
-          - Réaliser des prototypes pour résoudre des problèmes simples. Cela a pour objectif de saisir le fonctionnement de la programmation par contraintes.
-          - Comprendre comment intégrer Choco-Solver au projet.
+#### Mathieu :
+- Suivre un tutoriel complet sur Choco-Solver afin de se familiariser avec l’outil.
+- Réaliser des prototypes pour résoudre des problèmes simples. Cela a pour objectif de saisir le fonctionnement de la programmation par contraintes.
+- Comprendre comment intégrer Choco-Solver au projet.
           
-Enzo et Corentin : - Encoder les données du jeu et créer des classes Java permettant de les modéliser (lieux, personnages, indices, temps).
-                   - Développer une architecture MVC afin de lier les données de jeu avec l’interface graphique de l’application.
-                   - Commencer le développement de l’interface graphique (page d’accueil et redirection vers la feuille de jeu).
+#### Enzo et Corentin :
+- Encoder les données du jeu et créer des classes Java permettant de les modéliser (lieux, personnages, indices, temps).
+- Développer une architecture MVC afin de lier les données de jeu avec l’interface graphique de l’application.
+- Commencer le développement de l’interface graphique (page d’accueil et redirection vers la feuille de jeu).
 
 ### 2. Fonctionnalités Développées
 
