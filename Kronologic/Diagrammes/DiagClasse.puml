@@ -107,10 +107,10 @@ package "Kronologic" {
 }
 
 /' Relations entre les classes de Kronologic '/
-Lieu "1" -- "2..*" Lieu : - listeLieuxAdjacents
+Lieu "1" --> "2..*" Lieu : - listeLieuxAdjacents
 Partie "1" --> "1" Enquete : - enquete
-Partie "1" -- "1" Kronologic.Indice.GestionnaireIndices : - gestionnaireIndices
-Partie "1" -- "0..*" Kronologic.Indice.Indice : - indicesDecouverts
+Partie "1" --> "1" Kronologic.Indice.GestionnaireIndices : - gestionnaireIndices
+Partie "1" --> "0..*" Kronologic.Indice.Indice : - indicesDecouverts
 Partie "1" --> "1" Deroulement : - deroulement
 Enquete "1" --> "1" Personnage : - meurtrier
 Enquete "1" --> "1" Lieu : - lieuMeurtre
