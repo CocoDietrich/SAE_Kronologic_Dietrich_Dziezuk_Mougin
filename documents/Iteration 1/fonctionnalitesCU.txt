@@ -1,0 +1,68 @@
+Fonctionnalités développées au cours de l'itération 1 :
+
+- Créer une page d'accueil
+
+Condition de validation :
+La page permet de démarrer une nouvelle partie (bouton jouer : ouverture de l’interface de jeu), de tester l’IA joueuse ou de quitter l’application.
+
+- Création de l'interface de jeu (éléments visuels de la feuille de jeu et de la pose de question)
+
+Condition de validation :
+La page affiche : 
+	- Tous les éléments visuels (les 6 pas de temps avec les cartes),
+	- Les checkbox de modification de fonction des pions (hypothèse et absence),
+	- L’historique des indices dévoilés,
+	- Les différents boutons de jeu fonctionnels (poser une question, déduction de l’IA, faire une déduction, demander un indice),
+	- Les boutons d’affichage des présences et des absences (affichent des pions représentant les présences et/ou les absences selon les informations récoltées avec les questions) 	  ainsi que le bouton d’affichage des hypothèses (coché : affiche les hypothèses du joueur, décocher : désaffiche les hypothèses du joueur),
+	- Les boutons d’affichage des films des déplacements des personnages de la partie et du joueur,
+	- La flèche de retour en arrière
+
+- Permettre au joueur de poser une question (sans le placement automatique des pions)
+
+Condition de validation :
+	- Le joueur est redirigé sur une page lui permettant de sélectionner un lieu, et un temps ou un personnage.
+	- Dans le cas où il a choisi un temps, on affiche l’indice public (nombre de personnages dans le lieu au temps choisi) et l’indice privé (rejouer ou identité d’un personnage se 	  trouvant dans le lieu au temps choisi).
+	- Dans le cas où il a choisi un personnage, on affiche l’indice public (nombre de fois où le personnage choisi s’est trouvé dans le lieu) et l’indice privé (rejouer ou un temps où 	  il s’y trouvait).
+
+
+
+Cas d'utilisation développés au cours de l'itération 1 :
+
+- Cas d’utilisation : Créer une page d’accueil
+
+Acteur principal : Joueur.
+Objectifs : Permettre au joueur de démarrer une nouvelle partie ou de quitter l’application.
+Préconditions : L’application est lancée et affiche la page d’accueil.
+Postconditions : Le joueur peut accéder à l’interface de jeu ou quitter l’application.
+Scénario principal :
+Le joueur ouvre l’application.
+La page d’accueil s’affiche, avec deux options : Jouer et Quitter.
+Le joueur sélectionne Jouer.
+L’interface de jeu s’ouvre, et la partie est initialisée.
+Alternativement, le joueur sélectionne Quitter, et l’application se ferme.
+
+- Cas d’utilisation : Créer l’interface de jeu
+
+Acteur principal : Joueur.
+Objectifs : Générer une interface de jeu fonctionnelle, qu’elle soit sous forme de carte ou de tableaux, pour permettre au joueur d’interagir avec le jeu.
+Préconditions : Le joueur a démarré une nouvelle partie ou a basculé entre les affichages.
+Postconditions : Tous les éléments nécessaires au jeu sont affichés selon le type de vue sélectionné.
+Les 6 pas de temps sont affichés sous forme de cartes.
+Le joueur interagit avec les éléments spécifiques à l’affichage pour avancer dans la partie.
+
+- Cas d’utilisation : Permettre au joueur de poser une question
+
+Acteur principal : Joueur.
+Objectifs : Permettre au joueur de collecter des indices en posant des questions.
+Préconditions : Le joueur est en cours de partie et sur l’interface de jeu.
+Postconditions : Les indices récoltés sont ajoutés à l’historique et affichés.
+Scénario principal :
+	Le joueur appuie sur le bouton Poser une question.
+	Une fenêtre s’ouvre, proposant deux options : Choisir un lieu et un temps ou Choisir un lieu et un personnage.
+	Si le joueur choisit Lieu et Temps :
+		- L’indice public (nombre de personnages présents) est affiché.
+		- L’indice privé (identité d’un personnage ou rejouer) est révélé.
+	Si le joueur choisit Lieu et Personnage :
+		- L’indice public (nombre de passages) est affiché.
+		- L’indice privé (temps d’un passage ou rejouer) est révélé.
+	Les indices collectés s'ajoutent à l'historique des indices.
