@@ -71,7 +71,7 @@ public class VueCarte extends BorderPane implements Observateur {
     }
 
     public BorderPane afficherMilieu() {
-        // Création du GridPane
+        // Création du BorderPane
         BorderPane grille = new BorderPane();
         grille.setPadding(new Insets(10)); // Marges autour du GridPane
 
@@ -90,21 +90,33 @@ public class VueCarte extends BorderPane implements Observateur {
         historique = afficherHistorique();
         historique.setWrapText(true); // Texte ajusté
 
+        // Création du HBox central pour contenir l'historique à gauche et les optionsDroite à droite
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(historique, optionsDroite);
-        hBox.setAlignment(Pos.CENTER);
-        hBox.setSpacing(500);
+        hBox.setAlignment(Pos.CENTER); // Alignement général au centre
 
+        // Ajout de l'historique à gauche
+        HBox.setHgrow(historique, Priority.ALWAYS); // Permet à l'historique d'occuper tout l'espace restant
+        hBox.getChildren().add(historique); // Ajout de l'historique
+
+        // Ajout de la zone vide (Region) pour séparer l'historique et les boutons
+        Region espaceVide = new Region();
+        HBox.setHgrow(espaceVide, Priority.ALWAYS); // L'espace vide prend toute la place restante
+        hBox.getChildren().add(espaceVide); // Ajout de la zone vide
+
+        // Ajout des optionsDroite à droite
+        hBox.getChildren().add(optionsDroite); // Ajout des boutons à droite
+
+        // Assurez-vous que le HBox occupe toute la largeur disponible
+        hBox.setMaxWidth(Double.MAX_VALUE); // Prendre toute la largeur
+
+        // Définir le Top, Center et Bottom du BorderPane
         grille.setTop(cartesHaut); // Partie haute des cartes
-
-        grille.setCenter(hBox); // Partie basse des cartes
-
-        grille.setBottom(cartesBas);
+        grille.setCenter(hBox);   // Partie centrale avec l'historique à gauche et les optionsDroite à droite
+        grille.setBottom(cartesBas); // Partie basse des cartes
 
         // Retourner la grille
         return grille;
     }
-
 
     public List<HBox> afficherCarte() {
         Image carte = new Image("file:img/plateau.png");
@@ -194,12 +206,16 @@ public class VueCarte extends BorderPane implements Observateur {
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
         textArea.setWrapText(true);
-        textArea.setPrefSize(400, 150);
 
+        // Définir une largeur et une hauteur préférées, avec une taille minimale
+        textArea.setPrefWidth(450); // Largeur préférée
+        textArea.setPrefHeight(100); // Hauteur préférée
+        textArea.setMinWidth(200);  // Largeur minimale (permet de réduire la taille)
+        textArea.setMinHeight(50);  // Hauteur minimale (permet de réduire la taille)
 
         // Ajout de la zone de texte dans un ScrollPane
         ScrollPane scrollPane = new ScrollPane(textArea);
-        scrollPane.setFitToWidth(true); // Le scrollpane s'adapte à la largeur de la zone de texte
+        scrollPane.setFitToWidth(true); // Le ScrollPane s'adapte à la largeur de la zone de texte
         scrollPane.setFitToHeight(true); // S'adapte aussi à la hauteur
 
         // Personnalisation du ScrollPane
@@ -208,6 +224,7 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return textArea;
     }
+
 
 
     public StackPane afficherRegle() {
