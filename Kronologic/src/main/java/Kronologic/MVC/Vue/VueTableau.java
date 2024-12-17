@@ -1,10 +1,10 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.MVC.Modele.ModeleJeu;
+import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -14,9 +14,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerButton;
+import static Kronologic.MVC.Vue.VueAccueil.creerButtonAvecImage;
 import static Kronologic.MVC.Vue.VueCarte.*;
 
 public class VueTableau extends BorderPane implements Observateur {
@@ -178,27 +180,55 @@ public class VueTableau extends BorderPane implements Observateur {
 
         // On affiche les lieux en colonne
         for (int i = 0; i < 6; i++) {
-            Image image = Images.Lieu.get(i);
+            Image image = Images.Lieux.get(i);
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(30);
             tableau.add(imageView, 0, i + 1);
         }
 
+        List<String> elements = List.of("0", "1", "2", "3", "4", "5");
         // On ajoute les cases
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                GridPane caseNumero = creerCaseNumero();
-                tableau.add(caseNumero, i + 1, j + 1);
-            }
-        }
-
-        return tableau;
+        return creerCaseTableau(tableau, elements);
     }
 
     public GridPane afficherTableauTempsPersonnage(){
         GridPane tableau = creerTableauTemps();
         tableau.setAlignment(Pos.TOP_RIGHT);
+        tableau.setVgap(12);
+
+        // On affiche les personnages en colonne
+        List<String> personnagesImagesPaths = List.of(
+                Images.Personnages.PERSONNAGE1.getUrl(),
+                Images.Personnages.PERSONNAGE2.getUrl(),
+                Images.Personnages.PERSONNAGE3.getUrl(),
+                Images.Personnages.PERSONNAGE4.getUrl(),
+                Images.Personnages.PERSONNAGE5.getUrl(),
+                Images.Personnages.PERSONNAGE6.getUrl()
+        );
+
+        for (int i = 0; i < personnagesImagesPaths.size(); i++) {
+            String path = personnagesImagesPaths.get(i);
+            Image image = new Image(path);
+            ImageView imageView = new ImageView(image);
+            imageView.setPreserveRatio(true);
+            imageView.setFitWidth(30);
+            tableau.add(imageView, 0, i + 1);
+        }
+
+        List<String> elements = List.of("GF", "GE", "SA", "SC", "FD", "FC");
+        // On ajoute les cases
+        return creerCaseTableau(tableau, elements);
+    }
+
+    private GridPane creerCaseTableau(GridPane tableau, List<String> elements) {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                GridPane caseLettre = creerCase(elements);
+                tableau.add(caseLettre, i + 1, j + 1);
+            }
+        }
+
         return tableau;
     }
 
@@ -219,14 +249,16 @@ public class VueTableau extends BorderPane implements Observateur {
         return tableau;
     }
 
-    private GridPane creerCaseNumero(){
+
+
+    private GridPane creerCase(List<String> elements){
         GridPane caseNumero = new GridPane();
         caseNumero.setHgap(5);
         caseNumero.setVgap(5);
 
         // Partie Horizontal
         for (int i = 0; i < 6; i++) {
-            Text text = new Text(String.valueOf(i));
+            Text text = new Text(elements.get(i));
             text.setFont(Font.font("Arial", 10));
             text.setFill(Color.LIGHTGRAY);
             text.setUserData("neutral");

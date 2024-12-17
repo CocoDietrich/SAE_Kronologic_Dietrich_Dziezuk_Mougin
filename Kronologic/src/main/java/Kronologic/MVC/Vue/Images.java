@@ -43,7 +43,7 @@ public class Images {
         }
     }
 
-    public enum Lieu{
+    public enum Lieux {
         LIEU1("file:img/Lieu_Grand foyer_1.png"),
         LIEU2("file:img/Lieu_Grand escalier_2.png"),
         LIEU3("file:img/Lieu_Salle_3.png"),
@@ -54,7 +54,7 @@ public class Images {
         private final String url;
 
         // Constructeur de l'enum
-        Lieu(String url) {
+        Lieux(String url) {
             this.url = url;
         }
 
@@ -79,5 +79,44 @@ public class Images {
         public Image creerImage(){
             return new Image(url);
         }
+    }
+
+    public enum Personnages {
+        PERSONNAGE1("file:img/Aventurière.png"),
+        PERSONNAGE2("file:img/Baronne.png"),
+        PERSONNAGE3("file:img/Chauffeur.png"),
+        PERSONNAGE4("file:img/Détective.png"),
+        PERSONNAGE5("file:img/Journaliste.png"),
+        PERSONNAGE6("file:img/Servante.png");
+
+        private final String url;
+
+        // Constructeur de l'enum
+        Personnages(String url) {
+            this.url = url;
+        }
+
+        public static Image get(int i) {
+            return switch (i) {
+                case 0 -> PERSONNAGE1.creerImage();
+                case 1 -> PERSONNAGE2.creerImage();
+                case 2 -> PERSONNAGE3.creerImage();
+                case 3 -> PERSONNAGE4.creerImage();
+                case 4 -> PERSONNAGE5.creerImage();
+                case 5 -> PERSONNAGE6.creerImage();
+                default -> null;
+            };
+        }
+
+        // Méthode pour récupérer l'URL
+        public String getUrl() {
+            return url;
+        }
+
+        // Méthode pour créer l'image
+        public Image creerImage(){
+            return new Image(url);
+        }
+
     }
 }

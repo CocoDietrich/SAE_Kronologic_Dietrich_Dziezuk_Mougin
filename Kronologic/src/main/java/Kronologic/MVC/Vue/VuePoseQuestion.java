@@ -112,12 +112,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         lieuxBox.setAlignment(Pos.CENTER);
 
         List<String> lieuxImagesPaths = List.of(
-                Images.Lieu.LIEU1.getUrl(),
-                Images.Lieu.LIEU2.getUrl(),
-                Images.Lieu.LIEU3.getUrl(),
-                Images.Lieu.LIEU4.getUrl(),
-                Images.Lieu.LIEU5.getUrl(),
-                Images.Lieu.LIEU6.getUrl()
+                Images.Lieux.LIEU1.getUrl(),
+                Images.Lieux.LIEU2.getUrl(),
+                Images.Lieux.LIEU3.getUrl(),
+                Images.Lieux.LIEU4.getUrl(),
+                Images.Lieux.LIEU5.getUrl(),
+                Images.Lieux.LIEU6.getUrl()
         );
 
         lieuButtons = new ArrayList<>();
@@ -171,12 +171,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         persosGrid.setVgap(10);
 
         List<String> personnagesImagesPaths = List.of(
-                "file:img/Journaliste.png",
-                "file:img/Baronne.png",
-                "file:img/Servante.png",
-                "file:img/Aventurière.png",
-                "file:img/Chauffeur.png",
-                "file:img/Détective.png"
+                Images.Personnages.PERSONNAGE1.getUrl(),
+                Images.Personnages.PERSONNAGE2.getUrl(),
+                Images.Personnages.PERSONNAGE3.getUrl(),
+                Images.Personnages.PERSONNAGE4.getUrl(),
+                Images.Personnages.PERSONNAGE5.getUrl(),
+                Images.Personnages.PERSONNAGE6.getUrl()
         );
 
         personnageButtons = new ArrayList<>();
