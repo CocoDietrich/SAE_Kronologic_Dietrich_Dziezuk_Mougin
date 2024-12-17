@@ -106,7 +106,7 @@ public class VueTableau extends BorderPane implements Observateur {
     public GridPane afficherTableauTempsLieu(){
         GridPane tableau = creerTableauTemps();
         tableau.setAlignment(Pos.TOP_LEFT);
-        tableau.setVgap(20);
+        tableau.setVgap(15);
 
 
         // On affiche les lieux en colonne
@@ -114,7 +114,7 @@ public class VueTableau extends BorderPane implements Observateur {
             Image image = Images.Lieu.get(i);
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
-            imageView.setFitWidth(40);
+                imageView.setFitWidth(30);
             tableau.add(imageView, 0, i + 1);
         }
 
