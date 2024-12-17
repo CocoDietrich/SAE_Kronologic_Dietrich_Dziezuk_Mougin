@@ -11,14 +11,9 @@ import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueCarte;
 import Kronologic.MVC.Vue.VuePoseQuestion;
 import Kronologic.MVC.Vue.VueTableau;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;

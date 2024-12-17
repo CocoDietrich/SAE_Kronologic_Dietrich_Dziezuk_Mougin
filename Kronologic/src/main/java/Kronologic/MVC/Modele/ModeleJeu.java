@@ -4,7 +4,6 @@ import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
 import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
-import Kronologic.Jeu.Elements.Hypothese;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
