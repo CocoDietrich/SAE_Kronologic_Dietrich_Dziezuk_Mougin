@@ -8,6 +8,11 @@ import Kronologic.Jeu.Partie;
 public class IAAssistanceHeuristique extends IAAssistance {
     private Partie partie;
 
+    public IAAssistanceHeuristique(Partie partie) {
+        super();
+        this.partie = partie;
+    }
+
     @Override
     public Indice recommanderQuestionOptimal() {
         // TODO : Implémenter une heuristique pour recommander une question

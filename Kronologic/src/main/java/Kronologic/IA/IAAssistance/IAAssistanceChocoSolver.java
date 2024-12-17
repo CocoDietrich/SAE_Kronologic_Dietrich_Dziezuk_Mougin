@@ -8,6 +8,11 @@ import Kronologic.Jeu.Partie;
 public class IAAssistanceChocoSolver extends IAAssistance {
     private Partie partie;
 
+    public IAAssistanceChocoSolver(Partie partie) {
+        super();
+        this.partie = partie;
+    }
+
     @Override
     public Indice recommanderQuestionOptimal() {
         // TODO : Utiliser Choco-Solver pour identifier la question optimale

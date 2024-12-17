@@ -8,6 +8,8 @@ import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.Indice;
+import Kronologic.Jeu.Indice.IndicePersonnage;
+import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
@@ -24,18 +26,19 @@ public class ModeleJeu implements Sujet {
     private final List<Observateur> observateurs;
     private static Partie partie;
     private boolean vueCarte;
-    private Personnage deduPersonnage;
-    private Lieu deduLieu;
-    private Temps deduTemps;
-    private final IADeductionChocoSolver iaDeductionChocoSolver = new IADeductionChocoSolver();
-    private final IADeductionHeuristique iaDeductionHeuristique= new IADeductionHeuristique();
-    private final IAAssistanceChocoSolver iaAssistanceChocoSolver= new IAAssistanceChocoSolver();
-    private final IAAssistanceHeuristique iaAssistanceHeuristique= new IAAssistanceHeuristique();
+    private final IADeductionChocoSolver iaDeductionChocoSolver;
+    private final IADeductionHeuristique iaDeductionHeuristique;
+    private final IAAssistanceChocoSolver iaAssistanceChocoSolver;
+    private final IAAssistanceHeuristique iaAssistanceHeuristique;
 
     public ModeleJeu(Partie partie){
         this.observateurs = new ArrayList<>();
         ModeleJeu.partie = partie;
         this.vueCarte = true;
+        this.iaDeductionChocoSolver = new IADeductionChocoSolver(partie);
+        this.iaDeductionHeuristique = new IADeductionHeuristique(partie);
+        this.iaAssistanceChocoSolver = new IAAssistanceChocoSolver(partie);
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristique(partie);
     }
 
     // Méthode permettant de retourner à la vue de la carte
@@ -129,10 +132,31 @@ public class ModeleJeu implements Sujet {
 
         assert vuePoseQuestion != null;
         Indice i;
-        if (vuePoseQuestion.personnageChoisi != null){
+        if (vuePoseQuestion.personnageChoisi != null) {
             i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
+
+            // Ajouter contraintes publiques et privées
+            IndicePersonnage ip= (IndicePersonnage) i;
+            iaDeductionChocoSolver.ajouterContraintePersonnage(
+                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive()
+            );
+            iaDeductionChocoSolver.ajouterContrainteNombreDePassages(
+                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic()
+            );
         } else {
             i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
+
+            // Ajouter contraintes publiques et privées
+            IndiceTemps it = (IndiceTemps) i;
+            iaDeductionChocoSolver.ajouterContrainteTemps(
+                    it.getLieu(), it.getTemps(), it.getInfoPublic()
+            );
+
+            if (!it.getInfoPrive().equals("Rejouer")) {
+                iaDeductionChocoSolver.ajouterContraintePersonnage(
+                        new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur()
+                );
+            }
         }
 
         partie.ajouterIndice(i);
