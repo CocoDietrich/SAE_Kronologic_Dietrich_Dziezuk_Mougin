@@ -225,7 +225,7 @@ public class VueTableau extends BorderPane implements Observateur {
         caseNumero.setVgap(5);
 
         // Partie Horizontal
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             Text text = new Text(String.valueOf(i));
             text.setFont(Font.font("Arial", 10));
             text.setFill(Color.LIGHTGRAY);
