@@ -1,5 +1,10 @@
 package Kronologic.MVC.Modele;
 
+import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
+import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
+import Kronologic.IA.IADeduction.IADeductionChocoSolver;
+import Kronologic.IA.IADeduction.IADeductionHeuristique;
+import Kronologic.Jeu.Elements.Hypothese;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
@@ -20,12 +25,16 @@ import java.util.List;
 
 public class ModeleJeu implements Sujet {
 
-    private List<Observateur> observateurs;
+    private final List<Observateur> observateurs;
     private static Partie partie;
     private boolean vueCarte;
     private Personnage deduPersonnage;
     private Lieu deduLieu;
     private Temps deduTemps;
+    private final IADeductionChocoSolver iaDeductionChocoSolver = new IADeductionChocoSolver();
+    private final IADeductionHeuristique iaDeductionHeuristique= new IADeductionHeuristique();
+    private final IAAssistanceChocoSolver iaAssistanceChocoSolver= new IAAssistanceChocoSolver();
+    private final IAAssistanceHeuristique iaAssistanceHeuristique= new IAAssistanceHeuristique();
 
     public ModeleJeu(Partie partie){
         this.observateurs = new ArrayList<>();
@@ -144,8 +153,8 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
-    public void voirDeductionIA(){
-        //TODO
+    public String voirDeductionIA(){
+        return iaDeductionChocoSolver.afficherHistoriqueDeduction();
     }
 
     public void demanderIndice(){

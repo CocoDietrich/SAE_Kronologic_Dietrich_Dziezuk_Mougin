@@ -5,6 +5,7 @@ import Kronologic.Data.JsonReader;
 import Kronologic.MVC.Controleur.ControleurPoseQuestion;
 import Kronologic.MVC.Controleur.ControleurQuitter;
 import Kronologic.MVC.Controleur.ControleurVisualiserPoseQuestion;
+import Kronologic.MVC.Controleur.ControleurVoirDeductionIA;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueCarte;
 import Kronologic.MVC.Vue.VuePoseQuestion;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class ModeleAccueil implements Sujet {
 
-    private List<Observateur> observateurs;
+    private final List<Observateur> observateurs;
 
     public ModeleAccueil() {
         this.observateurs = new ArrayList<>();
@@ -40,12 +41,15 @@ public class ModeleAccueil implements Sujet {
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
                 ControleurPoseQuestion controleurPoseQuestion = new ControleurPoseQuestion(modeleJeu);
+                ControleurVoirDeductionIA controleurVoirDeductionIA = new ControleurVoirDeductionIA(modeleJeu);
+
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);
                 vuePoseQuestion.annuler.setOnAction(controleurPoseQuestion);
                 vuePoseQuestion.valider.setOnAction(controleurPoseQuestion);
+                vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
                 for (Button b : vuePoseQuestion.lieuButtons){
                     b.setOnAction(controleurPoseQuestion);
                 }
