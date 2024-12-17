@@ -1,5 +1,9 @@
 package Kronologic.MVC.Modele;
 
+import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
+import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
+import Kronologic.IA.IADeduction.IADeductionChocoSolver;
+import Kronologic.IA.IADeduction.IADeductionHeuristique;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
@@ -7,10 +11,7 @@ import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
-import Kronologic.MVC.Vue.Observateur;
-import Kronologic.MVC.Vue.VueAccueil;
-import Kronologic.MVC.Vue.VueCarte;
-import Kronologic.MVC.Vue.VuePoseQuestion;
+import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -20,20 +21,21 @@ import java.util.List;
 
 public class ModeleJeu implements Sujet {
 
-    private List<Observateur> observateurs;
+    private final List<Observateur> observateurs;
     private static Partie partie;
     private boolean vueCarte;
     private Personnage deduPersonnage;
     private Lieu deduLieu;
     private Temps deduTemps;
+    private final IADeductionChocoSolver iaDeductionChocoSolver = new IADeductionChocoSolver();
+    private final IADeductionHeuristique iaDeductionHeuristique= new IADeductionHeuristique();
+    private final IAAssistanceChocoSolver iaAssistanceChocoSolver= new IAAssistanceChocoSolver();
+    private final IAAssistanceHeuristique iaAssistanceHeuristique= new IAAssistanceHeuristique();
 
     public ModeleJeu(Partie partie){
         this.observateurs = new ArrayList<>();
         ModeleJeu.partie = partie;
         this.vueCarte = true;
-        this.deduPersonnage = null;
-        this.deduLieu = null;
-        this.deduTemps = null;
     }
 
     // Méthode permettant de retourner à la vue de la carte
@@ -47,6 +49,22 @@ public class ModeleJeu implements Sujet {
         }
 
         BorderPane bp = new BorderPane(vueCarte);
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // Méthode permettant de retourner à la vue de la carte
+    public void retourVueTableau(Stage stage){
+        VueTableau vueTableau = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VueTableau){
+                vueTableau = (VueTableau) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vueTableau);
         Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
         stage.setScene(scene);
         stage.show();
@@ -91,8 +109,13 @@ public class ModeleJeu implements Sujet {
         vuePoseQuestion.personnageChoisi = personnage;
     }
 
-    public void changerAffichage(){
-        //TODO
+    public void changerAffichage(Stage stage){
+        this.vueCarte = !this.vueCarte;
+        if (this.vueCarte){
+            retourVueCarte(stage);
+        } else {
+            retourVueTableau(stage);
+        }
     }
 
     public Indice poserQuestion(Stage stage){
@@ -103,6 +126,7 @@ public class ModeleJeu implements Sujet {
                 break;
             }
         }
+
         assert vuePoseQuestion != null;
         Indice i;
         if (vuePoseQuestion.personnageChoisi != null){
@@ -110,10 +134,15 @@ public class ModeleJeu implements Sujet {
         } else {
             i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
         }
+
         partie.ajouterIndice(i);
         notifierObservateurs();
         System.out.println("Réponse à la question posée : " + i);
-        retourVueCarte(stage);
+        if (isVueCarte()){
+            retourVueCarte(stage);
+        } else {
+            retourVueTableau(stage);
+        }
         return i;
     }
 
@@ -144,8 +173,8 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
-    public void voirDeductionIA(){
-        //TODO
+    public String voirDeductionIA(){
+        return iaDeductionChocoSolver.afficherHistoriqueDeduction();
     }
 
     public void demanderIndice(){
@@ -216,5 +245,9 @@ public class ModeleJeu implements Sujet {
 
     public static Partie getPartie() {
         return partie;
+    }
+
+    public boolean isVueCarte() {
+        return vueCarte;
     }
 }

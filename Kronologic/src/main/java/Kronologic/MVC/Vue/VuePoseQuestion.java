@@ -7,8 +7,6 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -114,12 +112,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         lieuxBox.setAlignment(Pos.CENTER);
 
         List<String> lieuxImagesPaths = List.of(
-                "file:img/Lieu_Salle_3.png",
-                "file:img/Lieu_Scène_4.png",
-                "file:img/Lieu_Foyer de la danse_5.png",
-                "file:img/Lieu_Foyer du chant_6.png",
-                "file:img/Lieu_Grand escalier_2.png",
-                "file:img/Lieu_Grand foyer_1.png"
+                Images.Lieu.LIEU1.getUrl(),
+                Images.Lieu.LIEU2.getUrl(),
+                Images.Lieu.LIEU3.getUrl(),
+                Images.Lieu.LIEU4.getUrl(),
+                Images.Lieu.LIEU5.getUrl(),
+                Images.Lieu.LIEU6.getUrl()
         );
 
         lieuButtons = new ArrayList<>();

@@ -95,7 +95,6 @@ public class VueCarte extends BorderPane implements Observateur {
         hBox.setAlignment(Pos.CENTER); // Alignement général au centre
 
         // Ajout de l'historique à gauche
-        HBox.setHgrow(historique, Priority.ALWAYS); // Permet à l'historique d'occuper tout l'espace restant
         hBox.getChildren().add(historique); // Ajout de l'historique
 
         // Ajout de la zone vide (Region) pour séparer l'historique et les boutons
@@ -122,12 +121,12 @@ public class VueCarte extends BorderPane implements Observateur {
         Image carte = new Image("file:img/plateau.png");
 
         List<Image> Temps = List.of(
-                new Image("file:img/temps1.png"),
-                new Image("file:img/temps2.png"),
-                new Image("file:img/temps3.png"),
-                new Image("file:img/temps4.png"),
-                new Image("file:img/temps5.png"),
-                new Image("file:img/temps6.png")
+                Images.Temps.TEMPS1.creerImage(),
+                Images.Temps.TEMPS2.creerImage(),
+                Images.Temps.TEMPS3.creerImage(),
+                Images.Temps.TEMPS4.creerImage(),
+                Images.Temps.TEMPS5.creerImage(),
+                Images.Temps.TEMPS6.creerImage()
         );
 
         HBox hBoxHaut = new HBox(5);
@@ -201,7 +200,7 @@ public class VueCarte extends BorderPane implements Observateur {
         return optionsDroite;
     }
 
-    public TextArea afficherHistorique() {
+    public static TextArea afficherHistorique() {
         // Création d'une zone de texte non éditable
         TextArea textArea = new TextArea();
         textArea.setEditable(false);
@@ -227,7 +226,7 @@ public class VueCarte extends BorderPane implements Observateur {
 
 
 
-    public StackPane afficherRegle() {
+    public static StackPane afficherRegle() {
         // Création du bouton sans texte
         Button regle = new Button();
         regle.setId("boutonRegle");
@@ -309,7 +308,7 @@ public class VueCarte extends BorderPane implements Observateur {
         return retourBox;
     }
 
-    public HBox afficherFilm() {
+    public static HBox afficherFilm() {
         // Boutons de film (joueur et partie)
         Button filmJoueur = creerButton("Film du joueur");
         Button filmPartie = creerButton("Film de la partie");
@@ -351,7 +350,7 @@ public class VueCarte extends BorderPane implements Observateur {
     @Override
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (historique.getText().equals("")) {
+        if (historique.getText().isEmpty()) {
             historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
         } else {
             historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n" + historique.getText());
