@@ -38,8 +38,11 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
         String id = ((Button) actionEvent.getSource()).getId();
         if (id.equals("Retour")) {
             // On retourne à la vue de la carte
-            this.modele.retourVueCarte(stage);
-
+            if(this.modele.isVueCarte()){
+                this.modele.retourVueCarte(stage);
+            } else {
+                this.modele.retourVueTableau(stage);
+            }
         } else if (id.startsWith("Lieu")) {
             // On récupère le nom et l'index du lieu
             String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));

@@ -46,6 +46,7 @@ public class ModeleAccueil implements Sujet {
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueCarte.changerAffichage.setOnAction(controleurAffichage);
+                vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);
                 vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);

@@ -19,7 +19,7 @@ import static Kronologic.MVC.Vue.VueAccueil.creerButton;
 
 public class VueCarte extends BorderPane implements Observateur {
 
-    public static Button retour;
+    public Button retour;
     public Button faireDeduction;
     public Button poserQuestion;
     public Button demanderIndice;
@@ -273,7 +273,7 @@ public class VueCarte extends BorderPane implements Observateur {
         return stackPane;
     }
 
-    public static HBox afficherRetour(){
+    public HBox afficherRetour(){
         // Bouton retour
         Image flecheRetour = new Image("file:img/flecheRetour.png");
         ImageView imageView = new ImageView(flecheRetour);
