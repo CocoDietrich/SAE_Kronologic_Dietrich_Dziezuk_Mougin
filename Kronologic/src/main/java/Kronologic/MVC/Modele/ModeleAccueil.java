@@ -2,15 +2,8 @@ package Kronologic.MVC.Modele;
 
 
 import Kronologic.Data.JsonReader;
-import Kronologic.MVC.Controleur.ControleurAffichage;
-import Kronologic.MVC.Controleur.ControleurPoseQuestion;
-import Kronologic.MVC.Controleur.ControleurQuitter;
-import Kronologic.MVC.Controleur.ControleurVisualiserPoseQuestion;
-import Kronologic.MVC.Controleur.ControleurVoirDeductionIA;
-import Kronologic.MVC.Vue.Observateur;
-import Kronologic.MVC.Vue.VueCarte;
-import Kronologic.MVC.Vue.VuePoseQuestion;
-import Kronologic.MVC.Vue.VueTableau;
+import Kronologic.MVC.Controleur.*;
+import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -35,6 +28,8 @@ public class ModeleAccueil implements Sujet {
                 VueCarte vueCarte = new VueCarte();
                 VueTableau vueTableau = new VueTableau();
                 VuePoseQuestion vuePoseQuestion = new VuePoseQuestion();
+                VueDeduction vueDeduction = new VueDeduction();
+                VuePopUpDeduction vuePopUpDeduction = new VuePopUpDeduction(stage, new Stage());
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
@@ -42,6 +37,10 @@ public class ModeleAccueil implements Sujet {
                 ControleurAffichage controleurAffichage = new ControleurAffichage(modeleJeu);
                 ControleurVoirDeductionIA controleurVoirDeductionIA = new ControleurVoirDeductionIA(modeleJeu);
 
+
+                ControleurVisualiserDeduction controleurVisualiserDeduction = new ControleurVisualiserDeduction(modeleJeu);
+                ControleurDeduction controleurDeduction = new ControleurDeduction(modeleJeu);
+                ControleurPopUpDeduction controleurPopUpDeduction = new ControleurPopUpDeduction(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -63,9 +62,27 @@ public class ModeleAccueil implements Sujet {
                     b.setOnAction(controleurPoseQuestion);
                 }
 
+                vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
+                vueDeduction.retour.setOnAction(controleurDeduction);
+                vueDeduction.annuler.setOnAction(controleurDeduction);
+                vueDeduction.valider.setOnAction(controleurDeduction);
+                for (Button b : vueDeduction.lieuButtons){
+                    b.setOnAction(controleurDeduction);
+                }
+                for (Button b : vueDeduction.tempsButtons){
+                    b.setOnAction(controleurDeduction);
+                }
+                for (Button b : vueDeduction.personnageButtons){
+                    b.setOnAction(controleurDeduction);
+                }
+
+                vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);
+
                 modeleJeu.enregistrerObservateur(vueCarte);
                 modeleJeu.enregistrerObservateur(vuePoseQuestion);
                 modeleJeu.enregistrerObservateur(vueTableau);
+                modeleJeu.enregistrerObservateur(vueDeduction);
+                modeleJeu.enregistrerObservateur(vuePopUpDeduction);
 
                 BorderPane bp = new BorderPane(vueCarte);
 

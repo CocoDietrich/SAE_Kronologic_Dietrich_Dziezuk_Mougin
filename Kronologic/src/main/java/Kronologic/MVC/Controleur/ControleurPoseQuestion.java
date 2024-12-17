@@ -55,7 +55,7 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
                     b.setDisable(true);
                 }
             }
-            modele.setLieuChoisi(lieu);
+            modele.setLieuChoisi(lieu, vuePoseQuestion);
 
         } else if (id.startsWith("temps")) {
             // On récupère l'index du temps
@@ -72,7 +72,7 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
             for (Button b : vuePoseQuestion.personnageButtons) {
                 b.setDisable(true);
             }
-            modele.setTempsChoisi(temps);
+            modele.setTempsChoisi(temps, vuePoseQuestion);
 
         } else if (id.equals("Valider")) {
             // On réactive tous les boutons pour les prichaines questions
@@ -103,14 +103,15 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
                 b.setDisable(false);
             }
             // On réinitialise les choix
-            modele.setLieuChoisi(null);
-            modele.setTempsChoisi(null);
-            modele.setPersonnageChoisi(null);
+            modele.setLieuChoisi(null, vuePoseQuestion);
+            modele.setTempsChoisi(null, vuePoseQuestion);
+            modele.setPersonnageChoisi(null, vuePoseQuestion);
         } else {
             // On récupère l'id du personnage
             personnage = new Personnage(id);
 
             // On désactive les boutons des autres personnages
+            assert vuePoseQuestion != null;
             for (Button b : vuePoseQuestion.personnageButtons) {
                 if (!b.getId().equals(id)) {
                     b.setDisable(true);
@@ -120,7 +121,7 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
             for (Button b : vuePoseQuestion.tempsButtons) {
                 b.setDisable(true);
             }
-            modele.setPersonnageChoisi(personnage);
+            modele.setPersonnageChoisi(personnage, vuePoseQuestion);
         }
     }
 }

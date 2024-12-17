@@ -3,6 +3,8 @@ package Kronologic.MVC.Controleur;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 public class ControleurVisualiserDeduction implements EventHandler<ActionEvent> {
 
@@ -14,6 +16,8 @@ public class ControleurVisualiserDeduction implements EventHandler<ActionEvent> 
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // TODO
+        // On passe à la vue de déduction
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        this.modele.visualiserDeduction(stage);
     }
 }

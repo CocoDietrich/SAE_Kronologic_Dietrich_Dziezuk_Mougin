@@ -14,6 +14,8 @@ import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Vue.*;
+import Kronologic.MVC.Controleur.ControleurQuitter;
+import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -73,43 +75,40 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    // Méthode permettant de stocker le lieu choisi pour la question posée par le joueur
-    public void setLieuChoisi(Lieu lieu){
-        VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePoseQuestion){
-                vuePoseQuestion = (VuePoseQuestion) o;
-                break;
-            }
+    // Méthode permettant de stocker le lieu choisi pour la question posée ou la déduction faite par le joueur
+    public void setLieuChoisi(Lieu lieu, Observateur vue){
+        assert vue != null;
+        if (vue instanceof VuePoseQuestion){
+            VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
+            vuePoseQuestion.lieuChoisi = lieu;
+        } else {
+            VueDeduction vueDeduction = (VueDeduction) vue;
+            vueDeduction.lieuMeurtre = lieu;
         }
-        assert vuePoseQuestion != null;
-        vuePoseQuestion.lieuChoisi = lieu;
     }
 
-    // Méthode permettant de stocker le temps choisi pour la question posée par le joueur
-    public void setTempsChoisi(Temps temps){
-        VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePoseQuestion){
-                vuePoseQuestion = (VuePoseQuestion) o;
-                break;
-            }
+    // Méthode permettant de stocker le temps choisi pour la question posée ou la déduction faite par le joueur
+    public void setTempsChoisi(Temps temps, Observateur vue){
+        assert vue != null;
+        if (vue instanceof VuePoseQuestion){
+            VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
+            vuePoseQuestion.tempsChoisi = temps;
+        } else {
+            VueDeduction vueDeduction = (VueDeduction) vue;
+            vueDeduction.tempsMeurtre = temps;
         }
-        assert vuePoseQuestion != null;
-        vuePoseQuestion.tempsChoisi = temps;
     }
 
-    // Méthode permettant de stocker le personnage choisi pour la question posée par le joueur
-    public void setPersonnageChoisi(Personnage personnage){
-        VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePoseQuestion){
-                vuePoseQuestion = (VuePoseQuestion) o;
-                break;
-            }
+    // Méthode permettant de stocker le personnage choisi pour la question posée ou la déduction faite par le joueur
+    public void setPersonnageChoisi(Personnage personnage, Observateur vue){
+        assert vue != null;
+        if (vue instanceof VuePoseQuestion){
+            VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
+            vuePoseQuestion.personnageChoisi = personnage;
+        } else {
+            VueDeduction vueDeduction = (VueDeduction) vue;
+            vueDeduction.meurtrier = personnage;
         }
-        assert vuePoseQuestion != null;
-        vuePoseQuestion.personnageChoisi = personnage;
     }
 
     public void changerAffichage(Stage stage){
@@ -189,12 +188,49 @@ public class ModeleJeu implements Sujet {
     }
 
     public boolean faireDeduction(){
-        //TODO
-        return false;
+        VueDeduction vueDeduction = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VueDeduction){
+                vueDeduction = (VueDeduction) o;
+                break;
+            }
+        }
+        assert vueDeduction != null;
+        boolean resultat = partie.faireDeduction(vueDeduction.lieuMeurtre, vueDeduction.meurtrier, vueDeduction.tempsMeurtre);
+
+        VuePopUpDeduction vuePopUpDeduction = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePopUpDeduction){
+                vuePopUpDeduction = (VuePopUpDeduction) o;
+                break;
+            }
+        }
+        assert vuePopUpDeduction != null;
+        vuePopUpDeduction.afficherPopUp(resultat);
+
+        if (resultat) {
+            System.out.println("Victoire enregistrée dans le modèle.");
+        } else {
+            System.out.println("Défaite enregistrée dans le modèle.");
+        }
+        return resultat;
     }
 
-    public void visualiserDeduction(){
-        //TODO
+    public void visualiserDeduction(Stage stage){
+        // On récupère la vuePoseQuestion dans la liste des observateurs
+        VueDeduction vueDeduction = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VueDeduction){
+                vueDeduction = (VueDeduction) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vueDeduction);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
     }
 
     public String voirDeductionIA(){
