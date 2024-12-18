@@ -98,9 +98,9 @@ public class VueCarte extends BorderPane implements Observateur {
         hBox.getChildren().add(historique); // Ajout de l'historique
 
         // Ajout de la zone vide (Region) pour séparer l'historique et les boutons
-        Region espaceVide = new Region();
-        HBox.setHgrow(espaceVide, Priority.ALWAYS); // L'espace vide prend toute la place restante
-        hBox.getChildren().add(espaceVide); // Ajout de la zone vide
+        VBox pions = afficherPions();
+        HBox.setHgrow(pions, Priority.ALWAYS); // L'espace vide prend toute la place restante
+        hBox.getChildren().add(pions); // Ajout de la zone vide
 
         // Ajout des optionsDroite à droite
         hBox.getChildren().add(optionsDroite); // Ajout des boutons à droite
@@ -116,6 +116,7 @@ public class VueCarte extends BorderPane implements Observateur {
         // Retourner la grille
         return grille;
     }
+
 
     public List<HBox> afficherCarte() {
         Image carte = new Image("file:img/plateau.png");
@@ -167,9 +168,54 @@ public class VueCarte extends BorderPane implements Observateur {
         return List.of(hBoxHaut, hBoxBas);
     }
 
-    public void afficherPions() {
-        // TODO : itération 2
+    private VBox afficherPions() {
+        VBox pionsVBox = new VBox(10); // Alignement vertical avec espacement
+        pionsVBox.setAlignment(Pos.CENTER);
+
+        // Pions des personnages
+        HBox pionsPersonnages = new HBox(15);
+        pionsPersonnages.setAlignment(Pos.CENTER);
+        String[] cheminsPions = {
+                "file:img/Aventurière.png",
+                "file:img/Baronne.png",
+                "file:img/Chauffeur.png",
+                "file:img/Détective.png",
+                "file:img/Journaliste.png",
+                "file:img/Servante.png"
+        };
+
+        for (String chemin : cheminsPions) {
+            ImageView pion = new ImageView(new Image(chemin));
+            pion.setFitHeight(50); // Taille uniforme plus grande
+            pion.setFitWidth(50);  // Taille uniforme plus grande
+            pion.setPreserveRatio(true);
+
+            // Changer le curseur en main au survol
+            pion.setOnMouseEntered(e -> pion.setCursor(javafx.scene.Cursor.HAND));
+            pion.setOnMouseExited(e -> pion.setCursor(javafx.scene.Cursor.DEFAULT));
+
+            pionsPersonnages.getChildren().add(pion);
+        }
+
+        // Création du pion de nombre (affiché en dessous des pions de personnages)
+        Button pionNombre = new Button("X");
+        pionNombre.setId("pionNombre");
+        pionNombre.setStyle("-fx-background-color: #464545; -fx-text-fill: #ffffff; -fx-font-size: 30px;");
+        pionNombre.setPrefWidth(45);
+        pionNombre.setPrefHeight(45);
+        pionNombre.setStyle("-fx-background-radius: 50%;");
+
+        // Changer le curseur pour le pion de nombre
+        pionNombre.setOnMouseEntered(e -> pionNombre.setCursor(javafx.scene.Cursor.HAND));
+        pionNombre.setOnMouseExited(e -> pionNombre.setCursor(javafx.scene.Cursor.DEFAULT));
+
+        // Ajout des pions dans le VBox principal
+        pionsVBox.getChildren().addAll(pionsPersonnages, pionNombre);
+
+        return pionsVBox;
     }
+
+
 
     public HBox afficherBoutonsBas() {
         // ======== Bas : Boutons d'action ========
