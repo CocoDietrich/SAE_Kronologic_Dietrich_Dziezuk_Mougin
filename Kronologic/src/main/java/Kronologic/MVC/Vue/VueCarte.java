@@ -104,10 +104,12 @@ public class VueCarte extends BorderPane implements Observateur {
         Button pionNombre = afficherPionNombre();
         CheckBox hypothese = afficherHypothese();
         CheckBox absence = afficherAbsence();
+        CheckBox masquerHypothese = afficherMasquerHypothese();
+        masquerHypothese.setAlignment(Pos.CENTER);
         hboxBas.getChildren().addAll(hypothese, pionNombre, absence);
         hboxBas.setAlignment(Pos.CENTER);
 
-        pions.getChildren().addAll(pionsPersonnages, hboxBas);
+        pions.getChildren().addAll(pionsPersonnages, hboxBas, masquerHypothese);
         pions.setAlignment(Pos.CENTER);
         HBox.setHgrow(pions, Priority.ALWAYS);
         hBox.getChildren().add(pions);
@@ -359,6 +361,12 @@ public class VueCarte extends BorderPane implements Observateur {
         return absence;
     }
 
+    public CheckBox afficherMasquerHypothese(){
+        CheckBox masquerHypothese = new CheckBox("Masquer les hypothèses");
+        masquerHypothese.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 12px;");
+        return masquerHypothese;
+    }
+
     public HBox afficherBoutonsBas() {
         // ======== Bas : Boutons d'action ========
         HBox boutonsBas = new HBox();
@@ -530,6 +538,7 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return List.of(afficherPresences, afficherAbsences);
     }
+
 
     @Override
     public void actualiser() {
