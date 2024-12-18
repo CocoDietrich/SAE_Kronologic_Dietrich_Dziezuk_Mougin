@@ -367,7 +367,7 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode affichant le pop-up de confirmation de quitter la partie
-    public void afficherPopUpQuitter(Stage stage){
+    public void afficherPopUpQuitter(){
         VuePopUpQuitter vuePopUpQuitter = null;
 
         for (Observateur o : observateurs){
@@ -378,9 +378,10 @@ public class ModeleJeu implements Sujet {
         }
 
         assert vuePopUpQuitter != null;
-        vuePopUpQuitter.afficherPopUp(stage);
+        vuePopUpQuitter.afficherPopUp();
     }
 
+    // Méthode permettant de quitter la partie
     public void quitter(String idBouton, Stage stage) {
         switch (idBouton) {
             case "retour":
@@ -408,6 +409,21 @@ public class ModeleJeu implements Sujet {
                 System.exit(0);
                 break;
         }
+    }
+
+    // Méthode affichant le pop-up de demande d'indice à l'IA
+    public void afficherPopUpDemanderIndice() {
+        VuePopUpDemanderIndice vuePopUpDemanderIndice = null;
+
+        for (Observateur o : observateurs){
+            if (o instanceof VuePopUpDemanderIndice){
+                vuePopUpDemanderIndice = (VuePopUpDemanderIndice) o;
+                break;
+            }
+        }
+
+        assert vuePopUpDemanderIndice != null;
+        vuePopUpDemanderIndice.afficherPopUp();
     }
 
     @Override
