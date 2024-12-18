@@ -136,27 +136,27 @@ public class ModeleJeu implements Sujet {
             i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
 
             // Ajouter contraintes publiques et privées
-            IndicePersonnage ip= (IndicePersonnage) i;
-            iaDeductionChocoSolver.ajouterContraintePersonnage(
-                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive()
-            );
-            iaDeductionChocoSolver.ajouterContrainteNombreDePassages(
-                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic()
-            );
+//            IndicePersonnage ip= (IndicePersonnage) i;
+//            iaDeductionChocoSolver.ajouterContraintePersonnage(
+//                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive()
+//            );
+//            iaDeductionChocoSolver.ajouterContrainteNombreDePassages(
+//                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic()
+//            );
         } else {
             i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
 
             // Ajouter contraintes publiques et privées
-            IndiceTemps it = (IndiceTemps) i;
-            iaDeductionChocoSolver.ajouterContrainteTemps(
-                    it.getLieu(), it.getTemps(), it.getInfoPublic()
-            );
-
-            if (!it.getInfoPrive().equals("Rejouer")) {
-                iaDeductionChocoSolver.ajouterContraintePersonnage(
-                        new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur()
-                );
-            }
+//            IndiceTemps it = (IndiceTemps) i;
+//            iaDeductionChocoSolver.ajouterContrainteTemps(
+//                    it.getLieu(), it.getTemps(), it.getInfoPublic()
+//            );
+//
+//            if (!it.getInfoPrive().equals("Rejouer")) {
+//                iaDeductionChocoSolver.ajouterContraintePersonnage(
+//                        new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur()
+//                );
+//            }
         }
 
         partie.ajouterIndice(i);
