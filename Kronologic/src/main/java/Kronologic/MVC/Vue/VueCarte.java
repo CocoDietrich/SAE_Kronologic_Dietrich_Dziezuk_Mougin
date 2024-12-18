@@ -3,10 +3,14 @@ package Kronologic.MVC.Vue;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -27,6 +31,7 @@ public class VueCarte extends BorderPane implements Observateur {
     public TextArea historique;
     public CheckBox hypothese;
     public CheckBox absence;
+    public List<Polygon> zonesDeJeu;
 
     public VueCarte() {
         super();
@@ -34,37 +39,30 @@ public class VueCarte extends BorderPane implements Observateur {
         this.setStyle("-fx-background-color: #800000;");
 
         HBox retourBox = afficherRetour();
-
         List<CheckBox> presenceAbsence = afficherPresenceAbsence();
 
         HBox films = afficherFilm();
         films.setAlignment(Pos.CENTER);
 
-        // Création de la zone centrale (checkboxes et boutons alignés au centre)
+        // Zone centrale
         HBox centreBox = new HBox(30);
         centreBox.getChildren().addAll(presenceAbsence.get(0), films, presenceAbsence.get(1));
         centreBox.setAlignment(Pos.CENTER);
-
 
         StackPane regle = afficherRegle();
         HBox regleBox = new HBox();
         regleBox.getChildren().add(regle);
         regleBox.setAlignment(Pos.TOP_RIGHT);
 
-        // Combinaison des deux zones dans un conteneur principal
         BorderPane topPane = new BorderPane();
         topPane.setLeft(retourBox);
         topPane.setCenter(centreBox);
         topPane.setRight(regleBox);
 
-        // Positionner la vue supérieure dans la scène
         this.setTop(topPane);
-
-        // Positionner la vue centrale
         this.setCenter(afficherMilieu());
-
-        // Affichage des boutons d'action
         this.setBottom(afficherBoutonsBas());
+
     }
 
     public void afficher(Stage stage) {
@@ -103,7 +101,7 @@ public class VueCarte extends BorderPane implements Observateur {
         VBox pions = new VBox(10);
         HBox pionsPersonnages = afficherPionsPersonnages();
         HBox hboxBas = new HBox(10);
-        Button pionNombre = afficherPionNombre();
+        ImageView pionNombre = afficherPionNombre();
         hypothese = afficherHypothese();
         absence = afficherAbsence();
         CheckBox masquerHypothese = afficherMasquerHypothese();
@@ -255,82 +253,152 @@ public class VueCarte extends BorderPane implements Observateur {
                 0, 70   // Coin inférieur gauche
         }, temps + " - Foyer de la Danse");
 
+        zonesDeJeu = List.of(zone1, zone2, zone3, zone4, zone5, zone6);
         return List.of(zone1, zone2, zone3, zone4, zone5, zone6);
     }
 
     private Polygon creerLieu(double[] points, String zoneName) {
-
         Polygon polygon = new Polygon(points);
-        polygon.setUserData(zoneName); // Nom de la zone
-        polygon.setFill(Color.TRANSPARENT); // Couleur transparente par défaut
+        polygon.setUserData(zoneName);
+        polygon.setFill(Color.TRANSPARENT);
 
-        polygon.setOnMouseEntered(event -> {
-            polygon.setFill(Color.LIGHTGRAY);
-            System.out.println("Vous survolez la zone : " + polygon.getUserData());
-        }); // Survol
-        polygon.setOnMouseExited(event -> polygon.setFill(Color.TRANSPARENT)); // Quitter
+        // Ajout de la réception du drag
+        polygon.setOnDragOver(event -> {
+            if (event.getGestureSource() instanceof ImageView && event.getDragboard().hasImage()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        polygon.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            if (db.hasImage()) {
+                // Création du pion déplacé
+                ImageView pionDeplace = new ImageView(db.getImage());
+                if (event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")).equals("pionNombre")) {
+                    pionDeplace.setFitHeight(65);
+                    pionDeplace.setFitWidth(65);
+                    pionDeplace.setId("pionNombre");
+                } else {
+                    pionDeplace.setFitHeight(40);
+                    pionDeplace.setFitWidth(40);
+                    pionDeplace.setId(event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")));
+                }
+                pionDeplace.setPreserveRatio(true);
+                pionDeplace.setStyle("-fx-cursor: hand;");
+
+                // Activer le drag & drop pour le pion déplacé
+                pionDeplace.setOnDragDetected(e -> {
+                    Dragboard newDb = pionDeplace.startDragAndDrop(TransferMode.MOVE);
+                    ClipboardContent content = new ClipboardContent();
+                    content.putImage(pionDeplace.getImage());
+                    newDb.setContent(content);
+                    e.consume();
+                });
+
+                pionDeplace.setOnDragDone(e -> {
+                    // Supprimer le pion si le dépôt n'est pas réussi
+                    if (!e.isDropCompleted()) {
+                        ((Pane) pionDeplace.getParent()).getChildren().remove(pionDeplace);
+                    }
+                    e.consume();
+                });
+
+                // Ajouter le pion dans le root principal (VueCarte)
+                VueCarte root = this;
+                root.getChildren().add(pionDeplace);
+
+                // Positionner le pion là où le curseur a été lâché
+                double sceneX = event.getSceneX();
+                double sceneY = event.getSceneY();
+                javafx.geometry.Point2D dropPoint = root.sceneToLocal(sceneX, sceneY);
+
+                pionDeplace.setLayoutX(dropPoint.getX() - pionDeplace.getFitWidth() / 2);
+                pionDeplace.setLayoutY(dropPoint.getY() - pionDeplace.getFitHeight() / 2);
+
+                event.setDropCompleted(true);
+            } else {
+                event.setDropCompleted(false);
+            }
+            event.consume();
+        });
 
         return polygon;
     }
 
     private HBox afficherPionsPersonnages() {
-        // Pions des personnages
         HBox pionsPersonnages = new HBox(15);
         pionsPersonnages.setAlignment(Pos.CENTER);
         String[] cheminsPions = {
-                Images.Personnages.PERSONNAGE1.getUrl(),
-                Images.Personnages.PERSONNAGE2.getUrl(),
-                Images.Personnages.PERSONNAGE3.getUrl(),
-                Images.Personnages.PERSONNAGE4.getUrl(),
-                Images.Personnages.PERSONNAGE5.getUrl(),
-                Images.Personnages.PERSONNAGE6.getUrl()
+                "file:img/Aventurière.png",
+                "file:img/Baronne.png",
+                "file:img/Chauffeur.png",
+                "file:img/Détective.png",
+                "file:img/Journaliste.png",
+                "file:img/Servante.png"
         };
 
         for (String chemin : cheminsPions) {
             ImageView pion = new ImageView(new Image(chemin));
-            pion.setFitHeight(50); // Taille uniforme plus grande
-            pion.setFitWidth(50);  // Taille uniforme plus grande
+            pion.setFitHeight(60);
+            pion.setFitWidth(60);
             pion.setPreserveRatio(true);
+            pion.setStyle("-fx-cursor: hand;");
+            pion.setId(chemin.substring(chemin.lastIndexOf("/") + 1, chemin.lastIndexOf(".")));
 
-            // Changer le curseur en main au survol
-            pion.setOnMouseEntered(e -> pion.setCursor(javafx.scene.Cursor.HAND));
-            pion.setOnMouseExited(e -> pion.setCursor(javafx.scene.Cursor.DEFAULT));
+            // Activation du Drag & Drop
+            pion.setOnDragDetected(event -> {
+                Dragboard db = pion.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(pion.getImage());
+                db.setContent(content);
+                event.consume();
+            });
+
+            pion.setOnDragDone(event -> event.consume());
 
             pionsPersonnages.getChildren().add(pion);
         }
-
         return pionsPersonnages;
     }
 
-    private Button afficherPionNombre(){
-        // Création du pion de nombre (affiché en dessous des pions de personnages)
-        Button pionNombre = new Button("X");
+    private ImageView afficherPionNombre() {
+        // Dossier contenant les images des nombres
+        String[] imagesPionNombre = {
+                "file:img/pions_nombres/Pion de Nombres.png",
+                "file:img/pions_nombres/Pion de Nombres_0.png",
+                "file:img/pions_nombres/Pion de Nombres_1.png",
+                "file:img/pions_nombres/Pion de Nombres_2.png",
+                "file:img/pions_nombres/Pion de Nombres_3.png",
+                "file:img/pions_nombres/Pion de Nombres_4.png",
+                "file:img/pions_nombres/Pion de Nombres_5.png",
+                "file:img/pions_nombres/Pion de Nombres_6.png"
+        };
+
+        // Création de l'image par défaut (Pion de Nombres.png)
+        ImageView pionNombre = new ImageView(new Image(imagesPionNombre[0]));
+        pionNombre.setFitWidth(90);
+        pionNombre.setFitHeight(90);
+        pionNombre.setPreserveRatio(true);
+        pionNombre.setStyle("-fx-cursor: hand;");
         pionNombre.setId("pionNombre");
-        pionNombre.setStyle("-fx-background-color: #464545; -fx-text-fill: #ffffff; -fx-font-size: 30px;");
-        pionNombre.setPrefWidth(45);
-        pionNombre.setPrefHeight(45);
-        pionNombre.setStyle("-fx-background-radius: 50%;");
 
-        // Changer le curseur pour le pion de nombre
-        pionNombre.setOnMouseEntered(e -> pionNombre.setCursor(javafx.scene.Cursor.HAND));
-        pionNombre.setOnMouseExited(e -> pionNombre.setCursor(javafx.scene.Cursor.DEFAULT));
-
-        // Ajouter l'événement de double-clic
-        pionNombre.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) { // Double-clic détecté
+        // Ajout du double-clic pour changer le nombre
+        pionNombre.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) { // Double-clic détecté
                 TextInputDialog dialog = new TextInputDialog();
-                dialog.setTitle("Modifier le texte du pion");
-                dialog.setHeaderText("Entrer un chiffre entre 0 et 5");
-                dialog.setContentText("Nouveau texte :");
+                dialog.setTitle("Modifier le pion de nombre");
+                dialog.setHeaderText("Entrer un chiffre entre 0 et 6");
+                dialog.setContentText("Nouveau chiffre :");
 
-                // Afficher la boîte de dialogue et récupérer la valeur saisie
                 dialog.showAndWait().ifPresent(input -> {
                     try {
-                        int value = Integer.parseInt(input); // Vérifie si c'est un entier
-                        if (value >= 0 && value <= 5) { // Vérifie que le chiffre est entre 0 et 5
-                            pionNombre.setText(String.valueOf(value));
+                        int value = Integer.parseInt(input); // Vérifie que c'est un entier
+                        if (value >= 0 && value <= 6) {
+                            // Mise à jour de l'image en fonction du chiffre sélectionné
+                            pionNombre.setImage(new Image(imagesPionNombre[value+1]));
                         } else {
-                            showAlert("Le nombre doit être entre 0 et 5 !");
+                            showAlert("Le nombre doit être entre 0 et 6 !");
                         }
                     } catch (NumberFormatException ex) {
                         showAlert("Veuillez entrer un chiffre valide !");
@@ -339,8 +407,20 @@ public class VueCarte extends BorderPane implements Observateur {
             }
         });
 
+        // Activation du Drag & Drop pour déplacer l'image
+        pionNombre.setOnDragDetected(event -> {
+            Dragboard db = pionNombre.startDragAndDrop(TransferMode.MOVE);
+            ClipboardContent content = new ClipboardContent();
+            content.putImage(pionNombre.getImage()); // Transfère l'image en cours
+            db.setContent(content);
+            event.consume();
+        });
+
+        pionNombre.setOnDragDone(event -> event.consume());
+
         return pionNombre;
     }
+
 
     // Méthode pour afficher une alerte en cas d'erreur
     private void showAlert(String message) {
