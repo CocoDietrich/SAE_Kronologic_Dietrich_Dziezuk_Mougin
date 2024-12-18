@@ -1,7 +1,6 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.MVC.Modele.ModeleJeu;
-import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,13 +11,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerButton;
-import static Kronologic.MVC.Vue.VueAccueil.creerButtonAvecImage;
 import static Kronologic.MVC.Vue.VueCarte.*;
 
 public class VueTableau extends BorderPane implements Observateur {
@@ -30,6 +27,7 @@ public class VueTableau extends BorderPane implements Observateur {
     public Button changerAffichage;
     public Button deductionIA;
     public TextArea historique;
+    public List<TextCase> listeCases = new ArrayList<>();
 
     public VueTableau() {
         super();
@@ -89,7 +87,6 @@ public class VueTableau extends BorderPane implements Observateur {
         for (GridPane tableau : tableaux) {
             tableauxBox.getChildren().add(tableau);
         }
-
 
         this.setCenter(tableauxBox);
 
@@ -177,7 +174,6 @@ public class VueTableau extends BorderPane implements Observateur {
         tableau.setAlignment(Pos.TOP_LEFT);
         tableau.setVgap(15);
 
-
         // On affiche les lieux en colonne
         for (int i = 0; i < 6; i++) {
             Image image = Images.Lieux.get(i);
@@ -197,19 +193,9 @@ public class VueTableau extends BorderPane implements Observateur {
         tableau.setAlignment(Pos.TOP_RIGHT);
         tableau.setVgap(12);
 
-        // On affiche les personnages en colonne
-        List<String> personnagesImagesPaths = List.of(
-                Images.Personnages.PERSONNAGE1.getUrl(),
-                Images.Personnages.PERSONNAGE2.getUrl(),
-                Images.Personnages.PERSONNAGE3.getUrl(),
-                Images.Personnages.PERSONNAGE4.getUrl(),
-                Images.Personnages.PERSONNAGE5.getUrl(),
-                Images.Personnages.PERSONNAGE6.getUrl()
-        );
 
-        for (int i = 0; i < personnagesImagesPaths.size(); i++) {
-            String path = personnagesImagesPaths.get(i);
-            Image image = new Image(path);
+        for (int i = 0; i < 6; i++) {
+            Image image = Images.Personnages.get(i);
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(30);
@@ -219,17 +205,6 @@ public class VueTableau extends BorderPane implements Observateur {
         List<String> elements = List.of("GF", "GE", "SA", "SC", "FD", "FC");
         // On ajoute les cases
         return creerCaseTableau(tableau, elements);
-    }
-
-    private GridPane creerCaseTableau(GridPane tableau, List<String> elements) {
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                GridPane caseLettre = creerCase(elements);
-                tableau.add(caseLettre, i + 1, j + 1);
-            }
-        }
-
-        return tableau;
     }
 
     public GridPane creerTableauTemps(){
@@ -249,21 +224,35 @@ public class VueTableau extends BorderPane implements Observateur {
         return tableau;
     }
 
+    private GridPane creerCaseTableau(GridPane tableau, List<String> elements) {
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                GridPane caseLettre = creerCase(elements, i + 1, j);
+                tableau.add(caseLettre, i + 1, j + 1);
+            }
+        }
 
+        return tableau;
+    }
 
-    private GridPane creerCase(List<String> elements){
+    private GridPane creerCase(List<String> elements, int temps, int lieuOuPersonnage){
         GridPane caseNumero = new GridPane();
         caseNumero.setHgap(5);
         caseNumero.setVgap(5);
 
-        // Partie Horizontal
         for (int i = 0; i < 6; i++) {
-            Text text = new Text(elements.get(i));
+            TextCase text = new TextCase(elements.get(i));
             text.setFont(Font.font("Arial", 10));
             text.setFill(Color.LIGHTGRAY);
-            text.setUserData("neutral");
-            text.setOnMouseClicked(e -> handleTextClick(text));
+            text.setEtat("neutre");
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+            text.setStyle("-fx-cursor: hand;");
+            if (elements.contains("0")){
+                text.setInfo("Nombre - " + temps + " - " + Images.Lieux.toString(lieuOuPersonnage));
+            }
+            else {
+                text.setInfo("Lieu - " + temps + " - " + Images.Personnages.toString(lieuOuPersonnage));
+            }
             if (i % 3 == 0) {
                 caseNumero.add(text, 0, (int) Math.floor((float) i / 3));
             } else if (i % 3 == 1) {
@@ -271,41 +260,11 @@ public class VueTableau extends BorderPane implements Observateur {
             } else {
                 caseNumero.add(text, 2, (int) Math.floor((float) i / 3));
             }
-
+            listeCases.add(text);
         }
 
         return caseNumero;
     }
-
-    private void handleTextClick(Text text) {
-        // Récupérer l'état actuel
-        String state = (String) text.getUserData();
-
-        // Basculer entre les états : neutre -> sélectionné -> absence -> neutre
-        switch (state) {
-            case "neutral":
-                // État sélectionné : texte noir et gras
-                text.setFill(Color.BLACK);
-                text.setStyle("-fx-font-weight: bold; -fx-strikethrough: false;");
-                text.setUserData("selected");
-                break;
-
-            case "selected":
-                // État absence : texte gris et barré
-                text.setFill(Color.GRAY);
-                text.setStyle("-fx-font-weight: normal; -fx-strikethrough: true;");
-                text.setUserData("absent");
-                break;
-
-            case "absent":
-                // Retour à l'état neutre
-                text.setFill(Color.LIGHTGRAY);
-                text.setStyle("-fx-font-weight: normal; -fx-strikethrough: false;");
-                text.setUserData("neutral");
-                break;
-        }
-    }
-
 
     @Override
     public void actualiser() {

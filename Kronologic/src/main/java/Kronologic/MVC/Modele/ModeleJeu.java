@@ -9,13 +9,9 @@ import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.Indice;
-import Kronologic.Jeu.Indice.IndicePersonnage;
-import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
-import Kronologic.MVC.Vue.*;
-import Kronologic.MVC.Controleur.ControleurQuitter;
 import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -235,7 +231,7 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de stocker les déplacements de pions de personnage du joueur
-    public void ajouterNote(Lieu l, Temps t, Personnage p) {
+    public void ajouterNote(Lieu l, Temps t, Personnage p, boolean hypothese, boolean absence) {
         Note n = new Note(l, t, p);
         VueCarte vueCarte = null;
         for (Observateur o : observateurs){
@@ -246,19 +242,14 @@ public class ModeleJeu implements Sujet {
         }
         assert vueCarte != null;
 
-        // On regarde si il s'agit d'une simple présence, ou d'une hypothèse et/ou d'une absence
-        if (vueCarte.hypothese.isSelected()) {
-            n.setEstHypothese(true);
-        }
-        if (vueCarte.absence.isSelected()) {
-            n.setEstAbsence(true);
-        }
+        n.setEstHypothese(hypothese);
+        n.setEstAbsence(absence);
 
         // On ajoute la note à la liste des notes
-        partie.getGestionnaireNotes().ajouterNote(n);
+        partie.ajouterNote(n);
     }
 
-    public void ajouterNote(Lieu l, Temps t, int nbPersonnages) {
+    public void ajouterNote(Lieu l, Temps t, int nbPersonnages, boolean hypothese, boolean absence) {
         Note n = new Note(l, t, nbPersonnages);
         VueCarte vueCarte = null;
         for (Observateur o : observateurs){
@@ -269,16 +260,43 @@ public class ModeleJeu implements Sujet {
         }
         assert vueCarte != null;
 
-        // On regarde si il s'agit d'une simple présence, ou d'une hypothèse et/ou d'une absence
-        if (vueCarte.hypothese.isSelected()) {
-            n.setEstHypothese(true);
-        }
-        if (vueCarte.absence.isSelected()) {
-            n.setEstAbsence(true);
-        }
+        n.setEstHypothese(hypothese);
+        n.setEstAbsence(absence);
 
         // On ajoute la note à la liste des notes
-        partie.getGestionnaireNotes().ajouterNote(n);
+        partie.ajouterNote(n);
+    }
+
+    public void modifierNote(Lieu l, Temps t, Personnage p, boolean absence, boolean hypothese) {
+        // On retrouve la note correspondante au pion placé
+        Note n = null;
+        for (Note note : partie.getGestionnaireNotes().getNotes()){
+            if (note.getLieu().getNom().equals(l.getNom())
+                    && note.getTemps().getValeur() == t.getValeur()
+                    && note.getPersonnage().getNom().equals(p.getNom())){
+                n = note;
+                break;
+            }
+        }
+
+        // On modifie la note
+        partie.modifierNote(n, absence, hypothese);
+    }
+
+    public void modifierNote(Lieu l, Temps t, int nbPersonnage, boolean absence, boolean hypothese) {
+        // On retrouve la note correspondante au pion placé
+        Note n = null;
+        for (Note note : partie.getGestionnaireNotes().getNotes()){
+            if (note.getLieu().getNom().equals(l.getNom())
+                    && note.getTemps().getValeur() == t.getValeur()
+                    && note.getNbPersonnages() == nbPersonnage){
+                n = note;
+                break;
+            }
+        }
+
+        // On modifie la note
+        partie.modifierNote(n, absence, hypothese);
     }
 
     // Méthode permettant de supprimer une note du joueur
@@ -286,28 +304,32 @@ public class ModeleJeu implements Sujet {
         // On retrouve la note correspondante au pion placé
         Note n = null;
         for (Note note : partie.getGestionnaireNotes().getNotes()){
-            if (note.getLieu().equals(l) && note.getTemps().equals(t) && note.getPersonnage().equals(p)){
+            if (note.getLieu().getNom().equals(l.getNom())
+                    && note.getTemps().getValeur() == t.getValeur()
+                    && note.getPersonnage().getNom().equals(p.getNom())){
                 n = note;
                 break;
             }
         }
 
         // On supprime la note de la liste des notes
-        partie.getGestionnaireNotes().supprimerNote(n);
+        partie.supprimerNote(n);
     }
 
     public void supprimerNote(Lieu l, Temps t, int nbPersonnages) {
         // On retrouve la note correspondante au pion placé
         Note n = null;
         for (Note note : partie.getGestionnaireNotes().getNotes()){
-            if (note.getLieu().equals(l) && note.getTemps().equals(t) && note.getNbPersonnages() == nbPersonnages){
+            if (note.getLieu().getNom().equals(l.getNom())
+                    && note.getTemps().getValeur() == t.getValeur()
+                    && note.getNbPersonnages() == nbPersonnages){
                 n = note;
                 break;
             }
         }
 
         // On supprime la note de la liste des notes
-        partie.getGestionnaireNotes().supprimerNote(n);
+        partie.supprimerNote(n);
     }
 
     public String voirDeductionIA(){

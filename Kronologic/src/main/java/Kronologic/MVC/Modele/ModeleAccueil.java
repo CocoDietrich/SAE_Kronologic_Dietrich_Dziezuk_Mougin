@@ -36,7 +36,7 @@ public class ModeleAccueil implements Sujet {
                 ControleurPoseQuestion controleurPoseQuestion = new ControleurPoseQuestion(modeleJeu);
                 ControleurAffichage controleurAffichage = new ControleurAffichage(modeleJeu);
                 ControleurVoirDeductionIA controleurVoirDeductionIA = new ControleurVoirDeductionIA(modeleJeu);
-
+                ControleurChoixTableau controleurChoixTableau = new ControleurChoixTableau(modeleJeu);
 
                 ControleurVisualiserDeduction controleurVisualiserDeduction = new ControleurVisualiserDeduction(modeleJeu);
                 ControleurDeduction controleurDeduction = new ControleurDeduction(modeleJeu);
@@ -48,6 +48,11 @@ public class ModeleAccueil implements Sujet {
                 vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);
+
+                for (TextCase tc : vueTableau.listeCases){
+                    tc.setOnMouseClicked(controleurChoixTableau);
+                }
+
                 vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);
                 vuePoseQuestion.annuler.setOnAction(controleurPoseQuestion);
                 vuePoseQuestion.valider.setOnAction(controleurPoseQuestion);

@@ -213,7 +213,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 30, 0, // Coin supérieur droit
                 30, 110, // Coin inférieur droit
                 0, 110   // Coin inférieur gauche
-        }, temps + " - Grand Foyer");
+        }, temps + " - Grand foyer");
 
         // Zone 2 (Salle Bleue au centre gauche)
         Polygon zone2 = creerLieu(new double[]{
@@ -221,7 +221,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 50, 0,  // Coin supérieur droit
                 50, 80,  // Coin inférieur droit
                 0, 80   // Coin inférieur gauche
-        }, temps + " - Grand Escalier");
+        }, temps + " - Grand escalier");
 
         // Zone 3 (Grande Scène Rouge)
         Polygon zone3 = creerLieu(new double[]{
@@ -245,7 +245,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 60, 0,  // Coin supérieur droit
                 60, 40, // Coin inférieur droit
                 0, 40  // Coin inférieur gauche
-        }, temps + " - Foyer du Chant");
+        }, temps + " - Foyer du chant");
 
         // Zone 6 (Salle Dorée en bas à droite)
         Polygon zone6 = creerLieu(new double[]{
@@ -253,7 +253,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 60, 0,  // Coin supérieur droit
                 60, 70,  // Coin inférieur droit
                 0, 70   // Coin inférieur gauche
-        }, temps + " - Foyer de la Danse");
+        }, temps + " - Foyer de la danse");
 
         return List.of(zone1, zone2, zone3, zone4, zone5, zone6);
     }

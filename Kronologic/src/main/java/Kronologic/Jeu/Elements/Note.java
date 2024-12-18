@@ -19,6 +19,25 @@ public class Note extends Position {
         this.estHypothese = false;
     }
 
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Note : ");
+        sb.append(this.getLieu().getNom());
+        sb.append(" - ");
+        sb.append(this.getTemps().getValeur());
+        sb.append(" - ");
+        if (this.getPersonnage() != null) {
+            sb.append(this.getPersonnage().getNom());
+        } else {
+            sb.append(this.getNbPersonnages());
+        }
+        sb.append(" - ");
+        sb.append(this.estAbsence);
+        sb.append(" - ");
+        sb.append(this.estHypothese);
+        return sb.toString();
+    }
+
     // Setter pour chaque attribut
     public void setEstAbsence(boolean estAbsence) {
         this.estAbsence = estAbsence;
