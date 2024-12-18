@@ -34,7 +34,6 @@ public class MainMVC extends Application {
         ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
         vueAccueil.quitter.setOnAction(controleurQuitterJeu);
 
-
         Scene scene = new Scene(bp);
         stage.setTitle("Kronologic");
         stage.setMaximized(true);

@@ -70,6 +70,18 @@ public class Images {
             };
         }
 
+        public static String toString(int i) {
+            return switch (i) {
+                case 0 -> "Grand foyer";
+                case 1 -> "Grand escalier";
+                case 2 -> "Salle";
+                case 3 -> "Scène";
+                case 4 -> "Foyer de la danse";
+                case 5 -> "Foyer du chant";
+                default -> null;
+            };
+        }
+
         // Méthode pour récupérer l'URL
         public String getUrl() {
             return url;
@@ -104,6 +116,18 @@ public class Images {
                 case 3 -> PERSONNAGE4.creerImage();
                 case 4 -> PERSONNAGE5.creerImage();
                 case 5 -> PERSONNAGE6.creerImage();
+                default -> null;
+            };
+        }
+
+        public static String toString(int i) {
+            return switch (i) {
+                case 0 -> "Aventurière";
+                case 1 -> "Baronne";
+                case 2 -> "Chauffeur";
+                case 3 -> "Détective";
+                case 4 -> "Journaliste";
+                case 5 -> "Servante";
                 default -> null;
             };
         }

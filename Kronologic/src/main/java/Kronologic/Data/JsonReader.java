@@ -41,8 +41,10 @@ public class JsonReader {
 
             // Charger les personnages
             Map<String, Personnage> personnageMap = new HashMap<>();
+            List<Personnage> personnages = new ArrayList<>();
             for (String personnageNom : getAllPersonnagesFromJson(jsonObject)) {
                 Personnage personnage = new Personnage(personnageNom);
+                personnages.add(personnage);
                 personnageMap.put(personnageNom, personnage);
             }
 
@@ -148,7 +150,7 @@ public class JsonReader {
             GestionnaireNotes gestionnaireNotes = new GestionnaireNotes();
 
             // Créer la partie
-            return new Partie(enquete, deroulement, gestionnaireIndices, gestionnaireNotes);
+            return new Partie(enquete, deroulement, gestionnaireIndices, gestionnaireNotes, new Elements(personnages, lieux));
 
         } catch (Exception e) {
             e.printStackTrace();

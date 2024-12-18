@@ -17,6 +17,15 @@ public class GestionnaireNotes {
         notes.add(n);
     }
 
+    public void modifierNote(Note n, boolean absence, boolean hypothese) {
+        for (Note note : notes) {
+            if (note.equals(n)) {
+                note.setEstAbsence(absence);
+                note.setEstHypothese(hypothese);
+            }
+        }
+    }
+
     // Méthode permettant de supprimer une note
     public void supprimerNote(Note n) {
         notes.remove(n);

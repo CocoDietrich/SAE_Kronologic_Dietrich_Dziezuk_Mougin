@@ -6,7 +6,6 @@ import Kronologic.Jeu.Elements.Temps;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueDeduction;
-import Kronologic.MVC.Vue.VuePoseQuestion;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

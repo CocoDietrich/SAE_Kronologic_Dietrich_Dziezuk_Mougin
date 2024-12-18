@@ -3,9 +3,7 @@ package Kronologic.Jeu;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.GestionnaireIndices;
 import Kronologic.Jeu.Indice.Indice;
-
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class Partie {
     private int nbQuestion;
@@ -14,14 +12,16 @@ public class Partie {
     private Deroulement deroulement;
     private GestionnaireIndices gestionnaireIndices;
     private GestionnaireNotes gestionnaireNotes;
+    private Elements elements;
 
-    public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes) {
+    public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes, Elements elements) {
         this.indicesDecouverts = new ArrayList<>();
         this.enquete = enquete;
         this.deroulement = deroulement;
         this.gestionnaireIndices = gestionnaireIndices;
         this.gestionnaireNotes = gestionnaireNotes;
         this.nbQuestion = 0;
+        this.elements = elements;
     }
 
     // Méthode permettant de poser une question sur un lieu et un personnage
@@ -53,6 +53,11 @@ public class Partie {
     // Méthode permettant d'ajouter une note du joueur (placer un pion)
     public void ajouterNote(Note n) {
         gestionnaireNotes.ajouterNote(n);
+    }
+
+    // Méthode permettant de modifier une note
+    public void modifierNote(Note n, boolean absence, boolean hypothese) {
+        gestionnaireNotes.modifierNote(n, absence, hypothese);
     }
 
     // Méthode permettant de retirer une note du joueur (enlever un pion des cartes)
@@ -89,5 +94,9 @@ public class Partie {
 
     public GestionnaireNotes getGestionnaireNotes() {
         return gestionnaireNotes;
+    }
+
+    public Elements getElements() {
+        return elements;
     }
 }
