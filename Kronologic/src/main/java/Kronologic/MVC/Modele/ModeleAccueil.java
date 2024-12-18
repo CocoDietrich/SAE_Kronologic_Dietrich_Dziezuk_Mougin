@@ -31,6 +31,7 @@ public class ModeleAccueil implements Sujet {
                 VueDeduction vueDeduction = new VueDeduction();
                 VuePopUpDeduction vuePopUpDeduction = new VuePopUpDeduction(stage, new Stage());
                 VuePopUpQuitter vuePopUpQuitter = new VuePopUpQuitter(stage);
+                VueRegle vueRegle = new VueRegle();
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
@@ -42,15 +43,19 @@ public class ModeleAccueil implements Sujet {
                 ControleurVisualiserDeduction controleurVisualiserDeduction = new ControleurVisualiserDeduction(modeleJeu);
                 ControleurDeduction controleurDeduction = new ControleurDeduction(modeleJeu);
                 ControleurPopUpDeduction controleurPopUpDeduction = new ControleurPopUpDeduction(modeleJeu);
-
+                ControleurVisualiserRegle controleurVisualiserRegle = new ControleurVisualiserRegle(modeleJeu);
                 ControleurPopUpQuitter controleurPopUpQuitter = new ControleurPopUpQuitter(modeleJeu);
+                ControleurRegle controleurRegle = new ControleurRegle(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueCarte.changerAffichage.setOnAction(controleurAffichage);
+                vueCarte.regle.setOnAction(controleurVisualiserRegle);
                 vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);
+                vueTableau.regle.setOnAction(controleurVisualiserRegle);
+                vueRegle.retour.setOnAction(controleurRegle);
 
                 for (TextCase tc : vueTableau.listeCases){
                     tc.setOnMouseClicked(controleurChoixTableau);
@@ -94,6 +99,7 @@ public class ModeleAccueil implements Sujet {
                 modeleJeu.enregistrerObservateur(vueDeduction);
                 modeleJeu.enregistrerObservateur(vuePopUpDeduction);
                 modeleJeu.enregistrerObservateur(vuePopUpQuitter);
+                modeleJeu.enregistrerObservateur(vueRegle);
 
                 BorderPane bp = new BorderPane(vueCarte);
 

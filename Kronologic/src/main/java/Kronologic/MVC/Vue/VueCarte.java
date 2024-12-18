@@ -3,7 +3,6 @@ package Kronologic.MVC.Vue;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -23,6 +22,7 @@ import static Kronologic.MVC.Vue.VueAccueil.creerButton;
 public class VueCarte extends BorderPane implements Observateur {
 
     public Button retour;
+    public Button regle;
     public Button faireDeduction;
     public Button poserQuestion;
     public Button demanderIndice;
@@ -35,7 +35,10 @@ public class VueCarte extends BorderPane implements Observateur {
 
     public VueCarte() {
         super();
+        afficher();
+    }
 
+    public void afficher() {
         this.setStyle("-fx-background-color: #800000;");
 
         HBox retourBox = afficherRetour();
@@ -63,10 +66,6 @@ public class VueCarte extends BorderPane implements Observateur {
         this.setCenter(afficherMilieu());
         this.setBottom(afficherBoutonsBas());
 
-    }
-
-    public void afficher(Stage stage) {
-        // TODO
     }
 
     public BorderPane afficherMilieu() {
@@ -330,12 +329,12 @@ public class VueCarte extends BorderPane implements Observateur {
         HBox pionsPersonnages = new HBox(15);
         pionsPersonnages.setAlignment(Pos.CENTER);
         String[] cheminsPions = {
-                "file:img/Aventurière.png",
-                "file:img/Baronne.png",
-                "file:img/Chauffeur.png",
-                "file:img/Détective.png",
-                "file:img/Journaliste.png",
-                "file:img/Servante.png"
+                Images.Personnages.PERSONNAGE1.getUrl(),
+                Images.Personnages.PERSONNAGE2.getUrl(),
+                Images.Personnages.PERSONNAGE3.getUrl(),
+                Images.Personnages.PERSONNAGE4.getUrl(),
+                Images.Personnages.PERSONNAGE5.getUrl(),
+                Images.Personnages.PERSONNAGE6.getUrl()
         };
 
         for (String chemin : cheminsPions) {
@@ -365,14 +364,13 @@ public class VueCarte extends BorderPane implements Observateur {
     private ImageView afficherPionNombre() {
         // Dossier contenant les images des nombres
         String[] imagesPionNombre = {
-                "file:img/pions_nombres/Pion de Nombres.png",
-                "file:img/pions_nombres/Pion de Nombres_0.png",
-                "file:img/pions_nombres/Pion de Nombres_1.png",
-                "file:img/pions_nombres/Pion de Nombres_2.png",
-                "file:img/pions_nombres/Pion de Nombres_3.png",
-                "file:img/pions_nombres/Pion de Nombres_4.png",
-                "file:img/pions_nombres/Pion de Nombres_5.png",
-                "file:img/pions_nombres/Pion de Nombres_6.png"
+                Images.Nombre.NOMBREX.getUrl(),
+                Images.Nombre.NOMBRE0.getUrl(),
+                Images.Nombre.NOMBRE1.getUrl(),
+                Images.Nombre.NOMBRE2.getUrl(),
+                Images.Nombre.NOMBRE3.getUrl(),
+                Images.Nombre.NOMBRE4.getUrl(),
+                Images.Nombre.NOMBRE5.getUrl()
         };
 
         // Création de l'image par défaut (Pion de Nombres.png)
@@ -388,17 +386,17 @@ public class VueCarte extends BorderPane implements Observateur {
             if (event.getClickCount() == 2) { // Double-clic détecté
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setTitle("Modifier le pion de nombre");
-                dialog.setHeaderText("Entrer un chiffre entre 0 et 6");
+                dialog.setHeaderText("Entrer un chiffre entre 0 et 5");
                 dialog.setContentText("Nouveau chiffre :");
 
                 dialog.showAndWait().ifPresent(input -> {
                     try {
                         int value = Integer.parseInt(input); // Vérifie que c'est un entier
-                        if (value >= 0 && value <= 6) {
+                        if (value >= 0 && value <= 5) {
                             // Mise à jour de l'image en fonction du chiffre sélectionné
                             pionNombre.setImage(new Image(imagesPionNombre[value+1]));
                         } else {
-                            showAlert("Le nombre doit être entre 0 et 6 !");
+                            showAlert("Le nombre doit être entre 0 et 5 !");
                         }
                     } catch (NumberFormatException ex) {
                         showAlert("Veuillez entrer un chiffre valide !");
@@ -501,12 +499,10 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return textArea;
     }
-
-
-
-    public static StackPane afficherRegle() {
+    
+    public StackPane afficherRegle() {
         // Création du bouton sans texte
-        Button regle = new Button();
+        regle = new Button();
         regle.setId("boutonRegle");
 
         // Ajout de l'image (icône du livre)
@@ -546,7 +542,6 @@ public class VueCarte extends BorderPane implements Observateur {
         // Positionnement dans le coin supérieur droit
         StackPane stackPane = new StackPane(regle);
         stackPane.setAlignment(Pos.TOP_RIGHT);
-
 
         return stackPane;
     }

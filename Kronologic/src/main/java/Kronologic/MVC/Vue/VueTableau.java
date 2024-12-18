@@ -21,6 +21,7 @@ import static Kronologic.MVC.Vue.VueCarte.*;
 public class VueTableau extends BorderPane implements Observateur {
 
     public Button retour;
+    public Button regle;
     public Button faireDeduction;
     public Button poserQuestion;
     public Button demanderIndice;
@@ -264,6 +265,52 @@ public class VueTableau extends BorderPane implements Observateur {
         }
 
         return caseNumero;
+    }
+
+    public StackPane afficherRegle() {
+        // Création du bouton sans texte
+        regle = new Button();
+        regle.setId("boutonRegle");
+
+        // Ajout de l'image (icône du livre)
+        Image regleImage = new Image("file:img/regle.png");
+        ImageView imageViewRegle = new ImageView(regleImage);
+        imageViewRegle.setPreserveRatio(true);
+        imageViewRegle.setFitHeight(30); // Ajustez la taille si nécessaire
+        regle.setGraphic(imageViewRegle);
+
+        // Application du style CSS pour un quart de cercle avec la bonne orientation et couleur
+        regle.setStyle("""
+            -fx-background-color: #FFCC66; /* Même couleur que les boutons */
+            -fx-background-radius: 0 0 0 100px; /* Quart de cercle (haut droit) */
+            -fx-padding: 20; /* Taille du bouton (ajustez selon vos besoins) */
+            -fx-border-radius: 0 0 100px 0; /* Coin arrondi */
+        """);
+
+        // Effets au survol de la souris
+        regle.setOnMouseEntered(e -> {
+            regle.setStyle(
+                    "-fx-background-color: #E6B85C; " +  // Changement de couleur
+                            "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
+                            "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
+                            "-fx-padding: 20;"  // Agrandir le bouton
+            );
+        });
+
+        regle.setOnMouseExited(e -> {
+            regle.setStyle(
+                    "-fx-background-color: #FFCC66; " +  // Couleur d'origine
+                            "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
+                            "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
+                            "-fx-padding: 20;"  // Taille d'origine du bouton
+            );
+        });
+
+        // Positionnement dans le coin supérieur droit
+        StackPane stackPane = new StackPane(regle);
+        stackPane.setAlignment(Pos.TOP_RIGHT);
+
+        return stackPane;
     }
 
     @Override

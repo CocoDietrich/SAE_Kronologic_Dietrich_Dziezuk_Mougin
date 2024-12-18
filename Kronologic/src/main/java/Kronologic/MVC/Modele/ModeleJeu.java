@@ -14,6 +14,7 @@ import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -344,8 +345,21 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
-    public void visualiserRegle(){
-        //TODO
+    public void visualiserRegle(Stage stage){
+        VueRegle vueRegle = new VueRegle();
+        for (Observateur o : observateurs){
+            if (o instanceof VueRegle){
+                vueRegle = (VueRegle) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vueRegle);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+
     }
 
     public void valider(){

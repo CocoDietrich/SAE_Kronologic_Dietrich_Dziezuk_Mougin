@@ -3,6 +3,8 @@ package Kronologic.MVC.Controleur;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 public class ControleurVisualiserRegle implements EventHandler<ActionEvent> {
 
@@ -14,6 +16,6 @@ public class ControleurVisualiserRegle implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // TODO
+        this.modele.visualiserRegle((Stage) ((Button) actionEvent.getSource()).getScene().getWindow());
     }
 }

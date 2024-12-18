@@ -141,6 +141,45 @@ public class Images {
         public Image creerImage(){
             return new Image(url);
         }
+    }
 
+    public enum Nombre {
+        NOMBREX("file:img/pions_nombres/Pion de Nombres.png"),
+        NOMBRE0("file:img/pions_nombres/Pion de Nombres_0.png"),
+        NOMBRE1("file:img/pions_nombres/Pion de Nombres_1.png"),
+        NOMBRE2("file:img/pions_nombres/Pion de Nombres_2.png"),
+        NOMBRE3("file:img/pions_nombres/Pion de Nombres_3.png"),
+        NOMBRE4("file:img/pions_nombres/Pion de Nombres_4.png"),
+        NOMBRE5("file:img/pions_nombres/Pion de Nombres_5.png");
+
+        private final String url;
+
+        // Constructeur de l'enum
+        Nombre(String url) {
+            this.url = url;
+        }
+
+        public static Image get(int i) {
+            return switch (i) {
+                case 0 -> NOMBREX.creerImage();
+                case 1 -> NOMBRE0.creerImage();
+                case 2 -> NOMBRE1.creerImage();
+                case 3 -> NOMBRE2.creerImage();
+                case 4 -> NOMBRE3.creerImage();
+                case 5 -> NOMBRE4.creerImage();
+                case 6 -> NOMBRE5.creerImage();
+                default -> null;
+            };
+        }
+
+        // Méthode pour récupérer l'URL
+        public String getUrl() {
+            return url;
+        }
+
+        // Méthode pour créer l'image
+        public Image creerImage(){
+            return new Image(url);
+        }
     }
 }
