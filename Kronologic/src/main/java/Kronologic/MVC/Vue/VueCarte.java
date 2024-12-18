@@ -25,6 +25,8 @@ public class VueCarte extends BorderPane implements Observateur {
     public Button changerAffichage;
     public Button deductionIA;
     public TextArea historique;
+    public CheckBox hypothese;
+    public CheckBox absence;
 
     public VueCarte() {
         super();
@@ -102,8 +104,8 @@ public class VueCarte extends BorderPane implements Observateur {
         HBox pionsPersonnages = afficherPionsPersonnages();
         HBox hboxBas = new HBox(10);
         Button pionNombre = afficherPionNombre();
-        CheckBox hypothese = afficherHypothese();
-        CheckBox absence = afficherAbsence();
+        hypothese = afficherHypothese();
+        absence = afficherAbsence();
         CheckBox masquerHypothese = afficherMasquerHypothese();
         masquerHypothese.setAlignment(Pos.CENTER);
         hboxBas.getChildren().addAll(hypothese, pionNombre, absence);

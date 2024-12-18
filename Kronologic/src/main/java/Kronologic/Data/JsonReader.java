@@ -145,9 +145,10 @@ public class JsonReader {
             Deroulement deroulement = new Deroulement(positions);
 
             GestionnaireIndices gestionnaireIndices = new GestionnaireIndices(indices);
+            GestionnaireNotes gestionnaireNotes = new GestionnaireNotes();
 
             // Créer la partie
-            return new Partie(enquete, deroulement, gestionnaireIndices);
+            return new Partie(enquete, deroulement, gestionnaireIndices, gestionnaireNotes);
 
         } catch (Exception e) {
             e.printStackTrace();

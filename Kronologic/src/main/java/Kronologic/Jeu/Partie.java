@@ -1,8 +1,6 @@
 package Kronologic.Jeu;
 
-import Kronologic.Jeu.Elements.Lieu;
-import Kronologic.Jeu.Elements.Personnage;
-import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.GestionnaireIndices;
 import Kronologic.Jeu.Indice.Indice;
 
@@ -15,12 +13,14 @@ public class Partie {
     private Enquete enquete;
     private Deroulement deroulement;
     private GestionnaireIndices gestionnaireIndices;
+    private GestionnaireNotes gestionnaireNotes;
 
-    public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices) {
+    public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes) {
         this.indicesDecouverts = new ArrayList<>();
         this.enquete = enquete;
         this.deroulement = deroulement;
         this.gestionnaireIndices = gestionnaireIndices;
+        this.gestionnaireNotes = gestionnaireNotes;
         this.nbQuestion = 0;
     }
 
@@ -50,6 +50,16 @@ public class Partie {
         return enquete.faireDeduction(l, p, t);
     }
 
+    // Méthode permettant d'ajouter une note du joueur (placer un pion)
+    public void ajouterNote(Note n) {
+        gestionnaireNotes.ajouterNote(n);
+    }
+
+    // Méthode permettant de retirer une note du joueur (enlever un pion des cartes)
+    public void supprimerNote(Note n) {
+        gestionnaireNotes.supprimerNote(n);
+    }
+
     // Méthode permettant à l'IA de demander un indice
     public Indice demanderIndice() {
         // TODO : à implémenter
@@ -75,5 +85,9 @@ public class Partie {
 
     public GestionnaireIndices getGestionnaireIndices() {
         return gestionnaireIndices;
+    }
+
+    public GestionnaireNotes getGestionnaireNotes() {
+        return gestionnaireNotes;
     }
 }

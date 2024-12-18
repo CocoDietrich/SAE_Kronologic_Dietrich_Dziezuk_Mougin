@@ -1,6 +1,5 @@
 package Kronologic.IA.IADeduction;
 
-import Kronologic.Jeu.Elements.Hypothese;
 import Kronologic.Jeu.Indice.Indice;
 import java.util.List;
 
