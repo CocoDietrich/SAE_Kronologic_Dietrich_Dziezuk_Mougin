@@ -258,12 +258,49 @@ public class ModeleJeu implements Sujet {
         partie.getGestionnaireNotes().ajouterNote(n);
     }
 
+    public void ajouterNote(Lieu l, Temps t, int nbPersonnages) {
+        Note n = new Note(l, t, nbPersonnages);
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VueCarte){
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+        assert vueCarte != null;
+
+        // On regarde si il s'agit d'une simple présence, ou d'une hypothèse et/ou d'une absence
+        if (vueCarte.hypothese.isSelected()) {
+            n.setEstHypothese(true);
+        }
+        if (vueCarte.absence.isSelected()) {
+            n.setEstAbsence(true);
+        }
+
+        // On ajoute la note à la liste des notes
+        partie.getGestionnaireNotes().ajouterNote(n);
+    }
+
     // Méthode permettant de supprimer une note du joueur
     public void supprimerNote(Lieu l, Temps t, Personnage p) {
         // On retrouve la note correspondante au pion placé
         Note n = null;
         for (Note note : partie.getGestionnaireNotes().getNotes()){
             if (note.getLieu().equals(l) && note.getTemps().equals(t) && note.getPersonnage().equals(p)){
+                n = note;
+                break;
+            }
+        }
+
+        // On supprime la note de la liste des notes
+        partie.getGestionnaireNotes().supprimerNote(n);
+    }
+
+    public void supprimerNote(Lieu l, Temps t, int nbPersonnages) {
+        // On retrouve la note correspondante au pion placé
+        Note n = null;
+        for (Note note : partie.getGestionnaireNotes().getNotes()){
+            if (note.getLieu().equals(l) && note.getTemps().equals(t) && note.getNbPersonnages() == nbPersonnages){
                 n = note;
                 break;
             }
