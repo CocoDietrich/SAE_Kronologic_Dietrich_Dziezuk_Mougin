@@ -30,6 +30,7 @@ public class ModeleAccueil implements Sujet {
                 VuePoseQuestion vuePoseQuestion = new VuePoseQuestion();
                 VueDeduction vueDeduction = new VueDeduction();
                 VuePopUpDeduction vuePopUpDeduction = new VuePopUpDeduction(stage, new Stage());
+                VuePopUpQuitter vuePopUpQuitter = new VuePopUpQuitter(stage);
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
@@ -41,6 +42,8 @@ public class ModeleAccueil implements Sujet {
                 ControleurVisualiserDeduction controleurVisualiserDeduction = new ControleurVisualiserDeduction(modeleJeu);
                 ControleurDeduction controleurDeduction = new ControleurDeduction(modeleJeu);
                 ControleurPopUpDeduction controleurPopUpDeduction = new ControleurPopUpDeduction(modeleJeu);
+
+                ControleurPopUpQuitter controleurPopUpQuitter = new ControleurPopUpQuitter(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -82,12 +85,15 @@ public class ModeleAccueil implements Sujet {
                 }
 
                 vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);
+                vuePopUpQuitter.annuler.setOnAction(controleurPopUpQuitter);
+                vuePopUpQuitter.valider.setOnAction(controleurPopUpQuitter);
 
                 modeleJeu.enregistrerObservateur(vueCarte);
                 modeleJeu.enregistrerObservateur(vuePoseQuestion);
                 modeleJeu.enregistrerObservateur(vueTableau);
                 modeleJeu.enregistrerObservateur(vueDeduction);
                 modeleJeu.enregistrerObservateur(vuePopUpDeduction);
+                modeleJeu.enregistrerObservateur(vuePopUpQuitter);
 
                 BorderPane bp = new BorderPane(vueCarte);
 

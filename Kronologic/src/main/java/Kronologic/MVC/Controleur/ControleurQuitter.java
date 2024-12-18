@@ -18,7 +18,7 @@ public class ControleurQuitter implements EventHandler<ActionEvent> {
     public void handle(ActionEvent actionEvent) {
         String id = ((Button)actionEvent.getSource()).getId();
         if (id.equals("retour")) {
-            this.modele.quitter(id, (Stage) ((Button) actionEvent.getSource()).getScene().getWindow());
+            this.modele.afficherPopUpQuitter((Stage) ((Button) actionEvent.getSource()).getScene().getWindow());
         }
     }
 }

@@ -352,6 +352,21 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
+    // Méthode affichant le pop-up de confirmation de quitter la partie
+    public void afficherPopUpQuitter(Stage stage){
+        VuePopUpQuitter vuePopUpQuitter = null;
+
+        for (Observateur o : observateurs){
+            if (o instanceof VuePopUpQuitter){
+                vuePopUpQuitter = (VuePopUpQuitter) o;
+                break;
+            }
+        }
+
+        assert vuePopUpQuitter != null;
+        vuePopUpQuitter.afficherPopUp(stage);
+    }
+
     public void quitter(String idBouton, Stage stage) {
         switch (idBouton) {
             case "retour":
