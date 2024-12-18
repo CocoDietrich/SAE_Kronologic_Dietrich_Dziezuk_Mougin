@@ -55,14 +55,13 @@ public class IADeductionChocoSolver extends IADeduction {
 
         for (int i = 0; i < personnages.length; i++) {
             for (int t = 0; t < 5; t++) {
-                // Déplacement obligatoire : Pi,t ≠ Pi,t+1
-                model.arithm(positions[i][t], "!=", positions[i][t + 1]).post();
-
-                // Salle actuelle et suivante
                 IntVar salleActuelle = positions[i][t];
                 IntVar salleSuivante = positions[i][t + 1];
 
-                // Définir les contraintes de salles adjacentes
+                // Déplacement obligatoire
+                model.arithm(salleActuelle, "!=", salleSuivante).post();
+
+                // Salles adjacentes
                 for (int salle = 1; salle <= 6; salle++) {
                     model.ifThen(
                             model.arithm(salleActuelle, "=", salle),
@@ -71,52 +70,6 @@ public class IADeductionChocoSolver extends IADeduction {
                 }
             }
         }
-    }
-
-    public void ajouterContraintePersonnage(Personnage personnage, Lieu lieu, int temps) {
-        int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
-
-        if (indexPersonnage != -1 && temps >= 1 && temps <= 6) {
-            model.arithm(positions[indexPersonnage][temps - 1], "=", lieu.getId()).post();
-        }
-    }
-
-
-    public void ajouterContrainteNombreDePassages(Personnage personnage, Lieu lieu, int nbPassages) {
-        int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
-
-        if (indexPersonnage != -1) {
-            IntVar[] passages = new IntVar[6];
-
-            for (int t = 0; t < 6; t++) {
-                passages[t] = model.intVar("Presence_" + personnage.getNom() + "_T" + (t + 1), 0, 1);
-
-                model.ifThenElse(
-                        model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
-                        model.arithm(passages[t], "=", 1),
-                        model.arithm(passages[t], "=", 0)
-                );
-            }
-
-            model.sum(passages, "=", nbPassages).post();
-        }
-    }
-
-    public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
-        IntVar[] personnagesAuTempsT = new IntVar[personnages.length];
-
-        for (int i = 0; i < personnages.length; i++) {
-            personnagesAuTempsT[i] = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
-
-            // Contraintes de présence
-            model.ifThenElse(
-                    model.arithm(positions[i][temps.getValeur() - 1], "=", lieu.getId()),
-                    model.arithm(personnagesAuTempsT[i], "=", 1),
-                    model.arithm(personnagesAuTempsT[i], "=", 0)
-            );
-        }
-
-        model.sum(personnagesAuTempsT, "=", nbPersonnages).post();
     }
 
     private int getIndexPersonnage(String personnage) {
@@ -128,62 +81,47 @@ public class IADeductionChocoSolver extends IADeduction {
         return -1;
     }
 
-
     @Override
     public void analyserIndices(List<Indice> indices) {
-        // Poster les contraintes déjà définies
-        model.getSolver().reset();
 
-        // Lancer la résolution
-        if (model.getSolver().solve()) {
-            System.out.println("===== Déduction Basée sur les Indices =====");
-
-            // Extraction des résultats après résolution
-            for (int i = 0; i < personnages.length; i++) {
-                for (int t = 0; t < 6; t++) {
-                    int salleTrouvee = positions[i][t].getValue();
-                    System.out.printf("%s_T%d = Salle %d%n", personnages[i], t + 1, salleTrouvee);
-                }
-            }
-
-            System.out.println("=== Exclusion des Suspects et Lieux Impossibles ===");
-            exclureSuspectsEtLieuxImpossibles();
-        } else {
-            System.out.println("Aucune solution trouvée avec les indices actuels.");
-        }
-    }
-
-    private void exclureSuspectsEtLieuxImpossibles() {
-        for (int i = 0; i < personnages.length; i++) {
-            boolean suspectElimine = true;
-
-            // Vérifier si le personnage a été présent dans toutes les salles impossibles
-            for (int salle = 1; salle <= 6; salle++) {
-                boolean estPresent = false;
-
-                for (int t = 0; t < 6; t++) {
-                    if (positions[i][t].contains(salle)) {
-                        estPresent = true;
-                        break;
-                    }
-                }
-
-                if (!estPresent) {
-                    System.out.printf("Le personnage %s n'a jamais été dans la salle %d.%n", personnages[i], salle);
-                } else {
-                    suspectElimine = false;
-                }
-            }
-
-            if (suspectElimine) {
-                System.out.printf("Le personnage %s est exclu de l'enquête.%n", personnages[i]);
-            }
-        }
     }
 
     @Override
     public String afficherHistoriqueDeduction() {
-        // TODO : Retourner l'historique des conclusions logiques et une proposition d'hypothèse
-        return null;
+        StringBuilder historique = new StringBuilder();
+        historique.append("===== Historique des Déductions =====\n");
+        try {
+            model.getSolver().propagate();
+        } catch (Exception e) {
+            System.out.println("Erreur de propagation : " + e.getMessage());
+        }
+        for (int i = 0; i < personnages.length; i++) {
+            for (int t = 0; t < 6; t++) {
+                IntVar position = positions[i][t];
+
+                // Afficher les salles fixées ou exclues
+                if (position.isInstantiated()) {
+                    // Si la variable est instanciée, afficher la valeur certaine
+                    int salleFixee = position.getValue();
+                    historique.append(String.format("%s, Salle %d, Temps %d => OUI%n", personnages[i], salleFixee, t + 1));
+
+                    // Marquer les autres salles comme impossibles
+                    for (int salle = 1; salle <= 6; salle++) {
+                        if (salle != salleFixee) {
+                            historique.append(String.format("%s, Salle %d, Temps %d => NON%n", personnages[i], salle, t + 1));
+                        }
+                    }
+                } else {
+                    // Si la variable n'est pas instanciée, utiliser son domaine réduit
+                    for (int salle = 1; salle <= 6; salle++) {
+                        if (!position.contains(salle)) { // Salle exclue du domaine
+                            historique.append(String.format("%s, Salle %d, Temps %d => NON%n", personnages[i], salle, t + 1));
+                        }
+                    }
+                }
+            }
+        }
+        return historique.toString();
     }
+
 }
