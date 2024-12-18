@@ -9,14 +9,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class VuePopUpQuitter implements Observateur {
+public class VuePopUpDemanderIndice implements Observateur {
 
     private final Stage stage;
     public Stage stageGlobal;
     public Button annuler;
     public Button valider;
 
-    public VuePopUpQuitter(Stage stageGlobal) {
+    public VuePopUpDemanderIndice(Stage stageGlobal) {
         this.stage = new Stage();
         this.stageGlobal = stageGlobal;
         this.annuler = new Button("Annuler");
@@ -27,7 +27,7 @@ public class VuePopUpQuitter implements Observateur {
         stage.setTitle("Quitter la Partie");
 
         // Texte principal
-        Text message = new Text("Êtes-vous sûr de vouloir quitter la partie en cours ?\n(Cette dernière ne sera pas sauvegardée).");
+        Text message = new Text("Êtes-vous sûr de vouloir demander un indice ?\n(Cela comptera comme une question).");
         message.setStyle("-fx-font-size: 18px; -fx-fill: #7b001e; -fx-font-weight: bold;");
 
         // Boutons

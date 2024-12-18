@@ -31,6 +31,7 @@ public class ModeleAccueil implements Sujet {
                 VueDeduction vueDeduction = new VueDeduction();
                 VuePopUpDeduction vuePopUpDeduction = new VuePopUpDeduction(stage, new Stage());
                 VuePopUpQuitter vuePopUpQuitter = new VuePopUpQuitter(stage);
+                VuePopUpDemanderIndice vuePopUpDemanderIndice = new VuePopUpDemanderIndice(stage);
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
@@ -38,16 +39,19 @@ public class ModeleAccueil implements Sujet {
                 ControleurAffichage controleurAffichage = new ControleurAffichage(modeleJeu);
                 ControleurVoirDeductionIA controleurVoirDeductionIA = new ControleurVoirDeductionIA(modeleJeu);
                 ControleurChoixTableau controleurChoixTableau = new ControleurChoixTableau(modeleJeu);
+                ControleurDemanderIndice controleurDemanderIndice = new ControleurDemanderIndice(modeleJeu);
 
                 ControleurVisualiserDeduction controleurVisualiserDeduction = new ControleurVisualiserDeduction(modeleJeu);
                 ControleurDeduction controleurDeduction = new ControleurDeduction(modeleJeu);
                 ControleurPopUpDeduction controleurPopUpDeduction = new ControleurPopUpDeduction(modeleJeu);
 
                 ControleurPopUpQuitter controleurPopUpQuitter = new ControleurPopUpQuitter(modeleJeu);
+                ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueCarte.changerAffichage.setOnAction(controleurAffichage);
+                vueCarte.demanderIndice.setOnAction(controleurDemanderIndice);
                 vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);
@@ -87,6 +91,8 @@ public class ModeleAccueil implements Sujet {
                 vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);
                 vuePopUpQuitter.annuler.setOnAction(controleurPopUpQuitter);
                 vuePopUpQuitter.valider.setOnAction(controleurPopUpQuitter);
+                vuePopUpDemanderIndice.annuler.setOnAction(controleurPopUpDemanderIndice);
+                vuePopUpDemanderIndice.valider.setOnAction(controleurPopUpDemanderIndice);
 
                 modeleJeu.enregistrerObservateur(vueCarte);
                 modeleJeu.enregistrerObservateur(vuePoseQuestion);
@@ -94,6 +100,7 @@ public class ModeleAccueil implements Sujet {
                 modeleJeu.enregistrerObservateur(vueDeduction);
                 modeleJeu.enregistrerObservateur(vuePopUpDeduction);
                 modeleJeu.enregistrerObservateur(vuePopUpQuitter);
+                modeleJeu.enregistrerObservateur(vuePopUpDemanderIndice);
 
                 BorderPane bp = new BorderPane(vueCarte);
 
