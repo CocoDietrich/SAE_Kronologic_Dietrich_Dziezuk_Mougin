@@ -3,10 +3,7 @@ package Kronologic.MVC.Vue;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -75,13 +72,13 @@ public class VueCarte extends BorderPane implements Observateur {
     public BorderPane afficherMilieu() {
         // Création du BorderPane
         BorderPane grille = new BorderPane();
-        grille.setPadding(new Insets(10)); // Marges autour du GridPane
+        grille.setPadding(new Insets(10)); // Marges autour du BorderPane
 
         // Récupération des cartes (partie haute et partie basse)
         List<HBox> cartes = afficherCarte(); // La liste contient deux HBox (haut et bas)
-        HBox cartesHaut = cartes.get(0); // Partie haute des cartes
+        HBox cartesHaut = cartes.get(0);
         cartesHaut.setAlignment(Pos.CENTER);
-        HBox cartesBas = cartes.get(1); // Partie basse des cartes
+        HBox cartesBas = cartes.get(1);
         cartesBas.setAlignment(Pos.CENTER);
 
         // Récupération des boutons (optionsDroite)
@@ -90,31 +87,42 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // Récupération de l'historique
         historique = afficherHistorique();
-        historique.setWrapText(true); // Texte ajusté
+        historique.setWrapText(true);
 
-        // Création du HBox central pour contenir l'historique à gauche et les optionsDroite à droite
+        // Création du HBox central
         HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER); // Alignement général au centre
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(50);
 
-        // Ajout de l'historique à gauche
-        hBox.getChildren().add(historique); // Ajout de l'historique
+        // Ajout de l'historique
+        hBox.getChildren().add(historique);
 
-        VBox pions = afficherPions();
-        //HBox.setHgrow(pions, Priority.ALWAYS); // L'espace vide prend toute la place restante
-        hBox.getChildren().add(pions); // Ajout de la zone vide
+        // Création des pions et des options supplémentaires
+        VBox pions = new VBox(10);
+        HBox pionsPersonnages = afficherPionsPersonnages();
+        HBox hboxBas = new HBox(10);
+        Button pionNombre = afficherPionNombre();
+        CheckBox hypothese = afficherHypothese();
+        CheckBox absence = afficherAbsence();
+        hboxBas.getChildren().addAll(hypothese, pionNombre, absence);
+        hboxBas.setAlignment(Pos.CENTER);
 
-        // Ajout des optionsDroite à droite
-        hBox.getChildren().add(optionsDroite); // Ajout des boutons à droite
+        pions.getChildren().addAll(pionsPersonnages, hboxBas);
+        pions.setAlignment(Pos.CENTER);
+        HBox.setHgrow(pions, Priority.ALWAYS);
+        hBox.getChildren().add(pions);
 
-        // Assurez-vous que le HBox occupe toute la largeur disponible
-        hBox.setMaxWidth(Double.MAX_VALUE); // Prendre toute la largeur
+        // Ajout des boutons à droite
+        hBox.getChildren().add(optionsDroite);
+
+        // Forcer hBox à s'étendre sur toute la largeur
+        hBox.setMaxWidth(Double.MAX_VALUE);
 
         // Définir le Top, Center et Bottom du BorderPane
-        grille.setTop(cartesHaut); // Partie haute des cartes
-        grille.setCenter(hBox);   // Partie centrale avec l'historique à gauche et les optionsDroite à droite
-        grille.setBottom(cartesBas); // Partie basse des cartes
+        grille.setTop(cartesHaut);
+        grille.setCenter(hBox);
+        grille.setBottom(cartesBas);
 
-        // Retourner la grille
         return grille;
     }
 
@@ -177,53 +185,6 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // Retourner les deux conteneurs HBox contenant les cartes
         return List.of(hBoxHaut, hBoxBas);
-    }
-
-    private VBox afficherPions() {
-        VBox pionsVBox = new VBox(10); // Alignement vertical avec espacement
-        pionsVBox.setAlignment(Pos.CENTER);
-
-        // Pions des personnages
-        HBox pionsPersonnages = new HBox(15);
-        pionsPersonnages.setAlignment(Pos.CENTER);
-        String[] cheminsPions = {
-                "file:img/Aventurière.png",
-                "file:img/Baronne.png",
-                "file:img/Chauffeur.png",
-                "file:img/Détective.png",
-                "file:img/Journaliste.png",
-                "file:img/Servante.png"
-        };
-
-        for (String chemin : cheminsPions) {
-            ImageView pion = new ImageView(new Image(chemin));
-            pion.setFitHeight(50); // Taille uniforme plus grande
-            pion.setFitWidth(50);  // Taille uniforme plus grande
-            pion.setPreserveRatio(true);
-
-            // Changer le curseur en main au survol
-            pion.setOnMouseEntered(e -> pion.setCursor(javafx.scene.Cursor.HAND));
-            pion.setOnMouseExited(e -> pion.setCursor(javafx.scene.Cursor.DEFAULT));
-
-            pionsPersonnages.getChildren().add(pion);
-        }
-
-        // Création du pion de nombre (affiché en dessous des pions de personnages)
-        Button pionNombre = new Button("X");
-        pionNombre.setId("pionNombre");
-        pionNombre.setStyle("-fx-background-color: #464545; -fx-text-fill: #ffffff; -fx-font-size: 30px;");
-        pionNombre.setPrefWidth(45);
-        pionNombre.setPrefHeight(45);
-        pionNombre.setStyle("-fx-background-radius: 50%;");
-
-        // Changer le curseur pour le pion de nombre
-        pionNombre.setOnMouseEntered(e -> pionNombre.setCursor(javafx.scene.Cursor.HAND));
-        pionNombre.setOnMouseExited(e -> pionNombre.setCursor(javafx.scene.Cursor.DEFAULT));
-
-        // Ajout des pions dans le VBox principal
-        pionsVBox.getChildren().addAll(pionsPersonnages, pionNombre);
-
-        return pionsVBox;
     }
 
     public HBox creerCalque(List<Polygon> zones) {
@@ -308,6 +269,96 @@ public class VueCarte extends BorderPane implements Observateur {
         return polygon;
     }
 
+    private HBox afficherPionsPersonnages() {
+        // Pions des personnages
+        HBox pionsPersonnages = new HBox(15);
+        pionsPersonnages.setAlignment(Pos.CENTER);
+        String[] cheminsPions = {
+                Images.Personnages.PERSONNAGE1.getUrl(),
+                Images.Personnages.PERSONNAGE2.getUrl(),
+                Images.Personnages.PERSONNAGE3.getUrl(),
+                Images.Personnages.PERSONNAGE4.getUrl(),
+                Images.Personnages.PERSONNAGE5.getUrl(),
+                Images.Personnages.PERSONNAGE6.getUrl()
+        };
+
+        for (String chemin : cheminsPions) {
+            ImageView pion = new ImageView(new Image(chemin));
+            pion.setFitHeight(50); // Taille uniforme plus grande
+            pion.setFitWidth(50);  // Taille uniforme plus grande
+            pion.setPreserveRatio(true);
+
+            // Changer le curseur en main au survol
+            pion.setOnMouseEntered(e -> pion.setCursor(javafx.scene.Cursor.HAND));
+            pion.setOnMouseExited(e -> pion.setCursor(javafx.scene.Cursor.DEFAULT));
+
+            pionsPersonnages.getChildren().add(pion);
+        }
+
+        return pionsPersonnages;
+    }
+
+    private Button afficherPionNombre(){
+        // Création du pion de nombre (affiché en dessous des pions de personnages)
+        Button pionNombre = new Button("X");
+        pionNombre.setId("pionNombre");
+        pionNombre.setStyle("-fx-background-color: #464545; -fx-text-fill: #ffffff; -fx-font-size: 30px;");
+        pionNombre.setPrefWidth(45);
+        pionNombre.setPrefHeight(45);
+        pionNombre.setStyle("-fx-background-radius: 50%;");
+
+        // Changer le curseur pour le pion de nombre
+        pionNombre.setOnMouseEntered(e -> pionNombre.setCursor(javafx.scene.Cursor.HAND));
+        pionNombre.setOnMouseExited(e -> pionNombre.setCursor(javafx.scene.Cursor.DEFAULT));
+
+        // Ajouter l'événement de double-clic
+        pionNombre.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) { // Double-clic détecté
+                TextInputDialog dialog = new TextInputDialog();
+                dialog.setTitle("Modifier le texte du pion");
+                dialog.setHeaderText("Entrer un chiffre entre 0 et 5");
+                dialog.setContentText("Nouveau texte :");
+
+                // Afficher la boîte de dialogue et récupérer la valeur saisie
+                dialog.showAndWait().ifPresent(input -> {
+                    try {
+                        int value = Integer.parseInt(input); // Vérifie si c'est un entier
+                        if (value >= 0 && value <= 5) { // Vérifie que le chiffre est entre 0 et 5
+                            pionNombre.setText(String.valueOf(value));
+                        } else {
+                            showAlert("Le nombre doit être entre 0 et 5 !");
+                        }
+                    } catch (NumberFormatException ex) {
+                        showAlert("Veuillez entrer un chiffre valide !");
+                    }
+                });
+            }
+        });
+
+        return pionNombre;
+    }
+
+    // Méthode pour afficher une alerte en cas d'erreur
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public CheckBox afficherHypothese() {
+        CheckBox hypothese = new CheckBox("Hypothèse");
+        hypothese.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 12px;");
+        return hypothese;
+    }
+
+    public CheckBox afficherAbsence() {
+        CheckBox absence = new CheckBox("Absence");
+        absence.setStyle("-fx-text-fill: #FFFFFF; -fx-font-size: 12px;");
+        return absence;
+    }
+
     public HBox afficherBoutonsBas() {
         // ======== Bas : Boutons d'action ========
         HBox boutonsBas = new HBox();
@@ -344,10 +395,10 @@ public class VueCarte extends BorderPane implements Observateur {
         textArea.setWrapText(true);
 
         // Définir une largeur et une hauteur préférées, avec une taille minimale
-        textArea.setPrefWidth(450); // Largeur préférée
-        textArea.setPrefHeight(100); // Hauteur préférée
+        textArea.setMaxWidth(400); // Largeur maximale
+        textArea.setMaxHeight(200); // Hauteur maximale
         textArea.setMinWidth(200);  // Largeur minimale (permet de réduire la taille)
-        textArea.setMinHeight(50);  // Hauteur minimale (permet de réduire la taille)
+        textArea.setMinHeight(80);  // Hauteur minimale (permet de réduire la taille)
 
         // Ajout de la zone de texte dans un ScrollPane
         ScrollPane scrollPane = new ScrollPane(textArea);
@@ -472,16 +523,12 @@ public class VueCarte extends BorderPane implements Observateur {
 
     public List<CheckBox> afficherPresenceAbsence() {
         CheckBox afficherPresences = new CheckBox("Afficher les présences");
-        afficherPresences.setStyle("-fx-text-fill: #FFCC66; -fx-font-size: 16px;");
+        afficherPresences.setStyle("-fx-text-fill: #FFCC66; -fx-font-size: 12px;");
 
         CheckBox afficherAbsences = new CheckBox("Afficher les absences");
-        afficherAbsences.setStyle("-fx-text-fill: #FFCC66; -fx-font-size: 16px;");
+        afficherAbsences.setStyle("-fx-text-fill: #FFCC66; -fx-font-size: 12px;");
 
         return List.of(afficherPresences, afficherAbsences);
-    }
-
-    public void afficherHypothese() {
-        // TODO : itération 2
     }
 
     @Override
