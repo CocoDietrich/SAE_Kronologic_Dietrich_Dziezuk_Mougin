@@ -11,6 +11,8 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 import java.util.List;
@@ -97,9 +99,8 @@ public class VueCarte extends BorderPane implements Observateur {
         // Ajout de l'historique à gauche
         hBox.getChildren().add(historique); // Ajout de l'historique
 
-        // Ajout de la zone vide (Region) pour séparer l'historique et les boutons
         VBox pions = afficherPions();
-        HBox.setHgrow(pions, Priority.ALWAYS); // L'espace vide prend toute la place restante
+        //HBox.setHgrow(pions, Priority.ALWAYS); // L'espace vide prend toute la place restante
         hBox.getChildren().add(pions); // Ajout de la zone vide
 
         // Ajout des optionsDroite à droite
@@ -117,11 +118,12 @@ public class VueCarte extends BorderPane implements Observateur {
         return grille;
     }
 
-
     public List<HBox> afficherCarte() {
+        // Chargement de l'image principale de la carte (le plateau)
         Image carte = new Image("file:img/plateau.png");
 
-        List<Image> Temps = List.of(
+        // Images représentant le temps
+        List<Image> tempsImages = List.of(
                 Images.Temps.TEMPS1.creerImage(),
                 Images.Temps.TEMPS2.creerImage(),
                 Images.Temps.TEMPS3.creerImage(),
@@ -130,34 +132,42 @@ public class VueCarte extends BorderPane implements Observateur {
                 Images.Temps.TEMPS6.creerImage()
         );
 
+        // Création des conteneurs horizontaux pour les cartes du haut et du bas
         HBox hBoxHaut = new HBox(5);
-        hBoxHaut.setSpacing(150);  // Espacement ajusté pour une meilleure adaptation
+        hBoxHaut.setSpacing(150);
+        hBoxHaut.setAlignment(Pos.CENTER);
+
         HBox hBoxBas = new HBox(5);
         hBoxBas.setSpacing(150);
+        hBoxBas.setAlignment(Pos.CENTER);
 
-        // Ajout des six cartes 3 en lignes pour 2 en colonnes
+        // Création de la grille pour afficher 6 cartes (3 en haut, 3 en bas)
         for (int i = 0; i < 6; i++) {
-            VBox vBox = new VBox(5);
+            // Récupération des zones interactives
+            List<Polygon> zones = creerZone("Temps " + (i+1));
 
-            // carte
+            // Superposition de l'image et des zones interactives via un StackPane
+            StackPane stackPane = new StackPane();
+            stackPane.setAlignment(Pos.CENTER);
+
+            // Image principale de la carte (plateau)
             ImageView imageViewCarte = new ImageView(carte);
             imageViewCarte.setPreserveRatio(true);
+            imageViewCarte.setFitHeight(160);
+            imageViewCarte.setFitWidth(Double.MAX_VALUE);
 
-            // Ajuster la taille de l'image carte en fonction de l'espace disponible dans le conteneur parent
-            imageViewCarte.setFitHeight(160); // 100% de la hauteur disponible
-            imageViewCarte.setFitWidth(Double.MAX_VALUE); // Limite à 100% de la largeur disponible
+            stackPane.getChildren().addAll(imageViewCarte, creerCalque(zones));
 
-            // temps
-            ImageView imageViewTemps = new ImageView(Temps.get(i));
+            // Création de l'image du temps au-dessus de la carte
+            ImageView imageViewTemps = new ImageView(tempsImages.get(i));
             imageViewTemps.setPreserveRatio(true);
+            imageViewTemps.setFitHeight(32);
 
-            // Ajuster la taille de l'image temps en fonction de l'espace disponible
-            imageViewTemps.setFitHeight(32); // 20% de la hauteur disponible
-            imageViewTemps.setFitWidth(Double.MAX_VALUE); // Limite à 100% de la largeur disponible
-
-            vBox.getChildren().addAll(imageViewTemps, imageViewCarte);
+            VBox vBox = new VBox(10);
             vBox.setAlignment(Pos.CENTER);
+            vBox.getChildren().addAll(imageViewTemps, stackPane);
 
+            // Ajouter au bon conteneur (haut ou bas)
             if (i < 3) {
                 hBoxHaut.getChildren().add(vBox);
             } else {
@@ -165,6 +175,7 @@ public class VueCarte extends BorderPane implements Observateur {
             }
         }
 
+        // Retourner les deux conteneurs HBox contenant les cartes
         return List.of(hBoxHaut, hBoxBas);
     }
 
@@ -215,7 +226,87 @@ public class VueCarte extends BorderPane implements Observateur {
         return pionsVBox;
     }
 
+    public HBox creerCalque(List<Polygon> zones) {
+        // Création d'un calque pour superposer les zones interactives
+        HBox calque = new HBox();
+        calque.setAlignment(Pos.CENTER);
 
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.CENTER);
+        vBox.getChildren().addAll(zones.get(4), zones.get(5));
+
+        // Ajout des zones interactives dans le calque
+        calque.getChildren().addAll(zones.get(0), zones.get(1), zones.get(2), zones.get(3), vBox);
+
+        return calque;
+    }
+
+    public List<Polygon> creerZone(String temps) {
+        // Zone 1 (Salle Orange à gauche)
+        Polygon zone1 = creerLieu(new double[]{
+                0, 0,  // Coin supérieur gauche
+                30, 0, // Coin supérieur droit
+                30, 110, // Coin inférieur droit
+                0, 110   // Coin inférieur gauche
+        }, temps + " - Grand Foyer");
+
+        // Zone 2 (Salle Bleue au centre gauche)
+        Polygon zone2 = creerLieu(new double[]{
+                0, 0,  // Coin supérieur gauche
+                50, 0,  // Coin supérieur droit
+                50, 80,  // Coin inférieur droit
+                0, 80   // Coin inférieur gauche
+        }, temps + " - Grand Escalier");
+
+        // Zone 3 (Grande Scène Rouge)
+        Polygon zone3 = creerLieu(new double[]{
+                0, 0,  // Coin supérieur gauche
+                50, 0,  // Coin supérieur droit
+                50, 150,  // Coin inférieur droit
+                0, 150   // Coin inférieur gauche
+        }, temps + " - Salle");
+
+        // Zone 4 (Couloir Sombre milieu droit)
+        Polygon zone4 = creerLieu(new double[]{
+                0, 0,  // Coin supérieur gauche
+                40, 0,  // Coin supérieur droit
+                40, 110,  // Coin inférieur droit
+                0, 110   // Coin inférieur gauche
+        }, temps + " - Scène");
+
+        // Zone 5 (Salle Bleue en haut à droite)
+        Polygon zone5 = creerLieu(new double[]{
+                0, 0,  // Coin supérieur gauche
+                60, 0,  // Coin supérieur droit
+                60, 40, // Coin inférieur droit
+                0, 40  // Coin inférieur gauche
+        }, temps + " - Foyer du Chant");
+
+        // Zone 6 (Salle Dorée en bas à droite)
+        Polygon zone6 = creerLieu(new double[]{
+                0, 0,  // Coin supérieur gauche
+                60, 0,  // Coin supérieur droit
+                60, 70,  // Coin inférieur droit
+                0, 70   // Coin inférieur gauche
+        }, temps + " - Foyer de la Danse");
+
+        return List.of(zone1, zone2, zone3, zone4, zone5, zone6);
+    }
+
+    private Polygon creerLieu(double[] points, String zoneName) {
+
+        Polygon polygon = new Polygon(points);
+        polygon.setUserData(zoneName); // Nom de la zone
+        polygon.setFill(Color.TRANSPARENT); // Couleur transparente par défaut
+
+        polygon.setOnMouseEntered(event -> {
+            polygon.setFill(Color.LIGHTGRAY);
+            System.out.println("Vous survolez la zone : " + polygon.getUserData());
+        }); // Survol
+        polygon.setOnMouseExited(event -> polygon.setFill(Color.TRANSPARENT)); // Quitter
+
+        return polygon;
+    }
 
     public HBox afficherBoutonsBas() {
         // ======== Bas : Boutons d'action ========
