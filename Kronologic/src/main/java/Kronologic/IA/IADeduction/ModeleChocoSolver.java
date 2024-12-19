@@ -57,19 +57,14 @@ public class ModeleChocoSolver {
                 IntVar salleSuivante = positions[i][t + 1];
 
                 // Création de la table de déplacements valides
-                List<int[]> tuplesValides = new ArrayList<>();
-
+                Tuples table = new Tuples(true);
                 for (int salle = 1; salle <= 6; salle++) {
                     for (int adj : sallesAdjacentes[salle - 1]) {
-                        tuplesValides.add(new int[]{salle, adj});
+                        table.add(salle, adj);
                     }
                 }
 
-                // Conversion en tableau
-                int[][] table = tuplesValides.toArray(new int[0][]);
-
-                // Application de la contrainte table
-                model.table(new IntVar[]{salleActuelle, salleSuivante}, new Tuples(table, true), "CT+").post();
+                model.table(new IntVar[]{salleActuelle, salleSuivante}, table, "CT+").post();
             }
         }
     }
@@ -92,18 +87,20 @@ public class ModeleChocoSolver {
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
 
         if (indexPersonnage != -1) {
-            IntVar[] passages = new IntVar[6];
+            IntVar[] presences = new IntVar[6];
 
             for (int t = 0; t < 6; t++) {
-                passages[t] = model.intVar("Presence_" + personnage.getNom() + "_T" + (t + 1), 0, 1);
+                presences[t] = model.intVar("Presence_" + personnage.getNom() + "_T" + (t + 1), 0, 1);
 
-                model.ifThenElse(
-                        model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
-                        model.arithm(passages[t], "=", 1),
-                        model.arithm(passages[t], "=", 0)
-                );
+                Tuples table = new Tuples(true);
+                for (int val = positions[indexPersonnage][t].getLB(); val <= positions[indexPersonnage][t].getUB(); val++) {
+                    table.add(val, val == lieu.getId() ? 1 : 0);
+                }
+
+                model.table(new IntVar[]{positions[indexPersonnage][t], presences[t]}, table).post();
             }
-            model.sum(passages, "=", nbPassages).post();
+
+            model.sum(presences, "=", nbPassages).post();
         }
 
         try {
@@ -112,47 +109,37 @@ public class ModeleChocoSolver {
             e.printStackTrace();
         }
     }
+
 
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
-        int tempsIndex = temps.getValeur() - 1;
+        int t = temps.getValeur() - 1;  // Index du temps
+        IntVar[] presences = new IntVar[personnages.length];
 
-        // Contraintes de présence pour chaque personnage
+        // Création des variables de présence pour chaque personnage
         for (int i = 0; i < personnages.length; i++) {
-            IntVar position = positions[i][tempsIndex];
-            if (nbPersonnages == 0) {
-                // Supprime la salle du domaine si personne ne peut y être
-                try {
-                    position.removeValue(lieu.getId(), null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // Contrainte de présence sinon
-                IntVar presence = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
-                model.ifThenElse(
-                        model.arithm(position, "=", lieu.getId()),
-                        model.arithm(presence, "=", 1),
-                        model.arithm(presence, "=", 0)
-                );
+            presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + (t + 1), 0, 1);
+
+            // Création des tuples valides
+            Tuples table = new Tuples(true);
+            for (int val = positions[i][t].getLB(); val <= positions[i][t].getUB(); val++) {
+                table.add(val, val == lieu.getId() ? 1 : 0);
             }
+
+            // Application de la contrainte `table`
+            model.table(new IntVar[]{positions[i][t], presences[i]}, table).post();
         }
 
-        // Contrainte de somme globale
-        if (nbPersonnages > 0) {
-            IntVar[] presences = new IntVar[personnages.length];
-            for (int i = 0; i < personnages.length; i++) {
-                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
-            }
-            model.sum(presences, "=", nbPersonnages).post();
-        }
+        // Somme des présences pour calculer le nombre total de personnages présents
+        model.sum(presences, "=", nbPersonnages).post();
 
-        // Propagation immédiate pour appliquer la contrainte
+        // Propagation
         try {
             model.getSolver().propagate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 
     private int getIndexPersonnage(String personnage) {
