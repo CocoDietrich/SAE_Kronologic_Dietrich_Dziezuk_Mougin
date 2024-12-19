@@ -114,25 +114,46 @@ public class ModeleChocoSolver {
     }
 
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
-        IntVar[] personnagesAuTempsT = new IntVar[personnages.length];
+        int tempsIndex = temps.getValeur() - 1;
 
+        // Contraintes de présence pour chaque personnage
         for (int i = 0; i < personnages.length; i++) {
-            personnagesAuTempsT[i] = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
-
-            // Contraintes de presence
-            model.ifThenElse(
-                    model.arithm(positions[i][temps.getValeur() - 1], "=", lieu.getId()),
-                    model.arithm(personnagesAuTempsT[i], "=", 1),
-                    model.arithm(personnagesAuTempsT[i], "=", 0)
-            );
+            IntVar position = positions[i][tempsIndex];
+            if (nbPersonnages == 0) {
+                // Supprime la salle du domaine si personne ne peut y être
+                try {
+                    position.removeValue(lieu.getId(), null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                // Contrainte de présence sinon
+                IntVar presence = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
+                model.ifThenElse(
+                        model.arithm(position, "=", lieu.getId()),
+                        model.arithm(presence, "=", 1),
+                        model.arithm(presence, "=", 0)
+                );
+            }
         }
-        model.sum(personnagesAuTempsT, "=", nbPersonnages).post();
+
+        // Contrainte de somme globale
+        if (nbPersonnages > 0) {
+            IntVar[] presences = new IntVar[personnages.length];
+            for (int i = 0; i < personnages.length; i++) {
+                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
+            }
+            model.sum(presences, "=", nbPersonnages).post();
+        }
+
+        // Propagation immédiate pour appliquer la contrainte
         try {
             model.getSolver().propagate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     private int getIndexPersonnage(String personnage) {
         for (int i = 0; i < personnages.length; i++) {
