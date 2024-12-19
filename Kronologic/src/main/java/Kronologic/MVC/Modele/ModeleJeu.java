@@ -9,6 +9,8 @@ import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.Indice;
+import Kronologic.Jeu.Indice.IndicePersonnage;
+import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
@@ -133,27 +135,18 @@ public class ModeleJeu implements Sujet {
             i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
 
             // Ajouter contraintes publiques et privées
-//            IndicePersonnage ip= (IndicePersonnage) i;
-//            iaDeductionChocoSolver.ajouterContraintePersonnage(
-//                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive()
-//            );
-//            iaDeductionChocoSolver.ajouterContrainteNombreDePassages(
-//                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic()
-//            );
+            IndicePersonnage ip= (IndicePersonnage) i;
+            iaDeductionChocoSolver.poserQuestionPersonnage(
+                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
+            );
         } else {
             i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
 
             // Ajouter contraintes publiques et privées
-//            IndiceTemps it = (IndiceTemps) i;
-//            iaDeductionChocoSolver.ajouterContrainteTemps(
-//                    it.getLieu(), it.getTemps(), it.getInfoPublic()
-//            );
-//
-//            if (!it.getInfoPrive().equals("Rejouer")) {
-//                iaDeductionChocoSolver.ajouterContraintePersonnage(
-//                        new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur()
-//                );
-//            }
+            IndiceTemps it = (IndiceTemps) i;
+            iaDeductionChocoSolver.poserQuestionTemps(
+                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
+            );
         }
 
         partie.ajouterIndice(i);
