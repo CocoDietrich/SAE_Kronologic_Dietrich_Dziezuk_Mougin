@@ -14,7 +14,7 @@ import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -333,6 +333,12 @@ public class ModeleJeu implements Sujet {
         partie.supprimerNote(n);
     }
 
+    public void ajouterPion(Note note, Image image, int x, int y){
+        Pion pion = new Pion(note, image.getUrl());
+        pion.deplacerPion(x, y);
+        partie.ajouterPion(pion);
+    }
+
     public String voirDeductionIA(){
         return iaDeductionChocoSolver.afficherHistoriqueDeduction();
     }
@@ -425,6 +431,8 @@ public class ModeleJeu implements Sujet {
         assert vuePopUpDemanderIndice != null;
         vuePopUpDemanderIndice.afficherPopUp();
     }
+
+
 
     @Override
     public void enregistrerObservateur(Observateur o) {

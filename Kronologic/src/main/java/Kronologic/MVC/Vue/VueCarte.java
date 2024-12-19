@@ -1,5 +1,6 @@
 package Kronologic.MVC.Vue;
 
+import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.event.Event;
 import javafx.geometry.Insets;
@@ -34,6 +35,7 @@ public class VueCarte extends BorderPane implements Observateur {
     public CheckBox absence;
     public List<Polygon> zonesDeJeu;
     public List<Pion> pions = new ArrayList<>();
+    public String lieuTempsPion;
 
     public VueCarte() {
         super();
@@ -212,7 +214,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 30, 0, // Coin supérieur droit
                 30, 110, // Coin inférieur droit
                 0, 110   // Coin inférieur gauche
-        }, temps + " - Grand foyer");
+        }, temps + "-Grand foyer");
 
         // Zone 2 (Salle Bleue au centre gauche)
         Polygon zone2 = creerLieu(new double[]{
@@ -220,7 +222,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 50, 0,  // Coin supérieur droit
                 50, 80,  // Coin inférieur droit
                 0, 80   // Coin inférieur gauche
-        }, temps + " - Grand escalier");
+        }, temps + "-Grand escalier");
 
         // Zone 3 (Grande Scène Rouge)
         Polygon zone3 = creerLieu(new double[]{
@@ -228,7 +230,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 50, 0,  // Coin supérieur droit
                 50, 150,  // Coin inférieur droit
                 0, 150   // Coin inférieur gauche
-        }, temps + " - Salle");
+        }, temps + "-Salle");
 
         // Zone 4 (Couloir Sombre milieu droit)
         Polygon zone4 = creerLieu(new double[]{
@@ -236,7 +238,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 40, 0,  // Coin supérieur droit
                 40, 110,  // Coin inférieur droit
                 0, 110   // Coin inférieur gauche
-        }, temps + " - Scène");
+        }, temps + "-Scène");
 
         // Zone 5 (Salle Bleue en haut à droite)
         Polygon zone5 = creerLieu(new double[]{
@@ -244,7 +246,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 60, 0,  // Coin supérieur droit
                 60, 40, // Coin inférieur droit
                 0, 40  // Coin inférieur gauche
-        }, temps + " - Foyer du chant");
+        }, temps + "-Foyer du chant");
 
         // Zone 6 (Salle Dorée en bas à droite)
         Polygon zone6 = creerLieu(new double[]{
@@ -252,7 +254,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 60, 0,  // Coin supérieur droit
                 60, 70,  // Coin inférieur droit
                 0, 70   // Coin inférieur gauche
-        }, temps + " - Foyer de la danse");
+        }, temps + "-Foyer de la danse");
 
         zonesDeJeu = List.of(zone1, zone2, zone3, zone4, zone5, zone6);
         return List.of(zone1, zone2, zone3, zone4, zone5, zone6);
@@ -262,6 +264,8 @@ public class VueCarte extends BorderPane implements Observateur {
         Polygon polygon = new Polygon(points);
         polygon.setUserData(zoneName);
         polygon.setFill(Color.TRANSPARENT);
+
+        lieuTempsPion = zoneName;
 
         // Ajout de la réception du drag
         polygon.setOnDragOver(event -> {
@@ -276,6 +280,7 @@ public class VueCarte extends BorderPane implements Observateur {
             if (db.hasImage()) {
                 // Création du pion déplacé
                 // TODO: Vérifier le type de pion (personnage ou nombre)
+
                 Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                 if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
                     pionDeplace.setFitHeight(47.5);
@@ -318,7 +323,6 @@ public class VueCarte extends BorderPane implements Observateur {
                 pionDeplace.setLayoutY(dropPoint.getY() - pionDeplace.getFitHeight() / 2);
 
                 event.setDropCompleted(true);
-
                 // Ajouter le pion à la liste des pions
                 pions.add(pionDeplace);
             } else {
@@ -637,5 +641,8 @@ public class VueCarte extends BorderPane implements Observateur {
         } else {
             historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n" + historique.getText());
         }
+
+        // On actualise les pions
+
     }
 }
