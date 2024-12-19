@@ -276,12 +276,12 @@ public class VueCarte extends BorderPane implements Observateur {
                 // Création du pion déplacé
                 ImageView pionDeplace = new ImageView(db.getImage());
                 if (event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")).equals("pionNombre")) {
-                    pionDeplace.setFitHeight(65);
-                    pionDeplace.setFitWidth(65);
+                    pionDeplace.setFitHeight(45);
+                    pionDeplace.setFitWidth(45);
                     pionDeplace.setId("pionNombre");
                 } else {
-                    pionDeplace.setFitHeight(40);
-                    pionDeplace.setFitWidth(40);
+                    pionDeplace.setFitHeight(30);
+                    pionDeplace.setFitWidth(30);
                     pionDeplace.setId(event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")));
                 }
                 pionDeplace.setPreserveRatio(true);
@@ -375,7 +375,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 "file:img/pions_nombres/Pion de Nombres_6.png"
         };
 
-        // Création de l'image par défaut (Pion de Nombres.png)
+        // Création de l'image par défaut (non modifiée)
         ImageView pionNombre = new ImageView(new Image(imagesPionNombre[0]));
         pionNombre.setFitWidth(90);
         pionNombre.setFitHeight(90);
@@ -395,8 +395,9 @@ public class VueCarte extends BorderPane implements Observateur {
                     try {
                         int value = Integer.parseInt(input); // Vérifie que c'est un entier
                         if (value >= 0 && value <= 6) {
-                            // Mise à jour de l'image en fonction du chiffre sélectionné
-                            pionNombre.setImage(new Image(imagesPionNombre[value+1]));
+                            // Mise à jour de l'image du pion
+                            pionNombre.setImage(new Image(imagesPionNombre[value + 1]));
+                            pionNombre.setUserData(value);  // Enregistrer la valeur
                         } else {
                             showAlert("Le nombre doit être entre 0 et 6 !");
                         }
@@ -407,12 +408,17 @@ public class VueCarte extends BorderPane implements Observateur {
             }
         });
 
-        // Activation du Drag & Drop pour déplacer l'image
+        // Activation du Drag & Drop uniquement si la valeur est valide
         pionNombre.setOnDragDetected(event -> {
-            Dragboard db = pionNombre.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(pionNombre.getImage()); // Transfère l'image en cours
-            db.setContent(content);
+            // Vérifie si le nombre est défini (non null)
+            if (pionNombre.getUserData() instanceof Integer value && value >= 0 && value <= 6) {
+                Dragboard db = pionNombre.startDragAndDrop(TransferMode.MOVE);
+                ClipboardContent content = new ClipboardContent();
+                content.putImage(pionNombre.getImage()); // Transfère l'image actuelle
+                db.setContent(content);
+            } else {
+                showAlert("Veuillez d'abord définir une valeur entre 0 et 6 !");
+            }
             event.consume();
         });
 
@@ -420,6 +426,7 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return pionNombre;
     }
+
 
 
     // Méthode pour afficher une alerte en cas d'erreur
