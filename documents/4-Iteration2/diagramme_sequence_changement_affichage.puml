@@ -1,0 +1,23 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor Utilisateur
+participant VueCarte
+participant ControleurAffichage
+participant ModeleJeu
+
+Utilisateur -> VueCarte: clique sur le bouton "Changer affichage"
+activate VueCarte
+VueCarte -> ControleurAffichage: handle(ActionEvent)
+activate ControleurAffichage
+ControleurAffichage -> ModeleJeu: changerAffichage(Stage stage)
+activate ModeleJeu
+ModeleJeu -> ModeleJeu: retourVueTableau(Stage stage)
+ModeleJeu --> ControleurAffichage: void
+deactivate ModeleJeu
+ControleurAffichage --> VueCarte: void
+deactivate ControleurAffichage
+VueCarte --> Utilisateur: l'affichage est changé, on est passé sur la vue en tableau
+deactivate VueCarte
+
+@enduml
