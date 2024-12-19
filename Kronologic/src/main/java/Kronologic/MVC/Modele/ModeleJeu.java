@@ -159,6 +159,16 @@ public class ModeleJeu implements Sujet {
         partie.ajouterIndice(i);
         notifierObservateurs();
         System.out.println("Réponse à la question posée : " + i);
+
+        VuePopUpPoseQuestion vuePopUpPoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePopUpPoseQuestion){
+                vuePopUpPoseQuestion = (VuePopUpPoseQuestion) o;
+                break;
+            }
+        }
+        assert vuePopUpPoseQuestion != null;
+        vuePopUpPoseQuestion.afficherPopUp(i);
         if (isVueCarte()){
             retourVueCarte(stage);
         } else {
