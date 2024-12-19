@@ -8,7 +8,6 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.variables.IntVar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModeleChocoSolver {
@@ -26,11 +25,8 @@ public class ModeleChocoSolver {
         definirVariables();
         definirContraintesInitiales();
         definirContraintesRegles(sallesAdjacentes);
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        propagerContraintes();
     }
 
     private void definirVariables() {
@@ -70,77 +66,44 @@ public class ModeleChocoSolver {
     }
 
     public void ajouterContraintePersonnage(Personnage personnage, Lieu lieu, int temps) {
+        System.out.println(personnage.getNom());
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
 
-        if (indexPersonnage != -1 && temps >= 1 && temps <= 6) {
+        if (temps >= 1 && temps <= 6) {
             model.arithm(positions[indexPersonnage][temps - 1], "=", lieu.getId()).post();
         }
 
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        propagerContraintes();
     }
 
     public void ajouterContrainteNombreDePassages(Personnage personnage, Lieu lieu, int nbPassages) {
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
-
-        if (indexPersonnage != -1) {
-            IntVar[] presences = new IntVar[6];
-
-            for (int t = 0; t < 6; t++) {
-                presences[t] = model.intVar("Presence_" + personnage.getNom() + "_T" + (t + 1), 0, 1);
-
-                Tuples table = new Tuples(true);
-                for (int val = positions[indexPersonnage][t].getLB(); val <= positions[indexPersonnage][t].getUB(); val++) {
-                    table.add(val, val == lieu.getId() ? 1 : 0);
-                }
-
-                model.table(new IntVar[]{positions[indexPersonnage][t], presences[t]}, table).post();
-            }
-
-            model.sum(presences, "=", nbPassages).post();
-        }
-
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        IntVar nbDePassages = model.intVar("Passages_" + personnage.getNom(), 0, 6);
+        model.count(lieu.getId(), positions[indexPersonnage], nbDePassages).post();
+        model.arithm(nbDePassages, "=", nbPassages).post();
+        propagerContraintes();
     }
-
 
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
-        int t = temps.getValeur() - 1;  // Index du temps
-        IntVar[] presences = new IntVar[personnages.length];
+        IntVar nbPersonnesDansLieu = model.intVar("NbPersonnes_T" + temps.getValeur() + "_L" + lieu.getId(), 0, personnages.length);
+        IntVar[] positionsTemps = new IntVar[personnages.length];
 
-        // Création des variables de présence pour chaque personnage
         for (int i = 0; i < personnages.length; i++) {
-            presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + (t + 1), 0, 1);
-
-            // Création des tuples valides
-            Tuples table = new Tuples(true);
-            for (int val = positions[i][t].getLB(); val <= positions[i][t].getUB(); val++) {
-                table.add(val, val == lieu.getId() ? 1 : 0);
-            }
-
-            // Application de la contrainte `table`
-            model.table(new IntVar[]{positions[i][t], presences[i]}, table).post();
+            positionsTemps[i] = positions[i][temps.getValeur() - 1];
         }
 
-        // Somme des présences pour calculer le nombre total de personnages présents
-        model.sum(presences, "=", nbPersonnages).post();
+        model.count(lieu.getId(), positionsTemps, nbPersonnesDansLieu).post();
+        model.arithm(nbPersonnesDansLieu, "=", nbPersonnages).post();
+        propagerContraintes();
+    }
 
-        // Propagation
+    private void propagerContraintes() {
         try {
             model.getSolver().propagate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
     private int getIndexPersonnage(String personnage) {
         for (int i = 0; i < personnages.length; i++) {
