@@ -94,6 +94,10 @@ public class Partie {
         return null;
     }
 
+    public String verifierLoupe(){
+        return enquete.verifierLoupe(nbQuestion);
+    }
+
     // Getter pour chaque attribut
     public int getNbQuestion() {
         return nbQuestion;

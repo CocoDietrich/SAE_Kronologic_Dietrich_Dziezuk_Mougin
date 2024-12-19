@@ -40,7 +40,7 @@ public class VuePopUpDeduction extends BorderPane implements Observateur {
     }
 
 
-    public void afficherPopUp(boolean victoire) {
+    public void afficherPopUp(boolean victoire, String loupe) {
         this.setCenter(null);
         this.setBottom(null);
 
@@ -49,7 +49,8 @@ public class VuePopUpDeduction extends BorderPane implements Observateur {
         contenuPrincipal.setPadding(new Insets(20));
 
         if (victoire) {
-            message.setText("Bravo ! Vous avez résolu l'énigme !");
+            message.setText("Bravo ! Vous avez résolu l'énigme !"
+                    + "\nVous obtenez la " + loupe);
             contenuPrincipal.getChildren().addAll(message, quitter);
             this.setCenter(contenuPrincipal);
         } else {

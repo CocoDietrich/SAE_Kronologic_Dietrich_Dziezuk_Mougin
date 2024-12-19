@@ -29,13 +29,13 @@ public class Enquete {
 
     public String verifierLoupe(int nbQuestion){
         if (nbQuestion <= loupeOr){
-            return "Loupe Or en " + nbQuestion + "coups !";
+            return "loupe Or en " + nbQuestion + " coups !";
         }
         else if (nbQuestion >= loupeBronze){
-            return "Loupe Bronze en " + nbQuestion + "coups !";
+            return "loupe Bronze en " + nbQuestion + " coups !";
         }
         else {
-            return "Loupe Argent en " + nbQuestion + "coups !";
+            return "loupe Argent en " + nbQuestion + " coups !";
         }
     }
 

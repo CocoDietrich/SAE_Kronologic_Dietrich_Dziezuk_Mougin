@@ -204,7 +204,7 @@ public class ModeleJeu implements Sujet {
             }
         }
         assert vuePopUpDeduction != null;
-        vuePopUpDeduction.afficherPopUp(resultat);
+        vuePopUpDeduction.afficherPopUp(resultat, partie.verifierLoupe());
 
         if (resultat) {
             System.out.println("Victoire enregistrée dans le modèle.");
