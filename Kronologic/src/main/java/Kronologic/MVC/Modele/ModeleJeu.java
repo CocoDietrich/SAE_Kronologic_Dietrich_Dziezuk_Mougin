@@ -214,6 +214,7 @@ public class ModeleJeu implements Sujet {
         } else {
             System.out.println("Défaite enregistrée dans le modèle.");
         }
+        notifierObservateurs();
         return resultat;
     }
 
@@ -251,6 +252,8 @@ public class ModeleJeu implements Sujet {
 
         // On ajoute la note à la liste des notes
         partie.ajouterNote(n);
+
+        notifierObservateurs();
     }
 
     public void ajouterNote(Lieu l, Temps t, int nbPersonnages, boolean hypothese, boolean absence) {
@@ -269,6 +272,8 @@ public class ModeleJeu implements Sujet {
 
         // On ajoute la note à la liste des notes
         partie.ajouterNote(n);
+
+        notifierObservateurs();
     }
 
     public void modifierNote(Lieu l, Temps t, Personnage p, boolean absence, boolean hypothese) {
@@ -285,6 +290,8 @@ public class ModeleJeu implements Sujet {
 
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
+
+        notifierObservateurs();
     }
 
     public void modifierNote(Lieu l, Temps t, int nbPersonnage, boolean absence, boolean hypothese) {
@@ -301,6 +308,8 @@ public class ModeleJeu implements Sujet {
 
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
+
+        notifierObservateurs();
     }
 
     // Méthode permettant de supprimer une note du joueur
@@ -318,6 +327,8 @@ public class ModeleJeu implements Sujet {
 
         // On supprime la note de la liste des notes
         partie.supprimerNote(n);
+
+        notifierObservateurs();
     }
 
     public void supprimerNote(Lieu l, Temps t, int nbPersonnages) {
@@ -334,6 +345,8 @@ public class ModeleJeu implements Sujet {
 
         // On supprime la note de la liste des notes
         partie.supprimerNote(n);
+
+        notifierObservateurs();
     }
 
     public String voirDeductionIA(){

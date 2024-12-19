@@ -26,11 +26,41 @@ public class JsonReader {
 
             // Charger les lieux
             List<Lieu> lieux = new ArrayList<>();
+            Map<Integer, List<Integer>> lieuxAdjacents = Map.of(
+                    1, List.of(2, 3),
+                    2, List.of(1, 3),
+                    3, List.of(1, 2, 4),
+                    4, List.of(3, 5, 6),
+                    5, List.of(4, 6),
+                    6, List.of(4, 5)
+            );
+
             int lieuId = 1;
+            Map<String, Lieu> lieuxMap = new HashMap<>();  // Stocke les lieux par nom
+
+            // Création des lieux
             for (String key : jsonObject.keySet()) {
                 if (isMetaKey(key)) {
                     Lieu lieu = new Lieu(key, lieuId++, new ArrayList<>());
                     lieux.add(lieu);
+                    lieuxMap.put(key, lieu);  // Associe le nom au lieu
+                }
+            }
+
+            // Ajout des lieux adjacents
+            for (Lieu lieu : lieux) {
+                List<Integer> adjacentsIds = lieuxAdjacents.get(lieu.getId());
+                if (adjacentsIds != null) {
+                    for (int adjId : adjacentsIds) {
+                        // Récupérer le lieu adjacent par son ID
+                        Lieu lieuAdjacent = lieux.stream()
+                                .filter(l -> l.getId() == adjId)
+                                .findFirst()
+                                .orElse(null);
+                        if (lieuAdjacent != null) {
+                            lieu.getListeLieuxAdjacents().add(lieuAdjacent);
+                        }
+                    }
                 }
             }
 
