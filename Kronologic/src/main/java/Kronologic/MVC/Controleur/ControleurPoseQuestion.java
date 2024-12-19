@@ -73,7 +73,7 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
                 b.setDisable(true);
             }
             modele.setTempsChoisi(temps, vuePoseQuestion);
-
+            modele.setPersonnageChoisi(null, vuePoseQuestion);
         } else if (id.equals("Valider")) {
             // On réactive tous les boutons pour les prichaines questions
             for (Button b : vuePoseQuestion.lieuButtons) {
@@ -122,6 +122,7 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
                 b.setDisable(true);
             }
             modele.setPersonnageChoisi(personnage, vuePoseQuestion);
+            modele.setTempsChoisi(null, vuePoseQuestion);
         }
     }
 }

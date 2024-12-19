@@ -33,6 +33,7 @@ public class ModeleAccueil implements Sujet {
                 VuePopUpQuitter vuePopUpQuitter = new VuePopUpQuitter(stage);
                 VueRegle vueRegle = new VueRegle();
                 VuePopUpDemanderIndice vuePopUpDemanderIndice = new VuePopUpDemanderIndice(stage);
+                VuePopUpPoseQuestion vuePopUpPoseQuestion = new VuePopUpPoseQuestion(stage);
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
@@ -50,6 +51,7 @@ public class ModeleAccueil implements Sujet {
                 ControleurRegle controleurRegle = new ControleurRegle(modeleJeu);
                 ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
                 ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu);
+                ControleurPopUpPoseQuestion controleurPopUpPoseQuestion = new ControleurPopUpPoseQuestion(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -102,6 +104,7 @@ public class ModeleAccueil implements Sujet {
                 vuePopUpQuitter.valider.setOnAction(controleurPopUpQuitter);
                 vuePopUpDemanderIndice.annuler.setOnAction(controleurPopUpDemanderIndice);
                 vuePopUpDemanderIndice.valider.setOnAction(controleurPopUpDemanderIndice);
+                vuePopUpPoseQuestion.continuer.setOnAction(controleurPopUpPoseQuestion);
 
                 modeleJeu.enregistrerObservateur(vueCarte);
                 modeleJeu.enregistrerObservateur(vuePoseQuestion);
@@ -111,6 +114,7 @@ public class ModeleAccueil implements Sujet {
                 modeleJeu.enregistrerObservateur(vuePopUpQuitter);
                 modeleJeu.enregistrerObservateur(vuePopUpDemanderIndice);
                 modeleJeu.enregistrerObservateur(vueRegle);
+                modeleJeu.enregistrerObservateur(vuePopUpPoseQuestion);
 
                 BorderPane bp = new BorderPane(vueCarte);
 

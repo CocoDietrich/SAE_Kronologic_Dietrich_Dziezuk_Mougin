@@ -1,127 +1,66 @@
 package Kronologic.IA.IADeduction;
 
-import Kronologic.Jeu.Elements.Lieu;
-import Kronologic.Jeu.Elements.Personnage;
-import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.Indice;
+import Kronologic.Jeu.Indice.IndicePersonnage;
+import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
-import org.chocosolver.solver.Model;
-import org.chocosolver.solver.variables.IntVar;
-import Kronologic.Jeu.Elements.Realite;
 
 import java.util.List;
 
 public class IADeductionChocoSolver extends IADeduction {
 
-    private final Model model = new Model("Deduction IA Choco-Solver");
-    private final String[] personnages = {"A", "B", "C", "D", "J", "S"};
-    private final IntVar[][] positions = new IntVar[6][6];
-    private final Partie partie;
+    private final ModeleChocoSolver model;
 
     public IADeductionChocoSolver(Partie partie) {
-        this.partie = partie;
-        definirVariables();
-        definirContraintesInitiales();
-        definirContraintesRegles();
-    }
+        //On recupere le premier caractere du nom de tous les personnages
+        List<Personnage> personnages = partie.getElements().getPersonnages();
+        String[] personnagesNoms = personnages.stream()
+                .map(p -> p.getNom().substring(0, 1))
+                .toArray(String[]::new);
 
-    private void definirVariables() {
-        for (int i = 0; i < personnages.length; i++) {
-            for (int t = 0; t < 6; t++) {
-                String variableName = personnages[i] + "_T" + (t + 1);
-                positions[i][t] = model.intVar(variableName, 1, 6);
-            }
-        }
-    }
+        //On recupere les salles adjacentes de chaque salle
+        List<Lieu> lieux = partie.getElements().getLieux();
+        int[][] sallesAdjacentes = lieux.stream()
+                .map(l -> l.getListeLieuxAdjacents().stream().mapToInt(Lieu::getId).toArray())
+                .toArray(int[][]::new);
 
-    private void definirContraintesInitiales() {
+        //On recupere les positions de tous les personnages au temps 1
         List<Realite> positionsInitiales = partie.getDeroulement().positionsAuTemps(new Temps(1));
-        for (Realite position : positionsInitiales) {
-            int idLieu = position.getLieu().getId();  // Lieu initial du personnage
-            int indexPersonnage = getIndexPersonnage(position.getPersonnage().getNom().substring(0, 1));
-            model.arithm(positions[indexPersonnage][0], "=", idLieu).post();
+
+        this.model = new ModeleChocoSolver(personnagesNoms,sallesAdjacentes,positionsInitiales);
+    }
+
+    public void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
+        model.ajouterContrainteTemps(lieu, temps, infoPublic);
+        if (!infoPrive.equals("Rejouer")) {
+            model.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
         }
     }
 
-    private void definirContraintesRegles() {
-        int[][] sallesAdjacentes = {
-                {2, 3},    // Salle 1 est adjacente à 2 et 3
-                {1, 3},    // Salle 2 est adjacente à 1 et 3
-                {1, 2, 4}, // Salle 3 est adjacente à 1, 2 et 4
-                {3, 5, 6}, // Salle 4 est adjacente à 3, 5 et 6
-                {4, 6},    // Salle 5 est adjacente à 4 et 6
-                {4, 5}     // Salle 6 est adjacente à 4 et 5
-        };
-
-        for (int i = 0; i < personnages.length; i++) {
-            for (int t = 0; t < 5; t++) {
-                IntVar salleActuelle = positions[i][t];
-                IntVar salleSuivante = positions[i][t + 1];
-
-                // Déplacement obligatoire
-                model.arithm(salleActuelle, "!=", salleSuivante).post();
-
-                // Salles adjacentes
-                for (int salle = 1; salle <= 6; salle++) {
-                    model.ifThen(
-                            model.arithm(salleActuelle, "=", salle),
-                            model.member(salleSuivante, sallesAdjacentes[salle - 1])
-                    );
-                }
-            }
-        }
+    public void poserQuestionPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
+        model.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
+        model.ajouterContraintePersonnage(personnage, lieu, infoPrive);
     }
 
-    private int getIndexPersonnage(String personnage) {
-        for (int i = 0; i < personnages.length; i++) {
-            if (personnages[i].equals(personnage)) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
     @Override
     public void analyserIndices(List<Indice> indices) {
-
+        for (Indice indice : indices) {
+            if (indice instanceof IndiceTemps it) {
+                model.ajouterContrainteTemps(it.getLieu(), it.getTemps(), it.getInfoPublic());
+                if (!it.getInfoPrive().equals("Rejouer")) {
+                    model.ajouterContraintePersonnage(new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur());
+                }
+            } else if (indice instanceof IndicePersonnage ip) {
+                model.ajouterContrainteNombreDePassages(ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic());
+                model.ajouterContraintePersonnage(ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive());
+            }
+        }
     }
 
     @Override
     public String afficherHistoriqueDeduction() {
-        StringBuilder historique = new StringBuilder();
-        historique.append("===== Historique des Déductions =====\n");
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            System.out.println("Erreur de propagation : " + e.getMessage());
-        }
-        for (int i = 0; i < personnages.length; i++) {
-            for (int t = 0; t < 6; t++) {
-                IntVar position = positions[i][t];
-
-                // Afficher les salles fixées ou exclues
-                if (position.isInstantiated()) {
-                    // Si la variable est instanciée, afficher la valeur certaine
-                    int salleFixee = position.getValue();
-                    historique.append(String.format("%s, Salle %d, Temps %d => OUI%n", personnages[i], salleFixee, t + 1));
-
-                    // Marquer les autres salles comme impossibles
-                    for (int salle = 1; salle <= 6; salle++) {
-                        if (salle != salleFixee) {
-                            historique.append(String.format("%s, Salle %d, Temps %d => NON%n", personnages[i], salle, t + 1));
-                        }
-                    }
-                } else {
-                    // Si la variable n'est pas instanciée, utiliser son domaine réduit
-                    for (int salle = 1; salle <= 6; salle++) {
-                        if (!position.contains(salle)) { // Salle exclue du domaine
-                            historique.append(String.format("%s, Salle %d, Temps %d => NON%n", personnages[i], salle, t + 1));
-                        }
-                    }
-                }
-            }
-        }
-        return historique.toString();
+        return model.affichagePropagate();
     }
-
 }

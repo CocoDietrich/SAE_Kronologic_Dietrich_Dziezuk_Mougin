@@ -9,6 +9,8 @@ import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.Indice;
+import Kronologic.Jeu.Indice.IndicePersonnage;
+import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
@@ -133,32 +135,33 @@ public class ModeleJeu implements Sujet {
             i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
 
             // Ajouter contraintes publiques et privées
-//            IndicePersonnage ip= (IndicePersonnage) i;
-//            iaDeductionChocoSolver.ajouterContraintePersonnage(
-//                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive()
-//            );
-//            iaDeductionChocoSolver.ajouterContrainteNombreDePassages(
-//                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic()
-//            );
+            IndicePersonnage ip= (IndicePersonnage) i;
+            iaDeductionChocoSolver.poserQuestionPersonnage(
+                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
+            );
         } else {
             i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
 
             // Ajouter contraintes publiques et privées
-//            IndiceTemps it = (IndiceTemps) i;
-//            iaDeductionChocoSolver.ajouterContrainteTemps(
-//                    it.getLieu(), it.getTemps(), it.getInfoPublic()
-//            );
-//
-//            if (!it.getInfoPrive().equals("Rejouer")) {
-//                iaDeductionChocoSolver.ajouterContraintePersonnage(
-//                        new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur()
-//                );
-//            }
+            IndiceTemps it = (IndiceTemps) i;
+            iaDeductionChocoSolver.poserQuestionTemps(
+                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
+            );
         }
 
         partie.ajouterIndice(i);
         notifierObservateurs();
         System.out.println("Réponse à la question posée : " + i);
+
+        VuePopUpPoseQuestion vuePopUpPoseQuestion = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VuePopUpPoseQuestion){
+                vuePopUpPoseQuestion = (VuePopUpPoseQuestion) o;
+                break;
+            }
+        }
+        assert vuePopUpPoseQuestion != null;
+        vuePopUpPoseQuestion.afficherPopUp(i);
         if (isVueCarte()){
             retourVueCarte(stage);
         } else {
@@ -211,6 +214,7 @@ public class ModeleJeu implements Sujet {
         } else {
             System.out.println("Défaite enregistrée dans le modèle.");
         }
+        notifierObservateurs();
         return resultat;
     }
 
@@ -248,6 +252,8 @@ public class ModeleJeu implements Sujet {
 
         // On ajoute la note à la liste des notes
         partie.ajouterNote(n);
+
+        notifierObservateurs();
     }
 
     public void ajouterNote(Lieu l, Temps t, int nbPersonnages, boolean hypothese, boolean absence) {
@@ -266,6 +272,8 @@ public class ModeleJeu implements Sujet {
 
         // On ajoute la note à la liste des notes
         partie.ajouterNote(n);
+
+        notifierObservateurs();
     }
 
     public void modifierNote(Lieu l, Temps t, Personnage p, boolean absence, boolean hypothese) {
@@ -282,6 +290,8 @@ public class ModeleJeu implements Sujet {
 
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
+
+        notifierObservateurs();
     }
 
     public void modifierNote(Lieu l, Temps t, int nbPersonnage, boolean absence, boolean hypothese) {
@@ -298,6 +308,8 @@ public class ModeleJeu implements Sujet {
 
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
+
+        notifierObservateurs();
     }
 
     // Méthode permettant de supprimer une note du joueur
@@ -315,6 +327,8 @@ public class ModeleJeu implements Sujet {
 
         // On supprime la note de la liste des notes
         partie.supprimerNote(n);
+
+        notifierObservateurs();
     }
 
     public void supprimerNote(Lieu l, Temps t, int nbPersonnages) {
@@ -331,6 +345,8 @@ public class ModeleJeu implements Sujet {
 
         // On supprime la note de la liste des notes
         partie.supprimerNote(n);
+
+        notifierObservateurs();
     }
 
     public void ajouterPion(Note note, Image image, int x, int y){
