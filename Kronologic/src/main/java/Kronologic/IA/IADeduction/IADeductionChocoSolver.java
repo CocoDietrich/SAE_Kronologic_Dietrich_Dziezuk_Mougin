@@ -20,10 +20,14 @@ public class IADeductionChocoSolver extends IADeduction {
                 .toArray(String[]::new);
 
         //On recupere les salles adjacentes de chaque salle
-        List<Lieu> lieux = partie.getElements().getLieux();
-        int[][] sallesAdjacentes = lieux.stream()
-                .map(l -> l.getListeLieuxAdjacents().stream().mapToInt(Lieu::getId).toArray())
-                .toArray(int[][]::new);
+        int[][] sallesAdjacentes = {
+                {2, 3},    // Salle 1 est adjacente à 2 et 3
+                {1, 3},    // Salle 2 est adjacente à 1 et 3
+                {1, 2, 4}, // Salle 3 est adjacente à 1, 2 et 4
+                {3, 5, 6}, // Salle 4 est adjacente à 3, 5 et 6
+                {4, 6},    // Salle 5 est adjacente à 4 et 6
+                {4, 5}     // Salle 6 est adjacente à 4 et 5
+        };
 
         //On recupere les positions de tous les personnages au temps 1
         List<Realite> positionsInitiales = partie.getDeroulement().positionsAuTemps(new Temps(1));
