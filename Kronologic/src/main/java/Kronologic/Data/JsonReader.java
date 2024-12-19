@@ -9,6 +9,7 @@ import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.*;
+import Kronologic.MVC.Vue.GestionnairePions;
 import com.google.gson.*;
 import Kronologic.Jeu.Partie;
 
@@ -148,9 +149,10 @@ public class JsonReader {
 
             GestionnaireIndices gestionnaireIndices = new GestionnaireIndices(indices);
             GestionnaireNotes gestionnaireNotes = new GestionnaireNotes();
+            GestionnairePions gestionnairePions = new GestionnairePions();
 
             // Créer la partie
-            return new Partie(enquete, deroulement, gestionnaireIndices, gestionnaireNotes, new Elements(personnages, lieux));
+            return new Partie(enquete, deroulement, gestionnaireIndices, gestionnaireNotes, gestionnairePions, new  Elements(personnages, lieux));
 
         } catch (Exception e) {
             e.printStackTrace();

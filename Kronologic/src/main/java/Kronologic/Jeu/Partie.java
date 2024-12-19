@@ -3,6 +3,9 @@ package Kronologic.Jeu;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.GestionnaireIndices;
 import Kronologic.Jeu.Indice.Indice;
+import Kronologic.MVC.Vue.GestionnairePions;
+import Kronologic.MVC.Vue.Pion;
+
 import java.util.ArrayList;
 
 public class Partie {
@@ -12,14 +15,16 @@ public class Partie {
     private Deroulement deroulement;
     private GestionnaireIndices gestionnaireIndices;
     private GestionnaireNotes gestionnaireNotes;
+    private GestionnairePions gestionnairePions;
     private Elements elements;
 
-    public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes, Elements elements) {
+    public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes, GestionnairePions gestionnairePions, Elements elements) {
         this.indicesDecouverts = new ArrayList<>();
         this.enquete = enquete;
         this.deroulement = deroulement;
         this.gestionnaireIndices = gestionnaireIndices;
         this.gestionnaireNotes = gestionnaireNotes;
+        this.gestionnairePions = gestionnairePions;
         this.nbQuestion = 0;
         this.elements = elements;
     }
@@ -63,6 +68,24 @@ public class Partie {
     // Méthode permettant de retirer une note du joueur (enlever un pion des cartes)
     public void supprimerNote(Note n) {
         gestionnaireNotes.supprimerNote(n);
+    }
+
+    // Méthode permettant d'ajouter un pion
+    public void ajouterPion(Pion pion) {
+        gestionnairePions.ajouterPion(pion);
+        gestionnaireNotes.ajouterNote(pion.getNote());
+    }
+
+    // Méthode permettant de déplacer un pion
+    public void deplacerPion(Pion pion, Lieu nouveauLieu, int x, int y) {
+        gestionnairePions.deplacerPion(pion, nouveauLieu, x, y);
+        gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu);
+    }
+
+    // Méthode permettant de supprimer un pion
+    public void supprimerPion(Pion pion) {
+        gestionnairePions.supprimerPion(pion);
+        gestionnaireNotes.supprimerNote(pion.getNote());
     }
 
     // Méthode permettant à l'IA de demander un indice

@@ -26,6 +26,14 @@ public class GestionnaireNotes {
         }
     }
 
+    public void deplacerNote(Note n, Lieu l) {
+        for (Note note : notes) {
+            if (note.equals(n)) {
+                note.setLieu(l);
+            }
+        }
+    }
+
     // Méthode permettant de supprimer une note
     public void supprimerNote(Note n) {
         notes.remove(n);

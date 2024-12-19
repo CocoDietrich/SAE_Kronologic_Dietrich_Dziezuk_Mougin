@@ -36,4 +36,10 @@ public abstract class Position {
     public int getNbPersonnages() {
         return nbPersonnages;
     }
+
+    // Setter pour le lieu
+
+    public void setLieu(Lieu lieu) {
+        this.lieu = lieu;
+    }
 }

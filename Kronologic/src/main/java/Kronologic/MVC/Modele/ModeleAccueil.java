@@ -49,6 +49,7 @@ public class ModeleAccueil implements Sujet {
                 ControleurPopUpQuitter controleurPopUpQuitter = new ControleurPopUpQuitter(modeleJeu);
                 ControleurRegle controleurRegle = new ControleurRegle(modeleJeu);
                 ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
+                ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -91,6 +92,9 @@ public class ModeleAccueil implements Sujet {
                 }
                 for (Button b : vueDeduction.personnageButtons){
                     b.setOnAction(controleurDeduction);
+                }
+                for (Pion p : vueCarte.pions){
+                    p.setOnDragDropped(controleurChoixCarte);
                 }
 
                 vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);

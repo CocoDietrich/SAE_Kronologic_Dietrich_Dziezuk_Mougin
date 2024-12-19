@@ -1,6 +1,7 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.MVC.Modele.ModeleJeu;
+import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -13,8 +14,8 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerButton;
@@ -32,6 +33,7 @@ public class VueCarte extends BorderPane implements Observateur {
     public CheckBox hypothese;
     public CheckBox absence;
     public List<Polygon> zonesDeJeu;
+    public List<Pion> pions = new ArrayList<>();
 
     public VueCarte() {
         super();
@@ -273,7 +275,9 @@ public class VueCarte extends BorderPane implements Observateur {
             Dragboard db = event.getDragboard();
             if (db.hasImage()) {
                 // Création du pion déplacé
-                ImageView pionDeplace = new ImageView(db.getImage());
+                // TODO: Vérifier le type de pion (personnage ou nombre)
+                System.out.println(db.getImage());
+                Pion pionDeplace = new Pion(null, db.getImage().getUrl());
                 if (event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")).equals("pionNombre")) {
                     pionDeplace.setFitHeight(45);
                     pionDeplace.setFitWidth(45);
@@ -316,6 +320,9 @@ public class VueCarte extends BorderPane implements Observateur {
                 pionDeplace.setLayoutY(dropPoint.getY() - pionDeplace.getFitHeight() / 2);
 
                 event.setDropCompleted(true);
+
+                // Ajouter le pion à la liste des pions
+                pions.add(pionDeplace);
             } else {
                 event.setDropCompleted(false);
             }
@@ -338,7 +345,7 @@ public class VueCarte extends BorderPane implements Observateur {
         };
 
         for (String chemin : cheminsPions) {
-            ImageView pion = new ImageView(new Image(chemin));
+            Pion pion = new Pion(null, chemin);
             pion.setFitHeight(60);
             pion.setFitWidth(60);
             pion.setPreserveRatio(true);
@@ -357,6 +364,7 @@ public class VueCarte extends BorderPane implements Observateur {
             pion.setOnDragDone(event -> event.consume());
 
             pionsPersonnages.getChildren().add(pion);
+            pions.add(pion);
         }
         return pionsPersonnages;
     }
@@ -374,7 +382,7 @@ public class VueCarte extends BorderPane implements Observateur {
         };
 
         // Création de l'image par défaut (non modifiée)
-        ImageView pionNombre = new ImageView(new Image(imagesPionNombre[0]));
+        Pion pionNombre = new Pion(null, imagesPionNombre[0]);
         pionNombre.setFitWidth(90);
         pionNombre.setFitHeight(90);
         pionNombre.setPreserveRatio(true);
@@ -420,8 +428,8 @@ public class VueCarte extends BorderPane implements Observateur {
             event.consume();
         });
 
-        pionNombre.setOnDragDone(event -> event.consume());
-
+        pionNombre.setOnDragDone(Event::consume);
+        pions.add(pionNombre);
         return pionNombre;
     }
 
