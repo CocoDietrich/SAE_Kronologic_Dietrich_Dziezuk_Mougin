@@ -276,17 +276,15 @@ public class VueCarte extends BorderPane implements Observateur {
             if (db.hasImage()) {
                 // Création du pion déplacé
                 // TODO: Vérifier le type de pion (personnage ou nombre)
-                System.out.println(db.getImage());
-                Pion pionDeplace = new Pion(null, db.getImage().getUrl());
-                if (event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")).equals("pionNombre")) {
-                    pionDeplace.setFitHeight(45);
-                    pionDeplace.setFitWidth(45);
-                    pionDeplace.setId("pionNombre");
+                Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
+                if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
+                    pionDeplace.setFitHeight(47.5);
+                    pionDeplace.setFitWidth(47.5);
                 } else {
                     pionDeplace.setFitHeight(30);
                     pionDeplace.setFitWidth(30);
-                    pionDeplace.setId(event.getGestureSource().toString().substring(13, event.getGestureSource().toString().indexOf(",")));
                 }
+                pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                 pionDeplace.setPreserveRatio(true);
                 pionDeplace.setStyle("-fx-cursor: hand;");
 
@@ -350,7 +348,7 @@ public class VueCarte extends BorderPane implements Observateur {
             pion.setFitWidth(60);
             pion.setPreserveRatio(true);
             pion.setStyle("-fx-cursor: hand;");
-            pion.setId(chemin.substring(chemin.lastIndexOf("/") + 1, chemin.lastIndexOf(".")));
+            pion.setId(chemin);
 
             // Activation du Drag & Drop
             pion.setOnDragDetected(event -> {
@@ -387,7 +385,7 @@ public class VueCarte extends BorderPane implements Observateur {
         pionNombre.setFitHeight(90);
         pionNombre.setPreserveRatio(true);
         pionNombre.setStyle("-fx-cursor: hand;");
-        pionNombre.setId("pionNombre");
+        pionNombre.setId(imagesPionNombre[0]);
 
         // Ajout du double-clic pour changer le nombre
         pionNombre.setOnMouseClicked(event -> {
@@ -404,6 +402,7 @@ public class VueCarte extends BorderPane implements Observateur {
                             // Mise à jour de l'image du pion
                             pionNombre.setImage(new Image(imagesPionNombre[value + 1]));
                             pionNombre.setUserData(value);
+                            pionNombre.setId(imagesPionNombre[value + 1]);
                         } else {
                             showAlert("Le nombre doit être entre 0 et 5 !");
                         }

@@ -94,7 +94,7 @@ public class ModeleAccueil implements Sujet {
                     b.setOnAction(controleurDeduction);
                 }
                 for (Pion p : vueCarte.pions){
-                    p.setOnDragDropped(controleurChoixCarte);
+                    p.setOnDragDone(controleurChoixCarte);
                 }
 
                 vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);
