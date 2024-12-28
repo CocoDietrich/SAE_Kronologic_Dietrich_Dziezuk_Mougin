@@ -1,0 +1,155 @@
+Fonctionnalités développées au cours de l'itération 2 :
+
+- Permettre au joueur de formuler des déductions
+
+Condition de validation :
+    - Le joueur peut, à tout moment, appuyer sur le bouton “Faire une déduction”. Ainsi, il choisit un coupable, un lieu, et un moment,
+      puis valide, ou non, sa déduction.
+    - Le jeu s’arrête et informe le joueur de sa victoire ou de sa défaite.
+
+
+- Permettre au joueur de formuler des hypothèses
+
+Condition de validation :
+    - Le joueur peut placer les pions représentant les personnages dans chaque lieu aux différents pas de temps sur la feuille de jeu
+      en fonction des indices qu’il connaît et des déductions qu’il réalise.
+    - Le joueur peut redéplacer les pions dans d'autres lieux et/ou à d'autres pas de temps à tout moment pour modifier ses hypothèses.
+    - Le joueur peut supprimer un pion en le drag and dropant hors d'une carte.
+    - Tout cela est également possible avec le pion de nombre, qui représente un nombre de personnages.
+
+
+- Permettre au joueur de changer d’affichage
+
+Condition de validation :
+    - Un bouton permet de passer à un deuxième type d’affichage sous forme de tableaux.
+
+Les fonctionnalités développées au sein de ce nouvel affichage sont les suivantes :
+
+- Création de l'interface de jeu
+
+Conditions de validation :
+La page affiche :
+    - Tous les éléments visuels (les 2 groupes de 6 pas de temps avec les groupes de pion de personnages et de pion de lieux),
+    - L’historique des indices dévoilés,
+    - Les différents boutons de jeu fonctionnels (poser une question, déduction de l’IA, faire une déduction, demander un indice),
+    - Les deux tableaux de déduction :
+    - Le premier tableau permet de renseigner combien de personnages sont présents dans tel lieu à tel moment.
+    - Le deuxième tableau permet au joueur d’indiquer dans quelle salle se trouve, ou ne se trouve pas, chaque personnage aux différents pas de temps.
+    - Les boutons d’affichage des films des déplacements des personnages de la partie et du joueur,
+    - La flèche de retour en arrière,
+    - Les règles du jeu,
+    - Changer d’affichage.
+
+- Permettre au joueur de poser une question (pareil que pour la VueCarte)
+
+- Permettre au joueur de faire une déduction (pareil que pour la VueCarte)
+
+
+- Réalisation de l'IA de déduction utilisant Choco-Solver
+
+Cette IA est capable de :
+    - Analyser les indices collectés et en tirer des conclusions logiques
+
+    Conditions de validation :
+        - L’IA croise les indices disponibles et déduit des informations supplémentaires non explicites avec les indices.
+          Ces conclusions sont affichées dans un historique de déduction, lorsque le joueur le demande.
+        - Les suspects impossibles sont exclus en temps réel après chaque nouvel indice.
+
+    - Proposer une hypothèse logique basée sur les indices
+
+    Conditions de validation :
+        - L’IA utilise les indices pour formuler une hypothèse probable (coupable, lieu, moment).
+        - L’hypothèse est mise en évidence dans l’historique des déductions.
+
+
+
+Cas d'utilisation développés au cours de l'itération 2 :
+
+- Cas d’utilisation : Permettre au joueur de formuler des déductions
+
+Acteur principal : Joueur.
+Objectifs : Donner la possibilité au joueur de résoudre l’enquête en déclarant un coupable, un lieu et un moment.
+Préconditions : Le joueur dispose d’indices suffisants pour effectuer une déduction.
+Postconditions : La partie se termine par une victoire ou une défaite.
+Scénario principal :
+- Le joueur appuie sur le bouton Faire une déduction.
+- Une fenêtre s’ouvre, permettant au joueur de sélectionner :
+    - Un coupable.
+    - Un lieu du meurtre.
+    - Le moment du crime.
+- Le joueur valide sa déduction.
+- Le système compare la déduction du joueur avec la solution de l’enquête.
+- Le joueur est informé de sa victoire (si la déduction est correcte) ou de sa défaite (si elle est incorrecte).
+
+
+- Cas d’utilisation : Permettre au joueur de formuler des hypothèses
+
+Acteur principal : Joueur.
+Objectifs : Offrir au joueur la possibilité de formuler et d’enregistrer des hypothèses sur les positions des personnages, en fonction de la vue choisie.
+Préconditions : Le joueur a récolté des indices et souhaite les exploiter pour formuler des hypothèses.
+Postconditions : Les hypothèses sont enregistrées et visibles dans la vue carte uniquement.
+Scénario principal :
+- Le joueur utilise l’interface pour formuler ses hypothèses :
+    Vue Carte :
+        - Le joueur place des pions sur les lieux des cartes.
+        - Les pions peuvent être configurés en hypothèses, absences, ou hypothèses d’absence à l’aide des cases à cocher disponibles.
+    Vue Tableaux :
+        - Le joueur renseigne directement les indices dans les tableaux.
+        - Il indique les présences et le nombre de personnages par lieu et par pas de temps.
+- Les hypothèses sont enregistrées dans le système.
+- Les hypothèses peuvent être modifiées ou supprimées par le joueur.
+
+
+- Cas d’utilisation : Permettre au joueur de changer d’affichage
+
+Acteur principal : Joueur.
+Objectifs : Permettre au joueur de basculer entre la Vue Carte et la Vue Tableaux.
+Préconditions : Une partie est en cours et le joueur souhaite changer d’affichage.
+Postconditions : L’affichage change et les informations saisies sont conservées dans les deux vues.
+Scénario principal :
+- Le joueur appuie sur le bouton Changer d’affichage.
+- Si la Vue Carte est affichée, elle est remplacée par la Vue Tableaux.
+- Si la Vue Tableaux est affichée, elle est remplacée par la Vue Carte.
+- Les hypothèses, les indices et les déductions enregistrés sont reportés dans la nouvelle vue.
+
+
+- Cas d’utilisation : Analyser les indices collectés et en tirer des conclusions logiques
+
+Acteur principal : IA de déduction (heuristique et Choco-Solver).
+Objectifs : Exploiter les indices disponibles pour produire des déductions logiques supplémentaires et tenir à jour un historique des déductions.
+Préconditions : Des indices ont été collectés par le joueur ou par l’IA.
+Postconditions : Les informations déduites sont visibles dans un historique de déduction et les suspects impossibles sont exclus en temps réel.
+Scénario principal :
+- L’IA examine les indices collectés.
+- Elle croise les données pour identifier des relations logiques non explicites (par exemple, un personnage innocenté en fonction de sa localisation).
+- Les suspects impossibles sont automatiquement écartés des hypothèses.
+- Les déductions supplémentaires sont enregistrées et mises à jour dans l’historique.
+- Le joueur peut consulter l’historique en appuyant sur le bouton Déduction de l’IA.
+
+
+- Cas d’utilisation : Proposer une hypothèse logique basée sur les indices
+
+Acteur principal : IA de déduction (heuristique et Choco-Solver).
+Objectifs : Formuler une hypothèse probable concernant le coupable, le lieu et le moment du crime.
+Préconditions : Des indices suffisants ont été collectés pour permettre à l’IA de formuler une hypothèse.
+Postconditions : Une hypothèse logique est générée et affichée dans l’historique des déductions.
+Scénario principal :
+- L’IA examine les indices disponibles pour identifier les suspects potentiels, le lieu probable du crime et l’heure associée.
+- Elle génère une hypothèse basée sur une analyse logique des données.
+- Cette hypothèse est mise en avant dans l’historique des déductions.
+- Le joueur peut consulter cette hypothèse en appuyant sur le bouton Déduction de l’IA.
+
+
+Rôle des membres du groupe :
+
+Mathieu :
+
+- Réaliser l'IA de déduction utilisant Choco-Solver.
+- Analyser les indices collectés et en tirer des conclusions logiques.
+- Proposer une hypothèse logique basée sur les indices.
+
+Enzo et Corentin :
+
+- Permettre au joueur de formuler des déductions.
+- Permettre au joueur de formuler des hypothèses.
+- Permettre au joueur de changer d’affichage.

@@ -1,0 +1,58 @@
+Bilan de l'Itération 1 :
+
+1. État Actuel de la Version
+
+Fonctionnalités Développées :
+
+ - Permettre au joueur de formuler des déductions
+ - Permettre au joueur de formuler des hypothèses (sans la gestion des pions d'absence et d'hypothèse)
+ - Permettre au joueur de changer d’affichage
+ - Réalisation de l'IA de déduction utilisant Choco-Solver :
+    - Analyser les indices collectés et en tirer des conclusions logiques
+    - Proposer une hypothèse logique basée sur les indices
+
+
+2. Validation des Choix de Conception
+
+Conformité à l'Étude Préalable :
+
+ - Respect de l'architecture MVC :
+    - La structure du projet reste conforme à l'architecture prévue.
+    - Les interactions entre le modèle, la vue et le contrôleur ont été maintenues de manière claire.
+
+ - Interaction Utilisateur :
+    - Le joueur peut émettre des hypothèses et des déductions intuitivement via les interfaces.
+    - Le changement d'affichage entre la Vue Carte et la Vue Tableaux est fluide.
+    - Pour presque tous les choix du joueur, un pop-up permettant de vérifier s'il est sûr de vouloir effectuer l'action est présent,
+      conformément à la maquette.
+
+ - Gestion des Données :
+    - Les données sont correctmeent modélisées et stockées afin que le joueur puisse jouer au jeu Kronologic sans rencontrer
+      de problèmes.
+    - L'IA utilise efficacement les indices pour produire des déductions logiques.
+
+
+3. Problèmes Rencontrés et Bugs Restants
+
+Nous avons rencontré quelques problèmes au cours de cette première itération, que nous avons néanmoins réussi à corriger :
+
+ - Problème de synchronisation entre les vues Carte et Tableaux réglé.
+
+ - Bugs liés au drag and drop des pions (problèmes de positionnement, de taille, de suppression) corrigés.
+
+ - Ajustement des déductions de l'IA pour qu'elles soient plus pertinentes et cohérentes.
+
+
+4. Conclusion et Perspectives
+
+L'itération 2 a permis de développer des fonctionnalités majeures conformes aux objectifs prévus. Le jeu est maintenant plus
+interactif et immersif, avec une meilleure prise en charge des déductions et des hypothèses.
+
+Pour l'itération 3, nous prévoyons de :
+    - Finaliser l'IA de déduction utilisant Choco-Solver pour qu'elle soit plus performante et pertinente.
+    - Terminer d'implémenter les fonctionnalités liées au jeu :
+        - Gestion des notes du joueur.
+        - Gestion des pions d'absence et d'hypothèse.
+        - Afficher les règles du jeu.
+        - Afficher les films des déplacements des personnages au cours de la partie.
+    - Réaliser l'IA de déduction heuristique.
