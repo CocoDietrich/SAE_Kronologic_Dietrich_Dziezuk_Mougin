@@ -1,6 +1,5 @@
 package Kronologic.MVC.Modele;
 
-
 import Kronologic.Data.JsonReader;
 import Kronologic.Jeu.Elements.Pion;
 import Kronologic.MVC.Controleur.*;
@@ -32,7 +31,7 @@ public class ModeleAccueil implements Sujet {
                 ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson("data/enquete_base.json"));
 
                 VuePopUpEnigme vuePopUpEnigme = new VuePopUpEnigme(stage);
-                VueCarte vueCarte = new VueCarte();
+                VueCarte vueCarte = new VueCarte(modeleJeu);
                 VueTableau vueTableau = new VueTableau();
                 VuePoseQuestion vuePoseQuestion = new VuePoseQuestion();
                 VueDeduction vueDeduction = new VueDeduction();

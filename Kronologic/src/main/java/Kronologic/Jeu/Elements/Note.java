@@ -38,6 +38,16 @@ public class Note extends Position {
         return sb.toString();
     }
 
+    public boolean equals(Object o) {
+        if (o instanceof Note n) {
+            return this.getLieu().equals(n.getLieu())
+                    && this.getTemps().equals(n.getTemps())
+                    && this.getPersonnage().equals(n.getPersonnage())
+                    && this.getNbPersonnages() == n.getNbPersonnages();
+        }
+        return false;
+    }
+
     // Setter pour chaque attribut
     public void setEstAbsence(boolean estAbsence) {
         this.estAbsence = estAbsence;

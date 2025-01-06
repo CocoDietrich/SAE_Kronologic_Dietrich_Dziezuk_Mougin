@@ -18,6 +18,7 @@ public class GestionnairePions {
     public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
         for (Pion p : this.pions) {
             if (p.getNote().toString().equals(pion.getNote().toString())){
+                System.out.println("pion trouvé");
                 Note note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getPersonnage());
                 note.setEstAbsence(pion.getNote().estAbsence());
                 note.setEstHypothese(pion.getNote().estHypothese());

@@ -29,6 +29,7 @@ public class GestionnaireNotes {
     public void deplacerNote(Note n, Lieu l) {
         for (Note note : notes) {
             if (note.equals(n)) {
+                System.out.println("note trouvée");
                 note.setLieu(l);
             }
         }

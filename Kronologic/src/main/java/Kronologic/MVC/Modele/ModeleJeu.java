@@ -390,7 +390,6 @@ public class ModeleJeu implements Sujet {
         Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
         stage.setScene(scene);
         stage.show();
-
     }
 
     public void valider(){
@@ -456,8 +455,6 @@ public class ModeleJeu implements Sujet {
         assert vuePopUpDemanderIndice != null;
         vuePopUpDemanderIndice.afficherPopUp();
     }
-
-
 
     @Override
     public void enregistrerObservateur(Observateur o) {
