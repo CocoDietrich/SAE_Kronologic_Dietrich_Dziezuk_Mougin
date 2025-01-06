@@ -141,12 +141,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         tempsGrid.setVgap(10);
 
         List<String> tempsImagesPaths = List.of(
-                "file:img/temps1.png",
-                "file:img/temps2.png",
-                "file:img/temps3.png",
-                "file:img/temps4.png",
-                "file:img/temps5.png",
-                "file:img/temps6.png"
+                Images.Temps.TEMPS1.getUrl(),
+                Images.Temps.TEMPS2.getUrl(),
+                Images.Temps.TEMPS3.getUrl(),
+                Images.Temps.TEMPS4.getUrl(),
+                Images.Temps.TEMPS5.getUrl(),
+                Images.Temps.TEMPS6.getUrl()
         );
 
         tempsButtons = new ArrayList<>();

@@ -1,8 +1,6 @@
 package Kronologic.MVC.Vue;
 
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-
 import java.util.List;
 
 public class TextCase extends Text {

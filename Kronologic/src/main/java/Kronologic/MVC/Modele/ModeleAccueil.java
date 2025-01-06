@@ -2,8 +2,14 @@ package Kronologic.MVC.Modele;
 
 
 import Kronologic.Data.JsonReader;
+import Kronologic.Jeu.Elements.Pion;
 import Kronologic.MVC.Controleur.*;
+import Kronologic.MVC.Controleur.PopUps.ControleurPopUpDeduction;
+import Kronologic.MVC.Controleur.PopUps.ControleurPopUpDemanderIndice;
+import Kronologic.MVC.Controleur.PopUps.ControleurPopUpPoseQuestion;
+import Kronologic.MVC.Controleur.PopUps.ControleurPopUpQuitter;
 import Kronologic.MVC.Vue.*;
+import Kronologic.MVC.Vue.PopUps.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +31,7 @@ public class ModeleAccueil implements Sujet {
             case "Jouer" :
                 ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson("data/enquete_base.json"));
 
+                VuePopUpEnigme vuePopUpEnigme = new VuePopUpEnigme(stage);
                 VueCarte vueCarte = new VueCarte();
                 VueTableau vueTableau = new VueTableau();
                 VuePoseQuestion vuePoseQuestion = new VuePoseQuestion();
@@ -121,6 +128,7 @@ public class ModeleAccueil implements Sujet {
                 Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
                 stage.setScene(scene);
                 stage.show();
+                vuePopUpEnigme.afficherPopUp(ModeleJeu.getPartie().getEnquete());
                 break;
             case "IAJoueuse":
                 // TODO : à implémenter quand l'IA le sera
@@ -133,7 +141,6 @@ public class ModeleAccueil implements Sujet {
     public void quitterJeu() {
         System.exit(0);
     }
-
 
     @Override
     public void enregistrerObservateur(Observateur o) {

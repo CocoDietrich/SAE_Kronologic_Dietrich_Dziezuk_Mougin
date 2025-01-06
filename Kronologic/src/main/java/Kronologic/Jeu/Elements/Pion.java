@@ -1,6 +1,5 @@
-package Kronologic.MVC.Vue;
+package Kronologic.Jeu.Elements;
 
-import Kronologic.Jeu.Elements.Note;
 import javafx.scene.image.ImageView;
 
 public class Pion extends ImageView  {

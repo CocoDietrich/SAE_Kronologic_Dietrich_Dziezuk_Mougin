@@ -5,12 +5,12 @@ import javafx.scene.image.Image;
 public class Images {
 
     public enum Temps{
-        TEMPS1("file:img/temps1.png"),
-        TEMPS2("file:img/temps2.png"),
-        TEMPS3("file:img/temps3.png"),
-        TEMPS4("file:img/temps4.png"),
-        TEMPS5("file:img/temps5.png"),
-        TEMPS6("file:img/temps6.png");
+        TEMPS1("file:img/pions_temps/temps1.png"),
+        TEMPS2("file:img/pions_temps/temps2.png"),
+        TEMPS3("file:img/pions_temps/temps3.png"),
+        TEMPS4("file:img/pions_temps/temps4.png"),
+        TEMPS5("file:img/pions_temps/temps5.png"),
+        TEMPS6("file:img/pions_temps/temps6.png");
 
         private final String url;
 
@@ -44,12 +44,12 @@ public class Images {
     }
 
     public enum Lieux {
-        LIEU1("file:img/Lieu_Grand foyer_1.png"),
-        LIEU2("file:img/Lieu_Grand escalier_2.png"),
-        LIEU3("file:img/Lieu_Salle_3.png"),
-        LIEU4("file:img/Lieu_Scène_4.png"),
-        LIEU5("file:img/Lieu_Foyer de la danse_5.png"),
-        LIEU6("file:img/Lieu_Foyer du chant_6.png");
+        LIEU1("file:img/pions_lieux/Lieu_Grand foyer_1.png"),
+        LIEU2("file:img/pions_lieux/Lieu_Grand escalier_2.png"),
+        LIEU3("file:img/pions_lieux/Lieu_Salle_3.png"),
+        LIEU4("file:img/pions_lieux/Lieu_Scène_4.png"),
+        LIEU5("file:img/pions_lieux/Lieu_Foyer de la danse_5.png"),
+        LIEU6("file:img/pions_lieux/Lieu_Foyer du chant_6.png");
 
         private final String url;
 
@@ -94,12 +94,12 @@ public class Images {
     }
 
     public enum Personnages {
-        PERSONNAGE1("file:img/Aventurière.png"),
-        PERSONNAGE2("file:img/Baronne.png"),
-        PERSONNAGE3("file:img/Chauffeur.png"),
-        PERSONNAGE4("file:img/Détective.png"),
-        PERSONNAGE5("file:img/Journaliste.png"),
-        PERSONNAGE6("file:img/Servante.png");
+        PERSONNAGE1("file:img/pions_personnages/Aventurière.png"),
+        PERSONNAGE2("file:img/pions_personnages/Baronne.png"),
+        PERSONNAGE3("file:img/pions_personnages/Chauffeur.png"),
+        PERSONNAGE4("file:img/pions_personnages/Détective.png"),
+        PERSONNAGE5("file:img/pions_personnages/Journaliste.png"),
+        PERSONNAGE6("file:img/pions_personnages/Servante.png");
 
         private final String url;
 

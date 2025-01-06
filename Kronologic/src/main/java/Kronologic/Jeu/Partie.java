@@ -3,8 +3,8 @@ package Kronologic.Jeu;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.GestionnaireIndices;
 import Kronologic.Jeu.Indice.Indice;
-import Kronologic.MVC.Vue.GestionnairePions;
-import Kronologic.MVC.Vue.Pion;
+import Kronologic.Jeu.Elements.GestionnairePions;
+import Kronologic.Jeu.Elements.Pion;
 
 import java.util.ArrayList;
 
@@ -77,15 +77,17 @@ public class Partie {
     }
 
     // Méthode permettant de déplacer un pion
-    public void deplacerPion(Pion pion, Lieu nouveauLieu, int x, int y) {
-        gestionnairePions.deplacerPion(pion, nouveauLieu, x, y);
+    public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
+        gestionnairePions.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
         gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu);
     }
 
     // Méthode permettant de supprimer un pion
     public void supprimerPion(Pion pion) {
         gestionnairePions.supprimerPion(pion);
-        gestionnaireNotes.supprimerNote(pion.getNote());
+        if (pion.getNote() != null){
+            gestionnaireNotes.supprimerNote(pion.getNote());
+        }
     }
 
     // Méthode permettant à l'IA de demander un indice

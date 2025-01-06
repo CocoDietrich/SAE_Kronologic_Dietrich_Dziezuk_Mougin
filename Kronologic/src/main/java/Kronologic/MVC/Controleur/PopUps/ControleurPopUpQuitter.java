@@ -1,8 +1,8 @@
-package Kronologic.MVC.Controleur;
+package Kronologic.MVC.Controleur.PopUps;
 
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.Observateur;
-import Kronologic.MVC.Vue.VuePopUpQuitter;
+import Kronologic.MVC.Vue.PopUps.VuePopUpQuitter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;

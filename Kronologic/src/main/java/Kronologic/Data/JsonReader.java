@@ -9,7 +9,7 @@ import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.*;
-import Kronologic.MVC.Vue.GestionnairePions;
+import Kronologic.Jeu.Elements.GestionnairePions;
 import com.google.gson.*;
 import Kronologic.Jeu.Partie;
 

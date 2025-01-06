@@ -4,10 +4,7 @@ import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
 import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
-import Kronologic.Jeu.Elements.Lieu;
-import Kronologic.Jeu.Elements.Note;
-import Kronologic.Jeu.Elements.Personnage;
-import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Indice.IndicePersonnage;
 import Kronologic.Jeu.Indice.IndiceTemps;
@@ -15,6 +12,10 @@ import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Vue.*;
+import Kronologic.MVC.Vue.PopUps.VuePopUpDeduction;
+import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
+import Kronologic.MVC.Vue.PopUps.VuePopUpPoseQuestion;
+import Kronologic.MVC.Vue.PopUps.VuePopUpQuitter;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -353,6 +354,14 @@ public class ModeleJeu implements Sujet {
         Pion pion = new Pion(note, image.getUrl());
         pion.deplacerPion(x, y);
         partie.ajouterPion(pion);
+    }
+
+    public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y){
+        partie.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
+    }
+
+    public void supprimerPion(Pion pion){
+        partie.supprimerPion(pion);
     }
 
     public String voirDeductionIA(){

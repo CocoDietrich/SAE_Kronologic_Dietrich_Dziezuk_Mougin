@@ -1,5 +1,6 @@
-package Kronologic.MVC.Vue;
+package Kronologic.MVC.Vue.PopUps;
 
+import Kronologic.MVC.Vue.Observateur;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
