@@ -1,6 +1,8 @@
 package Kronologic.MVC.Controleur;
 
 import Kronologic.MVC.Modele.ModeleJeu;
+import Kronologic.MVC.Vue.Observateur;
+import Kronologic.MVC.Vue.VuePopUpDeduction;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -25,6 +27,18 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
         if (id.equals("Quitter")) {
             stage.close();
             System.out.println("Fermeture du pop-up de déduction.");
+
+            VuePopUpDeduction vuePopUpDeduction = null;
+            // On récupère la vue du pop-up de déduction
+            for (Observateur o : modele.getObservateurs()) {
+                if (o instanceof VuePopUpDeduction) {
+                    vuePopUpDeduction = (VuePopUpDeduction) o;
+                    break;
+                }
+            }
+            // On retourne à la vue de la carte
+            assert vuePopUpDeduction != null;
+            this.modele.quitter("retour", vuePopUpDeduction.getStage());
         }
     }
 }

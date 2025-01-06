@@ -8,7 +8,6 @@ import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.extension.Tuples;
 import org.chocosolver.solver.variables.IntVar;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ModeleChocoSolver {
@@ -26,11 +25,8 @@ public class ModeleChocoSolver {
         definirVariables();
         definirContraintesInitiales();
         definirContraintesRegles(sallesAdjacentes);
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        propagerContraintes();
     }
 
     private void definirVariables() {
@@ -57,103 +53,57 @@ public class ModeleChocoSolver {
                 IntVar salleSuivante = positions[i][t + 1];
 
                 // Création de la table de déplacements valides
-                List<int[]> tuplesValides = new ArrayList<>();
-
+                Tuples table = new Tuples(true);
                 for (int salle = 1; salle <= 6; salle++) {
                     for (int adj : sallesAdjacentes[salle - 1]) {
-                        tuplesValides.add(new int[]{salle, adj});
+                        table.add(salle, adj);
                     }
                 }
 
-                // Conversion en tableau
-                int[][] table = tuplesValides.toArray(new int[0][]);
-
-                // Application de la contrainte table
-                model.table(new IntVar[]{salleActuelle, salleSuivante}, new Tuples(table, true), "CT+").post();
+                model.table(new IntVar[]{salleActuelle, salleSuivante}, table, "CT+").post();
             }
         }
     }
 
     public void ajouterContraintePersonnage(Personnage personnage, Lieu lieu, int temps) {
+        System.out.println(personnage.getNom());
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
 
-        if (indexPersonnage != -1 && temps >= 1 && temps <= 6) {
+        if (temps >= 1 && temps <= 6) {
             model.arithm(positions[indexPersonnage][temps - 1], "=", lieu.getId()).post();
         }
 
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        propagerContraintes();
     }
 
     public void ajouterContrainteNombreDePassages(Personnage personnage, Lieu lieu, int nbPassages) {
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
-
-        if (indexPersonnage != -1) {
-            IntVar[] passages = new IntVar[6];
-
-            for (int t = 0; t < 6; t++) {
-                passages[t] = model.intVar("Presence_" + personnage.getNom() + "_T" + (t + 1), 0, 1);
-
-                model.ifThenElse(
-                        model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
-                        model.arithm(passages[t], "=", 1),
-                        model.arithm(passages[t], "=", 0)
-                );
-            }
-            model.sum(passages, "=", nbPassages).post();
-        }
-
-        try {
-            model.getSolver().propagate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        IntVar nbDePassages = model.intVar("Passages_" + personnage.getNom(), 0, 6);
+        model.count(lieu.getId(), positions[indexPersonnage], nbDePassages).post();
+        model.arithm(nbDePassages, "=", nbPassages).post();
+        propagerContraintes();
     }
 
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
-        int tempsIndex = temps.getValeur() - 1;
+        IntVar nbPersonnesDansLieu = model.intVar("NbPersonnes_T" + temps.getValeur() + "_L" + lieu.getId(), 0, personnages.length);
+        IntVar[] positionsTemps = new IntVar[personnages.length];
 
-        // Contraintes de présence pour chaque personnage
         for (int i = 0; i < personnages.length; i++) {
-            IntVar position = positions[i][tempsIndex];
-            if (nbPersonnages == 0) {
-                // Supprime la salle du domaine si personne ne peut y être
-                try {
-                    position.removeValue(lieu.getId(), null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // Contrainte de présence sinon
-                IntVar presence = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
-                model.ifThenElse(
-                        model.arithm(position, "=", lieu.getId()),
-                        model.arithm(presence, "=", 1),
-                        model.arithm(presence, "=", 0)
-                );
-            }
+            positionsTemps[i] = positions[i][temps.getValeur() - 1];
         }
 
-        // Contrainte de somme globale
-        if (nbPersonnages > 0) {
-            IntVar[] presences = new IntVar[personnages.length];
-            for (int i = 0; i < personnages.length; i++) {
-                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + temps.getValeur(), 0, 1);
-            }
-            model.sum(presences, "=", nbPersonnages).post();
-        }
+        model.count(lieu.getId(), positionsTemps, nbPersonnesDansLieu).post();
+        model.arithm(nbPersonnesDansLieu, "=", nbPersonnages).post();
+        propagerContraintes();
+    }
 
-        // Propagation immédiate pour appliquer la contrainte
+    private void propagerContraintes() {
         try {
             model.getSolver().propagate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     private int getIndexPersonnage(String personnage) {
         for (int i = 0; i < personnages.length; i++) {

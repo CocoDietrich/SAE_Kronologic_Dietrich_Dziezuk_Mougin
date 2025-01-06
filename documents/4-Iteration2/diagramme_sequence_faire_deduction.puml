@@ -1,0 +1,64 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor Utilisateur
+participant VueDeduction
+participant ControleurDeduction
+participant ModeleJeu
+participant Partie
+participant Enquete
+participant VuePopUpDeduction
+participant ControleurPopUpDeduction
+
+Utilisateur -> VueDeduction: choisit le meurtrier, le lieu du meurtre et le temps du meurtre
+activate VueDeduction
+VueDeduction -> ControleurDeduction: handle(ActionEvent)
+activate ControleurDeduction
+ControleurDeduction -> ModeleJeu: setLieuChoisi(Lieu l), setPersonneChoisie(Personnage p), setTempsChoisi(Temps t)
+activate ModeleJeu
+ModeleJeu --> ControleurDeduction: void
+deactivate ModeleJeu
+ControleurDeduction --> VueDeduction: void
+deactivate ControleurDeduction
+VueDeduction --> Utilisateur: les choix du joueur sont enregistrés
+deactivate VueDeduction
+
+Utilisateur -> VueDeduction: valide ses choix
+activate VueDeduction
+VueDeduction -> ControleurDeduction: handle(ActionEvent)
+activate ControleurDeduction
+ControleurDeduction -> ModeleJeu: faireDeduction()
+activate ModeleJeu
+ModeleJeu -> Partie: faireDeduction(Lieu l, Personnage p, Temps t)
+activate Partie
+Partie -> Enquete: faireDeduction(Lieu l, Personnage p, Temps t)
+activate Enquete
+Enquete --> Partie: boolean (vrai si le joueur a trouvé le bon triplet, faux sinon)
+deactivate Enquete
+Partie --> ModeleJeu: boolean
+deactivate Partie
+ModeleJeu -> VuePopUpDeduction: afficherPopup(boolean)
+activate VuePopUpDeduction
+VuePopUpDeduction --> ModeleJeu: le pop-up affichant le résultat est affiché (il est différent en fonction du résultat)
+deactivate VuePopUpDeduction
+ModeleJeu -> ModeleJeu : notifierObservateurs()
+ModeleJeu --> ControleurDeduction: boolean
+deactivate ModeleJeu
+ControleurDeduction --> VueDeduction: void
+deactivate ControleurDeduction
+VueDeduction --> Utilisateur: le joueur est informé du résultat de la partie via un pop-up
+deactivate VueDeduction
+
+Utilisateur -> VuePopUpDeduction: clique sur le bouton "Quitter"
+activate VuePopUpDeduction
+VuePopUpDeduction -> ControleurPopUpDeduction: handle(ActionEvent)
+activate ControleurPopUpDeduction
+ControleurPopUpDeduction -> ModeleJeu : quitter(String s,Stage stage)
+activate ModeleJeu
+ModeleJeu --> ControleurPopUpDeduction : la partie est terminée et on retourne à l'écran d'accueil
+deactivate ModeleJeu
+ControleurPopUpDeduction --> VuePopUpDeduction: void
+deactivate ControleurPopUpDeduction
+VuePopUpDeduction --> Utilisateur: le joueur est de retour sur l'écran d'accueil et peut relancer une nouvelle partie et quitter l'application
+deactivate VuePopUpDeduction
+@enduml

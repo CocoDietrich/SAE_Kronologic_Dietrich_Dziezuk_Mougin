@@ -80,4 +80,8 @@ public class VuePopUpDeduction extends BorderPane implements Observateur {
     public void actualiser() {
 
     }
+
+    public Stage getStage() {
+        return stage;
+    }
 }

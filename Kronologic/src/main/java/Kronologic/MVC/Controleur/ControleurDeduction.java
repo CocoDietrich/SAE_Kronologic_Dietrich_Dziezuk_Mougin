@@ -81,9 +81,6 @@ public class ControleurDeduction implements EventHandler<ActionEvent> {
             // On pose la question
             modele.faireDeduction();
 
-            // On retourne à la vue de la carte
-            this.modele.quitter("retour", stage);
-
         } else if (id.equals("Annuler mes choix")) {
             // On réactive les boutons des lieux
             assert vueDeduction != null;
