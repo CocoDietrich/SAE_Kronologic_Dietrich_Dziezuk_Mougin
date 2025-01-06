@@ -98,12 +98,81 @@ public class ModeleChocoSolver {
 
         // Si le nombre de passages est strictement positif
         if (nbPassages > 0) {
+            // Étape 1 : Vérifier les temps instanciés
+            boolean foundInstantiated = false;
+            for (int t = 0; t < 6; t++) {
+                if (positions[indexPersonnage][t].isInstantiated()) {
+                    int confirmedSalle = positions[indexPersonnage][t].getValue();
 
+                    // Si la salle confirmée correspond à celle de l'indice
+                    if (confirmedSalle == lieu.getId()) {
+                        foundInstantiated = true;
+
+                        // Identifier si le temps est pair ou impair
+                        int[] tempsPattern = ((t + 1) % 2 == 0) ? new int[]{2, 4, 6} : new int[]{1, 3, 5};
+
+                        // Appliquer le pattern
+                        for (int i = 0; i < 6; i++) {
+                            boolean containsValue = false;
+                            for (int val : tempsPattern) {
+                                if (val == i + 1) {
+                                    containsValue = true;
+                                    break;
+                                }
+                            }
+                            if ((i + 1) != t + 1 && containsValue) {
+                                model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
+                            } else if ((i + 1) != t + 1) {
+                                model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
+                            }
+                        }
+                        propagerContraintes();
+                        break;
+                    }
+                }
+            }
+
+            // Étape 2 : Si aucune salle n'est instanciée, appliquer les patterns temporels
+            if (!foundInstantiated) {
+                Tuples validPatterns = new Tuples(true);
+                validPatterns.add(1, 3, 5);
+                validPatterns.add(2, 4, 6);
+
+                IntVar[] timeIndices = new IntVar[nbPassages];
+                for (int i = 0; i < nbPassages; i++) {
+                    timeIndices[i] = model.intVar("Time_" + (i + 1), 1, 6);
+                }
+                model.table(timeIndices, validPatterns).post();
+            }
+            propagerContraintes();
+
+            // Étape 3 : Ajouter des contraintes de déplacements cohérents
+            for (int i = 1; i < 6; i++) {
+                Tuples validMoves = new Tuples(true);
+                for (int salle = 1; salle <= 6; salle++) {
+                    for (int adj : sallesAdjacentes[salle - 1]) {
+                        validMoves.add(salle, adj);
+                    }
+                }
+                model.table(new IntVar[]{positions[indexPersonnage][i - 1], positions[indexPersonnage][i]}, validMoves).post();
+            }
+            propagerContraintes();
+
+            // Étape 4 : Lier les positions aux présences
+            for (int t = 0; t < 6; t++) {
+                model.ifThenElse(
+                        model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
+                        model.arithm(presences[t], "=", 1),
+                        model.arithm(presences[t], "=", 0)
+                );
+            }
+            propagerContraintes();
         }
 
         // Propager les contraintes pour éviter les incohérences
         propagerContraintes();
     }
+
 
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
         IntVar nbPersonnesDansLieu = model.intVar("NbPersonnes_T" + temps.getValeur() + "_L" + lieu.getId(), 0, personnages.length);
@@ -138,6 +207,7 @@ public class ModeleChocoSolver {
     public String affichagePropagate() {
         StringBuilder historique = new StringBuilder();
         historique.append("===== Historique des Déductions =====\n");
+        propagerContraintes();
 
         // Affichage des domaines des personnages
         for (int i = 0; i < personnages.length; i++) {
