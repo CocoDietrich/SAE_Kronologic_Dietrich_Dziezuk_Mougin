@@ -91,10 +91,12 @@ public class ModeleChocoSolver {
                 table.add(val, val == lieu.getId() ? 1 : 0);
             }
             model.table(new IntVar[]{positions[indexPersonnage][t], presences[t]}, table).post();
+            propagerContraintes();
         }
 
         // Contraindre la somme des présences au nombre de passages
         model.sum(presences, "=", nbPassages).post();
+        propagerContraintes();
 
         // Si le nombre de passages est strictement positif
         if (nbPassages > 0) {
