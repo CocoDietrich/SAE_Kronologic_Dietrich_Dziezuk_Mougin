@@ -64,10 +64,14 @@ public class ModeleAccueil implements Sujet {
                 vueCarte.changerAffichage.setOnAction(controleurAffichage);
                 vueCarte.regle.setOnAction(controleurVisualiserRegle);
                 vueCarte.demanderIndice.setOnAction(controleurDemanderIndice);
+                vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
                 vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);
                 vueTableau.regle.setOnAction(controleurVisualiserRegle);
+                vueTableau.deductionIA.setOnAction(controleurVoirDeductionIA);
+                vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
+                vueTableau.faireDeduction.setOnAction(controleurVisualiserDeduction);
                 vueRegle.retour.setOnAction(controleurRegle);
 
                 for (TextCase tc : vueTableau.listeCases){
@@ -77,7 +81,7 @@ public class ModeleAccueil implements Sujet {
                 vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);
                 vuePoseQuestion.annuler.setOnAction(controleurPoseQuestion);
                 vuePoseQuestion.valider.setOnAction(controleurPoseQuestion);
-                vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
+
                 for (Button b : vuePoseQuestion.lieuButtons){
                     b.setOnAction(controleurPoseQuestion);
                 }
@@ -88,7 +92,6 @@ public class ModeleAccueil implements Sujet {
                     b.setOnAction(controleurPoseQuestion);
                 }
 
-                vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
                 vueDeduction.retour.setOnAction(controleurDeduction);
                 vueDeduction.annuler.setOnAction(controleurDeduction);
                 vueDeduction.valider.setOnAction(controleurDeduction);

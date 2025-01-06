@@ -115,12 +115,12 @@ public class VueDeduction extends BorderPane implements Observateur {
         lieuxBox.setAlignment(Pos.CENTER);
 
         List<String> lieuxImagesPaths = List.of(
-                "file:img/Lieu_Salle_3.png",
-                "file:img/Lieu_Scène_4.png",
-                "file:img/Lieu_Foyer de la danse_5.png",
-                "file:img/Lieu_Foyer du chant_6.png",
-                "file:img/Lieu_Grand escalier_2.png",
-                "file:img/Lieu_Grand foyer_1.png"
+                Images.Lieux.LIEU1.getUrl(),
+                Images.Lieux.LIEU2.getUrl(),
+                Images.Lieux.LIEU3.getUrl(),
+                Images.Lieux.LIEU4.getUrl(),
+                Images.Lieux.LIEU5.getUrl(),
+                Images.Lieux.LIEU6.getUrl()
         );
 
         lieuButtons = new ArrayList<>();
@@ -144,12 +144,12 @@ public class VueDeduction extends BorderPane implements Observateur {
         tempsGrid.setVgap(10);
 
         List<String> tempsImagesPaths = List.of(
-                "file:img/temps1.png",
-                "file:img/temps2.png",
-                "file:img/temps3.png",
-                "file:img/temps4.png",
-                "file:img/temps5.png",
-                "file:img/temps6.png"
+                Images.Temps.TEMPS1.getUrl(),
+                Images.Temps.TEMPS2.getUrl(),
+                Images.Temps.TEMPS3.getUrl(),
+                Images.Temps.TEMPS4.getUrl(),
+                Images.Temps.TEMPS5.getUrl(),
+                Images.Temps.TEMPS6.getUrl()
         );
 
         tempsButtons = new ArrayList<>();
@@ -174,12 +174,12 @@ public class VueDeduction extends BorderPane implements Observateur {
         persosGrid.setVgap(10);
 
         List<String> personnagesImagesPaths = List.of(
-                "file:img/Journaliste.png",
-                "file:img/Baronne.png",
-                "file:img/Servante.png",
-                "file:img/Aventurière.png",
-                "file:img/Chauffeur.png",
-                "file:img/Détective.png"
+                Images.Personnages.PERSONNAGE1.getUrl(),
+                Images.Personnages.PERSONNAGE2.getUrl(),
+                Images.Personnages.PERSONNAGE3.getUrl(),
+                Images.Personnages.PERSONNAGE4.getUrl(),
+                Images.Personnages.PERSONNAGE5.getUrl(),
+                Images.Personnages.PERSONNAGE6.getUrl()
         );
 
         personnageButtons = new ArrayList<>();
