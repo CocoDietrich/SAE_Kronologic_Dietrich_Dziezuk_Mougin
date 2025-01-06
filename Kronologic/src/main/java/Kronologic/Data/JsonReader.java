@@ -157,7 +157,7 @@ public class JsonReader {
             int idLieuCrime = solution.get("idLieu").getAsInt();
             int tempsCrimeId = solution.get("temps").getAsInt();
 
-            Personnage meurtrier = personnageMap.getOrDefault(nomMeurtrier, new Personnage("Inconnu"));
+            Personnage meurtrier = personnageMap.get(nomMeurtrier);
             Lieu lieuMeurtre = lieux.stream().filter(l -> l.getId() == idLieuCrime).findFirst().orElse(null);
             Temps tempsMeurtre = tempsList.stream().filter(t -> t.getValeur() == tempsCrimeId).findFirst().orElse(null);
 

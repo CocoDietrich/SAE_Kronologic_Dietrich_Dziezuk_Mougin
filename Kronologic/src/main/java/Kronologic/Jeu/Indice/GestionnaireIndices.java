@@ -5,7 +5,6 @@ import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 
 import java.util.List;
-import java.util.Optional;
 
 public class GestionnaireIndices {
     private List<Indice> listeIndices;

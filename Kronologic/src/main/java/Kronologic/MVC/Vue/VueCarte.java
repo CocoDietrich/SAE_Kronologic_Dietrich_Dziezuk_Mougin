@@ -1,6 +1,7 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.Jeu.Elements.Pion;
+import Kronologic.Jeu.Images;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.event.Event;

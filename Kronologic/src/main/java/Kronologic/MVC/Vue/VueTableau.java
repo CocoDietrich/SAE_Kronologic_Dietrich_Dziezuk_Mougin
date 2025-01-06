@@ -1,5 +1,6 @@
 package Kronologic.MVC.Vue;
 
+import Kronologic.Jeu.Images;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

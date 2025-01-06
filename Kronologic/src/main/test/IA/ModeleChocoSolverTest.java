@@ -1,3 +1,5 @@
+package IA;
+
 import Kronologic.IA.IADeduction.ModeleChocoSolver;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;

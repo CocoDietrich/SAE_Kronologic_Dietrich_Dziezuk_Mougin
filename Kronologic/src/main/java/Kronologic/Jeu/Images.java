@@ -1,6 +1,9 @@
-package Kronologic.MVC.Vue;
+package Kronologic.Jeu;
 
 import javafx.scene.image.Image;
+
+import java.util.List;
+import java.util.Map;
 
 public class Images {
 
@@ -82,6 +85,17 @@ public class Images {
             };
         }
 
+        public static Map<Integer, String> getLieux() {
+            return Map.of(
+                    1, "Grand foyer",
+                    2, "Grand escalier",
+                    3, "Salle",
+                    4, "Scène",
+                    5, "Foyer de la danse",
+                    6, "Foyer du chant"
+            );
+        }
+
         // Méthode pour récupérer l'URL
         public String getUrl() {
             return url;
@@ -130,6 +144,10 @@ public class Images {
                 case 5 -> "Servante";
                 default -> null;
             };
+        }
+
+        public static List<String> getPersonnages() {
+            return List.of("Aventurière", "Baronne", "Chauffeur", "Détective", "Journaliste", "Servante");
         }
 
         // Méthode pour récupérer l'URL
