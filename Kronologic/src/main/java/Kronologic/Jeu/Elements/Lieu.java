@@ -14,6 +14,12 @@ public class Lieu {
             this.listeLieuxAdjacents = l;
         }
 
+        public Lieu(int i) {
+            this.nom = null;
+            this.id = i;
+            this.listeLieuxAdjacents = null;
+        }
+
         public String getNom() {
             return nom;
         }

@@ -8,4 +8,6 @@ module kronologic.kronologic {
 
     opens Kronologic to javafx.fxml;
     exports Kronologic;
+    exports Kronologic.Jeu.Elements;
+    exports Kronologic.IA.IADeduction;
 }

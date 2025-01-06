@@ -16,11 +16,13 @@ public class ModeleChocoSolver {
     private final IntVar[][] positions = new IntVar[6][6];
     private final String[] personnages;
     private final List<Realite> positionsInitiales;
+    private final int[][] sallesAdjacentes;
 
     public ModeleChocoSolver(String[] personnages, int[][] sallesAdjacentes, List<Realite> positionsInitiales) {
         this.model = new Model("Deduction IA Choco-Solver");
         this.personnages = personnages;
         this.positionsInitiales = positionsInitiales;
+        this.sallesAdjacentes = sallesAdjacentes;
 
         definirVariables();
         definirContraintesInitiales();
@@ -66,7 +68,6 @@ public class ModeleChocoSolver {
     }
 
     public void ajouterContraintePersonnage(Personnage personnage, Lieu lieu, int temps) {
-        System.out.println(personnage.getNom());
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
 
         if (temps >= 1 && temps <= 6) {
@@ -78,9 +79,29 @@ public class ModeleChocoSolver {
 
     public void ajouterContrainteNombreDePassages(Personnage personnage, Lieu lieu, int nbPassages) {
         int indexPersonnage = getIndexPersonnage(personnage.getNom().substring(0, 1));
-        IntVar nbDePassages = model.intVar("Passages_" + personnage.getNom(), 0, 6);
-        model.count(lieu.getId(), positions[indexPersonnage], nbDePassages).post();
-        model.arithm(nbDePassages, "=", nbPassages).post();
+        IntVar[] presences = new IntVar[6];
+
+        // Variables binaires pour indiquer la présence dans le lieu
+        for (int t = 0; t < 6; t++) {
+            presences[t] = model.intVar("Presence_" + personnage.getNom() + "_T" + (t + 1), 0, 1);
+
+            // Table pour associer position et présence
+            Tuples table = new Tuples(true);
+            for (int val = positions[indexPersonnage][t].getLB(); val <= positions[indexPersonnage][t].getUB(); val++) {
+                table.add(val, val == lieu.getId() ? 1 : 0);
+            }
+            model.table(new IntVar[]{positions[indexPersonnage][t], presences[t]}, table).post();
+        }
+
+        // Contraindre la somme des présences au nombre de passages
+        model.sum(presences, "=", nbPassages).post();
+
+        // Si le nombre de passages est strictement positif
+        if (nbPassages > 0) {
+
+        }
+
+        // Propager les contraintes pour éviter les incohérences
         propagerContraintes();
     }
 
@@ -144,6 +165,10 @@ public class ModeleChocoSolver {
 
 
         return historique.toString();
+    }
+
+    public IntVar[][] getPositions() {
+        return positions;
     }
 
 }
