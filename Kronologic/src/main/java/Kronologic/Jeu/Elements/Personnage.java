@@ -17,7 +17,8 @@ public class Personnage {
             throw new IllegalArgumentException("Le nom ne peut pas être null");
         } else if (n.isEmpty()) {
             throw new IllegalArgumentException("Le nom ne peut pas être vide");
-        } else if (!Images.Personnages.getPersonnages().contains(n) && !personnages.contains(String.valueOf(n.charAt(0))) || n.length() != 1) {
+        } else if (!Images.Personnages.getPersonnages().contains(n)
+                && !personnages.contains(String.valueOf(n.charAt(0)))) {
             throw new IllegalArgumentException("Le nom doit être un nom de personnage");
         }
         this.nom = n;
