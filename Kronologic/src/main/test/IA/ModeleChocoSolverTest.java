@@ -50,6 +50,15 @@ public class ModeleChocoSolverTest {
 
     @Test
     public void testJeuInitialDetective(){
+        /**
+         * D :
+         *      - Temps 1 : {2}
+         *      - Temps 2 : {1, 3}
+         *      - Temps 3 : {1, 2, 3, 4}
+         *      - Temps 4 : {1, 2, 3, 4, 5, 6}
+         *      - Temps 5 : {1, 2, 3, 4, 5, 6}
+         *      - Temps 6 : {1, 2, 3, 4, 5, 6}
+         */
         IntVar[] positions = solver.getPositions()[3]; //Detective
         assertEquals("D_T1 = 2", positions[0].toString());
         assertEquals("D_T2 = {1,3}", positions[1].toString());
@@ -74,6 +83,35 @@ public class ModeleChocoSolverTest {
     }
 
     @Test
+    public void test1Passages(){
+        solver.ajouterContraintePersonnage(new Personnage(personnages[3]), new Lieu(1), 3);
+        solver.ajouterContrainteNombreDePassages(new Personnage(personnages[3]), new Lieu(6), 1);
+
+        IntVar[] positions = solver.getPositions()[3]; // Récupérer les positions du Détective
+        assertEquals("D_T1 = 2", positions[0].toString());
+        assertEquals("D_T2 = 3", positions[1].toString());
+        assertEquals("D_T3 = 1", positions[2].toString());
+        assertEquals("D_T4 = 3", positions[3].toString());
+        assertEquals("D_T5 = 4", positions[4].toString());
+        assertEquals("D_T6 = 6", positions[5].toString());
+    }
+
+    @Test
+    public void test2Passages(){
+        //Est censé ne rien changer
+        solver.ajouterContraintePersonnage(new Personnage(personnages[3]), new Lieu(4), 5);
+        solver.ajouterContrainteNombreDePassages(new Personnage(personnages[3]), new Lieu(3), 2);
+
+        IntVar[] positions = solver.getPositions()[3];
+        assertEquals("D_T1 = 2", positions[0].toString());
+        assertEquals("D_T2 = {1,3}", positions[1].toString());
+        assertEquals("D_T3 = {1..2,4}", positions[2].toString());
+        assertEquals("D_T4 = {3,5..6}", positions[3].toString());
+        assertEquals("D_T5 = 4", positions[4].toString());
+        assertEquals("D_T6 = {3,5..6}", positions[5].toString());
+    }
+
+    @Test
     public void testContrainteNombreDePassagesAucunPassage() {
         // Ajouter contrainte : Aucun passage dans la salle 3
         solver.ajouterContrainteNombreDePassages(new Personnage(personnages[3]), new Lieu(6), 0);
@@ -85,5 +123,85 @@ public class ModeleChocoSolverTest {
         assertEquals("D_T4 = {1..5}", positions[3].toString());
         assertEquals("D_T5 = {1..5}", positions[4].toString());
         assertEquals("D_T6 = {1..5}", positions[5].toString());
+    }
+
+
+    @Test
+    public void testContrainteTemps2Personnes() {
+        /**
+         * J :
+         *      - Temps 1 : {4}
+         *      - Temps 2 : {3, 5, 6}
+         * A :
+         *      - Temps 1 : {6}
+         *      - Temps 2 : {4, 5}
+         */
+        solver.ajouterContrainteTemps(new Lieu(5), new Temps(2), 2);
+
+        IntVar[] positions = solver.getPositions()[0];
+        IntVar[] positions2 = solver.getPositions()[4];
+        assertEquals("A_T2 = 5", positions[1].toString());
+        assertEquals("J_T2 = 5", positions2[1].toString());
+    }
+
+    @Test
+    public void testContrainteTemps1Personne() {
+        /**
+         * J :
+         *      - Temps 1 : {4}
+         *      - Temps 2 : {3, 5, 6}
+         * S :
+         *      - Temps 1 : {5}
+         *      - Temps 2 : {4, 6}
+         */
+        solver.ajouterContrainteTemps(new Lieu(6), new Temps(2), 1);
+        IntVar[] positions = solver.getPositions()[4];
+        IntVar[] positions2 = solver.getPositions()[5];
+        assertEquals("J_T2 = {3,5..6}", positions[1].toString());
+        assertEquals("S_T2 = {4,6}", positions2[1].toString());
+
+        solver.ajouterContraintePersonnage(new Personnage(personnages[4]), new Lieu(5), 2);
+        positions = solver.getPositions()[4];
+        positions2 = solver.getPositions()[5];
+        assertEquals("J_T2 = 5", positions[1].toString());
+        assertEquals("S_T2 = 6", positions2[1].toString());
+    }
+
+    @Test
+    public void testContrainteTemps0Personne(){
+        /**
+         * J :
+         *      - Temps 1 : {4}
+         *      - Temps 2 : {3, 5, 6}
+         * S :
+         *      - Temps 1 : {5}
+         *      - Temps 2 : {4, 6}
+         */
+        solver.ajouterContrainteTemps(new Lieu(6), new Temps(2), 0);
+        IntVar[] positions = solver.getPositions()[4];
+        IntVar[] positions2 = solver.getPositions()[5];
+        assertEquals("J_T2 = {3,5}", positions[1].toString());
+        assertEquals("S_T2 = 4", positions2[1].toString());
+    }
+
+    public void testContrainteTemps3Personnes(){
+        /**
+         * J :
+         *      - Temps 1 : {4}
+         *      - Temps 2 : {3, 5, 6}
+         * A :
+         *      - Temps 1 : {6}
+         *      - Temps 2 : {4, 5}
+         * S :
+         *      - Temps 1 : {5}
+         *      - Temps 2 : {4, 6}
+         */
+        solver.ajouterContrainteTemps(new Lieu(5), new Temps(2), 3);
+        IntVar[] positions = solver.getPositions()[0];
+        IntVar[] positions2 = solver.getPositions()[4];
+        IntVar[] positions3 = solver.getPositions()[5];
+        assertEquals("A_T2 = 5", positions[1].toString());
+        assertEquals("J_T2 = 5", positions2[1].toString());
+        assertEquals("S_T2 = 5", positions3[1].toString());
     }
 }

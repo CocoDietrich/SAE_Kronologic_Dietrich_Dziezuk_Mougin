@@ -32,15 +32,15 @@ public class IADeductionChocoSolver extends IADeduction {
     }
 
     public void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
-        model.ajouterContrainteTemps(lieu, temps, infoPublic);
         if (!infoPrive.equals("Rejouer")) {
             model.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
         }
+        model.ajouterContrainteTemps(lieu, temps, infoPublic);
     }
 
     public void poserQuestionPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
-        model.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
         model.ajouterContraintePersonnage(personnage, lieu, infoPrive);
+        model.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
     }
 
 
