@@ -59,7 +59,6 @@ public class ModeleChocoSolver {
         }
     }
 
-    // Définir la contrainte du coupable
     public void definirContrainteCoupable() {
         IntVar[] suspects = new IntVar[personnages.length - 1];
         int suspectIndex = 0;
@@ -71,71 +70,75 @@ public class ModeleChocoSolver {
             }
         }
 
+        // Analyser chaque temps
         for (int t = 0; t < 6; t++) {
-            IntVar[] presences = calculerPresencesParTemps(t);
-            IntVar nbPersonnes = calculerNombreDePersonnesDansSalle(presences, t);
-            verifierSeulAvecDetective(t, suspectIndex, nbPersonnes, suspects);
-        }
+            IntVar[] presences = new IntVar[personnages.length];
 
-        propagerContraintes();
-    }
-
-    // Calculer les présences par temps
-    private IntVar[] calculerPresencesParTemps(int t) {
-        IntVar[] presences = new IntVar[personnages.length];
-
-        for (int i = 0; i < personnages.length; i++) {
-            presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + (t + 1), 0, 1);
-
-            model.ifThenElse(
-                    model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t]),
-                    model.arithm(presences[i], "=", 1),
-                    model.arithm(presences[i], "=", 0)
-            );
-        }
-
-        return presences;
-    }
-
-    // Calculer le nombre de personnes dans une salle
-    private IntVar calculerNombreDePersonnesDansSalle(IntVar[] presences, int t) {
-        IntVar nbPersonnes = model.intVar("NbPersonnes_T" + (t + 1), 0, personnages.length);
-        model.sum(presences, "=", nbPersonnes).post();
-        return nbPersonnes;
-    }
-
-    // Vérifier si un personnage est seul avec le détective
-    private void verifierSeulAvecDetective(int t, int suspectIndex, IntVar nbPersonnes, IntVar[] suspects) {
-        for (int i = 0; i < personnages.length; i++) {
-            if (!personnages[i].equals("D")) { // Exclure le détective
-                IntVar estSeulAvecDetective = model.intVar("SeulAvecDetective_" + personnages[i] + "_T" + (t + 1), 0, 1);
-
+            // Calculer les présences dans la salle du détective
+            for (int i = 0; i < personnages.length; i++) {
+                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + (t + 1), 0, 1);
                 model.ifThenElse(
-                        model.and(
-                                model.arithm(nbPersonnes, "=", 2), // Deux personnes dans la salle
-                                model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t]) // Même salle
-                        ),
-                        model.arithm(estSeulAvecDetective, "=", 1),
-                        model.arithm(estSeulAvecDetective, "=", 0)
-                );
-
-                // Si le personnage est seul avec le détective, il est coupable
-                model.ifThen(
-                        model.arithm(estSeulAvecDetective, "=", 1),
-                        model.and(
-                                model.arithm(coupablePersonnage, "=", i),
-                                model.arithm(coupableLieu, "=", positions[i][t]),
-                                model.arithm(coupableTemps, "=", t + 1)
-                        )
-                );
-
-                // Si le personnage n'est pas seul avec le détective, il est innocenté
-                model.ifThen(
-                        model.arithm(estSeulAvecDetective, "=", 0),
-                        model.arithm(suspects[suspectIndex - 1], "=", 0)
+                        model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t]),
+                        model.arithm(presences[i], "=", 1),
+                        model.arithm(presences[i], "=", 0)
                 );
             }
+
+            // Nombre total de personnes présentes
+            IntVar nbPersonnes = model.intVar("NbPersonnes_T" + (t + 1), 0, personnages.length);
+            model.sum(presences, "=", nbPersonnes).post();
+
+            for (int i = 0; i < personnages.length; i++) {
+                if (!personnages[i].equals("D")) {
+                    IntVar estSeulAvecDetective = model.intVar("SeulAvecDetective_" + personnages[i] + "_T" + (t + 1), 0, 1);
+                    IntVar suspect = suspects[i < suspectIndex ? i : i - 1];
+
+                    // Vérifier si le personnage est seul avec le détective
+                    model.ifThenElse(
+                            model.and(
+                                    model.arithm(nbPersonnes, "=", 2), // Deux personnes dans la salle
+                                    model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t])
+                            ),
+                            model.arithm(estSeulAvecDetective, "=", 1),
+                            model.arithm(estSeulAvecDetective, "=", 0)
+                    );
+
+                    // Si le personnage est seul avec le détective, il est coupable
+                    model.ifThen(
+                            model.arithm(estSeulAvecDetective, "=", 1),
+                            model.and(
+                                    model.arithm(coupablePersonnage, "=", i),
+                                    model.arithm(coupableLieu, "=", positions[i][t]),
+                                    model.arithm(coupableTemps, "=", t + 1),
+                                    model.arithm(suspect, "=", 1)
+                            )
+                    );
+
+                    // Si le personnage n'est pas seul avec le détective, il est innocenté
+                    model.ifThen(
+                            model.or(
+                                    model.arithm(estSeulAvecDetective, "=", 0),
+                                    model.arithm(nbPersonnes, "!=", 2)
+                            ),
+                            model.arithm(suspect, "=", 0)
+                    );
+
+                    // Debugging information
+//                    System.out.println("Temps: " + (t + 1) + ", Personnage: " + personnages[i]);
+//                    System.out.println("Presence: " + presences[i] + ", NbPersonnes: " + nbPersonnes);
+//                    System.out.println("Est seul avec détective: " + estSeulAvecDetective);
+//                    System.out.println("Suspect: " + suspect);
+                }
+            }
+            // Propagation après chaque temps
+            propagerContraintes();
         }
+
+//        // Vérification finale des suspects
+//        System.out.println("===== Final Suspects Status =====");
+//        for (int i = 0; i < suspects.length; i++) {
+//            System.out.println("Suspect: " + personnages[i + 1] + ", Value: " + suspects[i]);
+//        }
     }
 
 
@@ -189,7 +192,9 @@ public class ModeleChocoSolver {
 
         // Si le nombre de passages est strictement positif
         if (nbPassages > 0) {
-            gererTempsInstancies(indexPersonnage, lieu, nbPassages, presences);
+            if (nbPassages == 3) {
+                gererTempsInstancies(indexPersonnage, lieu, nbPassages, presences);
+            }
             ajouterContraintesDeDeplacements(indexPersonnage);
             lierPositionsAuxPresences(indexPersonnage, lieu, presences);
         }
@@ -200,7 +205,6 @@ public class ModeleChocoSolver {
     // Gérer les temps instanciés
     private void gererTempsInstancies(int indexPersonnage, Lieu lieu, int nbPassages, IntVar[] presences) {
         for (int t = 0; t < 6; t++) {
-            System.out.println("Personnage: " + personnages[indexPersonnage] + ", Temps: " + (t + 1));
             if (positions[indexPersonnage][t].isInstantiated()) {
                 int confirmedSalle = positions[indexPersonnage][t].getValue();
 
@@ -209,10 +213,7 @@ public class ModeleChocoSolver {
                     appliquerContrainteSpecifiqueTemps(indexPersonnage, lieu, nbPassages, presences, t);
                     return;
                 } else {
-                    // Vérifier d'abord si le lieu est encore dans le domaine avant de restreindre
-                    if (positions[indexPersonnage][t].contains(lieu.getId())) {
-                        model.arithm(positions[indexPersonnage][t], "!=", lieu.getId()).post();
-                    }
+                    model.arithm(positions[indexPersonnage][t], "!=", lieu.getId()).post();
                 }
             }
         }
