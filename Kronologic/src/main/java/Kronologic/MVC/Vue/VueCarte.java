@@ -277,6 +277,7 @@ public class VueCarte extends BorderPane implements Observateur {
         polygon.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             if (db.hasImage()) {
+
                 // Création du pion déplacé
                 Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                 if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
@@ -311,13 +312,11 @@ public class VueCarte extends BorderPane implements Observateur {
                     e.consume();
                 });
 
-                // Ajouter le pion dans le root principal (VueCarte)
-                VueCarte root = this;
-                root.getChildren().add(pionDeplace);
-
                 // Positionner le pion là où le curseur a été lâché
                 double sceneX = event.getSceneX();
                 double sceneY = event.getSceneY();
+                VueCarte root = this;
+                root.getChildren().add(pionDeplace);
                 javafx.geometry.Point2D dropPoint = root.sceneToLocal(sceneX, sceneY);
 
                 pionDeplace.setLayoutX(dropPoint.getX() - pionDeplace.getFitWidth() / 2);
