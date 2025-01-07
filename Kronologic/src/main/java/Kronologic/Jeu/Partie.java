@@ -79,7 +79,7 @@ public class Partie {
     // Méthode permettant de déplacer un pion
     public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
         gestionnairePions.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
-        gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu);
+        gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu, nouveauTemps);
     }
 
     // Méthode permettant de supprimer un pion

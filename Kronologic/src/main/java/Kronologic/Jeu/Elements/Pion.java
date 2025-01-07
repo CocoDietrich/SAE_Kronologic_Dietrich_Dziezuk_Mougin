@@ -16,12 +16,41 @@ public class Pion extends ImageView  {
     }
 
     public void deplacerPion(int x, int y) {
-        this.x = x;
-        this.y = y;
+        if (x < 0 || y < 0) {
+            throw new IllegalArgumentException("Les valeurs de x et y doivent être positives");
+        }
+        setXPion(x);
+        setYPion(y);
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof Pion p) {
+            if (((this.getNote() == null) && (p.getNote() == null)) ||
+                    (this.getNote().equals(p.getNote()))) {
+                return this.getImage().getUrl().equals(p.getImage().getUrl());
+            }
+        }
+        return false;
     }
 
     public Note getNote() {
         return note;
+    }
+
+    public int getXPion() {
+        return x;
+    }
+
+    public int getYPion() {
+        return y;
+    }
+
+    public void setXPion(int x) {
+        this.x = x;
+    }
+
+    public void setYPion(int y) {
+        this.y = y;
     }
 
     public void setNote(Note note) {

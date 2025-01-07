@@ -40,10 +40,25 @@ public class Note extends Position {
 
     public boolean equals(Object o) {
         if (o instanceof Note n) {
-            return this.getLieu().equals(n.getLieu())
-                    && this.getTemps().equals(n.getTemps())
-                    && this.getPersonnage().equals(n.getPersonnage())
-                    && this.getNbPersonnages() == n.getNbPersonnages();
+            if (this.getPersonnage() == null) {
+                return this.getLieu().getNom().equals(n.getLieu().getNom())
+                        && this.getTemps().getValeur() == n.getTemps().getValeur()
+                        && this.getNbPersonnages() == n.getNbPersonnages()
+                        && this.estAbsence == n.estAbsence
+                        && this.estHypothese == n.estHypothese;
+            }
+            else {
+                if (n.getPersonnage() == null) {
+                    return false;
+                }
+                else {
+                    return this.getLieu().getNom().equals(n.getLieu().getNom())
+                            && this.getTemps().getValeur() == n.getTemps().getValeur()
+                            && this.getPersonnage().getNom().equals(n.getPersonnage().getNom())
+                            && this.estAbsence == n.estAbsence
+                            && this.estHypothese == n.estHypothese;
+                }
+            }
         }
         return false;
     }

@@ -12,32 +12,50 @@ public class GestionnairePions {
     }
 
     public void ajouterPion(Pion pion) {
+        if (this.pions.contains(pion) || pion == null) {
+            return;
+        }
         this.pions.add(pion);
     }
 
     public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
+        if (nouveauLieu == null || nouveauTemps == null || pion == null) {
+            return;
+        }
+        Pion pionASupprimer = null;
         for (Pion p : this.pions) {
-            if (p.getNote().toString().equals(pion.getNote().toString())){
-                System.out.println("pion trouvé");
+            if (p.equals(pion)) {
                 Note note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getPersonnage());
                 note.setEstAbsence(pion.getNote().estAbsence());
                 note.setEstHypothese(pion.getNote().estHypothese());
-                pion.setNote(note);
-                pion.deplacerPion(x, y);
-                this.pions.set(this.pions.indexOf(p), pion);
-                break;
+                p.setNote(note);
+                p.deplacerPion(x, y);
+
+                int compteurDePionsIdentiques = 0;
+                for (Pion p2 : this.pions) {
+                    if (p2.equals(p)) {
+                        compteurDePionsIdentiques++;
+                    }
+                    if (compteurDePionsIdentiques == 2) {
+                        pionASupprimer = p2;
+                        break;
+                    }
+                }
             }
+        }
+        if (pionASupprimer != null) {
+            this.pions.remove(pionASupprimer);
         }
     }
 
     public void supprimerPion(Pion pion) {
+        if (pion == null) {
+            return;
+        }
         this.pions.remove(pion);
     }
 
     public List<Pion> getPions() {
         return this.pions;
     }
-
-
-
 }

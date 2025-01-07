@@ -7,6 +7,9 @@ public abstract class Position {
     private int nbPersonnages;
 
     public Position(Lieu lieu, Temps temps, Personnage personnage) {
+        if (lieu == null || temps == null || personnage == null) {
+            throw new IllegalArgumentException("Les paramètres ne peuvent pas être null");
+        }
         this.lieu = lieu;
         this.temps = temps;
         this.personnage = personnage;
@@ -14,6 +17,9 @@ public abstract class Position {
 
     // Constructeur pour le pion de nombre
     public Position(Lieu lieu, Temps temps, int nbPersonnages) {
+        if (lieu == null || temps == null || ((nbPersonnages < 0) || (nbPersonnages > 6))){
+            throw new IllegalArgumentException("Les paramètres ne peuvent pas être null");
+        }
         this.lieu = lieu;
         this.temps = temps;
         this.nbPersonnages = nbPersonnages;
@@ -41,5 +47,11 @@ public abstract class Position {
 
     public void setLieu(Lieu lieu) {
         this.lieu = lieu;
+    }
+
+    // Setter pour le temps
+
+    public void setTemps(Temps temps) {
+        this.temps = temps;
     }
 }
