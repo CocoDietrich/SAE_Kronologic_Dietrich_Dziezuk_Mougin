@@ -15,9 +15,10 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerButton;
-import static Kronologic.MVC.Vue.VueCarte.*;
 
 public class VueTableau extends BorderPane implements Observateur {
 
@@ -28,6 +29,8 @@ public class VueTableau extends BorderPane implements Observateur {
     public Button demanderIndice;
     public Button changerAffichage;
     public Button deductionIA;
+    public Button filmJoueur;
+    public Button filmRealite;
     public TextArea historique;
     public List<TextCase> listeCases = new ArrayList<>();
 
@@ -314,13 +317,56 @@ public class VueTableau extends BorderPane implements Observateur {
         return stackPane;
     }
 
+    public HBox afficherFilm() {
+        // Boutons de film (joueur et partie)
+        filmJoueur = creerButton("Film du joueur");
+        filmRealite = creerButton("Film de la partie");
+
+        Image film = new Image("file:img/film.png");
+        ImageView imageViewFilm = new ImageView(film);
+        imageViewFilm.setPreserveRatio(true);
+        imageViewFilm.setFitHeight(20);
+
+        ImageView imageViewFilm2 = new ImageView(film);
+        imageViewFilm2.setPreserveRatio(true);
+        imageViewFilm2.setFitHeight(20);
+
+        filmJoueur.setGraphic(imageViewFilm);
+        filmRealite.setGraphic(imageViewFilm2);
+
+        // Groupe des films
+        HBox films = new HBox(10);
+        films.setSpacing(50);
+        films.getChildren().addAll(filmJoueur, filmRealite);
+
+        return films;
+    }
+
     @Override
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (historique.getText().isEmpty()) {
+        if (ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
+            return;
+        } else if (historique.getText().isEmpty()) {
             historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
+        } else if (ModeleJeu.getPartie().getNbQuestion() == compterOccurrencesRegex(historique.getText(), "Tour")) {
+            return;
         } else {
-            historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n" + historique.getText());
+            historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion()
+                    + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
+                    + "\n" + historique.getText());
         }
+    }
+
+    public static int compterOccurrencesRegex(String texte, String sequence) {
+        Pattern pattern = Pattern.compile(Pattern.quote(sequence));
+        Matcher matcher = pattern.matcher(texte);
+
+        int count = 0;
+        while (matcher.find()) {
+            count++;
+        }
+
+        return count;
     }
 }

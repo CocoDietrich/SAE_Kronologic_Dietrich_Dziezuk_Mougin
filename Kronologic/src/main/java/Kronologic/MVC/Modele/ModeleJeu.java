@@ -22,7 +22,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class ModeleJeu implements Sujet {
 
@@ -372,8 +374,44 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
-    public void visualiserFilm(){
-        //TODO
+    public void visualiserFilmJoueur(){
+        // Récupération de l'historique
+        Map<Integer, List<Note>> historique = partie.getHistorique();
+
+        // Tri des tours pour garantir l'ordre croissant
+        List<Integer> tours = new ArrayList<>(historique.keySet());
+        Collections.sort(tours);
+
+        // Parcourir chaque tour dans l'ordre
+        for (int i = 0; i <= tours.getLast(); i++) {
+            System.out.println("--------------------");
+            // Afficher le numéro du tour
+            System.out.println("Tour " + i + " :");
+
+            // Afficher les notes associées au tour
+            if (!historique.containsKey(i)){
+                continue;
+            }
+            List<Note> notes = historique.get(i);
+            for (Note note : notes) {
+                System.out.println(note);
+            }
+        }
+    }
+
+    public void visualiserFilmRealite(){
+        // Récupération du déroulement de la partie
+        List<Realite> positions = partie.getDeroulement().getListePositions();
+
+        for (int i = 1; i < 7; i++){
+            System.out.println("--------------------");
+            System.out.println("Tour " + i + " :");
+            for (Realite r : positions){
+                if (r.getTemps().getValeur() == i){
+                    System.out.println(r.toString());
+                }
+            }
+        }
     }
 
     public void visualiserRegle(Stage stage){

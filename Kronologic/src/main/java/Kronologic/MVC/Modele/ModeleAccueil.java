@@ -58,6 +58,8 @@ public class ModeleAccueil implements Sujet {
                 ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
                 ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu);
                 ControleurPopUpPoseQuestion controleurPopUpPoseQuestion = new ControleurPopUpPoseQuestion(modeleJeu);
+                ControleurVisualiserFilmJoueur controleurVisualiserFilmJoueur = new ControleurVisualiserFilmJoueur(modeleJeu);
+                ControleurVisualiserFilmRealite controleurVisualiserFilmRealite = new ControleurVisualiserFilmRealite(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -65,11 +67,15 @@ public class ModeleAccueil implements Sujet {
                 vueCarte.regle.setOnAction(controleurVisualiserRegle);
                 vueCarte.demanderIndice.setOnAction(controleurDemanderIndice);
                 vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
+                vueCarte.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
+                vueCarte.filmRealite.setOnAction(controleurVisualiserFilmRealite);
                 vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);
                 vueTableau.regle.setOnAction(controleurVisualiserRegle);
                 vueTableau.deductionIA.setOnAction(controleurVoirDeductionIA);
+                vueTableau.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
+                vueTableau.filmRealite.setOnAction(controleurVisualiserFilmRealite);
                 vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
                 vueTableau.faireDeduction.setOnAction(controleurVisualiserDeduction);
                 vueRegle.retour.setOnAction(controleurRegle);

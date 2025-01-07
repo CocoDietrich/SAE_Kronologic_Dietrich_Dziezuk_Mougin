@@ -7,6 +7,9 @@ import Kronologic.Jeu.Elements.GestionnairePions;
 import Kronologic.Jeu.Elements.Pion;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Partie {
     private int nbQuestion;
@@ -17,6 +20,7 @@ public class Partie {
     private GestionnaireNotes gestionnaireNotes;
     private GestionnairePions gestionnairePions;
     private Elements elements;
+    private Map<Integer, List<Note>> historique;
 
     public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes, GestionnairePions gestionnairePions, Elements elements) {
         this.indicesDecouverts = new ArrayList<>();
@@ -27,6 +31,7 @@ public class Partie {
         this.gestionnairePions = gestionnairePions;
         this.nbQuestion = 0;
         this.elements = elements;
+        this.historique = new HashMap<>();
     }
 
     // Méthode permettant de poser une question sur un lieu et un personnage
@@ -58,11 +63,13 @@ public class Partie {
     // Méthode permettant d'ajouter une note du joueur (placer un pion)
     public void ajouterNote(Note n) {
         gestionnaireNotes.ajouterNote(n);
+        mettreAJourHistorique();
     }
 
     // Méthode permettant de modifier une note
     public void modifierNote(Note n, boolean absence, boolean hypothese) {
         gestionnaireNotes.modifierNote(n, absence, hypothese);
+        mettreAJourHistorique();
     }
 
     // Méthode permettant de retirer une note du joueur (enlever un pion des cartes)
@@ -74,12 +81,14 @@ public class Partie {
     public void ajouterPion(Pion pion) {
         gestionnairePions.ajouterPion(pion);
         gestionnaireNotes.ajouterNote(pion.getNote());
+        mettreAJourHistorique();
     }
 
     // Méthode permettant de déplacer un pion
     public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
         gestionnairePions.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
         gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu, nouveauTemps);
+        mettreAJourHistorique();
     }
 
     // Méthode permettant de supprimer un pion
@@ -94,6 +103,14 @@ public class Partie {
     public Indice demanderIndice() {
         // TODO : à implémenter
         return null;
+    }
+
+    public void mettreAJourHistorique(){
+        // Copier la liste de notes pour éviter les références partagées
+        List<Note> notesCopiees = new ArrayList<>(gestionnaireNotes.getNotes());
+
+        // Mettre à jour l'historique avec une copie
+        historique.put(nbQuestion, notesCopiees);
     }
 
     public String verifierLoupe(){
@@ -127,5 +144,9 @@ public class Partie {
 
     public Elements getElements() {
         return elements;
+    }
+
+    public Map<Integer, List<Note>> getHistorique() {
+        return historique;
     }
 }
