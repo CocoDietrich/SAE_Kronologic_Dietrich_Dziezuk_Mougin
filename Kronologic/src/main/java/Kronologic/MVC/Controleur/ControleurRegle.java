@@ -16,7 +16,6 @@ public class ControleurRegle implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        System.out.println("ALLO");
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         if(this.modele.isVueCarte()){
             this.modele.retourVueCarte(stage);

@@ -82,8 +82,7 @@ public class ModeleJeu implements Sujet {
     // Méthode permettant de stocker le lieu choisi pour la question posée ou la déduction faite par le joueur
     public void setLieuChoisi(Lieu lieu, Observateur vue){
         assert vue != null;
-        if (vue instanceof VuePoseQuestion){
-            VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
+        if (vue instanceof VuePoseQuestion vuePoseQuestion){
             vuePoseQuestion.lieuChoisi = lieu;
         } else {
             VueDeduction vueDeduction = (VueDeduction) vue;
@@ -192,7 +191,7 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    public boolean faireDeduction(){
+    public void faireDeduction(){
         VueDeduction vueDeduction = null;
         for (Observateur o : observateurs){
             if (o instanceof VueDeduction){
@@ -213,13 +212,7 @@ public class ModeleJeu implements Sujet {
         assert vuePopUpDeduction != null;
         vuePopUpDeduction.afficherPopUp(resultat, partie.verifierLoupe());
 
-        if (resultat) {
-            System.out.println("Victoire enregistrée dans le modèle.");
-        } else {
-            System.out.println("Défaite enregistrée dans le modèle.");
-        }
         notifierObservateurs();
-        return resultat;
     }
 
     public void visualiserDeduction(Stage stage){

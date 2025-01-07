@@ -115,6 +115,7 @@ public class ModeleAccueil implements Sujet {
                 }
 
                 vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);
+                vuePopUpDeduction.voirFilm.setOnAction(controleurPopUpDeduction);
                 vuePopUpQuitter.annuler.setOnAction(controleurPopUpQuitter);
                 vuePopUpQuitter.valider.setOnAction(controleurPopUpQuitter);
                 vuePopUpDemanderIndice.annuler.setOnAction(controleurPopUpDemanderIndice);

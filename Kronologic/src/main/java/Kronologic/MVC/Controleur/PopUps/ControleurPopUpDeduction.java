@@ -21,10 +21,10 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
 
         // On récupère l'id du bouton
-        String id = ((Button) actionEvent.getSource()).getId();
+        String texte = ((Button) actionEvent.getSource()).getText();
 
         // Si on clique sur le bouton de retour, on ferme le stage du pop-up
-        if (id.equals("Quitter")) {
+        if (texte.equals("Quitter")) {
             stage.close();
             System.out.println("Fermeture du pop-up de déduction.");
 
@@ -39,6 +39,8 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
             // On retourne à la vue de la carte
             assert vuePopUpDeduction != null;
             this.modele.quitter("retour", vuePopUpDeduction.getStage());
+        } else if (texte.equals("Voir le film")) {
+            this.modele.visualiserFilmRealite();
         }
     }
 }

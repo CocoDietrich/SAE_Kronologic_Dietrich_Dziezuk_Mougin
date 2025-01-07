@@ -31,7 +31,6 @@ public class VuePopUpDeduction extends BorderPane implements Observateur {
         message.setStyle("-fx-font-size: 30px; -fx-fill: #7b001e; -fx-font-weight: bold;");
 
         quitter = new Button("Quitter");
-        quitter.setId("Quitter");
         quitter.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
         quitter.setPrefSize(120, 50);
 
