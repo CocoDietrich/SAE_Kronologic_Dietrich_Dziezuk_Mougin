@@ -16,7 +16,6 @@ public class ModeleChocoSolver {
     private final IntVar[][] positions = new IntVar[6][6];
     private final String[] personnages;
     private final List<Realite> positionsInitiales;
-    private final int[][] sallesAdjacentes;
     private IntVar coupablePersonnage;
     private IntVar coupableLieu;
     private IntVar coupableTemps;
@@ -25,7 +24,6 @@ public class ModeleChocoSolver {
         this.model = new Model("Deduction IA Choco-Solver");
         this.personnages = personnages;
         this.positionsInitiales = positionsInitiales;
-        this.sallesAdjacentes = sallesAdjacentes;
 
         definirVariables();
         definirContraintesInitiales();
@@ -59,6 +57,7 @@ public class ModeleChocoSolver {
         }
     }
 
+    // Définir les contraintes du coupable
     public void definirContrainteCoupable() {
         IntVar[] suspects = new IntVar[personnages.length - 1];
         int suspectIndex = 0;
@@ -90,32 +89,55 @@ public class ModeleChocoSolver {
             for (int i = 0; i < personnages.length; i++) {
                 if (!personnages[i].equals("D")) { // Exclure le détective
                     IntVar estSeulAvecDetective = model.intVar("SeulAvecDetective_" + personnages[i] + "_T" + (t + 1), 0, 1);
+                    IntVar suspect = suspects[i < suspectIndex ? i : i - 1];
+
                     // Vérifier si le personnage est seul avec le détective
                     model.ifThenElse(
                             model.and(
                                     model.arithm(nbPersonnes, "=", 2), // Deux personnes dans la salle
-                                    model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t]) // Même salle
+                                    model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t])
                             ),
                             model.arithm(estSeulAvecDetective, "=", 1),
                             model.arithm(estSeulAvecDetective, "=", 0)
                     );
+
                     // Si le personnage est seul avec le détective, il est coupable
                     model.ifThen(
                             model.arithm(estSeulAvecDetective, "=", 1),
                             model.and(
                                     model.arithm(coupablePersonnage, "=", i),
                                     model.arithm(coupableLieu, "=", positions[i][t]),
-                                    model.arithm(coupableTemps, "=", t + 1)
+                                    model.arithm(coupableTemps, "=", t + 1),
+                                    model.arithm(suspect, "=", 1)
                             )
                     );
+
                     // Si le personnage n'est pas seul avec le détective, il est innocenté
                     model.ifThen(
-                            model.arithm(estSeulAvecDetective, "=", 0),
-                            model.arithm(suspects[suspectIndex - 1], "=", 0)
+                            model.or(
+                                    model.arithm(estSeulAvecDetective, "=", 0),
+                                    model.arithm(nbPersonnes, "!=", 2)
+                            ),
+                            model.arithm(suspect, "=", 0)
                     );
                 }
             }
+
+            // Réduire le domaine de coupableTemps si on a un indice sur deux personnes présentes
+            model.ifThen(
+                    model.arithm(nbPersonnes, "=", 2),
+                    model.arithm(coupableTemps, "=", t + 1)
+            );
         }
+
+        // Ajouter une contrainte pour réduire le domaine du lieu du coupable si le détective est seul avec quelqu'un
+        if (coupableTemps.isInstantiated()) {
+            model.ifThen(
+                    model.arithm(coupableTemps, "!=", 1),
+                    model.arithm(coupableLieu, "=", positions[getIndexPersonnage("D")][coupableTemps.getValue() - 1])
+            );
+        }
+
         propagerContraintes();
     }
 
