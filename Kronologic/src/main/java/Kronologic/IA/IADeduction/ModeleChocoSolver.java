@@ -189,12 +189,63 @@ public class ModeleChocoSolver {
 
         // Si le nombre de passages est strictement positif
         if (nbPassages > 0) {
+            gererTempsInstancies(indexPersonnage, lieu, nbPassages, presences);
             ajouterContraintesDeDeplacements(indexPersonnage);
             lierPositionsAuxPresences(indexPersonnage, lieu, presences);
         }
         propagerContraintes();
 
     }
+
+    // Gérer les temps instanciés
+    private void gererTempsInstancies(int indexPersonnage, Lieu lieu, int nbPassages, IntVar[] presences) {
+        for (int t = 0; t < 6; t++) {
+            System.out.println("Personnage: " + personnages[indexPersonnage] + ", Temps: " + (t + 1));
+            if (positions[indexPersonnage][t].isInstantiated()) {
+                int confirmedSalle = positions[indexPersonnage][t].getValue();
+
+                // S'il y a une salle déjà instanciée qui correspond au lieu
+                if (confirmedSalle == lieu.getId()) {
+                    appliquerContrainteSpecifiqueTemps(indexPersonnage, lieu, nbPassages, presences, t);
+                    return;
+                } else {
+                    // Vérifier d'abord si le lieu est encore dans le domaine avant de restreindre
+                    if (positions[indexPersonnage][t].contains(lieu.getId())) {
+                        model.arithm(positions[indexPersonnage][t], "!=", lieu.getId()).post();
+                    }
+                }
+            }
+        }
+    }
+
+    // Appliquer les contraintes spécifiques à un temps instancié
+    private void appliquerContrainteSpecifiqueTemps(int indexPersonnage, Lieu lieu, int nbPassages, IntVar[] presences, int t) {
+        if (nbPassages == 1) {
+            for (int i = 0; i < 6; i++) {
+                if (i != t) {
+                    model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
+                }
+            }
+        } else if (nbPassages == 2) {
+            for (int i = 0; i < 6; i++) {
+                if (i != t && !positions[indexPersonnage][i].isInstantiated()) {
+                    model.arithm(presences[i], "=", 1).post();
+                }
+            }
+        } else {
+            int[] tempsPattern = ((t + 1) % 2 == 0) ? new int[]{2, 4, 6} : new int[]{1, 3, 5};
+            for (int i = 0; i < 6; i++) {
+                if (i != t) {
+                    if (contains(tempsPattern, i + 1)) {
+                        model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
+                    } else {
+                        model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
+                    }
+                }
+            }
+        }
+    }
+
 
     // Ajouter des contraintes de déplacements cohérents
     private void ajouterContraintesDeDeplacements(int indexPersonnage) {
@@ -222,6 +273,15 @@ public class ModeleChocoSolver {
         }
     }
 
+    // Vérifier si un tableau contient une valeur
+    private boolean contains(int[] array, int value) {
+        for (int element : array) {
+            if (element == value) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // Ajouter une contrainte de nombre de personnes dans une salle à un temps donné
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
