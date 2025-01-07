@@ -25,10 +25,14 @@ public class Pion extends ImageView  {
 
     public boolean equals(Object o) {
         if (o instanceof Pion p) {
-            if (((this.getNote() == null) && (p.getNote() == null)) ||
-                    (this.getNote().equals(p.getNote()))) {
+            if (((this.getNote() == null) && (p.getNote() != null)) || ((this.getNote() != null) && (p.getNote() == null))) {
+                return false;
+            }
+            if (this.getNote() == null && p.getNote() == null) {
                 return this.getImage().getUrl().equals(p.getImage().getUrl());
             }
+            return this.getImage().getUrl().equals(p.getImage().getUrl())
+                    && this.getNote().equals(p.getNote());
         }
         return false;
     }
