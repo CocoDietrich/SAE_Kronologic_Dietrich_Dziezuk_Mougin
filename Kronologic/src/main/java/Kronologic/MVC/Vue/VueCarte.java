@@ -310,7 +310,6 @@ public class VueCarte extends BorderPane implements Observateur {
 
                     // Déléguer la logique métier au contrôleur
                     new ControleurChoixCarte(modeleJeu).handle(e);
-
                     e.consume();
                 });
 
@@ -327,6 +326,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 event.setDropCompleted(true);
 
                 pionDeplace.setUserData(zoneName);
+
                 // Ajouter le pion à la liste des pions
                 pions.add(pionDeplace);
             } else {
