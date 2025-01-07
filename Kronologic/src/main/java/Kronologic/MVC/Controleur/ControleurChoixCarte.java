@@ -83,14 +83,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
             modeleJeu.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
-            // Quand le drag and drop est fini, on supprime le pion qui a été déplacé
-            VueCarte finalVueCarte = vueCarte;
-            vueCarte.pions.getLast().setOnDragDropped(
-                    event -> {
-                        finalVueCarte.getChildren().remove(pionAvant);
-                        event.consume();
-                    }
-            );
         }
         // On affiche la liste des notes du joueur
         System.out.println("Liste des notes du joueur : ");
