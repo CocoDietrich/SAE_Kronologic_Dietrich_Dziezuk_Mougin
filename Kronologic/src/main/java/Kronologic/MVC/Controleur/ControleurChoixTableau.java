@@ -20,7 +20,7 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
         this.modeleJeu = modeleJeu;
     }
 
-    public String nomLieu(String nomCourt){
+    public static String nomLieu(String nomCourt){
         return switch (nomCourt) {
             case "GF" -> "Grand foyer";
             case "GE" -> "Grand escalier";
@@ -143,12 +143,6 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 text.setEtat("neutre");
                 gestionNote(text, elements, text.getEtat());
                 break;
-        }
-
-        // On affiche les notes actuelles du joueur
-        System.out.println("Notes actuelles : ");
-        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
-            System.out.println(n);
         }
     }
 }

@@ -1,5 +1,7 @@
 package Kronologic.MVC.Vue;
 
+import Kronologic.Jeu.Elements.Note;
+import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Kronologic.MVC.Controleur.ControleurChoixTableau.nomLieu;
 import static Kronologic.MVC.Vue.VueAccueil.creerButton;
 
 public class VueTableau extends BorderPane implements Observateur {
@@ -36,6 +39,10 @@ public class VueTableau extends BorderPane implements Observateur {
 
     public VueTableau() {
         super();
+        afficher();
+    }
+
+    public void afficher() {
         this.setStyle("-fx-background-color: #800000;");
 
         HBox retourBox = afficherRetour();
@@ -94,11 +101,6 @@ public class VueTableau extends BorderPane implements Observateur {
         }
 
         this.setCenter(tableauxBox);
-
-    }
-
-    public void afficher() {
-        // TODO
     }
 
     public VBox afficherBoutonsGauche() {
@@ -345,16 +347,92 @@ public class VueTableau extends BorderPane implements Observateur {
     @Override
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
-            return;
-        } else if (historique.getText().isEmpty()) {
-            historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
-        } else if (ModeleJeu.getPartie().getNbQuestion() == compterOccurrencesRegex(historique.getText(), "Tour")) {
-            return;
-        } else {
-            historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion()
-                    + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
-                    + "\n" + historique.getText());
+        if (!ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
+            if (historique.getText().isEmpty()) {
+                historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
+            } else if (ModeleJeu.getPartie().getNbQuestion() != compterOccurrencesRegex(historique.getText(), "Tour")) {
+                historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion()
+                        + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
+                        + "\n" + historique.getText());
+            }
+        }
+
+        // On met à jour les cases du tableau
+        for (TextCase text : listeCases) {
+            text.setFill(Color.LIGHTGRAY);
+            text.setStyle("-fx-font-weight: normal; " +
+                    "-fx-strikethrough: false;" +
+                    "-fx-cursor: hand;");
+            text.setEtat("neutre");
+            List<String> elements = List.of("GF", "GE", "SA", "SC", "FD", "FC");
+            String valeur = "";
+            if (elements.contains(text.getText())) {
+                valeur = nomLieu(text.getText()); // Pour le tableau de droite
+            }
+            else {
+                valeur = text.getText(); // Pour le tableau de gauche
+            }
+
+            Temps temps = new Temps(Integer.parseInt(text.getInfo().split(" - ")[1])); // Pour les deux
+
+            String lieu = ""; // Pour le tableau de gauche
+            String personnage = ""; // Pour le tableau de droite
+
+
+            if (Images.Lieux.getLieux().containsValue(text.getInfo().split(" - ")[2])) {
+                lieu = text.getInfo().split(" - ")[2];
+            }
+            else {
+                personnage = text.getInfo().split(" - ")[2];
+            }
+
+            for (Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
+                if (personnage.isEmpty()){ // Pour le tableau de gauche
+                    if (note.getLieu().getNom().equals(lieu)
+                            && note.getTemps().getValeur() == temps.getValeur()
+                            && note.getNbPersonnages() == Integer.parseInt(valeur)
+                            && note.getPersonnage().getNom().isEmpty()){
+                        if (note.estAbsence()) {
+                            text.setFill(Color.GRAY);
+                            text.setStyle("-fx-font-weight: normal; " +
+                                    "-fx-strikethrough: true;" +
+                                    "-fx-cursor: hand;");
+                            text.setEtat("absent");
+                            break;
+                        }
+                        else {
+                            text.setFill(Color.BLACK);
+                            text.setStyle("-fx-font-weight: bold; " +
+                                    "-fx-strikethrough: false;" +
+                                    "-fx-cursor: hand;");
+                            text.setEtat("présent");
+                            break;
+                        }
+                    }
+                }
+                else { // Pour le tableau de droite
+                    if (note.getPersonnage().getNom().equals(personnage)
+                            && note.getTemps().getValeur() == temps.getValeur()
+                            && note.getLieu().getNom().equals(valeur)){
+                        if (note.estAbsence()) {
+                            text.setFill(Color.GRAY);
+                            text.setStyle("-fx-font-weight: normal; " +
+                                    "-fx-strikethrough: true;" +
+                                    "-fx-cursor: hand;");
+                            text.setEtat("absent");
+                            break;
+                        }
+                        else {
+                            text.setFill(Color.BLACK);
+                            text.setStyle("-fx-font-weight: bold; " +
+                                    "-fx-strikethrough: false;" +
+                                    "-fx-cursor: hand;");
+                            text.setEtat("présent");
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
