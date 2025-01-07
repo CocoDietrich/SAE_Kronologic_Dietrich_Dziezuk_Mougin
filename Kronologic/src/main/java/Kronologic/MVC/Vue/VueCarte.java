@@ -32,6 +32,8 @@ public class VueCarte extends BorderPane implements Observateur {
     public Button demanderIndice;
     public Button changerAffichage;
     public Button deductionIA;
+    public Button filmJoueur;
+    public Button filmRealite;
     public TextArea historique;
     public CheckBox hypothese;
     public CheckBox absence;
@@ -599,10 +601,10 @@ public class VueCarte extends BorderPane implements Observateur {
         return retourBox;
     }
 
-    public static HBox afficherFilm() {
+    public HBox afficherFilm() {
         // Boutons de film (joueur et partie)
-        Button filmJoueur = creerButton("Film du joueur");
-        Button filmPartie = creerButton("Film de la partie");
+        filmJoueur = creerButton("Film du joueur");
+        filmRealite = creerButton("Film de la partie");
 
         Image film = new Image("file:img/film.png");
         ImageView imageViewFilm = new ImageView(film);
@@ -614,12 +616,12 @@ public class VueCarte extends BorderPane implements Observateur {
         imageViewFilm2.setFitHeight(20);
 
         filmJoueur.setGraphic(imageViewFilm);
-        filmPartie.setGraphic(imageViewFilm2);
+        filmRealite.setGraphic(imageViewFilm2);
 
         // Groupe des films
         HBox films = new HBox(10);
         films.setSpacing(50);
-        films.getChildren().addAll(filmJoueur, filmPartie);
+        films.getChildren().addAll(filmJoueur, filmRealite);
 
         return films;
     }
@@ -638,7 +640,9 @@ public class VueCarte extends BorderPane implements Observateur {
     @Override
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (historique.getText().isEmpty()) {
+        if (ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
+            return;
+        } else if (historique.getText().isEmpty()) {
             historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
         } else {
             historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n" + historique.getText());
