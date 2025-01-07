@@ -290,6 +290,7 @@ public class VueCarte extends BorderPane implements Observateur {
                     pionDeplace.setFitWidth(30);
                 }
                 pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
+                System.out.println("Pion déplacé : " + pionDeplace.getId());
                 pionDeplace.setPreserveRatio(true);
                 pionDeplace.setStyle("-fx-cursor: hand;");
 
@@ -306,6 +307,7 @@ public class VueCarte extends BorderPane implements Observateur {
                     // Supprimer le pion si le dépôt n'est pas réussi
                     if (!e.isDropCompleted()) {
                         ((Pane) pionDeplace.getParent()).getChildren().remove(pionDeplace);
+                        pions.add(new Pion(null, pionDeplace.getImage().getUrl()));
                     }
 
                     // Déléguer la logique métier au contrôleur

@@ -87,6 +87,7 @@ public class Partie {
     // Méthode permettant de déplacer un pion
     public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
         gestionnairePions.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
+        System.out.println("Modification de la note : " + pion.getNote().toString());
         gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu, nouveauTemps);
         mettreAJourHistorique();
     }
@@ -95,6 +96,7 @@ public class Partie {
     public void supprimerPion(Pion pion) {
         gestionnairePions.supprimerPion(pion);
         if (pion.getNote() != null){
+            System.out.println("Suppression de la note : " + pion.getNote().toString());
             gestionnaireNotes.supprimerNote(pion.getNote());
         }
     }
