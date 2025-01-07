@@ -6,6 +6,7 @@ import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.Jeu.Elements.Pion;
+import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueCarte;
 import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
@@ -28,12 +29,13 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         System.out.println("2-" + pionAvant);
         System.out.println("3-" + pionAvant.getParent());
 
-        VueCarte vueCarte;
-        if (pionAvant.getNote() == null) {
-            vueCarte = (VueCarte) pionAvant.getParent().getParent().getParent().getParent().getParent();
-        } else {
-            vueCarte = (VueCarte) pionAvant.getParent();
+        VueCarte vueCarte = null;
+        for (Observateur observateur : modeleJeu.getObservateurs()) {
+            if (observateur instanceof VueCarte) {
+                vueCarte = (VueCarte) observateur;
+            }
         }
+        assert vueCarte != null;
 
         Pion pionActuel = vueCarte.pions.getLast();
 
@@ -60,11 +62,10 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
             modeleJeu.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
-            vueCarte.pions.getLast().setOnDragDone(this);
         } else if (pionAvant.getNote() != null) {
-            // Rajouter une condition pour savoir si le pion a été déposé sur une zone ou pas.
 
             // Récupérer Lieu
+            System.out.println("Pion actuel : " + pionActuel.getUserData());
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
 
             Lieu nouveauLieu = null;
@@ -78,21 +79,18 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             String nomTemps = ((String) pionActuel.getUserData()).split("-")[0];
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
 
+            vueCarte.pions.getLast().setNote(new Note(nouveauLieu, temps, pionAvant.getNote().getPersonnage()));
+
             modeleJeu.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
-            // On met à jour le pion dans la vue
-            for (Pion p : vueCarte.pions) {
-                if (p.getNote() != null) {
-                    if (p.getNote().toString().equals(pionAvant.getNote().toString())) {
-                        System.out.println("Pion trouvé : " + p.getNote());
-                        p.setOnDragDone(this);
-                        p.deplacerPion((int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
-                        p.setNote(new Note(nouveauLieu, temps, p.getNote().getPersonnage()));
-                        vueCarte.pions.set(vueCarte.pions.indexOf(p), p);
-                        break;
+            // Quand le drag and drop est fini, on supprime le pion qui a été déplacé
+            VueCarte finalVueCarte = vueCarte;
+            vueCarte.pions.getLast().setOnDragDropped(
+                    event -> {
+                        finalVueCarte.getChildren().remove(pionAvant);
+                        event.consume();
                     }
-                }
-            }
+            );
         }
         // On affiche la liste des notes du joueur
         System.out.println("Liste des notes du joueur : ");
