@@ -95,64 +95,95 @@ public class ModeleChocoSolver {
 
         // Si le nombre de passages est strictement positif
         if (nbPassages > 0) {
-            // Étape 1 : Vérifier les temps instanciés
-            boolean foundInstantiated = false;
-            for (int t = 0; t < 6; t++) {
-                if (positions[indexPersonnage][t].isInstantiated()) {
-                    foundInstantiated = true;
-                    int confirmedSalle = positions[indexPersonnage][t].getValue();
-                    // Si la salle confirmée correspond à celle de l'indice
-                    if (confirmedSalle == lieu.getId()) {
-                        int[] tempsPattern = ((t + 1) % 2 == 0) ? new int[]{2, 4, 6} : new int[]{1, 3, 5};
+    // Étape 1 : Vérifier les temps instanciés
+    boolean foundInstantiated = false;
+    for (int t = 0; t < 6; t++) {
+        if (positions[indexPersonnage][t].isInstantiated()) {
+            foundInstantiated = true;
+            int confirmedSalle = positions[indexPersonnage][t].getValue();
 
-                        // Réduction des domaines pour les autres temps
-                        for (int i = 0; i < 6; i++) {
-                            if (i != t) {
-                                if (contains(tempsPattern, i + 1)) {
-                                    model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
-                                } else {
-                                    model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
-                                }
+            // Si la salle confirmée correspond à celle de l'indice
+            if (confirmedSalle == lieu.getId()) {
+                if (nbPassages == 1) {
+                    // Un seul passage : fixer uniquement ce temps, exclure tous les autres
+                    for (int i = 0; i < 6; i++) {
+                        if (i != t) {
+                            model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
+                        }
+                    }
+                } else if (nbPassages == 2) {
+                    // Deux passages : appliquer une logique spécifique
+                    for (int i = 0; i < 6; i++) {
+                        if (i != t && !positions[indexPersonnage][i].isInstantiated()) {
+                            // On peut fixer un deuxième temps s'il est valide
+                            model.arithm(presences[i], "=", 1).post();
+                        }
+                    }
+                } else if (nbPassages == 3) {
+                    // Trois passages : appliquer les patterns temporels
+                    int[] tempsPattern = ((t + 1) % 2 == 0) ? new int[]{2, 4, 6} : new int[]{1, 3, 5};
+                    for (int i = 0; i < 6; i++) {
+                        if (i != t) {
+                            if (contains(tempsPattern, i + 1)) {
+                                model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
+                            } else {
+                                model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
                             }
                         }
-                        break;
                     }
                 }
-            }
-
-            // Étape 2 : Si aucune salle n'est instanciée, appliquer les patterns temporels
-            if (!foundInstantiated) {
-                Tuples validPatterns = new Tuples(true);
-                validPatterns.add(1, 3, 5);
-                validPatterns.add(2, 4, 6);
-                IntVar[] timeIndices = new IntVar[nbPassages];
-                for (int i = 0; i < nbPassages; i++) {
-                    timeIndices[i] = model.intVar("Time_" + (i + 1), 1, 6);
-                }
-                model.table(timeIndices, validPatterns).post();
-            }
-
-            // Étape 3 : Ajouter des contraintes de déplacements cohérents
-            Tuples validMoves = new Tuples(true);
-            for (int salle = 1; salle <= 6; salle++) {
-                for (int adj : sallesAdjacentes[salle - 1]) {
-                    validMoves.add(salle, adj);
-                }
-            }
-            for (int i = 1; i < 6; i++) {
-                model.table(new IntVar[]{positions[indexPersonnage][i - 1], positions[indexPersonnage][i]}, validMoves).post();
-            }
-
-            // Étape 4 : Lier les positions aux présences
-            for (int t = 0; t < 6; t++) {
-                model.ifThenElse(
-                        model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
-                        model.arithm(presences[t], "=", 1),
-                        model.arithm(presences[t], "=", 0)
-                );
+                propagerContraintes();
+                break;
             }
         }
+    }
+
+    // Étape 2 : Si aucune salle n'est instanciée, appliquer les patterns temporels
+    if (!foundInstantiated) {
+        Tuples validPatterns = new Tuples(true);
+        if (nbPassages == 3) {
+            validPatterns.add(1, 3, 5);
+            validPatterns.add(2, 4, 6);
+        } else if (nbPassages == 2) {
+            // Pour deux passages, ne pas appliquer un pattern strict
+            for (int i = 1; i <= 6; i++) {
+                for (int j = i + 1; j <= 6; j++) {
+                    validPatterns.add(i, j);
+                }
+            }
+        }
+        IntVar[] timeIndices = new IntVar[nbPassages];
+        for (int i = 0; i < nbPassages; i++) {
+            timeIndices[i] = model.intVar("Time_" + (i + 1), 1, 6);
+        }
+        model.table(timeIndices, validPatterns).post();
         propagerContraintes();
+    }
+
+    // Étape 3 : Ajouter des contraintes de déplacements cohérents
+    Tuples validMoves = new Tuples(true);
+    for (int salle = 1; salle <= 6; salle++) {
+        for (int adj : sallesAdjacentes[salle - 1]) {
+            validMoves.add(salle, adj);
+        }
+    }
+    for (int i = 1; i < 6; i++) {
+        model.table(new IntVar[]{positions[indexPersonnage][i - 1], positions[indexPersonnage][i]}, validMoves).post();
+    }
+
+    // Étape 4 : Lier les positions aux présences
+    for (int t = 0; t < 6; t++) {
+        if (!positions[indexPersonnage][t].isInstantiated()) {
+            model.ifThenElse(
+                    model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
+                    model.arithm(presences[t], "=", 1),
+                    model.arithm(presences[t], "=", 0)
+            );
+        }
+    }
+}
+propagerContraintes();
+
     }
 
     private boolean contains(int[] array, int value) {
