@@ -191,85 +191,32 @@ public class ModeleChocoSolver {
         model.sum(presences, "=", nbPassages).post();
 
         // Si le nombre de passages est strictement positif
-        if (nbPassages > 0) {
-            if (nbPassages == 3) {
-                gererTempsInstancies(indexPersonnage, lieu, nbPassages, presences);
-            }
-            ajouterContraintesDeDeplacements(indexPersonnage);
-            lierPositionsAuxPresences(indexPersonnage, lieu, presences);
+        if (nbPassages == 3) {
+            gererTempsInstancies(indexPersonnage, lieu);
         }
         propagerContraintes();
-
     }
 
     // Gérer les temps instanciés
-    private void gererTempsInstancies(int indexPersonnage, Lieu lieu, int nbPassages, IntVar[] presences) {
+    private void gererTempsInstancies(int indexPersonnage, Lieu lieu) {
         for (int t = 0; t < 6; t++) {
             if (positions[indexPersonnage][t].isInstantiated()) {
                 int confirmedSalle = positions[indexPersonnage][t].getValue();
 
                 // S'il y a une salle déjà instanciée qui correspond au lieu
                 if (confirmedSalle == lieu.getId()) {
-                    appliquerContrainteSpecifiqueTemps(indexPersonnage, lieu, nbPassages, presences, t);
-                    return;
-                } else {
-                    model.arithm(positions[indexPersonnage][t], "!=", lieu.getId()).post();
-                }
-            }
-        }
-    }
-
-    // Appliquer les contraintes spécifiques à un temps instancié
-    private void appliquerContrainteSpecifiqueTemps(int indexPersonnage, Lieu lieu, int nbPassages, IntVar[] presences, int t) {
-        if (nbPassages == 1) {
-            for (int i = 0; i < 6; i++) {
-                if (i != t) {
-                    model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
-                }
-            }
-        } else if (nbPassages == 2) {
-            for (int i = 0; i < 6; i++) {
-                if (i != t && !positions[indexPersonnage][i].isInstantiated()) {
-                    model.arithm(presences[i], "=", 1).post();
-                }
-            }
-        } else {
-            int[] tempsPattern = ((t + 1) % 2 == 0) ? new int[]{2, 4, 6} : new int[]{1, 3, 5};
-            for (int i = 0; i < 6; i++) {
-                if (i != t) {
-                    if (contains(tempsPattern, i + 1)) {
-                        model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
-                    } else {
-                        model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
+                    int[] tempsPattern = ((t + 1) % 2 == 0) ? new int[]{2, 4, 6} : new int[]{1, 3, 5};
+                    for (int i = 0; i < 6; i++) {
+                        if (i != t) {
+                            if (contains(tempsPattern, i + 1)) {
+                                model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
+                            } else {
+                                model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
+                            }
+                        }
                     }
+                    return;
                 }
-            }
-        }
-    }
-
-
-    // Ajouter des contraintes de déplacements cohérents
-    private void ajouterContraintesDeDeplacements(int indexPersonnage) {
-        Tuples validMoves = new Tuples(true);
-        for (int salle = 1; salle <= 6; salle++) {
-            for (int adj : sallesAdjacentes[salle - 1]) {
-                validMoves.add(salle, adj);
-            }
-        }
-        for (int i = 1; i < 6; i++) {
-            model.table(new IntVar[]{positions[indexPersonnage][i - 1], positions[indexPersonnage][i]}, validMoves).post();
-        }
-    }
-
-    // Lier les positions aux présences
-    private void lierPositionsAuxPresences(int indexPersonnage, Lieu lieu, IntVar[] presences) {
-        for (int t = 0; t < 6; t++) {
-            if (!positions[indexPersonnage][t].isInstantiated()) {
-                model.ifThenElse(
-                        model.arithm(positions[indexPersonnage][t], "=", lieu.getId()),
-                        model.arithm(presences[t], "=", 1),
-                        model.arithm(presences[t], "=", 0)
-                );
             }
         }
     }
