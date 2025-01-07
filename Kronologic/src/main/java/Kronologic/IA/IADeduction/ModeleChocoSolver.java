@@ -108,12 +108,10 @@ public class ModeleChocoSolver {
                         // Réduction des domaines pour les autres temps
                         for (int i = 0; i < 6; i++) {
                             if (i != t) {
-                                for (int element : tempsPattern) {
-                                    if (element == i + 1) {
-                                        model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
-                                    } else {
-                                        model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
-                                    }
+                                if (contains(tempsPattern, i + 1)) {
+                                    model.arithm(positions[indexPersonnage][i], "=", lieu.getId()).post();
+                                } else {
+                                    model.arithm(positions[indexPersonnage][i], "!=", lieu.getId()).post();
                                 }
                             }
                         }
@@ -155,6 +153,15 @@ public class ModeleChocoSolver {
             }
         }
         propagerContraintes();
+    }
+
+    private boolean contains(int[] array, int value) {
+        for (int element : array) {
+            if (element == value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
