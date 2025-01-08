@@ -40,7 +40,7 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
             assert vuePopUpDeduction != null;
             this.modele.quitter("retour", vuePopUpDeduction.getStage());
         } else if (texte.equals("Voir le film")) {
-            this.modele.visualiserFilmRealite();
+            this.modele.visualiserFilmRealite(stage);
         }
     }
 }

@@ -6,11 +6,11 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class ControleurRegle implements EventHandler<ActionEvent> {
+public class ControleurQuitterRegleFilm implements EventHandler<ActionEvent> {
 
     private ModeleJeu modele;
 
-    public ControleurRegle(ModeleJeu modele) {
+    public ControleurQuitterRegleFilm(ModeleJeu modele) {
         this.modele = modele;
     }
 

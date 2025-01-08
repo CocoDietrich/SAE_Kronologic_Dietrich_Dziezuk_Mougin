@@ -19,8 +19,8 @@ import javafx.scene.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Kronologic.MVC.Vue.VueAccueil.creerButton;
-import static Kronologic.MVC.Vue.VueAccueil.creerButtonAvecImage;
+import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
+import static Kronologic.MVC.Vue.VueAccueil.creerBoutonAvecImage;
 
 public class VueDeduction extends BorderPane implements Observateur {
 
@@ -126,7 +126,7 @@ public class VueDeduction extends BorderPane implements Observateur {
 
         lieuButtons = new ArrayList<>();
         for (String path : lieuxImagesPaths) {
-            Button lieuButton = creerButtonAvecImage(path);
+            Button lieuButton = creerBoutonAvecImage(path);
             lieuButtons.add(lieuButton);
             lieuxBox.getChildren().add(lieuButton);
 
@@ -156,7 +156,7 @@ public class VueDeduction extends BorderPane implements Observateur {
         tempsButtons = new ArrayList<>();
         for (int i = 0; i < tempsImagesPaths.size(); i++) {
             String path = tempsImagesPaths.get(i);
-            Button tempsButton = creerButtonAvecImage(path);
+            Button tempsButton = creerBoutonAvecImage(path);
             tempsButtons.add(tempsButton);
             tempsGrid.add(tempsButton, i % 2, i / 2);
 
@@ -186,7 +186,7 @@ public class VueDeduction extends BorderPane implements Observateur {
         personnageButtons = new ArrayList<>();
         for (int i = 0; i < personnagesImagesPaths.size(); i++) {
             String path = personnagesImagesPaths.get(i);
-            Button personnageButton = creerButtonAvecImage(path);
+            Button personnageButton = creerBoutonAvecImage(path);
             personnageButtons.add(personnageButton);
             persosGrid.add(personnageButton, i % 2, i / 2);
 
@@ -203,13 +203,13 @@ public class VueDeduction extends BorderPane implements Observateur {
         boutonsBox.setAlignment(Pos.CENTER);
         boutonsBox.setPadding(new Insets(60, 0, 0, 0)); // Réduction de l'espacement supérieur
 
-        retour = creerButton("Retour");
+        retour = creerBouton("Retour");
         retour.setPrefSize(120, 40);
 
-        annuler = creerButton("Annuler mes choix");
+        annuler = creerBouton("Annuler mes choix");
         annuler.setPrefSize(200, 40);
 
-        valider = creerButton("Valider");
+        valider = creerBouton("Valider");
         valider.setPrefSize(120, 40);
 
         boutonsBox.getChildren().addAll(retour, annuler, valider);

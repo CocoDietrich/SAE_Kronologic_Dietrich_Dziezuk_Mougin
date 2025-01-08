@@ -36,9 +36,9 @@ public class VueAccueil extends BorderPane implements Observateur {
         ));
         this.setTop(titreBox);
 
-        jouer = creerButton("Jouer");
-        IAJoueuse = creerButton("IAJoueuse");
-        quitter = creerButton("Quitter");
+        jouer = creerBouton("Jouer");
+        IAJoueuse = creerBouton("IAJoueuse");
+        quitter = creerBouton("Quitter");
 
         VBox boutonsBox = new VBox(20);
         boutonsBox.setAlignment(Pos.CENTER);
@@ -58,7 +58,7 @@ public class VueAccueil extends BorderPane implements Observateur {
         this.setCenter(boutonsBox);
     }
 
-    public static Button creerButton(String s) {
+    public static Button creerBouton(String s) {
         Button bouton = new Button(s);
         bouton.setId(s);
         bouton.setFont(Font.font("Arial", 18));
@@ -102,7 +102,7 @@ public class VueAccueil extends BorderPane implements Observateur {
     }
 
 
-    public static Button creerButtonAvecImage(String imagePath) {
+    public static Button creerBoutonAvecImage(String imagePath) {
         Image image = new Image(imagePath);
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
@@ -111,7 +111,7 @@ public class VueAccueil extends BorderPane implements Observateur {
                 imageView.sceneProperty()
         ));
 
-        Button bouton = creerButton("");
+        Button bouton = creerBouton("");
         String idBouton = imagePath.substring(imagePath.lastIndexOf("/") + 1, imagePath.lastIndexOf("."));
         bouton.setId(idBouton);
         bouton.setGraphic(imageView);

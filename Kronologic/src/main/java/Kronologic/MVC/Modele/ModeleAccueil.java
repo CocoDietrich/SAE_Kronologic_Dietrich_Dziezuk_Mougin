@@ -40,6 +40,8 @@ public class ModeleAccueil implements Sujet {
                 VueRegle vueRegle = new VueRegle();
                 VuePopUpDemanderIndice vuePopUpDemanderIndice = new VuePopUpDemanderIndice(stage);
                 VuePopUpPoseQuestion vuePopUpPoseQuestion = new VuePopUpPoseQuestion(stage);
+                VueFilmJoueur vueFilmJoueur = new VueFilmJoueur(modeleJeu);
+                VueFilmRealite vueFilmRealite = new VueFilmRealite(modeleJeu);
 
                 ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
                 ControleurVisualiserPoseQuestion controleurVisualiserPoseQuestion = new ControleurVisualiserPoseQuestion(modeleJeu);
@@ -54,12 +56,14 @@ public class ModeleAccueil implements Sujet {
                 ControleurPopUpDeduction controleurPopUpDeduction = new ControleurPopUpDeduction(modeleJeu);
                 ControleurVisualiserRegle controleurVisualiserRegle = new ControleurVisualiserRegle(modeleJeu);
                 ControleurPopUpQuitter controleurPopUpQuitter = new ControleurPopUpQuitter(modeleJeu);
-                ControleurRegle controleurRegle = new ControleurRegle(modeleJeu);
+                ControleurQuitterRegleFilm controleurQuitterRegleFilm = new ControleurQuitterRegleFilm(modeleJeu);
                 ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
                 ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu);
                 ControleurPopUpPoseQuestion controleurPopUpPoseQuestion = new ControleurPopUpPoseQuestion(modeleJeu);
                 ControleurVisualiserFilmJoueur controleurVisualiserFilmJoueur = new ControleurVisualiserFilmJoueur(modeleJeu);
                 ControleurVisualiserFilmRealite controleurVisualiserFilmRealite = new ControleurVisualiserFilmRealite(modeleJeu);
+                ControleurFilmJoueur controleurFilmJoueur = new ControleurFilmJoueur(modeleJeu);
+                ControleurFilmRealite controleurFilmRealite = new ControleurFilmRealite(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -78,7 +82,11 @@ public class ModeleAccueil implements Sujet {
                 vueTableau.filmRealite.setOnAction(controleurVisualiserFilmRealite);
                 vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
                 vueTableau.faireDeduction.setOnAction(controleurVisualiserDeduction);
-                vueRegle.retour.setOnAction(controleurRegle);
+                vueRegle.retour.setOnAction(controleurQuitterRegleFilm);
+                vueFilmJoueur.retour.setOnAction(controleurQuitterRegleFilm);
+                vueFilmJoueur.slider.valueProperty().addListener(controleurFilmJoueur);
+                vueFilmRealite.retour.setOnAction(controleurQuitterRegleFilm);
+                vueFilmRealite.slider.valueProperty().addListener(controleurFilmRealite);
 
                 for (TextCase tc : vueTableau.listeCases){
                     tc.setOnMouseClicked(controleurChoixTableau);
@@ -131,6 +139,8 @@ public class ModeleAccueil implements Sujet {
                 modeleJeu.enregistrerObservateur(vuePopUpDemanderIndice);
                 modeleJeu.enregistrerObservateur(vueRegle);
                 modeleJeu.enregistrerObservateur(vuePopUpPoseQuestion);
+                modeleJeu.enregistrerObservateur(vueFilmJoueur);
+                modeleJeu.enregistrerObservateur(vueFilmRealite);
 
                 BorderPane bp = new BorderPane(vueCarte);
 

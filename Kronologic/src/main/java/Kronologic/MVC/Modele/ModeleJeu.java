@@ -16,15 +16,14 @@ import Kronologic.MVC.Vue.PopUps.VuePopUpDeduction;
 import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
 import Kronologic.MVC.Vue.PopUps.VuePopUpPoseQuestion;
 import Kronologic.MVC.Vue.PopUps.VuePopUpQuitter;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModeleJeu implements Sujet {
 
@@ -368,7 +367,23 @@ public class ModeleJeu implements Sujet {
         //TODO
     }
 
-    public void visualiserFilmJoueur(){
+    public void visualiserFilmJoueur(Stage stage){
+        VueFilmJoueur vueFilmJoueur = new VueFilmJoueur(this);
+        for (Observateur o : observateurs){
+            if (o instanceof VueFilmJoueur){
+                vueFilmJoueur = (VueFilmJoueur) o;
+                break;
+            }
+        }
+
+        notifierObservateurs();
+
+        BorderPane bp = new BorderPane(vueFilmJoueur);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+
         // Récupération de l'historique
         Map<Integer, List<Note>> historique = partie.getHistorique();
 
@@ -378,7 +393,7 @@ public class ModeleJeu implements Sujet {
 
         // Parcourir chaque tour dans l'ordre
         if (tours.isEmpty()){
-            System.out.println("Aucun indice n'a été posé.");
+            System.out.println("Aucune note n'a été posé.");
             return;
         }
         for (int i = 0; i <= tours.getLast(); i++) {
@@ -397,7 +412,21 @@ public class ModeleJeu implements Sujet {
         }
     }
 
-    public void visualiserFilmRealite(){
+    public void visualiserFilmRealite(Stage stage){
+        VueFilmRealite vueFilmRealite = new VueFilmRealite(this);
+        for (Observateur o : observateurs){
+            if (o instanceof VueFilmRealite){
+                vueFilmRealite = (VueFilmRealite) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vueFilmRealite);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+
         // Récupération du déroulement de la partie
         List<Realite> positions = partie.getDeroulement().getListePositions();
 
@@ -412,6 +441,33 @@ public class ModeleJeu implements Sujet {
         }
     }
 
+    public void actualiserFilmRealite(){
+        VueFilmRealite vueFilmRealite = null;
+        for (Observateur o : observateurs){
+            if (o instanceof VueFilmRealite){
+                vueFilmRealite = (VueFilmRealite) o;
+                break;
+            }
+        }
+
+        assert vueFilmRealite != null;
+
+        for (Node node : vueFilmRealite.getChildren()){
+            if (node instanceof HBox h) {
+                if (h.getId() != null){
+                    if (h.getId().equals("carte")){
+                        vueFilmRealite.getChildren().remove(h);
+                        // On met à jour la carte
+                        HBox nouvelleHbox = vueFilmRealite.afficherCarte(this);
+                        vueFilmRealite.add(nouvelleHbox, 1, 1);
+                        break;
+                    }
+                }
+            }
+        }
+        vueFilmRealite.actualiser();
+    }
+
     public void visualiserRegle(Stage stage){
         VueRegle vueRegle = new VueRegle();
         for (Observateur o : observateurs){
@@ -420,6 +476,8 @@ public class ModeleJeu implements Sujet {
                 break;
             }
         }
+
+        System.out.println(vueRegle.retour.getOnAction());
 
         BorderPane bp = new BorderPane(vueRegle);
 
