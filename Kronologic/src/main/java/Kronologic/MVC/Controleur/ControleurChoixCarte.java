@@ -43,16 +43,12 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             pionActuel = vueCarte.pions.getLast();
         }
 
-        for (Pion p : vueCarte.pions) {
-            System.out.println("user data : " + p.getUserData() + " - Id : " + p.getId());
-        }
-
         // Si un pion représentant le même personnage ou le pion de nombre est déjà présent dans le même lieu et au même temps
         // On ne peut pas ajouter un autre pion représentant le même personnage ou le pion de nombre
 
         if (pionActuel.getId() != null) {
-            // Si c'est un pion de personnage
             String nomPersonnagePionActuel = pionActuel.getId().substring(pionActuel.getId().lastIndexOf("/")+1, pionActuel.getId().lastIndexOf("."));
+            // Si c'est un pion de nombres
             if (nomPersonnagePionActuel.contains("Pion de Nombres")) {
                 // On récupère les pions de nombres déjà placés
                 ArrayList<Pion> pionsDeNombres = new ArrayList<>();
@@ -86,6 +82,8 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     }
                 }*/
             } else {
+                // Si c'est un pion de personnage
+
                 // On récupère les pions de ce personnage déjà placés
                 ArrayList<Pion> pionsMemePersonnage = new ArrayList<>();
                 for (Pion p : vueCarte.pions) {
@@ -105,11 +103,11 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                     if (lieuTempsPion.equals(lieuTempsPionActuel)) {
                         System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps");
-                        vueCarte.getChildren().removeLast();
-                        vueCarte.zonesContenantPions.removeLast();
-                        for (Polygon poly : vueCarte.zonesContenantPions) {
-                            System.out.println("Zone : " + poly.getUserData());
+                        if (vueCarte.getChildren().getLast() instanceof Pion) {
+                            vueCarte.getChildren().removeLast();
                         }
+                        vueCarte.zonesContenantPions.removeLast();
+                        vueCarte.pions.removeLast();
                         return;
                     }
                 }
@@ -202,10 +200,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     vueCarte.zonesContenantPions.remove(j);
                 }
             }
-        }
-
-        for (Polygon p : vueCarte.zonesContenantPions) {
-            System.out.println("Zone : " + p.getUserData());
         }
 
         System.out.println("Liste des notes : ");

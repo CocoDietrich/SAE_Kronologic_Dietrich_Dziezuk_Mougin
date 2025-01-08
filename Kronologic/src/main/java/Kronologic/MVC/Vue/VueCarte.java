@@ -363,7 +363,6 @@ public class VueCarte extends BorderPane implements Observateur {
         zones.addAll(sousZones6);
         zonesDeJeu.addAll(sousZones6);
 
-
         return zones;
     }
 
@@ -409,18 +408,15 @@ public class VueCarte extends BorderPane implements Observateur {
                 boolean sousZoneOccupee = pions.stream()
                         .filter(p -> p.getUserData() != null && p.getUserData().equals(polygon.getUserData()))
                         .count() >= 2;
-                System.out.println("Sous-zone occupée : " + sousZoneOccupee);
 
                 if (sousZoneOccupee) {
                     String nomLieu = polygon.getUserData().toString().split("-")[1];
                     String nomTemps = polygon.getUserData().toString().split("-")[0];
-                    System.out.println("Nom lieu : " + nomLieu + " - Nom temps : " + nomTemps);
                     if (zonesContenantPions.getLast().getUserData() != zonesContenantPions.get(zonesContenantPions.size() - 2).getUserData()) {
                         zonesContenantPions.removeLast();
                     }
                     Polygon sousZoneLibre = trouverSousZoneLibre(nomLieu, nomTemps);
                     if (sousZoneLibre != null) {
-                        System.out.println("Data sous-zone libre : " + sousZoneLibre.getUserData());
 
                         // Mise à jour du UserData pour refléter la sous-zone libre
                         pionDeplace.setUserData(sousZoneLibre.getUserData());
@@ -434,7 +430,6 @@ public class VueCarte extends BorderPane implements Observateur {
                         pionDeplace.setLayoutY(pointLibre.getY() - pionDeplace.getFitHeight() / 2);
                     } else {
                         // On ne fait rien
-                        System.out.println("Aucune sous-zone libre trouvée");
                         return;
                     }
                 } else {
