@@ -11,13 +11,14 @@ public class ModeleHeuristiqueSolver {
 
     private final String[] personnages;
     private final boolean[][][] domainesPersonnages = new boolean[6][6][6]; // Temps × Personnages × Lieux
+    private final int[][] sallesAdjacentes;
 
     public ModeleHeuristiqueSolver(String[] personnages, int[][] sallesAdjacentes, List<Realite> positionsInitiales) {
         this.personnages = personnages;
+        this.sallesAdjacentes = sallesAdjacentes;
 
         initialiserDomaines();
         appliquerPositionsInitiales(positionsInitiales);
-        //appliquerContraintesDeplacements(sallesAdjacentes);
     }
 
     // Initialiser les domaines
@@ -36,30 +37,33 @@ public class ModeleHeuristiqueSolver {
         for (Realite position : positionsInitiales) {
             ajouterContraintePersonnage(position.getPersonnage(), position.getLieu(), position.getTemps().getValeur() - 1);
         }
+        appliquerContraintesDeplacements();
     }
 
-    private void appliquerContraintesDeplacements(int[][] sallesAdjacentes) {
+    private void appliquerContraintesDeplacements() {
         for (int t = 0; t < 5; t++) { // Temps de 0 à 4
             for (int p = 0; p < personnages.length; p++) {
-                for (int l = 0; l < 6; l++) {
-                    if (domainesPersonnages[t][p][l]) { // Si le lieu est possible au temps `t`
-                        // Vérifier les salles adjacentes
-                        boolean[] adjacents = new boolean[6];
-                        for (int adj : sallesAdjacentes[l]) {
-                            adjacents[adj - 1] = true; // `adj - 1` pour convertir en index
-                        }
+                boolean[] lieuxAccessibles = new boolean[6];
 
-                        // Désactiver les lieux non adjacents au temps suivant
-                        for (int nextL = 0; nextL < 6; nextL++) {
-                            if (!adjacents[nextL]) {
-                                domainesPersonnages[t + 1][p][nextL] = false;
-                            }
+                // Réunion des lieux accessibles depuis tous les lieux possibles au temps `t`
+                for (int l = 0; l < 6; l++) {
+                    if (domainesPersonnages[t][p][l]) { // Si le lieu `l` est possible au temps `t`
+                        for (int adj : sallesAdjacentes[l]) {
+                            lieuxAccessibles[adj - 1] = true; // Marquer comme accessible au temps suivant
                         }
+                    }
+                }
+
+                // Appliquer les lieux accessibles au temps `t+1`
+                for (int l = 0; l < 6; l++) {
+                    if (!lieuxAccessibles[l]) {
+                        domainesPersonnages[t + 1][p][l] = false; // Désactiver les lieux non accessibles
                     }
                 }
             }
         }
     }
+
 
     // Ajouter une contrainte sur un personnage
     public void ajouterContraintePersonnage(Personnage personnage, Lieu lieu, int temps) {
@@ -71,31 +75,8 @@ public class ModeleHeuristiqueSolver {
             domainesPersonnages[temps][personnageIndex][l] = (l == lieuIndex);
         }
 
-        // Supprimer ce personnage des autres lieux pour ce temps
-        for (int otherP = 0; otherP < personnages.length; otherP++) {
-            if (otherP != personnageIndex) {
-                domainesPersonnages[temps][otherP][lieuIndex] = false;
-            }
-        }
-        propagerContraintes();
+        appliquerContraintesDeplacements();
     }
-
-    private boolean verifierCohérence(int temps) {
-        for (int p = 0; p < personnages.length; p++) {
-            boolean hasValidDomain = false;
-            for (int l = 0; l < 6; l++) {
-                if (domainesPersonnages[temps][p][l]) {
-                    hasValidDomain = true;
-                    break;
-                }
-            }
-            if (!hasValidDomain) {
-                return false;
-            }
-        }
-        return true;
-    }
-
 
     // Ajouter une contrainte sur le nombre de passages
     public void ajouterContrainteNombreDePassages(Personnage personnage, Lieu lieu, int nbPassages) {
@@ -114,8 +95,6 @@ public class ModeleHeuristiqueSolver {
                 domainesPersonnages[t][personnageIndex][lieuIndex] = false;
             }
         }
-
-        propagerContraintes();
     }
 
 
@@ -136,40 +115,7 @@ public class ModeleHeuristiqueSolver {
                 domainesPersonnages[tempsIndex][p][lieuIndex] = false;
             }
         }
-
-        propagerContraintes();
     }
-
-    private void propagerContraintes() {
-        for (int t = 0; t < 6; t++) {
-            for (int p = 0; p < personnages.length; p++) {
-                int possibleLieuxCount = 0;
-                int dernierLieuPossible = -1;
-
-                for (int l = 0; l < 6; l++) {
-                    if (domainesPersonnages[t][p][l]) {
-                        possibleLieuxCount++;
-                        dernierLieuPossible = l;
-                    }
-                }
-
-                // Si un seul lieu est possible, réduire directement le domaine
-                if (possibleLieuxCount == 1) {
-                    for (int l = 0; l < 6; l++) {
-                        domainesPersonnages[t][p][l] = (l == dernierLieuPossible);
-                    }
-
-                    // Supprimer ce personnage des autres domaines pour ce lieu
-                    for (int otherP = 0; otherP < personnages.length; otherP++) {
-                        if (otherP != p) {
-                            domainesPersonnages[t][otherP][dernierLieuPossible] = false;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
 
     // Affichage des domaines
     public String affichagePropagate() {

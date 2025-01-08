@@ -66,60 +66,83 @@ public class ModeleChocoSolver {
             }
         }
 
-        // Créer une table pour relier les temps possibles aux nombres de personnes présentes
-        Tuples tableTemps = new Tuples(true);
-        for (int t = 1; t < 6; t++) {
+        Tuples tableCoupable = new Tuples(true);
+
+        for (int t = 2; t <= 6; t++) { // Temps commence à 2 car meurtre pas au temps 1
             IntVar[] presences = new IntVar[personnages.length];
             for (int i = 0; i < personnages.length; i++) {
-                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + (t + 1), 0, 1);
+                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + t, 0, 1);
 
                 // Vérifier si le personnage est présent dans la même salle que le détective
                 model.ifThenElse(
-                        model.arithm(positions[i][t], "=", positions[getIndexPersonnage("D")][t]),
+                        model.arithm(positions[i][t - 1], "=", positions[getIndexPersonnage("D")][t - 1]),
                         model.arithm(presences[i], "=", 1),
                         model.arithm(presences[i], "=", 0)
                 );
             }
 
-            IntVar nbPersonnes = model.intVar("NbPersonnes_T" + (t + 1), 0, personnages.length);
+            IntVar nbPersonnes = model.intVar("NbPersonnes_T" + t, 0, personnages.length);
             model.sum(presences, "=", nbPersonnes).post();
 
-            // Ajouter les valeurs valides à la table : exactement 2 personnes présentes pour un temps valide
-            tableTemps.add(2, t + 1);
-        }
+            // Réduire immédiatement le domaine du temps et du lieu si deux personnes sont présentes
+            model.ifThen(
+                    model.arithm(nbPersonnes, "=", 2),
+                    model.and(
+                            model.arithm(coupableTemps, "=", t),
+                            model.arithm(coupableLieu, "=", positions[getIndexPersonnage("D")][t - 1])
+                    )
+            );
 
-        // Associer le nombre de personnes présentes au temps potentiel du meurtre
-        model.table(new IntVar[]{model.intVar("NbPersonnes", 2), coupableTemps}, tableTemps).post();
+            // Ajouter toutes les combinaisons possibles (personnage, temps, lieu)
+            for (int i = 0; i < personnages.length; i++) {
+                if (!personnages[i].equals("D")) { // Exclure le détective
+                    for (int lieu = 1; lieu <= 6; lieu++) {
+                        if (positions[i][t - 1].contains(lieu)) {
+                            tableCoupable.add(i, t, lieu);
+                        }
+                    }
+                }
+            }
 
-        // Créer une table pour relier les suspects, les temps et les lieux
-        Tuples tableCoupable = new Tuples(true);
-        for (int t = 1; t < 6; t++) {
+            // Réduire les suspects directement
             for (int i = 0; i < personnages.length; i++) {
                 if (!personnages[i].equals("D")) {
-                    for (int lieu = 1; lieu <= 6; lieu++) {
-                        tableCoupable.add(i, t + 1, lieu); // Ajouter toutes les combinaisons possibles
-                    }
+                    model.ifThen(
+                            model.and(
+                                    model.arithm(nbPersonnes, "=", 2),
+                                    model.arithm(positions[i][t - 1], "=", positions[getIndexPersonnage("D")][t - 1])
+                            ),
+                            model.arithm(coupablePersonnage, "=", i)
+                    );
                 }
             }
         }
 
+        // Relier les suspects, temps et lieux avec la table coupable
         model.table(new IntVar[]{coupablePersonnage, coupableTemps, coupableLieu}, tableCoupable).post();
 
-        // Réduire les domaines des suspects en fonction des règles
+        // Réduire les domaines des suspects
         for (int i = 0; i < personnages.length; i++) {
             if (!personnages[i].equals("D")) {
                 IntVar suspect = suspects[i < suspectIndex ? i : i - 1];
 
-                model.ifThen(
-                        model.arithm(coupablePersonnage, "!=", i),
-                        model.arithm(suspect, "=", 0)
-                );
+                if (!suspect.isInstantiated()) {
+                    model.ifThen(
+                            model.arithm(coupablePersonnage, "!=", i),
+                            model.arithm(suspect, "=", 0)
+                    );
 
-                model.ifThen(
-                        model.arithm(coupablePersonnage, "=", i),
-                        model.arithm(suspect, "=", 1)
-                );
+                    model.ifThen(
+                            model.arithm(coupablePersonnage, "=", i),
+                            model.arithm(suspect, "=", 1)
+                    );
+                }
             }
+        }
+
+        // Debugging prints
+        for (IntVar suspect : suspects) {
+            System.out.println("Suspect: " + suspect);
         }
 
         propagerContraintes();
