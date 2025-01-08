@@ -10,6 +10,12 @@ public class IndicePersonnage extends Indice {
 
     public IndicePersonnage(Lieu l, int p, Personnage perso, int ip) {
         super(l, p);
+        if (perso == null) {
+            throw new IllegalArgumentException("Le personnage ne peut pas être nul.");
+        }
+        if (ip < 0) {
+            throw new IllegalArgumentException("L'information privée ne peut pas être négatif.");
+        }
         this.personnage = perso;
         this.infoPrive = ip;
     }

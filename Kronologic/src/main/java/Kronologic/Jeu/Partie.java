@@ -75,6 +75,7 @@ public class Partie {
     // Méthode permettant de retirer une note du joueur (enlever un pion des cartes)
     public void supprimerNote(Note n) {
         gestionnaireNotes.supprimerNote(n);
+        mettreAJourHistorique();
     }
 
     // Méthode permettant d'ajouter un pion
@@ -98,6 +99,7 @@ public class Partie {
         if (pion.getNote() != null){
             System.out.println("Suppression de la note : " + pion.getNote().toString());
             gestionnaireNotes.supprimerNote(pion.getNote());
+            mettreAJourHistorique();
         }
     }
 

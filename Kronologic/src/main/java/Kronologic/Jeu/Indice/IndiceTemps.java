@@ -10,6 +10,12 @@ public class IndiceTemps extends Indice{
 
     public IndiceTemps(Lieu l, int p, Temps t, String ip) {
         super(l, p);
+        if (t == null) {
+            throw new IllegalArgumentException("Le temps ne peut pas être nul.");
+        }
+        if (ip == null || ip.isEmpty()) {
+            throw new IllegalArgumentException("L'information privée ne peut pas être vide.");
+        }
         this.temps = t;
         this.infoPrive = ip;
     }
