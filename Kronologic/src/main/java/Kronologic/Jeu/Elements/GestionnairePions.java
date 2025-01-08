@@ -25,7 +25,14 @@ public class GestionnairePions {
         Pion pionASupprimer = null;
         for (Pion p : this.pions) {
             if (p.equals(pion)) {
-                Note note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getPersonnage());
+                Note note = null;
+                if (pion.getNote().getPersonnage() == null){
+                    note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getNbPersonnages());
+                }
+                else {
+
+                    note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getPersonnage());
+                }
                 note.setEstAbsence(pion.getNote().estAbsence());
                 note.setEstHypothese(pion.getNote().estHypothese());
                 p.setNote(note);

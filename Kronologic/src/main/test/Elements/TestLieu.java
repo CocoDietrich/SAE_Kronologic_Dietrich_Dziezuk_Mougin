@@ -1,7 +1,6 @@
 package Elements;
 
 import Kronologic.Jeu.Elements.Lieu;
-import Kronologic.MVC.Modele.ModeleJeu;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

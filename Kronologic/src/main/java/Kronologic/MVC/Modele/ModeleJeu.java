@@ -377,6 +377,10 @@ public class ModeleJeu implements Sujet {
         Collections.sort(tours);
 
         // Parcourir chaque tour dans l'ordre
+        if (tours.isEmpty()){
+            System.out.println("Aucun indice n'a été posé.");
+            return;
+        }
         for (int i = 0; i <= tours.getLast(); i++) {
             System.out.println("--------------------");
             // Afficher le numéro du tour
