@@ -8,6 +8,12 @@ public class Deroulement {
     private ArrayList<Realite> listePositions;
 
     public Deroulement(ArrayList<Realite> listePositions) {
+        if (listePositions == null) {
+            throw new IllegalArgumentException("La liste de positions ne peut pas être nulle");
+        }
+        if (listePositions.isEmpty()) {
+            throw new IllegalArgumentException("La liste de positions ne peut pas être vide");
+        }
         this.listePositions = listePositions;
     }
 

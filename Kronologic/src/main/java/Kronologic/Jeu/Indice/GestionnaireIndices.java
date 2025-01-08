@@ -10,6 +10,12 @@ public class GestionnaireIndices {
     private List<Indice> listeIndices;
 
     public GestionnaireIndices(List<Indice> listeIndices) {
+        if (listeIndices == null) {
+            throw new IllegalArgumentException("La liste d'indices ne peut pas être nulle.");
+        }
+        if (listeIndices.isEmpty()) {
+            throw new IllegalArgumentException("La liste d'indices ne peut pas être vide.");
+        }
         this.listeIndices = listeIndices;
     }
 
