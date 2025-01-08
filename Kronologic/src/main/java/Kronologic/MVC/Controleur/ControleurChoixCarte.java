@@ -16,8 +16,6 @@ import java.util.Objects;
 public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
     private ModeleJeu modeleJeu;
-    private static int nbPionsPlaces = 0;
-    private static Pion pionAvantAvant = null;
 
     public ControleurChoixCarte(ModeleJeu modeleJeu) {
         this.modeleJeu = modeleJeu;
