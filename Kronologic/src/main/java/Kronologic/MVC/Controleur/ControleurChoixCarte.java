@@ -12,20 +12,27 @@ import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
 
 import java.util.List;
+import javafx.scene.shape.Polygon;
 import java.util.Objects;
 
 public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
     private ModeleJeu modeleJeu;
+    private Polygon polygone;
 
-    public ControleurChoixCarte(ModeleJeu modeleJeu) {
+    public ControleurChoixCarte(ModeleJeu modeleJeu, Polygon polygon) {
         this.modeleJeu = modeleJeu;
+        this.polygone = polygon;
     }
 
     @Override
     public void handle(DragEvent dragEvent) {
         System.out.println("--------------------");
         Pion pionAvant = (Pion) dragEvent.getGestureSource();
+
+        if (polygone != null) {
+            System.out.println(polygone.getUserData());
+        }
 
         VueCarte vueCarte = null;
         for (Observateur observateur : modeleJeu.getObservateurs()) {

@@ -6,6 +6,7 @@ import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.event.Event;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
@@ -19,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
@@ -196,71 +198,159 @@ public class VueCarte extends BorderPane implements Observateur {
     }
 
     public HBox creerCalque(List<Polygon> zones) {
-        // Création d'un calque pour superposer les zones interactives
         HBox calque = new HBox();
         calque.setAlignment(Pos.CENTER);
+        calque.setSpacing(0);
 
-        VBox vBox = new VBox();
-        vBox.setAlignment(Pos.CENTER);
-        vBox.getChildren().addAll(zones.get(4), zones.get(5));
+        for (int i = 0; i < 6; i++) {
+            StackPane lieuContainer = new StackPane();
+            lieuContainer.setAlignment(Pos.CENTER);
+            lieuContainer.setPadding(new Insets(-1));
 
-        // Ajout des zones interactives dans le calque
-        calque.getChildren().addAll(zones.get(0), zones.get(1), zones.get(2), zones.get(3), vBox);
+            Polygon zonePrincipale = zones.get(i);
+            lieuContainer.getChildren().add(zonePrincipale);
+
+            if (i < 4) { // Pour le grand foyer, grand escalier, salle et scène
+                GridPane sousZonesGrid = new GridPane();
+                sousZonesGrid.setAlignment(Pos.CENTER);
+
+                for (int j = 0; j < 6; j++) {
+                    int col = j % 2; // 2 colonnes
+                    int row = j / 2; // 3 lignes
+                    Polygon sousZone = zones.get(6 + i * 6 + j); // Index des sous-zones
+                    sousZonesGrid.add(sousZone, col, row);
+                }
+                lieuContainer.getChildren().add(sousZonesGrid);
+            }
+            else if (i == 4) {
+                VBox foyerContainer = new VBox();
+                foyerContainer.setAlignment(Pos.CENTER);
+                foyerContainer.setSpacing(0);
+
+                GridPane sousZonesFoyerChant = new GridPane();
+                sousZonesFoyerChant.setAlignment(Pos.CENTER);
+
+                GridPane sousZonesFoyerDanse = new GridPane();
+                sousZonesFoyerDanse.setAlignment(Pos.CENTER);
+                sousZonesFoyerDanse.setPadding(new Insets(0));
+
+                for (int j = 0; j < 6; j++) {
+                    int sousZoneIndex = 6 + i * 6 + j;
+                    sousZonesFoyerChant.add(zones.get(sousZoneIndex), j % 3, j / 3);
+                }
+
+                for (int j = 0; j < 6; j++) {
+                    int sousZoneIndex = 6 + (i + 1) * 6 + j;
+                    sousZonesFoyerDanse.add(zones.get(sousZoneIndex), j % 3, j / 3);
+                }
+
+                foyerContainer.getChildren().addAll(sousZonesFoyerChant, sousZonesFoyerDanse);
+                lieuContainer.getChildren().add(foyerContainer);
+                i++;
+            }
+
+            calque.getChildren().add(lieuContainer);
+        }
 
         return calque;
     }
 
+
+    private List<Polygon> creerSousLieux(Polygon zoneParent, String nomZone, ModeleJeu modeleJeu) {
+        ArrayList<Polygon> sousZones = new ArrayList<>();
+
+        // Récupération des coordonnées du lieu parent
+        double[] coords = zoneParent.getPoints().stream().mapToDouble(Double::doubleValue).toArray();
+
+        // Ajustements des dimensions en fonction du lieu
+        double ajustementX = 0;
+        double ajustementY = 0;
+        double largeurFactor = 1.0;
+        double hauteurFactor = 1.0;
+
+        if (nomZone.contains("Grand foyer") || nomZone.contains("Grand escalier") ||
+                nomZone.contains("Salle") || nomZone.contains("Scène")) {
+            largeurFactor = 0.98; // Ajustement léger de largeur
+            hauteurFactor = 0.98; // Ajustement léger de hauteur
+        } else if (nomZone.contains("Foyer du chant") || nomZone.contains("Foyer de la danse")) {
+            largeurFactor = 0.95;
+            hauteurFactor = 0.95;
+        }
+
+        // Création et positionnement des sous-zones
+        for (int i = 0; i < 6; i++) {
+            double largeur = (coords[2] - coords[0]) * largeurFactor;
+            double hauteur = (coords[5] - coords[1]) * hauteurFactor;
+
+            int col, row;
+
+            if (nomZone.contains("Grand foyer") || nomZone.contains("Grand escalier") ||
+                    nomZone.contains("Salle") || nomZone.contains("Scène")) {
+                col = i % 2; // 2 colonnes
+                row = i / 2; // 3 lignes
+            } else {
+                col = i % 3; // 3 colonnes
+                row = i / 3; // 2 lignes
+            }
+
+            double largeurPart = largeur / (nomZone.contains("Grand foyer") || nomZone.contains("Grand escalier") ||
+                    nomZone.contains("Salle") || nomZone.contains("Scène") ? 2 : 3);
+            double hauteurPart = hauteur / (nomZone.contains("Grand foyer") || nomZone.contains("Grand escalier") ||
+                    nomZone.contains("Salle") || nomZone.contains("Scène") ? 3 : 2);
+
+            double x1 = coords[0] + ajustementX + col * largeurPart;
+            double y1 = coords[1] + ajustementY + row * hauteurPart;
+            double x2 = x1 + largeurPart;
+            double y2 = y1 + hauteurPart;
+
+            double[] sousLieuCoords = new double[]{x1, y1, x2, y1, x2, y2, x1, y2};
+
+            // Création du sous-lieu
+            Polygon sousLieu = creerLieu(sousLieuCoords, nomZone + "-SousZone" + (i + 1), modeleJeu);
+
+            // Style pour les voir
+            sousLieu.setStroke(Color.TRANSPARENT);
+            sousLieu.setStrokeWidth(1);
+
+            // Ajout de la sous-zone à la liste
+            sousZones.add(sousLieu);
+        }
+        return sousZones;
+    }
+
     public List<Polygon> creerZone(String temps, ModeleJeu modeleJeu) {
-        // Zone 1 (Salle Orange à gauche)
-        Polygon zone1 = creerLieu(new double[]{
-                0, 0,  // Coin supérieur gauche
-                30, 0, // Coin supérieur droit
-                30, 110, // Coin inférieur droit
-                0, 110   // Coin inférieur gauche
-        }, temps + "-Grand foyer", modeleJeu);
+        List<Polygon> zones = new ArrayList<>();
 
-        // Zone 2 (Salle Bleue au centre gauche)
-        Polygon zone2 = creerLieu(new double[]{
-                0, 0,  // Coin supérieur gauche
-                50, 0,  // Coin supérieur droit
-                50, 80,  // Coin inférieur droit
-                0, 80   // Coin inférieur gauche
-        }, temps + "-Grand escalier", modeleJeu);
+        // Exemple de création de zones principales
+        Polygon zone1 = creerLieu(new double[]{0, 0, 30, 0, 30, 110, 0, 110}, temps + "-Grand foyer", modeleJeu);
+        Polygon zone2 = creerLieu(new double[]{0, 0, 50, 0, 50, 80, 0, 80}, temps + "-Grand escalier", modeleJeu);
+        Polygon zone3 = creerLieu(new double[]{0, 0, 50, 0, 50, 150, 0, 150}, temps + "-Salle", modeleJeu);
+        Polygon zone4 = creerLieu(new double[]{0, 0, 40, 0, 40, 110, 0, 110}, temps + "-Scène", modeleJeu);
+        Polygon zone5 = creerLieu(new double[]{0, 0, 60, 0, 60, 40, 0, 40}, temps + "-Foyer du chant", modeleJeu);
+        Polygon zone6 = creerLieu(new double[]{0, 0, 60, 0, 60, 70, 0, 70}, temps + "-Foyer de la danse", modeleJeu);
 
-        // Zone 3 (Grande Scène Rouge)
-        Polygon zone3 = creerLieu(new double[]{
-                0, 0,  // Coin supérieur gauche
-                50, 0,  // Coin supérieur droit
-                50, 150,  // Coin inférieur droit
-                0, 150   // Coin inférieur gauche
-        }, temps + "-Salle", modeleJeu);
+        // Ajout des zones à la liste
+        zones.add(zone1);
+        zones.add(zone2);
+        zones.add(zone3);
+        zones.add(zone4);
+        zones.add(zone5);
+        zones.add(zone6);
 
-        // Zone 4 (Couloir Sombre milieu droit)
-        Polygon zone4 = creerLieu(new double[]{
-                0, 0,  // Coin supérieur gauche
-                40, 0,  // Coin supérieur droit
-                40, 110,  // Coin inférieur droit
-                0, 110   // Coin inférieur gauche
-        }, temps + "-Scène", modeleJeu);
+        List<Polygon> sousZones1 = creerSousLieux(zone1, temps + "-Grand foyer", modeleJeu);
+        zones.addAll(sousZones1);
+        List<Polygon> sousZones2 = creerSousLieux(zone2, temps + "-Grand escalier", modeleJeu);
+        zones.addAll(sousZones2);
+        List<Polygon> sousZones3 = creerSousLieux(zone3, temps + "-Salle", modeleJeu);
+        zones.addAll(sousZones3);
+        List<Polygon> sousZones4 = creerSousLieux(zone4, temps + "-Scène", modeleJeu);
+        zones.addAll(sousZones4);
+        List<Polygon> sousZones5 = creerSousLieux(zone5, temps + "-Foyer du chant", modeleJeu);
+        zones.addAll(sousZones5);
+        List<Polygon> sousZones6 = creerSousLieux(zone6, temps + "-Foyer de la danse", modeleJeu);
+        zones.addAll(sousZones6);
 
-        // Zone 5 (Salle Bleue en haut à droite)
-        Polygon zone5 = creerLieu(new double[]{
-                0, 0,  // Coin supérieur gauche
-                60, 0,  // Coin supérieur droit
-                60, 40, // Coin inférieur droit
-                0, 40  // Coin inférieur gauche
-        }, temps + "-Foyer du chant", modeleJeu);
-
-        // Zone 6 (Salle Dorée en bas à droite)
-        Polygon zone6 = creerLieu(new double[]{
-                0, 0,  // Coin supérieur gauche
-                60, 0,  // Coin supérieur droit
-                60, 70,  // Coin inférieur droit
-                0, 70   // Coin inférieur gauche
-        }, temps + "-Foyer de la danse", modeleJeu);
-
-        zonesDeJeu = List.of(zone1, zone2, zone3, zone4, zone5, zone6);
-        return List.of(zone1, zone2, zone3, zone4, zone5, zone6);
+        return zones;
     }
 
     private Polygon creerLieu(double[] points, String zoneName, ModeleJeu modeleJeu) {
@@ -310,19 +400,17 @@ public class VueCarte extends BorderPane implements Observateur {
                     }
 
                     // Déléguer la logique métier au contrôleur
-                    new ControleurChoixCarte(modeleJeu).handle(e);
+                    new ControleurChoixCarte(modeleJeu, polygon).handle(e);
                     e.consume();
                 });
 
-                // Positionner le pion là où le curseur a été lâché
-                double sceneX = event.getSceneX();
-                double sceneY = event.getSceneY();
                 VueCarte root = this;
                 root.getChildren().add(pionDeplace);
-                javafx.geometry.Point2D dropPoint = root.sceneToLocal(sceneX, sceneY);
 
-                pionDeplace.setLayoutX(dropPoint.getX() - pionDeplace.getFitWidth() / 2);
-                pionDeplace.setLayoutY(dropPoint.getY() - pionDeplace.getFitHeight() / 2);
+                // Positionner le pion au centre de la zone où il a été déposé
+                Point2D point = polygon.localToScene(polygon.getBoundsInLocal().getCenterX(), polygon.getBoundsInLocal().getCenterY());
+                pionDeplace.setLayoutX(point.getX() - pionDeplace.getFitWidth() / 2);
+                pionDeplace.setLayoutY(point.getY() - pionDeplace.getFitHeight() / 2);
 
                 event.setDropCompleted(true);
 
