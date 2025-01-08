@@ -285,7 +285,7 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                     }
 
                     // Déléguer la logique métier au contrôleur
-                    new ControleurChoixCarte(modeleJeu).handle(e);
+                    new ControleurChoixCarte(modeleJeu, polygon).handle(e);
                     e.consume();
                 });
 
