@@ -17,13 +17,13 @@ public class ModeleHeuristiqueSolver {
 
         initialiserDomaines();
         appliquerPositionsInitiales(positionsInitiales);
-        appliquerContraintesDeplacements(sallesAdjacentes);
+        //appliquerContraintesDeplacements(sallesAdjacentes);
     }
 
     // Initialiser les domaines
     public void initialiserDomaines() {
         for (int t = 0; t < 6; t++) {
-            for (int p = 0; p < personnages.length; p++) {
+            for (int p = 0; p < 6; p++) {
                 for (int l = 0; l < 6; l++) {
                     domainesPersonnages[t][p][l] = true; // Tous les lieux sont initialement possibles
                 }
@@ -34,7 +34,7 @@ public class ModeleHeuristiqueSolver {
     // Appliquer les positions initiales
     public void appliquerPositionsInitiales(List<Realite> positionsInitiales) {
         for (Realite position : positionsInitiales) {
-            ajouterContraintePersonnage(position.getPersonnage(), position.getLieu(), position.getTemps().getValeur());
+            ajouterContraintePersonnage(position.getPersonnage(), position.getLieu(), position.getTemps().getValeur() - 1);
         }
     }
 
@@ -68,18 +68,32 @@ public class ModeleHeuristiqueSolver {
 
         // Réduire le domaine du personnage à un seul lieu
         for (int l = 0; l < 6; l++) {
-            if (l != lieuIndex) {
-                domainesPersonnages[temps - 1][personnageIndex][l] = false;
-            }
+            domainesPersonnages[temps][personnageIndex][l] = (l == lieuIndex);
         }
 
-        // Réduire les domaines des autres personnages pour ce lieu
-        for (int p = 0; p < personnages.length; p++) {
-            if (p != personnageIndex) {
-                domainesPersonnages[temps - 1][p][lieuIndex] = false;
+        // Supprimer ce personnage des autres lieux pour ce temps
+        for (int otherP = 0; otherP < personnages.length; otherP++) {
+            if (otherP != personnageIndex) {
+                domainesPersonnages[temps][otherP][lieuIndex] = false;
             }
         }
         propagerContraintes();
+    }
+
+    private boolean verifierCohérence(int temps) {
+        for (int p = 0; p < personnages.length; p++) {
+            boolean hasValidDomain = false;
+            for (int l = 0; l < 6; l++) {
+                if (domainesPersonnages[temps][p][l]) {
+                    hasValidDomain = true;
+                    break;
+                }
+            }
+            if (!hasValidDomain) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -131,14 +145,26 @@ public class ModeleHeuristiqueSolver {
             for (int p = 0; p < personnages.length; p++) {
                 int possibleLieuxCount = 0;
                 int dernierLieuPossible = -1;
+
                 for (int l = 0; l < 6; l++) {
                     if (domainesPersonnages[t][p][l]) {
                         possibleLieuxCount++;
                         dernierLieuPossible = l;
                     }
                 }
+
+                // Si un seul lieu est possible, réduire directement le domaine
                 if (possibleLieuxCount == 1) {
-                    ajouterContraintePersonnage(t, p, dernierLieuPossible);
+                    for (int l = 0; l < 6; l++) {
+                        domainesPersonnages[t][p][l] = (l == dernierLieuPossible);
+                    }
+
+                    // Supprimer ce personnage des autres domaines pour ce lieu
+                    for (int otherP = 0; otherP < personnages.length; otherP++) {
+                        if (otherP != p) {
+                            domainesPersonnages[t][otherP][dernierLieuPossible] = false;
+                        }
+                    }
                 }
             }
         }
