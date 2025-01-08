@@ -359,8 +359,14 @@ public class ModeleJeu implements Sujet {
         partie.supprimerPion(pion);
     }
 
-    public String voirDeductionIA(){
+    // Méthode pour afficher les déductions de l'IA ChocoSolver
+    public String voirDeductionIAChocoSolver() {
         return iaDeductionChocoSolver.afficherHistoriqueDeduction();
+    }
+
+    // Méthode pour afficher les déductions de l'IA Heuristique
+    public String voirDeductionIAHeuristique() {
+        return iaDeductionHeuristique.afficherHistoriqueDeduction();
     }
 
     public void demanderIndice(){

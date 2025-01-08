@@ -7,6 +7,8 @@ import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import javafx.scene.control.Button;
+
 public class ControleurVoirDeductionIA implements EventHandler<ActionEvent> {
 
     private ModeleJeu modele;
@@ -17,16 +19,26 @@ public class ControleurVoirDeductionIA implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // Création de la nouvelle vue
         VueDeductionIA vueDeductionIA = new VueDeductionIA();
 
-        // Récupération des déductions de l'IA
-        String historique = modele.voirDeductionIA();
+        // Définir l'action des boutons
+        Button boutonChocoSolver = vueDeductionIA.getBoutonChocoSolver();
+        Button boutonHeuristique = vueDeductionIA.getBoutonHeuristique();
 
-        // Affichage dans la nouvelle vue
+        boutonChocoSolver.setOnAction(e -> {
+            String historiqueChocoSolver = modele.voirDeductionIAChocoSolver();
+            vueDeductionIA.afficherDeduction(historiqueChocoSolver);
+        });
+
+        boutonHeuristique.setOnAction(e -> {
+            String historiqueHeuristique = modele.voirDeductionIAHeuristique();
+            vueDeductionIA.afficherDeduction(historiqueHeuristique);
+        });
+
+        // Afficher la vue initiale avec ChocoSolver par défaut
+        String historique = modele.voirDeductionIAChocoSolver();
         vueDeductionIA.afficherDeduction(historique);
 
-        // Création de la scène
         Stage stage = new Stage();
         stage.setTitle("Déductions de l'IA");
         Scene scene = new Scene(vueDeductionIA, 600, 400);
@@ -34,3 +46,4 @@ public class ControleurVoirDeductionIA implements EventHandler<ActionEvent> {
         stage.show();
     }
 }
+

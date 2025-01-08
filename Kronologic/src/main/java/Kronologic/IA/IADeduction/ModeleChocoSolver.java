@@ -15,7 +15,6 @@ public class ModeleChocoSolver {
     private final Model model;
     private final IntVar[][] positions = new IntVar[6][6];
     private final String[] personnages;
-    private final List<Realite> positionsInitiales;
     private IntVar coupablePersonnage;
     private IntVar coupableLieu;
     private IntVar coupableTemps;
@@ -23,10 +22,9 @@ public class ModeleChocoSolver {
     public ModeleChocoSolver(String[] personnages, int[][] sallesAdjacentes, List<Realite> positionsInitiales) {
         this.model = new Model("Deduction IA Choco-Solver");
         this.personnages = personnages;
-        this.positionsInitiales = positionsInitiales;
 
         definirVariables();
-        definirContraintesInitiales();
+        definirContraintesInitiales(positionsInitiales);
         definirContraintesRegles(sallesAdjacentes);
         definirContrainteCoupable();
 
@@ -49,7 +47,7 @@ public class ModeleChocoSolver {
     }
 
     // Définir les contraintes initiales
-    private void definirContraintesInitiales() {
+    private void definirContraintesInitiales(List<Realite> positionsInitiales) {
         for (Realite position : positionsInitiales) {
             int idLieu = position.getLieu().getId();
             int indexPersonnage = getIndexPersonnage(position.getPersonnage().getNom().substring(0, 1));
