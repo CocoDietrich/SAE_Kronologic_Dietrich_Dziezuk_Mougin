@@ -27,4 +27,5 @@ public class Personnage {
     public String getNom() {
         return nom;
     }
+
 }
