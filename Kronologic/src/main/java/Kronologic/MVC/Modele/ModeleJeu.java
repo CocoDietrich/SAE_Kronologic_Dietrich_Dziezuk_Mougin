@@ -55,6 +55,7 @@ public class ModeleJeu implements Sujet {
             }
         }
 
+        notifierObservateurs();
         BorderPane bp = new BorderPane(vueCarte);
         Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
         stage.setScene(scene);

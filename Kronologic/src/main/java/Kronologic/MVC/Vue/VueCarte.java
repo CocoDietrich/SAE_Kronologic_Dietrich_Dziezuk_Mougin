@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
+import static Kronologic.MVC.Vue.VueTableau.compterOccurrencesRegex;
 
 public class VueCarte extends BorderPane implements Observateur {
 
@@ -797,15 +798,18 @@ public class VueCarte extends BorderPane implements Observateur {
     @Override
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
-            return;
-        } else if (historique.getText().isEmpty()) {
-            historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
-        } else {
-            historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion() + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n" + historique.getText());
+        if (!ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
+            if (historique.getText().isEmpty()) {
+                historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
+            } else if (ModeleJeu.getPartie().getNbQuestion() != compterOccurrencesRegex(historique.getText(), "Tour")) {
+                historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion()
+                        + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
+                        + "\n" + historique.getText());
+            }
         }
 
         // On actualise les pions
+
 
     }
 }

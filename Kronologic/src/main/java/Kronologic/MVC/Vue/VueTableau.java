@@ -388,11 +388,9 @@ public class VueTableau extends BorderPane implements Observateur {
 
             for (Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
                 if (personnage.isEmpty() && note.getPersonnage() == null){ // Pour le tableau de gauche
-                    System.out.println("Tableau gauche");
                     if (note.getLieu().getNom().equals(lieu)
                             && note.getTemps().getValeur() == temps.getValeur()
                             && note.getNbPersonnages() == Integer.parseInt(valeur)){
-                        System.out.println(note);
                         if (note.estAbsence()) {
                             text.setFill(Color.GRAY);
                             text.setStyle("-fx-font-weight: normal; " +
@@ -412,11 +410,9 @@ public class VueTableau extends BorderPane implements Observateur {
                     }
                 }
                 else if (lieu.isEmpty() && note.getNbPersonnages() == 0){ // Pour le tableau de droite
-                    System.out.println("Tableau droite");
                     if (note.getPersonnage().getNom().equals(personnage)
                             && note.getTemps().getValeur() == temps.getValeur()
                             && note.getLieu().getNom().equals(valeur)){
-                        System.out.println(note);
                         if (note.estAbsence()) {
                             text.setFill(Color.GRAY);
                             text.setStyle("-fx-font-weight: normal; " +

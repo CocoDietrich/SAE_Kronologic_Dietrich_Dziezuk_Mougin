@@ -23,6 +23,9 @@ public class Partie {
     private Map<Integer, List<Note>> historique;
 
     public Partie(Enquete enquete, Deroulement deroulement, GestionnaireIndices gestionnaireIndices, GestionnaireNotes gestionnaireNotes, GestionnairePions gestionnairePions, Elements elements) {
+        if (enquete == null || deroulement == null || gestionnaireIndices == null || gestionnaireNotes == null || gestionnairePions == null || elements == null) {
+            throw new IllegalArgumentException("Les paramètres ne peuvent pas être nuls");
+        }
         this.indicesDecouverts = new ArrayList<>();
         this.enquete = enquete;
         this.deroulement = deroulement;
@@ -52,6 +55,9 @@ public class Partie {
 
     // Méthode permettant d'ajouter un indice à la liste des indices découverts
     public void ajouterIndice(Indice i) {
+        if (i == null || indicesDecouverts.contains(i) || !gestionnaireIndices.getListeIndices().contains(i)) {
+            return;
+        }
         indicesDecouverts.add(i);
     }
 
@@ -62,6 +68,9 @@ public class Partie {
 
     // Méthode permettant d'ajouter une note du joueur (placer un pion)
     public void ajouterNote(Note n) {
+        if (n == null || gestionnaireNotes.getNotes().contains(n)) {
+            return;
+        }
         gestionnaireNotes.ajouterNote(n);
         mettreAJourHistorique();
     }
@@ -87,14 +96,19 @@ public class Partie {
 
     // Méthode permettant de déplacer un pion
     public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
-        gestionnairePions.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
-        System.out.println("Modification de la note : " + pion.getNote().toString());
+        if (pion == null || nouveauLieu == null || nouveauTemps == null || !gestionnairePions.getPions().contains(pion)) {
+            return;
+        }
         gestionnaireNotes.deplacerNote(pion.getNote(), nouveauLieu, nouveauTemps);
+        gestionnairePions.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
         mettreAJourHistorique();
     }
 
     // Méthode permettant de supprimer un pion
     public void supprimerPion(Pion pion) {
+        if (pion == null || !gestionnairePions.getPions().contains(pion)) {
+            return;
+        }
         gestionnairePions.supprimerPion(pion);
         if (pion.getNote() != null){
             System.out.println("Suppression de la note : " + pion.getNote().toString());
@@ -144,6 +158,10 @@ public class Partie {
 
     public GestionnaireNotes getGestionnaireNotes() {
         return gestionnaireNotes;
+    }
+
+    public GestionnairePions getGestionnairePions() {
+        return gestionnairePions;
     }
 
     public Elements getElements() {
