@@ -121,25 +121,6 @@ public class ModeleChocoSolver {
         // Relier les suspects, temps et lieux avec la table coupable
         model.table(new IntVar[]{coupablePersonnage, coupableTemps, coupableLieu}, tableCoupable).post();
 
-        // Réduire les domaines des suspects
-        for (int i = 0; i < personnages.length; i++) {
-            if (!personnages[i].equals("D")) {
-                IntVar suspect = suspects[i < suspectIndex ? i : i - 1];
-
-                if (!suspect.isInstantiated()) {
-                    model.ifThen(
-                            model.arithm(coupablePersonnage, "!=", i),
-                            model.arithm(suspect, "=", 0)
-                    );
-
-                    model.ifThen(
-                            model.arithm(coupablePersonnage, "=", i),
-                            model.arithm(suspect, "=", 1)
-                    );
-                }
-            }
-        }
-
         propagerContraintes();
     }
 
