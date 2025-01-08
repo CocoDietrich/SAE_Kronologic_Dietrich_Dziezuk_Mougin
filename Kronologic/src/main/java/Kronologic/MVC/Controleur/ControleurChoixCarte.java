@@ -11,6 +11,8 @@ import Kronologic.MVC.Vue.VueCarte;
 import javafx.event.EventHandler;
 import javafx.scene.input.DragEvent;
 
+import java.util.Objects;
+
 public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
     private ModeleJeu modeleJeu;
@@ -34,12 +36,15 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         }
         assert vueCarte != null;
 
-        Pion pionActuel = vueCarte.pions.getLast();
-        System.out.println("Pion avant : " + pionAvant.getId());
-        System.out.println("Pion actuel : " + pionActuel.getId());
+        Pion pionActuel = null;
+        if (vueCarte.pions.getLast().getParent() == null && vueCarte.pions.get(vueCarte.pions.size() - 2).getParent() instanceof VueCarte) {
+            pionActuel = vueCarte.pions.get(vueCarte.pions.size() - 2);
+        } else {
+            pionActuel = vueCarte.pions.getLast();
+        }
 
         // Cas du pion déplacé depuis la réserve de pion vers un lieu
-        if (pionAvant.getNote() == null) {
+        if (pionAvant.getUserData() == null) {
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
@@ -58,11 +63,14 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             vueCarte.pions.getLast().setNote(note);
 
             modeleJeu.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
-        } else if (pionActuel.getNote() == null) {
+        } else if (!Objects.equals(pionAvant.getId(), pionActuel.getId())) {
             // Cas du pion déplacé depuis un lieu vers un autre lieu
             modeleJeu.supprimerPion(pionAvant);
             vueCarte.pions.removeLast();
             vueCarte.pions.remove(pionAvant);
+            for (Pion p : vueCarte.pions) {
+                System.out.println(p.getUserData());
+            }
         } else {
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
@@ -79,20 +87,18 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             // On crée la note
             Note note = new Note(nouveauLieu, temps, new Personnage((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0]));
 
-            vueCarte.pions.getLast().setNote(note);
+            vueCarte.pions.get(vueCarte.pions.size() - 2).setNote(note);
 
             modeleJeu.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
             vueCarte.pions.remove(pionAvant);
+            for (Pion p : vueCarte.pions) {
+                System.out.println(p.getUserData());
+            }
         }
 
         System.out.println("Liste des notes : ");
         for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
             System.out.println(n);
-        }
-
-        System.out.println("Liste des pions : ");
-        for (Pion p : vueCarte.pions) {
-            System.out.println(p.getUserData());
         }
     }
 }

@@ -290,7 +290,6 @@ public class VueCarte extends BorderPane implements Observateur {
                     pionDeplace.setFitWidth(30);
                 }
                 pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
-                System.out.println("Pion déplacé : " + pionDeplace.getId());
                 pionDeplace.setPreserveRatio(true);
                 pionDeplace.setStyle("-fx-cursor: hand;");
 
