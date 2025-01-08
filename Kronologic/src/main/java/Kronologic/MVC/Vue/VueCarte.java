@@ -21,7 +21,7 @@ import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Kronologic.MVC.Vue.VueAccueil.creerButton;
+import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
 
 public class VueCarte extends BorderPane implements Observateur {
 
@@ -475,9 +475,9 @@ public class VueCarte extends BorderPane implements Observateur {
         boutonsBas.setSpacing(300);
         boutonsBas.setPadding(new Insets(0, 20, 50, 20));
 
-        faireDeduction = creerButton("Faire une déduction");
-        poserQuestion = creerButton("Poser une question");
-        demanderIndice = creerButton("Demander un indice");
+        faireDeduction = creerBouton("Faire une déduction");
+        poserQuestion = creerBouton("Poser une question");
+        demanderIndice = creerBouton("Demander un indice");
 
         boutonsBas.getChildren().addAll(faireDeduction, poserQuestion, demanderIndice);
 
@@ -489,8 +489,8 @@ public class VueCarte extends BorderPane implements Observateur {
         optionsDroite.setAlignment(Pos.CENTER);
         optionsDroite.setPadding(new Insets(20));
 
-        changerAffichage = creerButton("Changer affichage");
-        deductionIA = creerButton("Déduction de l'IA");
+        changerAffichage = creerBouton("Changer affichage");
+        deductionIA = creerBouton("Déduction de l'IA");
 
         optionsDroite.getChildren().addAll(changerAffichage, deductionIA);
 
@@ -604,8 +604,8 @@ public class VueCarte extends BorderPane implements Observateur {
 
     public HBox afficherFilm() {
         // Boutons de film (joueur et partie)
-        filmJoueur = creerButton("Film du joueur");
-        filmRealite = creerButton("Film de la partie");
+        filmJoueur = creerBouton("Film du joueur");
+        filmRealite = creerBouton("Film de la partie");
 
         Image film = new Image("file:img/film.png");
         ImageView imageViewFilm = new ImageView(film);
