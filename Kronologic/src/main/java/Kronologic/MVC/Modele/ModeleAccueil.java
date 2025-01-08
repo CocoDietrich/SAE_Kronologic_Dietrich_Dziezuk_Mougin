@@ -58,7 +58,7 @@ public class ModeleAccueil implements Sujet {
                 ControleurPopUpQuitter controleurPopUpQuitter = new ControleurPopUpQuitter(modeleJeu);
                 ControleurQuitterRegleFilm controleurQuitterRegleFilm = new ControleurQuitterRegleFilm(modeleJeu);
                 ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
-                ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu, null);
+                ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu);
                 ControleurPopUpPoseQuestion controleurPopUpPoseQuestion = new ControleurPopUpPoseQuestion(modeleJeu);
                 ControleurVisualiserFilmJoueur controleurVisualiserFilmJoueur = new ControleurVisualiserFilmJoueur(modeleJeu);
                 ControleurVisualiserFilmRealite controleurVisualiserFilmRealite = new ControleurVisualiserFilmRealite(modeleJeu);

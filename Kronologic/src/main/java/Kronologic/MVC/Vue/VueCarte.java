@@ -39,7 +39,8 @@ public class VueCarte extends BorderPane implements Observateur {
     public TextArea historique;
     public CheckBox hypothese;
     public CheckBox absence;
-    public List<Polygon> zonesDeJeu;
+    public List<Polygon> zonesDeJeu = new ArrayList<>();
+    public List<Polygon> zonesContenantPions = new ArrayList<>();
     public List<Pion> pions = new ArrayList<>();
 
     public VueCarte(ModeleJeu modeleJeu) {
@@ -331,24 +332,37 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // Ajout des zones à la liste
         zones.add(zone1);
+        zonesDeJeu.add(zone1);
         zones.add(zone2);
+        zonesDeJeu.add(zone2);
         zones.add(zone3);
+        zonesDeJeu.add(zone3);
         zones.add(zone4);
+        zonesDeJeu.add(zone4);
         zones.add(zone5);
+        zonesDeJeu.add(zone5);
         zones.add(zone6);
+        zonesDeJeu.add(zone6);
 
         List<Polygon> sousZones1 = creerSousLieux(zone1, temps + "-Grand foyer", modeleJeu);
         zones.addAll(sousZones1);
+        zonesDeJeu.addAll(sousZones1);
         List<Polygon> sousZones2 = creerSousLieux(zone2, temps + "-Grand escalier", modeleJeu);
         zones.addAll(sousZones2);
+        zonesDeJeu.addAll(sousZones2);
         List<Polygon> sousZones3 = creerSousLieux(zone3, temps + "-Salle", modeleJeu);
         zones.addAll(sousZones3);
+        zonesDeJeu.addAll(sousZones3);
         List<Polygon> sousZones4 = creerSousLieux(zone4, temps + "-Scène", modeleJeu);
         zones.addAll(sousZones4);
+        zonesDeJeu.addAll(sousZones4);
         List<Polygon> sousZones5 = creerSousLieux(zone5, temps + "-Foyer du chant", modeleJeu);
         zones.addAll(sousZones5);
+        zonesDeJeu.addAll(sousZones5);
         List<Polygon> sousZones6 = creerSousLieux(zone6, temps + "-Foyer de la danse", modeleJeu);
         zones.addAll(sousZones6);
+        zonesDeJeu.addAll(sousZones6);
+
 
         return zones;
     }
@@ -368,6 +382,10 @@ public class VueCarte extends BorderPane implements Observateur {
 
         polygon.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
+
+            // Ajout de la zone où on a déposé le pion à la liste des zones contenant des pions
+            zonesContenantPions.add(polygon);
+
             if (db.hasImage()) {
 
                 // Création du pion déplacé
@@ -382,6 +400,52 @@ public class VueCarte extends BorderPane implements Observateur {
                 pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                 pionDeplace.setPreserveRatio(true);
                 pionDeplace.setStyle("-fx-cursor: hand;");
+                pionDeplace.setUserData(zoneName);
+
+                // Ajouter le pion à la liste des pions
+                pions.add(pionDeplace);
+
+                // Vérifier si la sous-zone est occupée (sous-zone occupée si doublon dans la liste de pions)
+                boolean sousZoneOccupee = pions.stream()
+                        .filter(p -> p.getUserData() != null && p.getUserData().equals(polygon.getUserData()))
+                        .count() >= 2;
+                System.out.println("Sous-zone occupée : " + sousZoneOccupee);
+
+                if (sousZoneOccupee) {
+                    String nomLieu = polygon.getUserData().toString().split("-")[1];
+                    String nomTemps = polygon.getUserData().toString().split("-")[0];
+                    System.out.println("Nom lieu : " + nomLieu + " - Nom temps : " + nomTemps);
+                    if (zonesContenantPions.getLast().getUserData() != zonesContenantPions.get(zonesContenantPions.size() - 2).getUserData()) {
+                        zonesContenantPions.removeLast();
+                    }
+                    Polygon sousZoneLibre = trouverSousZoneLibre(nomLieu, nomTemps);
+                    if (sousZoneLibre != null) {
+                        System.out.println("Data sous-zone libre : " + sousZoneLibre.getUserData());
+
+                        // Mise à jour du UserData pour refléter la sous-zone libre
+                        pionDeplace.setUserData(sousZoneLibre.getUserData());
+                        pions.removeLast();
+                        pions.add(pionDeplace);
+                        zonesContenantPions.add(sousZoneLibre);
+
+                        // Positionner le pion au centre de la sous-zone libre
+                        Point2D pointLibre = sousZoneLibre.localToScene(sousZoneLibre.getBoundsInLocal().getCenterX(), sousZoneLibre.getBoundsInLocal().getCenterY());
+                        pionDeplace.setLayoutX(pointLibre.getX() - pionDeplace.getFitWidth() / 2);
+                        pionDeplace.setLayoutY(pointLibre.getY() - pionDeplace.getFitHeight() / 2);
+                    } else {
+                        // On ne fait rien
+                        System.out.println("Aucune sous-zone libre trouvée");
+                        return;
+                    }
+                } else {
+                    // Positionner le pion au centre de la zone où il a été déposé
+                    Point2D point = polygon.localToScene(polygon.getBoundsInLocal().getCenterX(), polygon.getBoundsInLocal().getCenterY());
+                    pionDeplace.setLayoutX(point.getX() - pionDeplace.getFitWidth() / 2);
+                    pionDeplace.setLayoutY(point.getY() - pionDeplace.getFitHeight() / 2);
+                }
+
+                VueCarte root = this;
+                root.getChildren().add(pionDeplace);
 
                 // Activer le drag & drop pour le pion déplacé
                 pionDeplace.setOnDragDetected(e -> {
@@ -400,24 +464,11 @@ public class VueCarte extends BorderPane implements Observateur {
                     }
 
                     // Déléguer la logique métier au contrôleur
-                    new ControleurChoixCarte(modeleJeu, polygon).handle(e);
+                    new ControleurChoixCarte(modeleJeu).handle(e);
                     e.consume();
                 });
 
-                VueCarte root = this;
-                root.getChildren().add(pionDeplace);
-
-                // Positionner le pion au centre de la zone où il a été déposé
-                Point2D point = polygon.localToScene(polygon.getBoundsInLocal().getCenterX(), polygon.getBoundsInLocal().getCenterY());
-                pionDeplace.setLayoutX(point.getX() - pionDeplace.getFitWidth() / 2);
-                pionDeplace.setLayoutY(point.getY() - pionDeplace.getFitHeight() / 2);
-
                 event.setDropCompleted(true);
-
-                pionDeplace.setUserData(zoneName);
-
-                // Ajouter le pion à la liste des pions
-                pions.add(pionDeplace);
             } else {
                 event.setDropCompleted(false);
             }
@@ -426,6 +477,23 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return polygon;
     }
+
+    private Polygon trouverSousZoneLibre(String nomLieu, String nomTemps) {
+        // On récupère les sous-zones du lieu et du temps ciblé
+        List<Polygon> zonesMemeLieu = zonesDeJeu.stream()
+                .filter(p -> p.getUserData().toString().contains(nomLieu))
+                .filter(p -> p.getUserData().toString().contains(nomTemps))
+                .filter(p -> p.getUserData().toString().contains("SousZone"))
+                .toList();
+
+        // On renvoie la première qui n'est pas dans la liste des zones contenant des pions
+        // Si toutes les sous-zones du lieu au temps donné sont déjà occupées, on ne fait rien
+        return zonesMemeLieu.stream()
+                .filter(p -> !zonesContenantPions.contains(p))
+                .findFirst()
+                .orElse(null);
+    }
+
 
     private HBox afficherPionsPersonnages() {
         HBox pionsPersonnages = new HBox(15);
