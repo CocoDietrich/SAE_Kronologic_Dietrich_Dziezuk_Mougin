@@ -28,9 +28,10 @@ public class IADeductionChocoSolver extends IADeduction {
         //On recupere les positions de tous les personnages au temps 1
         List<Realite> positionsInitiales = partie.getDeroulement().positionsAuTemps(new Temps(1));
 
-        this.model = new ModeleChocoSolver(personnagesNoms,sallesAdjacentes,positionsInitiales);
+        this.model = new ModeleChocoSolver(personnagesNoms, sallesAdjacentes, positionsInitiales);
     }
 
+    @Override
     public void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         if (!infoPrive.equals("Rejouer")) {
             model.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
@@ -38,25 +39,10 @@ public class IADeductionChocoSolver extends IADeduction {
         model.ajouterContrainteTemps(lieu, temps, infoPublic);
     }
 
+    @Override
     public void poserQuestionPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
         model.ajouterContraintePersonnage(personnage, lieu, infoPrive);
         model.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
-    }
-
-
-    @Override
-    public void analyserIndices(List<Indice> indices) {
-        for (Indice indice : indices) {
-            if (indice instanceof IndiceTemps it) {
-                model.ajouterContrainteTemps(it.getLieu(), it.getTemps(), it.getInfoPublic());
-                if (!it.getInfoPrive().equals("Rejouer")) {
-                    model.ajouterContraintePersonnage(new Personnage(it.getInfoPrive()), it.getLieu(), it.getTemps().getValeur());
-                }
-            } else if (indice instanceof IndicePersonnage ip) {
-                model.ajouterContrainteNombreDePassages(ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic());
-                model.ajouterContraintePersonnage(ip.getPersonnage(), ip.getLieu(), ip.getInfoPrive());
-            }
-        }
     }
 
     @Override
