@@ -140,11 +140,6 @@ public class ModeleChocoSolver {
             }
         }
 
-        // Debugging prints
-        for (IntVar suspect : suspects) {
-            System.out.println("Suspect: " + suspect);
-        }
-
         propagerContraintes();
     }
 

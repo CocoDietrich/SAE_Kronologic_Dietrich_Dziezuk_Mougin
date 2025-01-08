@@ -35,7 +35,7 @@ public class ModeleJeu implements Sujet {
     private final IAAssistanceChocoSolver iaAssistanceChocoSolver;
     private final IAAssistanceHeuristique iaAssistanceHeuristique;
 
-    public ModeleJeu(Partie partie){
+    public ModeleJeu(Partie partie) {
         this.observateurs = new ArrayList<>();
         ModeleJeu.partie = partie;
         this.vueCarte = true;
@@ -46,10 +46,10 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de retourner à la vue de la carte
-    public void retourVueCarte(Stage stage){
+    public void retourVueCarte(Stage stage) {
         VueCarte vueCarte = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueCarte){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
                 vueCarte = (VueCarte) o;
                 break;
             }
@@ -62,10 +62,10 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de retourner à la vue de la carte
-    public void retourVueTableau(Stage stage){
+    public void retourVueTableau(Stage stage) {
         VueTableau vueTableau = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueTableau){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueTableau) {
                 vueTableau = (VueTableau) o;
                 break;
             }
@@ -79,9 +79,9 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de stocker le lieu choisi pour la question posée ou la déduction faite par le joueur
-    public void setLieuChoisi(Lieu lieu, Observateur vue){
+    public void setLieuChoisi(Lieu lieu, Observateur vue) {
         assert vue != null;
-        if (vue instanceof VuePoseQuestion vuePoseQuestion){
+        if (vue instanceof VuePoseQuestion vuePoseQuestion) {
             vuePoseQuestion.lieuChoisi = lieu;
         } else {
             VueDeduction vueDeduction = (VueDeduction) vue;
@@ -90,9 +90,9 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de stocker le temps choisi pour la question posée ou la déduction faite par le joueur
-    public void setTempsChoisi(Temps temps, Observateur vue){
+    public void setTempsChoisi(Temps temps, Observateur vue) {
         assert vue != null;
-        if (vue instanceof VuePoseQuestion){
+        if (vue instanceof VuePoseQuestion) {
             VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
             vuePoseQuestion.tempsChoisi = temps;
         } else {
@@ -102,9 +102,9 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de stocker le personnage choisi pour la question posée ou la déduction faite par le joueur
-    public void setPersonnageChoisi(Personnage personnage, Observateur vue){
+    public void setPersonnageChoisi(Personnage personnage, Observateur vue) {
         assert vue != null;
-        if (vue instanceof VuePoseQuestion){
+        if (vue instanceof VuePoseQuestion) {
             VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
             vuePoseQuestion.personnageChoisi = personnage;
         } else {
@@ -113,19 +113,19 @@ public class ModeleJeu implements Sujet {
         }
     }
 
-    public void changerAffichage(Stage stage){
+    public void changerAffichage(Stage stage) {
         this.vueCarte = !this.vueCarte;
-        if (this.vueCarte){
+        if (this.vueCarte) {
             retourVueCarte(stage);
         } else {
             retourVueTableau(stage);
         }
     }
 
-    public Indice poserQuestion(Stage stage){
+    public Indice poserQuestion(Stage stage) {
         VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePoseQuestion){
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePoseQuestion) {
                 vuePoseQuestion = (VuePoseQuestion) o;
                 break;
             }
@@ -137,8 +137,11 @@ public class ModeleJeu implements Sujet {
             i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
 
             // Ajouter contraintes publiques et privées
-            IndicePersonnage ip= (IndicePersonnage) i;
+            IndicePersonnage ip = (IndicePersonnage) i;
             iaDeductionChocoSolver.poserQuestionPersonnage(
+                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
+            );
+            iaDeductionHeuristique.poserQuestionPersonnage(
                     ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
             );
         } else {
@@ -149,6 +152,9 @@ public class ModeleJeu implements Sujet {
             iaDeductionChocoSolver.poserQuestionTemps(
                     it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
             );
+            iaDeductionHeuristique.poserQuestionTemps(
+                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
+            );
         }
 
         partie.ajouterIndice(i);
@@ -156,15 +162,15 @@ public class ModeleJeu implements Sujet {
         System.out.println("Réponse à la question posée : " + i);
 
         VuePopUpPoseQuestion vuePopUpPoseQuestion = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePopUpPoseQuestion){
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePopUpPoseQuestion) {
                 vuePopUpPoseQuestion = (VuePopUpPoseQuestion) o;
                 break;
             }
         }
         assert vuePopUpPoseQuestion != null;
         vuePopUpPoseQuestion.afficherPopUp(i);
-        if (isVueCarte()){
+        if (isVueCarte()) {
             retourVueCarte(stage);
         } else {
             retourVueTableau(stage);
@@ -173,11 +179,11 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant d'afficher la vue de pose de question
-    public void visualiserPoseQuestion(Stage stage){
+    public void visualiserPoseQuestion(Stage stage) {
         // On récupère la vuePoseQuestion dans la liste des observateurs
         VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePoseQuestion){
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePoseQuestion) {
                 vuePoseQuestion = (VuePoseQuestion) o;
                 break;
             }
@@ -190,10 +196,10 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    public void faireDeduction(){
+    public void faireDeduction() {
         VueDeduction vueDeduction = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueDeduction){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueDeduction) {
                 vueDeduction = (VueDeduction) o;
                 break;
             }
@@ -202,8 +208,8 @@ public class ModeleJeu implements Sujet {
         boolean resultat = partie.faireDeduction(vueDeduction.lieuMeurtre, vueDeduction.meurtrier, vueDeduction.tempsMeurtre);
 
         VuePopUpDeduction vuePopUpDeduction = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VuePopUpDeduction){
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePopUpDeduction) {
                 vuePopUpDeduction = (VuePopUpDeduction) o;
                 break;
             }
@@ -214,11 +220,11 @@ public class ModeleJeu implements Sujet {
         notifierObservateurs();
     }
 
-    public void visualiserDeduction(Stage stage){
+    public void visualiserDeduction(Stage stage) {
         // On récupère la vuePoseQuestion dans la liste des observateurs
         VueDeduction vueDeduction = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueDeduction){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueDeduction) {
                 vueDeduction = (VueDeduction) o;
                 break;
             }
@@ -235,8 +241,8 @@ public class ModeleJeu implements Sujet {
     public void ajouterNote(Lieu l, Temps t, Personnage p, boolean hypothese, boolean absence) {
         Note n = new Note(l, t, p);
         VueCarte vueCarte = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueCarte){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
                 vueCarte = (VueCarte) o;
                 break;
             }
@@ -255,8 +261,8 @@ public class ModeleJeu implements Sujet {
     public void ajouterNote(Lieu l, Temps t, int nbPersonnages, boolean hypothese, boolean absence) {
         Note n = new Note(l, t, nbPersonnages);
         VueCarte vueCarte = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueCarte){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
                 vueCarte = (VueCarte) o;
                 break;
             }
@@ -275,10 +281,10 @@ public class ModeleJeu implements Sujet {
     public void modifierNote(Lieu l, Temps t, Personnage p, boolean absence, boolean hypothese) {
         // On retrouve la note correspondante au pion placé
         Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()){
+        for (Note note : partie.getGestionnaireNotes().getNotes()) {
             if (note.getLieu().getNom().equals(l.getNom())
                     && note.getTemps().getValeur() == t.getValeur()
-                    && note.getPersonnage().getNom().equals(p.getNom())){
+                    && note.getPersonnage().getNom().equals(p.getNom())) {
                 n = note;
                 break;
             }
@@ -293,10 +299,10 @@ public class ModeleJeu implements Sujet {
     public void modifierNote(Lieu l, Temps t, int nbPersonnage, boolean absence, boolean hypothese) {
         // On retrouve la note correspondante au pion placé
         Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()){
+        for (Note note : partie.getGestionnaireNotes().getNotes()) {
             if (note.getLieu().getNom().equals(l.getNom())
                     && note.getTemps().getValeur() == t.getValeur()
-                    && note.getNbPersonnages() == nbPersonnage){
+                    && note.getNbPersonnages() == nbPersonnage) {
                 n = note;
                 break;
             }
@@ -312,10 +318,10 @@ public class ModeleJeu implements Sujet {
     public void supprimerNote(Lieu l, Temps t, Personnage p) {
         // On retrouve la note correspondante au pion placé
         Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()){
+        for (Note note : partie.getGestionnaireNotes().getNotes()) {
             if (note.getLieu().getNom().equals(l.getNom())
                     && note.getTemps().getValeur() == t.getValeur()
-                    && note.getPersonnage().getNom().equals(p.getNom())){
+                    && note.getPersonnage().getNom().equals(p.getNom())) {
                 n = note;
                 break;
             }
@@ -330,10 +336,10 @@ public class ModeleJeu implements Sujet {
     public void supprimerNote(Lieu l, Temps t, int nbPersonnages) {
         // On retrouve la note correspondante au pion placé
         Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()){
+        for (Note note : partie.getGestionnaireNotes().getNotes()) {
             if (note.getLieu().getNom().equals(l.getNom())
                     && note.getTemps().getValeur() == t.getValeur()
-                    && note.getNbPersonnages() == nbPersonnages){
+                    && note.getNbPersonnages() == nbPersonnages) {
                 n = note;
                 break;
             }
@@ -345,17 +351,17 @@ public class ModeleJeu implements Sujet {
         notifierObservateurs();
     }
 
-    public void ajouterPion(Note note, Image image, int x, int y){
+    public void ajouterPion(Note note, Image image, int x, int y) {
         Pion pion = new Pion(note, image.getUrl());
         pion.deplacerPion(x, y);
         partie.ajouterPion(pion);
     }
 
-    public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y){
+    public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
         partie.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
     }
 
-    public void supprimerPion(Pion pion){
+    public void supprimerPion(Pion pion) {
         partie.supprimerPion(pion);
     }
 
@@ -369,14 +375,14 @@ public class ModeleJeu implements Sujet {
         return iaDeductionHeuristique.afficherHistoriqueDeduction();
     }
 
-    public void demanderIndice(){
+    public void demanderIndice() {
         //TODO
     }
 
-    public void visualiserFilmJoueur(Stage stage){
+    public void visualiserFilmJoueur(Stage stage) {
         VueFilmJoueur vueFilmJoueur = new VueFilmJoueur(this);
-        for (Observateur o : observateurs){
-            if (o instanceof VueFilmJoueur){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueFilmJoueur) {
                 vueFilmJoueur = (VueFilmJoueur) o;
                 break;
             }
@@ -398,7 +404,7 @@ public class ModeleJeu implements Sujet {
         Collections.sort(tours);
 
         // Parcourir chaque tour dans l'ordre
-        if (tours.isEmpty()){
+        if (tours.isEmpty()) {
             System.out.println("Aucune note n'a été posé.");
             return;
         }
@@ -408,7 +414,7 @@ public class ModeleJeu implements Sujet {
             System.out.println("Tour " + i + " :");
 
             // Afficher les notes associées au tour
-            if (!historique.containsKey(i)){
+            if (!historique.containsKey(i)) {
                 continue;
             }
             List<Note> notes = historique.get(i);
@@ -418,10 +424,10 @@ public class ModeleJeu implements Sujet {
         }
     }
 
-    public void visualiserFilmRealite(Stage stage){
+    public void visualiserFilmRealite(Stage stage) {
         VueFilmRealite vueFilmRealite = new VueFilmRealite(this);
-        for (Observateur o : observateurs){
-            if (o instanceof VueFilmRealite){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueFilmRealite) {
                 vueFilmRealite = (VueFilmRealite) o;
                 break;
             }
@@ -436,21 +442,21 @@ public class ModeleJeu implements Sujet {
         // Récupération du déroulement de la partie
         List<Realite> positions = partie.getDeroulement().getListePositions();
 
-        for (int i = 1; i < 7; i++){
+        for (int i = 1; i < 7; i++) {
             System.out.println("--------------------");
             System.out.println("Tour " + i + " :");
-            for (Realite r : positions){
-                if (r.getTemps().getValeur() == i){
+            for (Realite r : positions) {
+                if (r.getTemps().getValeur() == i) {
                     System.out.println(r.toString());
                 }
             }
         }
     }
 
-    public void actualiserFilmRealite(){
+    public void actualiserFilmRealite() {
         VueFilmRealite vueFilmRealite = null;
-        for (Observateur o : observateurs){
-            if (o instanceof VueFilmRealite){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueFilmRealite) {
                 vueFilmRealite = (VueFilmRealite) o;
                 break;
             }
@@ -458,10 +464,10 @@ public class ModeleJeu implements Sujet {
 
         assert vueFilmRealite != null;
 
-        for (Node node : vueFilmRealite.getChildren()){
+        for (Node node : vueFilmRealite.getChildren()) {
             if (node instanceof HBox h) {
-                if (h.getId() != null){
-                    if (h.getId().equals("carte")){
+                if (h.getId() != null) {
+                    if (h.getId().equals("carte")) {
                         vueFilmRealite.getChildren().remove(h);
                         // On met à jour la carte
                         HBox nouvelleHbox = vueFilmRealite.afficherCarte(this);
@@ -474,10 +480,10 @@ public class ModeleJeu implements Sujet {
         vueFilmRealite.actualiser();
     }
 
-    public void visualiserRegle(Stage stage){
+    public void visualiserRegle(Stage stage) {
         VueRegle vueRegle = new VueRegle();
-        for (Observateur o : observateurs){
-            if (o instanceof VueRegle){
+        for (Observateur o : observateurs) {
+            if (o instanceof VueRegle) {
                 vueRegle = (VueRegle) o;
                 break;
             }
@@ -492,16 +498,16 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    public void valider(){
+    public void valider() {
         //TODO
     }
 
     // Méthode affichant le pop-up de confirmation de quitter la partie
-    public void afficherPopUpQuitter(){
+    public void afficherPopUpQuitter() {
         VuePopUpQuitter vuePopUpQuitter = null;
 
-        for (Observateur o : observateurs){
-            if (o instanceof VuePopUpQuitter){
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePopUpQuitter) {
                 vuePopUpQuitter = (VuePopUpQuitter) o;
                 break;
             }
@@ -545,8 +551,8 @@ public class ModeleJeu implements Sujet {
     public void afficherPopUpDemanderIndice() {
         VuePopUpDemanderIndice vuePopUpDemanderIndice = null;
 
-        for (Observateur o : observateurs){
-            if (o instanceof VuePopUpDemanderIndice){
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePopUpDemanderIndice) {
                 vuePopUpDemanderIndice = (VuePopUpDemanderIndice) o;
                 break;
             }
@@ -568,7 +574,7 @@ public class ModeleJeu implements Sujet {
 
     @Override
     public void notifierObservateurs() {
-        for (Observateur o : observateurs){
+        for (Observateur o : observateurs) {
             o.actualiser();
         }
     }

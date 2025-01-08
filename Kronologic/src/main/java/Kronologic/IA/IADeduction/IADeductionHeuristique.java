@@ -30,7 +30,7 @@ public class IADeductionHeuristique extends IADeduction {
 
     @Override
     public void poserQuestionPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
-        model.ajouterContraintePersonnage(personnage, lieu, infoPrive);
+        model.ajouterContraintePersonnage(personnage, lieu, infoPrive-1);
         model.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
     }
 
