@@ -13,22 +13,8 @@ public class IADeductionChocoSolver extends IADeduction {
     private final ModeleChocoSolver model;
 
     public IADeductionChocoSolver(Partie partie) {
-        //On recupere le premier caractere du nom de tous les personnages
-        List<Personnage> personnages = partie.getElements().getPersonnages();
-        String[] personnagesNoms = personnages.stream()
-                .map(p -> p.getNom().substring(0, 1))
-                .toArray(String[]::new);
-
-        //On recupere les salles adjacentes de chaque salle
-        List<Lieu> lieux = partie.getElements().getLieux();
-        int[][] sallesAdjacentes = lieux.stream()
-                .map(l -> l.getListeLieuxAdjacents().stream().mapToInt(Lieu::getId).toArray())
-                .toArray(int[][]::new);
-
-        //On recupere les positions de tous les personnages au temps 1
-        List<Realite> positionsInitiales = partie.getDeroulement().positionsAuTemps(new Temps(1));
-
-        this.model = new ModeleChocoSolver(personnagesNoms, sallesAdjacentes, positionsInitiales);
+        super(partie);
+        this.model = new ModeleChocoSolver(getPersonnagesNoms(), getSallesAdjacentes(), getPositionsInitiales());
     }
 
     @Override

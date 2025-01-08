@@ -2,9 +2,33 @@ package Kronologic.IA.IADeduction;
 
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
+import Kronologic.Jeu.Elements.Realite;
 import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Partie;
+
+import java.util.List;
 
 public abstract class IADeduction {
+    private final String[] personnagesNoms;
+    private final int[][] sallesAdjacentes;
+    private final List<Realite> positionsInitiales;
+
+    public IADeduction(Partie partie) {
+        //On recupere le premier caractere du nom de tous les personnages
+        List<Personnage> personnages = partie.getElements().getPersonnages();
+        personnagesNoms = personnages.stream()
+                .map(p -> p.getNom().substring(0, 1))
+                .toArray(String[]::new);
+
+        //On recupere les salles adjacentes de chaque salle
+        List<Lieu> lieux = partie.getElements().getLieux();
+        sallesAdjacentes = lieux.stream()
+                .map(l -> l.getListeLieuxAdjacents().stream().mapToInt(Lieu::getId).toArray())
+                .toArray(int[][]::new);
+
+        //On recupere les positions de tous les personnages au temps 1
+        positionsInitiales = partie.getDeroulement().positionsAuTemps(new Temps(1));
+    }
     // Méthode pour poser une question sur le temps
     public abstract void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive);
 
@@ -13,4 +37,16 @@ public abstract class IADeduction {
 
     // Méthode pour afficher l'historique des déductions
     public abstract String afficherHistoriqueDeduction();
+
+    public String[] getPersonnagesNoms() {
+        return personnagesNoms;
+    }
+
+    public int[][] getSallesAdjacentes() {
+        return sallesAdjacentes;
+    }
+
+    public List<Realite> getPositionsInitiales() {
+        return positionsInitiales;
+    }
 }
