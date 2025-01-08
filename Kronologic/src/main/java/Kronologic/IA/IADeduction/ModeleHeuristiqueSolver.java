@@ -80,41 +80,13 @@ public class ModeleHeuristiqueSolver {
 
     // Ajouter une contrainte sur le nombre de passages
     public void ajouterContrainteNombreDePassages(Personnage personnage, Lieu lieu, int nbPassages) {
-        int personnageIndex = getIndexPersonnage(personnage.getNom().substring(0, 1));
-        int lieuIndex = lieu.getId() - 1;
-
-        int passages = 0;
-        for (int t = 0; t < 6; t++) {
-            if (domainesPersonnages[t][personnageIndex][lieuIndex]) {
-                passages++;
-            }
-        }
-
-        if (passages != nbPassages) {
-            for (int t = 0; t < 6; t++) {
-                domainesPersonnages[t][personnageIndex][lieuIndex] = false;
-            }
-        }
+        //TODO
     }
 
 
     // Ajouter une contrainte sur le nombre de personnes dans une salle
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
-        int tempsIndex = temps.getValeur() - 1;
-        int lieuIndex = lieu.getId() - 1;
-
-        int occupants = 0;
-        for (int p = 0; p < personnages.length; p++) {
-            if (domainesPersonnages[tempsIndex][p][lieuIndex]) {
-                occupants++;
-            }
-        }
-
-        if (occupants != nbPersonnages) {
-            for (int p = 0; p < personnages.length; p++) {
-                domainesPersonnages[tempsIndex][p][lieuIndex] = false;
-            }
-        }
+        //TODO
     }
 
     // Affichage des domaines

@@ -23,7 +23,7 @@ public class IADeductionHeuristique extends IADeduction {
     @Override
     public void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         if (!infoPrive.equals("Rejouer")) {
-            model.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
+            model.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur()-1);
         }
         model.ajouterContrainteTemps(lieu, temps, infoPublic);
     }
