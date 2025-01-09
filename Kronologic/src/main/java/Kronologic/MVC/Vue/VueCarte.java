@@ -808,7 +808,6 @@ public class VueCarte extends BorderPane implements Observateur {
         // On actualise les pions
         for (Pion pion : pions) {
             if (pion.getUserData() != null) {
-                System.out.println("Pion1" + pion.getUserData());
                 String placement = (String) pion.getUserData();
                 // Cas où faut le placer
                 if (placement.split("-").length == 2) {
@@ -816,23 +815,23 @@ public class VueCarte extends BorderPane implements Observateur {
                         if (pion.getUserData().equals(placement)) {
                             if (((String)zone.getUserData()).contains(placement)) {
                                 for (Pion pion2 : pions) {
-                                    System.out.println("Pion2 " + pion2.getUserData());
-                                    System.out.println("Zone " + zone.getUserData());
                                     if (pion2.getUserData() == null) {
                                         continue;
                                     }
                                     if (pion2.getUserData().equals(zone.getUserData())) {
                                         break;
                                     }
+                                    if (zonesContenantPions.contains(zone)) {
+                                        break;
+                                    }
                                     if (pion.getUserData() == placement) {
-                                        System.out.println("RENTRE");
                                         pion.setUserData(zone.getUserData());
                                         System.out.println(pion.getUserData());
+                                        pion.setFitWidth(30);
+                                        pion.setFitHeight(30);
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
                                         pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
-                                        pion.setFitWidth(30);
-                                        pion.setFitHeight(30);
                                         pion.setId(pion.getImage().getUrl());
                                         pion.setPreserveRatio(true);
                                         pion.setStyle("-fx-cursor: hand;");
