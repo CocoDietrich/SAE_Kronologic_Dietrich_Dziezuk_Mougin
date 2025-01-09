@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 import java.util.*;
@@ -240,7 +241,7 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de stocker les déplacements de pions de personnage du joueur
-    public void ajouterNote(Lieu l, Temps t, Personnage p, boolean hypothese, boolean absence) {
+    public void ajouterNote(Lieu l, Temps t, Personnage p) {
         Note n = new Note(l, t, p);
         VueCarte vueCarte = null;
         for (Observateur o : observateurs) {
@@ -250,9 +251,6 @@ public class ModeleJeu implements Sujet {
             }
         }
         assert vueCarte != null;
-
-        n.setEstHypothese(hypothese);
-        n.setEstAbsence(absence);
 
         Pion pion = new Pion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))).getUrl());
         pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
@@ -265,7 +263,7 @@ public class ModeleJeu implements Sujet {
     }
 
     // Méthode permettant de stocker les déplacements de pions de personnage du joueur
-    public void ajouterNote(Lieu l, Temps t, int nbPersonnages, boolean hypothese, boolean absence) {
+    public void ajouterNote(Lieu l, Temps t, int nbPersonnages) {
         Note n = new Note(l, t, nbPersonnages);
         VueCarte vueCarte = null;
         for (Observateur o : observateurs) {
@@ -275,9 +273,6 @@ public class ModeleJeu implements Sujet {
             }
         }
         assert vueCarte != null;
-
-        n.setEstHypothese(hypothese);
-        n.setEstAbsence(absence);
 
         // On ajoute la note à la liste des notes
         partie.ajouterNote(n);
@@ -380,6 +375,12 @@ public class ModeleJeu implements Sujet {
                 vueCarte.pions.remove(pion);
                 vueCarte.getChildren().remove(pion);
                 supprimerPion(pion);
+                for (Polygon zone : vueCarte.zonesContenantPions) {
+                    if (zone.getUserData().equals(pion.getUserData())) {
+                        vueCarte.zonesContenantPions.remove(zone);
+                        break;
+                    }
+                }
                 break;
             }
         }
@@ -411,7 +412,14 @@ public class ModeleJeu implements Sujet {
         for (Pion pion : vueCarte.pions) {
             if (pion.getNote().equals(n)) {
                 vueCarte.pions.remove(pion);
+                vueCarte.getChildren().remove(pion);
                 supprimerPion(pion);
+                for (Polygon zone : vueCarte.zonesContenantPions) {
+                    if (zone.getUserData().equals(pion.getUserData())) {
+                        vueCarte.zonesContenantPions.remove(zone);
+                        break;
+                    }
+                }
                 break;
             }
         }
