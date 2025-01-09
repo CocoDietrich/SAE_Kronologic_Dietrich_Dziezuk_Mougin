@@ -103,7 +103,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 for (Pion p : pionsMemePersonnage) {
                     String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                     if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                        System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps");
+                        System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps.");
                         if (vueCarte.getChildren().getLast() instanceof Pion) {
                             vueCarte.getChildren().removeLast();
                         }
