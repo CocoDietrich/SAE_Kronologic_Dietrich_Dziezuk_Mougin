@@ -809,12 +809,12 @@ public class VueCarte extends BorderPane implements Observateur {
     }
 
     private void ajouterPionImbougeable(String userDataZone, String personnage) {
-        System.out.println("Ajout du pion " + personnage + " dans la zone " + userDataZone);
+        //System.out.println("Ajout du pion " + personnage + " dans la zone " + userDataZone);
 
         for (Polygon zone : zonesDeJeu) {
             if (((String)zone.getUserData()).contains("SousZone")) {
                 if (((String)zone.getUserData()).contains(userDataZone) && !zonesContenantPions.contains(zone)) {
-                    System.out.println("Zone trouvée : " + zone.getUserData());
+                    //System.out.println("Zone trouvée : " + zone.getUserData());
                     Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
                     pion.setUserData(zone.getUserData());
                     pion.setFitWidth(30);
@@ -896,7 +896,6 @@ public class VueCarte extends BorderPane implements Observateur {
                                         pion.setFitWidth(30);
                                         pion.setFitHeight(30);
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
-                                        System.out.println("Point : " + point);
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
                                         pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
                                         pion.setId(pion.getImage().getUrl());
