@@ -704,7 +704,8 @@ public class VueCarte extends BorderPane implements Observateur {
                     "-fx-background-color: #E6B85C; " +  // Changement de couleur
                             "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
                             "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
-                            "-fx-padding: 20;"  // Agrandir le bouton
+                            "-fx-padding: 20;" +  // Agrandir le bouton
+                            "-fx-cursor: hand;" // Curseur main
             );
         });
 

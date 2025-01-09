@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+actor Utilisateur
+participant VueCarte
+participant ControleurChoixCarte
+participant ModeleJeu
+participant Partie
+participant GestionnairePions
+participant GestionnaireNotes
+
+Utilisateur -> VueCarte: place un pion sur une carte
+activate VueCarte
+VueCarte -> ControleurChoixCarte: handle(ActionEvent)
+activate ControleurChoixCarte
+ControleurChoixCarte -> ModeleJeu: ajouterPion(Note n, Image i, int x, int y)
+activate ModeleJeu
+ModeleJeu -> Partie: ajouterPion(Pion pion)
+activate Partie
+Partie -> GestionnairePions: ajouterPion(Pion pion)
+activate GestionnairePions
+GestionnairePions --> Partie: le pion est ajouté à la liste
+deactivate GestionnairePions
+Partie --> GestionnaireNotes : ajouterNote(Note n)
+activate GestionnaireNotes
+GestionnaireNotes --> Partie : la note est ajoutée à la liste
+deactivate GestionnaireNotes
+Partie --> ModeleJeu: void
+deactivate Partie
+ModeleJeu --> ControleurChoixCarte: les données sont mises à jour
+deactivate ModeleJeu
+ControleurChoixCarte --> VueCarte: void
+deactivate ControleurChoixCarte
+VueCarte --> Utilisateur: le pion est placé sur la carte
+deactivate VueCarte
+
+@enduml
