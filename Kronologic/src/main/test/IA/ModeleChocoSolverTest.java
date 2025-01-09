@@ -184,24 +184,28 @@ public class ModeleChocoSolverTest {
         assertEquals("S_T2 = 4", positions2[1].toString());
     }
 
+    @Test
     public void testContrainteTemps3Personnes(){
         /**
          * J :
          *      - Temps 1 : {4}
          *      - Temps 2 : {3, 5, 6}
+         *      - Temps 3 : {1, 2, 4, 5, 6}
          * A :
          *      - Temps 1 : {6}
          *      - Temps 2 : {4, 5}
+         *      - Temps 3 : {3, 4, 5, 6}
          * S :
          *      - Temps 1 : {5}
          *      - Temps 2 : {4, 6}
+         *      - Temps 3 : {3, 4, 5, 6}
          */
-        solver.ajouterContrainteTemps(new Lieu(5), new Temps(2), 3);
+        solver.ajouterContrainteTemps(new Lieu(6), new Temps(3), 3);
         IntVar[] positions = solver.getPositions()[0];
         IntVar[] positions2 = solver.getPositions()[4];
         IntVar[] positions3 = solver.getPositions()[5];
-        assertEquals("A_T2 = 5", positions[1].toString());
-        assertEquals("J_T2 = 5", positions2[1].toString());
-        assertEquals("S_T2 = 5", positions3[1].toString());
+        assertEquals("A_T3 = 6", positions[2].toString());
+        assertEquals("J_T3 = 6", positions2[2].toString());
+        assertEquals("S_T3 = 6", positions3[2].toString());
     }
 }
