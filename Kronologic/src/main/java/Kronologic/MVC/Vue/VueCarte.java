@@ -4,10 +4,12 @@ import Kronologic.Jeu.Elements.Pion;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -49,6 +51,7 @@ public class VueCarte extends BorderPane implements Observateur {
         super();
         this.modeleJeu = modeleJeu;
         afficher(modeleJeu);
+        initialiserPionsImbougeables();
     }
 
     public void afficher(ModeleJeu modeleJeu) {
@@ -312,8 +315,8 @@ public class VueCarte extends BorderPane implements Observateur {
             // Création du sous-lieu
             Polygon sousLieu = creerLieu(sousLieuCoords, nomZone + "-SousZone" + (i + 1), modeleJeu);
 
-            // Style pour les voir
-            sousLieu.setStroke(Color.BLUE);
+            // Ajout de la bordure
+            sousLieu.setStroke(Color.TRANSPARENT);
             sousLieu.setStrokeWidth(1);
 
             // Ajout de la sous-zone à la liste
@@ -790,6 +793,56 @@ public class VueCarte extends BorderPane implements Observateur {
 
         return List.of(afficherPresences, afficherAbsences);
     }
+
+    public void initialiserPionsImbougeables() {
+        // Initialisation des pions immobiles pour le temps 1
+        ajouterPionImbougeable("Temps 1-Grand foyer", "Baronne");
+        ajouterPionImbougeable("Temps 1-Grand foyer", "Chauffeur");
+        ajouterPionImbougeable("Temps 1-Grand escalier", "Détective");
+        ajouterPionImbougeable("Temps 1-Scène", "Journaliste");
+        ajouterPionImbougeable("Temps 1-Foyer du chant-SousZone1", "Aventurière");
+        ajouterPionImbougeable("Temps 1-Foyer de la danse-SousZone1", "Servante");
+    }
+
+    private void ajouterPionImbougeable(String userDataZone, String personnage) {
+        System.out.println("Ajout du pion " + personnage + " dans la zone " + userDataZone);
+        // Trouver la zone correspondante
+        Polygon zone = zonesDeJeu.stream()
+                .filter(p -> p.getUserData().equals(userDataZone))
+                .findFirst()
+                .orElse(null);
+
+        if (zone != null) {
+            System.out.println("Zone trouvée : " + zone.getUserData());
+            // Créer le pion et définir ses propriétés
+            Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
+            pion.setFitHeight(30);
+            pion.setFitWidth(30);
+            pion.setPreserveRatio(true);
+            pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
+            pion.setUserData(userDataZone);
+
+            // Vérifier si la zone est une sous-zone d'un Foyer ou autre
+            if (userDataZone.contains("Foyer du chant") || userDataZone.contains("Foyer de la danse")) {
+                // Positionner le pion au coin inférieur droit de la zone
+                Point2D point = zone.localToScene(zone.getBoundsInLocal().getMaxX(), zone.getBoundsInLocal().getMaxY());
+                pion.setLayoutX(point.getX() - pion.getFitWidth());
+                pion.setLayoutY(point.getY() - pion.getFitHeight());
+
+                Pane parent = (Pane) zone.getParent(); // Récupérer le parent du GridPane
+                parent.getChildren().add(pion);
+            } else {
+                // Si la zone est un lieu principal (Grand Foyer, etc.)
+                Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
+                pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
+                pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
+
+                // Ajouter le pion au parent du Polygon
+                ((Pane) zone.getParent()).getChildren().add(pion);
+            }
+        }
+    }
+
 
 
     @Override
