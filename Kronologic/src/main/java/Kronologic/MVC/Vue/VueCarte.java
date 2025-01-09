@@ -1,6 +1,8 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.Jeu.Elements.Pion;
+import Kronologic.Jeu.Elements.Realite;
+import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
@@ -796,52 +798,63 @@ public class VueCarte extends BorderPane implements Observateur {
     }
 
     public void initialiserPionsImbougeables() {
+        ArrayList<Realite> listePionTemps1 = ModeleJeu.getPartie().getDeroulement().positionsAuTemps(new Temps(1));
+
         // Initialisation des pions immobiles pour le temps 1
-        ajouterPionImbougeable("Temps 1-Grand foyer", "Baronne");
-        ajouterPionImbougeable("Temps 1-Grand foyer", "Chauffeur");
-        ajouterPionImbougeable("Temps 1-Grand escalier", "Détective");
-        ajouterPionImbougeable("Temps 1-Scène", "Journaliste");
-        ajouterPionImbougeable("Temps 1-Foyer du chant-SousZone1", "Aventurière");
-        ajouterPionImbougeable("Temps 1-Foyer de la danse-SousZone1", "Servante");
+        for (int i = 0; i < listePionTemps1.size(); i++) {
+            ajouterPionImbougeable("Temps " + listePionTemps1.get(i).getTemps().getValeur()
+                    + "-" + listePionTemps1.get(i).getLieu().getNom(),
+                    listePionTemps1.get(i).getPersonnage().getNom());
+        }
     }
 
     private void ajouterPionImbougeable(String userDataZone, String personnage) {
         System.out.println("Ajout du pion " + personnage + " dans la zone " + userDataZone);
-        // Trouver la zone correspondante
-        Polygon zone = zonesDeJeu.stream()
-                .filter(p -> p.getUserData().equals(userDataZone))
-                .findFirst()
-                .orElse(null);
 
-        if (zone != null) {
-            System.out.println("Zone trouvée : " + zone.getUserData());
-            // Créer le pion et définir ses propriétés
-            Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
-            pion.setFitHeight(30);
-            pion.setFitWidth(30);
-            pion.setPreserveRatio(true);
-            pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
-            pion.setUserData(userDataZone);
+        for (Polygon zone : zonesDeJeu) {
+            if (((String)zone.getUserData()).contains("SousZone")) {
+                if (((String)zone.getUserData()).contains(userDataZone) && !zonesContenantPions.contains(zone)) {
+                    System.out.println("Zone trouvée : " + zone.getUserData());
+                    Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
+                    pion.setUserData(zone.getUserData());
+                    pion.setFitWidth(30);
+                    pion.setFitHeight(30);
+                    pion.setPreserveRatio(true);
+                    pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
 
-            // Vérifier si la zone est une sous-zone d'un Foyer ou autre
-            if (userDataZone.contains("Foyer du chant") || userDataZone.contains("Foyer de la danse")) {
-                // Positionner le pion au coin inférieur droit de la zone
-                Point2D point = zone.localToScene(zone.getBoundsInLocal().getMaxX(), zone.getBoundsInLocal().getMaxY());
-                pion.setLayoutX(point.getX() - pion.getFitWidth());
-                pion.setLayoutY(point.getY() - pion.getFitHeight());
+                    Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
+                    pion.setLayoutX(point.getX() - pion.getFitWidth());
+                    pion.setLayoutY(point.getY() - pion.getFitHeight());
 
-                Pane parent = (Pane) zone.getParent(); // Récupérer le parent du GridPane
-                parent.getChildren().add(pion);
-            } else {
-                // Si la zone est un lieu principal (Grand Foyer, etc.)
-                Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
-                pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
-                pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
-
-                // Ajouter le pion au parent du Polygon
-                ((Pane) zone.getParent()).getChildren().add(pion);
+                    ((Pane) zone.getParent()).getChildren().add(pion);
+                    this.zonesContenantPions.add(zone);
+                    break;
+                }
             }
         }
+//        Polygon zone = zonesDeJeu.stream()
+//                .filter(p -> p.getUserData().equals(finalUserDataZone))
+//                .findFirst()
+//                .orElse(null);
+//
+//        if (zone != null) {
+//            System.out.println("Zone trouvée : " + zone.getUserData());
+//            // Créer le pion et définir ses propriétés
+//            Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
+//            pion.setFitHeight(30);
+//            pion.setFitWidth(30);
+//            Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
+//            System.out.println("Point : " + point);
+//            pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
+//            pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
+//            System.out.println("Layout : " + pion.getLayoutX() + " " + pion.getLayoutY());
+//            pion.setPreserveRatio(true);
+//            pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
+//            pion.setUserData(userDataZone);
+//
+//            this.getChildren().add(pion);
+//            this.zonesContenantPions.add(zone);
+//        }
     }
 
 
@@ -880,10 +893,10 @@ public class VueCarte extends BorderPane implements Observateur {
                                     }
                                     if (pion.getUserData() == placement) {
                                         pion.setUserData(zone.getUserData());
-                                        System.out.println(pion.getUserData());
                                         pion.setFitWidth(30);
                                         pion.setFitHeight(30);
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
+                                        System.out.println("Point : " + point);
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
                                         pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
                                         pion.setId(pion.getImage().getUrl());
