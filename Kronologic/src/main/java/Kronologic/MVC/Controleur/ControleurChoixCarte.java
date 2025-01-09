@@ -82,6 +82,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     }
                 }*/
             } else {
+                System.out.println("2");
                 // Si c'est un pion de personnage
 
                 // On récupère les pions de ce personnage déjà placés
@@ -108,6 +109,10 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                         }
                         vueCarte.zonesContenantPions.removeLast();
                         vueCarte.pions.removeLast();
+                        vueCarte.pions.remove(pionAvant);
+                        vueCarte.pions.remove(pionActuel);
+                        vueCarte.pions.remove(pionActuel);
+                        modeleJeu.supprimerPion(pionAvant);
                         return;
                     }
                 }
@@ -116,6 +121,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
         // Cas du pion déplacé depuis la réserve de pion vers un lieu
         if ((pionAvant.getUserData() == null) || (pionAvant.getUserData().getClass() == Integer.class)) {
+            System.out.println("1");
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
@@ -141,6 +147,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             modeleJeu.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
         } else if (!Objects.equals(pionAvant.getId(), pionActuel.getId())) {
+            System.out.println("2");
             // Cas du pion déplacé depuis un lieu vers un autre lieu
             modeleJeu.supprimerPion(pionAvant);
             vueCarte.pions.removeLast();
@@ -152,6 +159,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 }
             }
         } else {
+            System.out.println("3");
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;

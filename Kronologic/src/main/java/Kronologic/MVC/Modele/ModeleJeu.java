@@ -5,6 +5,7 @@ import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
 import Kronologic.Jeu.Elements.*;
+import Kronologic.Jeu.Images;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Indice.IndicePersonnage;
 import Kronologic.Jeu.Indice.IndiceTemps;
@@ -253,12 +254,17 @@ public class ModeleJeu implements Sujet {
         n.setEstHypothese(hypothese);
         n.setEstAbsence(absence);
 
-        // On ajoute la note à la liste des notes
-        partie.ajouterNote(n);
+        Pion pion = new Pion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))).getUrl());
+        pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
 
+        ajouterPion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))), 0, 0);
+
+
+        vueCarte.pions.add(pion);
         notifierObservateurs();
     }
 
+    // Méthode permettant de stocker les déplacements de pions de personnage du joueur
     public void ajouterNote(Lieu l, Temps t, int nbPersonnages, boolean hypothese, boolean absence) {
         Note n = new Note(l, t, nbPersonnages);
         VueCarte vueCarte = null;
@@ -291,8 +297,24 @@ public class ModeleJeu implements Sujet {
             }
         }
 
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+        assert vueCarte != null;
+
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
+
+        for (Pion pion : vueCarte.pions) {
+            if (pion.getNote() != null && pion.getNote().equals(n)) {
+                pion.getNote().setEstAbsence(absence);
+                pion.getNote().setEstHypothese(hypothese);
+            }
+        }
 
         notifierObservateurs();
     }
@@ -309,8 +331,24 @@ public class ModeleJeu implements Sujet {
             }
         }
 
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+        assert vueCarte != null;
+
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
+
+        for (Pion pion : vueCarte.pions) {
+            if (pion.getNote().equals(n)) {
+                pion.getNote().setEstAbsence(absence);
+                pion.getNote().setEstHypothese(hypothese);
+            }
+        }
 
         notifierObservateurs();
     }
@@ -328,8 +366,23 @@ public class ModeleJeu implements Sujet {
             }
         }
 
-        // On supprime la note de la liste des notes
-        partie.supprimerNote(n);
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+        assert vueCarte != null;
+
+        for (Pion pion : vueCarte.pions) {
+            if (pion.getNote() != null && pion.getNote().equals(n)) {
+                vueCarte.pions.remove(pion);
+                vueCarte.getChildren().remove(pion);
+                supprimerPion(pion);
+                break;
+            }
+        }
 
         notifierObservateurs();
     }
@@ -346,8 +399,22 @@ public class ModeleJeu implements Sujet {
             }
         }
 
-        // On supprime la note de la liste des notes
-        partie.supprimerNote(n);
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+        assert vueCarte != null;
+
+        for (Pion pion : vueCarte.pions) {
+            if (pion.getNote().equals(n)) {
+                vueCarte.pions.remove(pion);
+                supprimerPion(pion);
+                break;
+            }
+        }
 
         notifierObservateurs();
     }
