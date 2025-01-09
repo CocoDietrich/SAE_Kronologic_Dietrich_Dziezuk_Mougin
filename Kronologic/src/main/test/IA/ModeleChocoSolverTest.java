@@ -70,16 +70,16 @@ public class ModeleChocoSolverTest {
 
     @Test
     public void test3Passages() {
-        solver.ajouterContraintePersonnage(new Personnage(personnages[3]), new Lieu(3), 2);
-        solver.ajouterContrainteNombreDePassages(new Personnage(personnages[3]), new Lieu(3), 3);
+        solver.ajouterContraintePersonnage(new Personnage(personnages[2]), new Lieu(3), 4);
+        solver.ajouterContrainteNombreDePassages(new Personnage(personnages[2]), new Lieu(3), 3);
 
-        IntVar[] positions = solver.getPositions()[3]; // Récupérer les positions du Détective
-        assertEquals("D_T1 = 2", positions[0].toString());
-        assertEquals("D_T2 = 3", positions[1].toString());
-        assertEquals("D_T3 = {1..2,4}", positions[2].toString());
-        assertEquals("D_T4 = 3", positions[3].toString());
-        assertEquals("D_T5 = {1..2,4}", positions[4].toString());
-        assertEquals("D_T6 = 3", positions[5].toString());
+        IntVar[] positions = solver.getPositions()[2]; // Récupérer les positions du Détective
+        assertEquals("C_T1 = 1", positions[0].toString());
+        assertEquals("C_T2 = 3", positions[1].toString());
+        assertEquals("C_T3 = {1..2,4}", positions[2].toString());
+        assertEquals("C_T4 = 3", positions[3].toString());
+        assertEquals("C_T5 = {1..2,4}", positions[4].toString());
+        assertEquals("C_T6 = 3", positions[5].toString());
     }
 
     @Test
