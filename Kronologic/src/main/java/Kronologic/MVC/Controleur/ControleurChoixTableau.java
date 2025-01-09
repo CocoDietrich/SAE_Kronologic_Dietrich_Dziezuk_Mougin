@@ -78,9 +78,9 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
         switch (etat) {
             case "présent":
                 if (personnage != null) {
-                    this.modeleJeu.ajouterNote(lieu, temps,  personnage, false, false);
+                    this.modeleJeu.ajouterNote(lieu, temps,  personnage);
                 } else {
-                    this.modeleJeu.ajouterNote(lieu, temps, nbPersonnage, false, false);
+                    this.modeleJeu.ajouterNote(lieu, temps, nbPersonnage);
                 }
                 break;
             case "absent":
