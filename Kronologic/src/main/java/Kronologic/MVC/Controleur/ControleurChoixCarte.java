@@ -64,7 +64,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 pionsDeNombres.removeLast();
 
                 for (Pion p : pionsDeNombres) {
-                    System.out.println("Pion de nombres : " + p.getUserData() + "-" + p.getId());
+                    //System.out.println("Pion de nombres : " + p.getUserData() + "-" + p.getId());
                 }
 
                 // Si un d'eux est placé dans le même lieu et au même temps, on ne fait rien
@@ -82,7 +82,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     }
                 }*/
             } else {
-                System.out.println("2");
                 // Si c'est un pion de personnage
 
                 // On récupère les pions de ce personnage déjà placés
@@ -103,7 +102,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 for (Pion p : pionsMemePersonnage) {
                     String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                     if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                        System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps.");
+                        //System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps.");
                         if (vueCarte.getChildren().getLast() instanceof Pion) {
                             vueCarte.getChildren().removeLast();
                         }
@@ -121,7 +120,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
         // Cas du pion déplacé depuis la réserve de pion vers un lieu
         if ((pionAvant.getUserData() == null) || (pionAvant.getUserData().getClass() == Integer.class)) {
-            System.out.println("1");
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
@@ -147,7 +145,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             modeleJeu.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
         } else if (!Objects.equals(pionAvant.getId(), pionActuel.getId())) {
-            System.out.println("2");
             // Cas du pion déplacé depuis un lieu vers un autre lieu
             modeleJeu.supprimerPion(pionAvant);
             vueCarte.pions.removeLast();
@@ -159,7 +156,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 }
             }
         } else {
-            System.out.println("3");
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
@@ -172,8 +168,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             String nomTemps = ((String) pionActuel.getUserData()).split("-")[0];
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
 
-            System.out.println(pionActuel.getImage().getUrl().split("/")[2].split(".png")[0]);
-
             Note note = null;
             if ((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].contains("Pion de Nombres")){
                 // On crée la note
@@ -183,13 +177,13 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 note = new Note(nouveauLieu, temps, new Personnage((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0]));
             }
 
-            System.out.println("Note : " + note);
+            //System.out.println("Note : " + note);
 
             vueCarte.pions.get(vueCarte.pions.size() - 2).setNote(note);
 
-            System.out.println("Pion avant : " + pionAvant);
-            System.out.println("Nouveau lieu : " + nouveauLieu);
-            System.out.println("Temps : " + temps);
+//            System.out.println("Pion avant : " + pionAvant);
+//            System.out.println("Nouveau lieu : " + nouveauLieu);
+//            System.out.println("Temps : " + temps);
 
             modeleJeu.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
             vueCarte.pions.remove(pionAvant);

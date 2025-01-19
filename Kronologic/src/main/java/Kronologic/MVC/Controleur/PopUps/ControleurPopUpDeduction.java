@@ -26,7 +26,6 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
         // Si on clique sur le bouton de retour, on ferme le stage du pop-up
         if (texte.equals("Quitter")) {
             stage.close();
-            System.out.println("Fermeture du pop-up de déduction.");
 
             VuePopUpDeduction vuePopUpDeduction = null;
             // On récupère la vue du pop-up de déduction
