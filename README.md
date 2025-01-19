@@ -73,3 +73,46 @@ Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponi
 - Changer d'affichage : Avoir une visualisation différente des notes du joueur sous forme de tableaux.
 - Formuler des hypothèses : Déplacer les pions représentant les personnages ou le pion de nombre représentant un nombre de personnages sur les cartes en fonction des indices découverts.
 - IA de déduction : Avoir accès aux déductions faites (en se basant sur les indices collectés) par l'IA utilisant Choco-Solver grâce au bouton "Déduction de l'IA".
+
+## Itération 3
+
+### 1. Répartition des Tâches
+
+#### Mathieu :
+- Terminer la réalisation de l'IA de déduction utilisant Choco-Solver.
+- Commencer le développement de l'IA de déduction heuristique.
+- Analyser les indices collectés et en tirer des conclusions logiques.
+- Proposer une hypothèse logique basée sur les indices.
+          
+#### Enzo :
+- Permettre au joueur de visualiser le film des déplacements des personnages.
+- Réaliser un jeu de tests permettant de vérifier le bon fonctionnement des fonctionnalités développées.
+
+#### Corentin :
+- Permettre au joueur de visualiser les règles.
+- Gestion des pions et des notes du joueur.
+
+#### Enzo et Corentin :
+- Gestion du placement automatique des pions et des sous-zones.
+
+### 2. Fonctionnalités Développées
+
+ - Afficher les règles du jeu
+ - Afficher le film des déplacements des personnages au cours de la partie (pas encore fonctionnel)
+ - Afficher le film des hypothèses du joueur (pas encore fonctionnel)
+ - Gestion des pions et des notes du joueur
+ - Synchronisation des vues Carte et Tableaux par rapport aux hypothèses du joueur
+ - Terminer l'IA de déduction utilisant Choco-Solver
+ - Implémenter l'IA de déduction heuristique (pas encore fonctionnel)
+ - Réalisation d'un jeu de tests permettant de vérifier le bon fonctionnement des fonctionnalités développées
+
+### 3. Mode d’Emploi
+
+Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponibles.
+
+#### Fonctionnalités Disponibles (en plus des fonctionnalités implémentées dans l'itération précédente) :
+
+- Visualiser les règles : Permettre au joueur, via le bouton situé en haut à droite, d'avoir accès aux règles du jeu afin de se familiariser avec Kronologic
+- Formuler des hypothèses : Tous les bugs liés au déplacement des pions ont été corrigés. De plus, la gestion des notes a été ajoutée.
+- IA de déduction : Avoir accès aux déductions faites (en se basant sur les indices collectés) par l'IA utilisant Choco-Solver grâce au bouton "Déduction de l'IA".
+- Films de la partie et du joueur (en cours de développement) : Le joueur peut voir les déplacements des personnages au cours de la partie (réalité) ainsi que l'évolution des hypothèse du joueur au fil des tours de jeu.
