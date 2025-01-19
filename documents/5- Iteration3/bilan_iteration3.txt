@@ -1,0 +1,66 @@
+Bilan de l'Itération 3 :
+
+1. État Actuel de la Version
+
+Fonctionnalités Développées :
+
+ - Afficher les règles du jeu
+ - Afficher le film des déplacements des personnages au cours de la partie (pas encore fonctionnel)
+ - Afficher le film des hypothèses du joueur (pas encore fonctionnel)
+ - Gestion des pions et des notes du joueur
+ - Synchronisation des vues Carte et Tableaux par rapport aux hypothèses du joueur
+ - Terminer l'IA de déduction utilisant Choco-Solver
+ - Implémenter l'IA de déduction heuristique (pas encore fonctionnel)
+ - Réalisation d'un jeu de tests permettant de vérifier le bon fonctionnement des fonctionnalités développées
+
+
+2. Validation des Choix de Conception
+
+Conformité à l'Étude Préalable :
+
+ - Respect de l'architecture MVC :
+    - La structure du projet reste conforme à l'architecture prévue.
+    - Les interactions entre le modèle, la vue et le contrôleur ont été affinées, notamment avec une meilleure
+      gestion des synchronisations entre les Vues Carte et Tableaux.
+    - Une implémentation plus robuste de la gestion des données a été réalisée, facilitant leur manipulation
+      dans les deux types de vue.
+
+ - Interaction Utilisateur :
+    - Les interactions liées au déplacement des pions ont été améliorées pour offrir une expérience utilisateur
+      plus intuitive. Par exemple, les pions sont désormais positionnés de manière centralisée dans la zone où
+      ils sont déposés.
+    - Le système vérifie automatiquement si une zone est déjà occupée et ajuste le placement des pions en conséquence,
+      garantissant une logique de jeu cohérente.
+
+ - IA et Traitement des Données :
+    - L'IA utilisant Choco-Solver a été intégrée pour les déductions logiques.
+    - L'IA heuristique est en cours d'implémentation pour proposer des hypothèses basées sur les indices collectés.
+
+
+3. Problèmes Rencontrés et Bugs Restants
+
+Nous avons rencontré quelques problèmes au cours de cette première itération, que nous avons néanmoins réussi à corriger :
+
+ - Problème de synchronisation des données entre les vues Carte et Tableaux réglé.
+
+ - Bugs liés à la gestion des notes du joueur corrigés.
+
+ - Problèmes liés aux placements de plusieurs pions identiques dans la même salle et aux sous-zones réglés.
+
+ - Ajustement des déductions de l'IA pour qu'elles soient plus pertinentes et cohérentes.
+
+
+4. Conclusion et Perspectives
+
+L'itération 3 a permis de développer des fonctionnalités essentielles qui renforcent la jouabilité et la logique du jeu.
+Les interactions utilisateur, le placement des pions et la synchronisation des différentes vues ont été significativement
+améliorés, offrant une expérience plus fluide et conforme à la maquette prévue. De plus, des progrès ont été réalisés
+dans l'intégration de l'IA, notamment avec l'utilisation de Choco-Solver.
+
+Pour l'itération 3, nous prévoyons de :
+    - Terminer le développement de l'IA de déduction heuristique.
+    - Développer une IA d’assistance au joueur en utilisant Choco-Solver.
+    - Finaliser les films des déductions du joueur et de la partie pour enrichir l'expérience visuelle.
+    - Implémenter les pions d’hypothèses et d’absences, en veillant à leur cohérence dans le gameplay.
+    - Afficher les présences et les absences pour améliorer la lisibilité des informations disponibles au joueur.
+    - Corriger les bugs liés au placement automatique des pions, afin d’assurer un fonctionnement parfaitement fluide.
