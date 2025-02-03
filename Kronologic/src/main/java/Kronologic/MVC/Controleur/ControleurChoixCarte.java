@@ -48,6 +48,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
         if (pionActuel.getId() != null) {
             String nomPersonnagePionActuel = pionActuel.getId().substring(pionActuel.getId().lastIndexOf("/")+1, pionActuel.getId().lastIndexOf("."));
+            System.out.println("Nom du personnage du pion actuel : " + nomPersonnagePionActuel);
             // Si c'est un pion de nombres
             if (nomPersonnagePionActuel.contains("Pion de Nombres")) {
                 // On récupère les pions de nombres déjà placés
@@ -63,24 +64,20 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 // On supprime le pion actuel de la liste
                 pionsDeNombres.removeLast();
 
-                for (Pion p : pionsDeNombres) {
-                    //System.out.println("Pion de nombres : " + p.getUserData() + "-" + p.getId());
-                }
-
                 // Si un d'eux est placé dans le même lieu et au même temps, on ne fait rien
-                /*String lieuTempsPionActuel = pionActuel.getUserData().toString().substring(0, pionActuel.getUserData().toString().lastIndexOf("-"));
+                String lieuTempsPionActuel = pionActuel.getUserData().toString().substring(0, pionActuel.getUserData().toString().lastIndexOf("-"));
                 for (Pion p : pionsDeNombres) {
-                    String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
-                    if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                        System.out.println("Pion de nombres déjà placé dans le même lieu et au même temps");
-                        vueCarte.getChildren().removeLast();
-                        vueCarte.zonesContenantPions.removeLast();
-                        for (Polygon poly : vueCarte.zonesContenantPions) {
-                            System.out.println("Zone : " + poly.getUserData());
+                    if (p.getNote() != null) {
+                        String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
+                        if (lieuTempsPion.equals(lieuTempsPionActuel)) {
+                            System.out.println("Pion de nombres déjà placé dans le même lieu et au même temps");
+                            vueCarte.getChildren().removeLast();
+                            vueCarte.zonesContenantPions.removeLast();
+                            pionsDeNombres.removeLast();
+                            return;
                         }
-                        return;
                     }
-                }*/
+                }
             } else {
                 // Si c'est un pion de personnage
 

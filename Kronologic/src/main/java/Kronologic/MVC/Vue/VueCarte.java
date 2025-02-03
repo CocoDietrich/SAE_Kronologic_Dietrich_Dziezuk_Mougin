@@ -9,6 +9,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextArea;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -19,7 +22,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
@@ -374,104 +379,107 @@ public class VueCarte extends BorderPane implements Observateur {
         polygon.setUserData(zoneName);
         polygon.setFill(Color.TRANSPARENT);
 
-        // Ajout de la réception du drag
-        polygon.setOnDragOver(event -> {
-            if (event.getGestureSource() instanceof ImageView && event.getDragboard().hasImage()) {
-                event.acceptTransferModes(TransferMode.MOVE);
-            }
-            event.consume();
-        });
-
-        polygon.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-
-            // Ajout de la zone où on a déposé le pion à la liste des zones contenant des pions
-            zonesContenantPions.add(polygon);
-
-            if (db.hasImage()) {
-
-                // Création du pion déplacé
-                Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
-                if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
-                    pionDeplace.setFitHeight(47.5);
-                    pionDeplace.setFitWidth(47.5);
-                } else {
-                    pionDeplace.setFitHeight(30);
-                    pionDeplace.setFitWidth(30);
+        // Drag and drop pour les lieux (sauf le temps 1)
+        if (!polygon.getUserData().toString().contains("Temps 1")) {
+            // Ajout de la réception du drag
+            polygon.setOnDragOver(event -> {
+                if (event.getGestureSource() instanceof ImageView && event.getDragboard().hasImage()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
                 }
-                pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
-                pionDeplace.setPreserveRatio(true);
-                pionDeplace.setStyle("-fx-cursor: hand;");
-                pionDeplace.setUserData(zoneName);
+                event.consume();
+            });
 
-                // Ajouter le pion à la liste des pions
-                pions.add(pionDeplace);
+            polygon.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
 
-                // Vérifier si la sous-zone est occupée (sous-zone occupée si doublon dans la liste de pions)
-                boolean sousZoneOccupee = pions.stream()
-                        .filter(p -> p.getUserData() != null && p.getUserData().equals(polygon.getUserData()))
-                        .count() >= 2;
+                // Ajout de la zone où on a déposé le pion à la liste des zones contenant des pions
+                zonesContenantPions.add(polygon);
 
-                if (sousZoneOccupee) {
-                    String nomLieu = polygon.getUserData().toString().split("-")[1];
-                    String nomTemps = polygon.getUserData().toString().split("-")[0];
-                    if (zonesContenantPions.getLast().getUserData() != zonesContenantPions.get(zonesContenantPions.size() - 2).getUserData()) {
-                        zonesContenantPions.removeLast();
-                    }
-                    Polygon sousZoneLibre = trouverSousZoneLibre(nomLieu, nomTemps);
-                    if (sousZoneLibre != null) {
+                if (db.hasImage()) {
 
-                        // Mise à jour du UserData pour refléter la sous-zone libre
-                        pionDeplace.setUserData(sousZoneLibre.getUserData());
-                        pions.removeLast();
-                        pions.add(pionDeplace);
-                        zonesContenantPions.add(sousZoneLibre);
-
-                        // Positionner le pion au centre de la sous-zone libre
-                        Point2D pointLibre = sousZoneLibre.localToScene(sousZoneLibre.getBoundsInLocal().getCenterX(), sousZoneLibre.getBoundsInLocal().getCenterY());
-                        pionDeplace.setLayoutX(pointLibre.getX() - pionDeplace.getFitWidth() / 2);
-                        pionDeplace.setLayoutY(pointLibre.getY() - pionDeplace.getFitHeight() / 2);
+                    // Création du pion déplacé
+                    Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
+                    if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
+                        pionDeplace.setFitHeight(47.5);
+                        pionDeplace.setFitWidth(47.5);
                     } else {
-                        // On ne fait rien
-                        return;
+                        pionDeplace.setFitHeight(30);
+                        pionDeplace.setFitWidth(30);
                     }
+                    pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
+                    pionDeplace.setPreserveRatio(true);
+                    pionDeplace.setStyle("-fx-cursor: hand;");
+                    pionDeplace.setUserData(zoneName);
+
+                    // Ajouter le pion à la liste des pions
+                    pions.add(pionDeplace);
+
+                    // Vérifier si la sous-zone est occupée (sous-zone occupée si doublon dans la liste de pions)
+                    boolean sousZoneOccupee = pions.stream()
+                            .filter(p -> p.getUserData() != null && p.getUserData().equals(polygon.getUserData()))
+                            .count() >= 2;
+
+                    if (sousZoneOccupee) {
+                        String nomLieu = polygon.getUserData().toString().split("-")[1];
+                        String nomTemps = polygon.getUserData().toString().split("-")[0];
+                        if (zonesContenantPions.getLast().getUserData() != zonesContenantPions.get(zonesContenantPions.size() - 2).getUserData()) {
+                            zonesContenantPions.removeLast();
+                        }
+                        Polygon sousZoneLibre = trouverSousZoneLibre(nomLieu, nomTemps);
+                        if (sousZoneLibre != null) {
+
+                            // Mise à jour du UserData pour refléter la sous-zone libre
+                            pionDeplace.setUserData(sousZoneLibre.getUserData());
+                            pions.removeLast();
+                            pions.add(pionDeplace);
+                            zonesContenantPions.add(sousZoneLibre);
+
+                            // Positionner le pion au centre de la sous-zone libre
+                            Point2D pointLibre = sousZoneLibre.localToScene(sousZoneLibre.getBoundsInLocal().getCenterX(), sousZoneLibre.getBoundsInLocal().getCenterY());
+                            pionDeplace.setLayoutX(pointLibre.getX() - pionDeplace.getFitWidth() / 2);
+                            pionDeplace.setLayoutY(pointLibre.getY() - pionDeplace.getFitHeight() / 2);
+                        } else {
+                            // On ne fait rien
+                            return;
+                        }
+                    } else {
+                        // Positionner le pion au centre de la zone où il a été déposé
+                        Point2D point = polygon.localToScene(polygon.getBoundsInLocal().getCenterX(), polygon.getBoundsInLocal().getCenterY());
+                        pionDeplace.setLayoutX(point.getX() - pionDeplace.getFitWidth() / 2);
+                        pionDeplace.setLayoutY(point.getY() - pionDeplace.getFitHeight() / 2);
+                    }
+
+                    VueCarte root = this;
+                    root.getChildren().add(pionDeplace);
+
+                    // Activer le drag & drop pour le pion déplacé
+                    pionDeplace.setOnDragDetected(e -> {
+                        Dragboard newDb = pionDeplace.startDragAndDrop(TransferMode.MOVE);
+                        ClipboardContent content = new ClipboardContent();
+                        content.putImage(pionDeplace.getImage());
+                        newDb.setContent(content);
+                        e.consume();
+                    });
+
+                    pionDeplace.setOnDragDone(e -> {
+                        // Supprimer le pion si le dépôt n'est pas réussi
+                        if (!e.isDropCompleted()) {
+                            ((Pane) pionDeplace.getParent()).getChildren().remove(pionDeplace);
+                            pions.add(new Pion(null, pionDeplace.getImage().getUrl()));
+                        }
+
+                        // Déléguer la logique métier au contrôleur
+                        new ControleurChoixCarte(modeleJeu).handle(e);
+                        e.consume();
+                    });
+
+                    event.setDropCompleted(true);
                 } else {
-                    // Positionner le pion au centre de la zone où il a été déposé
-                    Point2D point = polygon.localToScene(polygon.getBoundsInLocal().getCenterX(), polygon.getBoundsInLocal().getCenterY());
-                    pionDeplace.setLayoutX(point.getX() - pionDeplace.getFitWidth() / 2);
-                    pionDeplace.setLayoutY(point.getY() - pionDeplace.getFitHeight() / 2);
+                    event.setDropCompleted(false);
                 }
-
-                VueCarte root = this;
-                root.getChildren().add(pionDeplace);
-
-                // Activer le drag & drop pour le pion déplacé
-                pionDeplace.setOnDragDetected(e -> {
-                    Dragboard newDb = pionDeplace.startDragAndDrop(TransferMode.MOVE);
-                    ClipboardContent content = new ClipboardContent();
-                    content.putImage(pionDeplace.getImage());
-                    newDb.setContent(content);
-                    e.consume();
-                });
-
-                pionDeplace.setOnDragDone(e -> {
-                    // Supprimer le pion si le dépôt n'est pas réussi
-                    if (!e.isDropCompleted()) {
-                        ((Pane) pionDeplace.getParent()).getChildren().remove(pionDeplace);
-                        pions.add(new Pion(null, pionDeplace.getImage().getUrl()));
-                    }
-
-                    // Déléguer la logique métier au contrôleur
-                    new ControleurChoixCarte(modeleJeu).handle(e);
-                    e.consume();
-                });
-
-                event.setDropCompleted(true);
-            } else {
-                event.setDropCompleted(false);
-            }
-            event.consume();
-        });
+                event.consume();
+            });
+        }
 
         return polygon;
     }
@@ -809,17 +817,22 @@ public class VueCarte extends BorderPane implements Observateur {
         for (Polygon zone : zonesDeJeu) {
             if (((String)zone.getUserData()).contains("SousZone")) {
                 if (((String)zone.getUserData()).contains(userDataZone) && !zonesContenantPions.contains(zone)) {
-                    //System.out.println("Zone trouvée : " + zone.getUserData());
+                    System.out.println("Zone trouvée : " + zone.getUserData());
                     Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
                     pion.setUserData(zone.getUserData());
+                    pion.setId("file:img/pions_personnages/" + personnage + ".png");
                     pion.setFitWidth(30);
                     pion.setFitHeight(30);
                     pion.setPreserveRatio(true);
                     pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
 
                     Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
+                    System.out.println("Point : " + point);
                     pion.setLayoutX(point.getX() - pion.getFitWidth());
                     pion.setLayoutY(point.getY() - pion.getFitHeight());
+
+                    // On ajoute le pion à la liste des pions
+                    pions.add(pion);
 
                     for (int i = 1; i < Images.Lieux.getLieux().size()+1; i++){
                         if (userDataZone.contains(Images.Lieux.getLieux().get(i))){
