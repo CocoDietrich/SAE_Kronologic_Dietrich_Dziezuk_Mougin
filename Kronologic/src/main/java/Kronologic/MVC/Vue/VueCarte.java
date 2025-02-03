@@ -1,17 +1,13 @@
 package Kronologic.MVC.Vue;
 
-import Kronologic.Jeu.Elements.Pion;
-import Kronologic.Jeu.Elements.Realite;
-import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
@@ -24,7 +20,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
@@ -826,12 +821,25 @@ public class VueCarte extends BorderPane implements Observateur {
                     pion.setLayoutX(point.getX() - pion.getFitWidth());
                     pion.setLayoutY(point.getY() - pion.getFitHeight());
 
+                    for (int i = 1; i < Images.Lieux.getLieux().size()+1; i++){
+                        if (userDataZone.contains(Images.Lieux.getLieux().get(i))){
+                            modeleJeu.ajouterPion(new Note(new Lieu(userDataZone.split("-")[1], i, null),
+                                    new Temps(Integer.parseInt(userDataZone.replaceAll("[^0-9]", ""))),
+                                    new Personnage(personnage)),
+                                    new Image("file:img/pions_personnages/" + personnage + ".png"),
+                                    0,
+                                    0);
+                            break;
+                        }
+                    }
+
                     ((Pane) zone.getParent()).getChildren().add(pion);
                     this.zonesContenantPions.add(zone);
                     break;
                 }
             }
         }
+
 //        Polygon zone = zonesDeJeu.stream()
 //                .filter(p -> p.getUserData().equals(finalUserDataZone))
 //                .findFirst()
@@ -856,8 +864,6 @@ public class VueCarte extends BorderPane implements Observateur {
 //            this.zonesContenantPions.add(zone);
 //        }
     }
-
-
 
     @Override
     public void actualiser() {

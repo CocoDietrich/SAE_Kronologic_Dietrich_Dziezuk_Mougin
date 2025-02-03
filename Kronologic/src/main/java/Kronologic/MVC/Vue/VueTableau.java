@@ -1,6 +1,8 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.Jeu.Elements.Note;
+import Kronologic.Jeu.Elements.Personnage;
+import Kronologic.Jeu.Elements.Realite;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Modele.ModeleJeu;
@@ -270,6 +272,7 @@ public class VueTableau extends BorderPane implements Observateur {
             listeCases.add(text);
         }
 
+
         return caseNumero;
     }
 
@@ -355,6 +358,11 @@ public class VueTableau extends BorderPane implements Observateur {
                         + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
                         + "\n" + historique.getText());
             }
+        }
+
+        System.out.println("Notes : " + ModeleJeu.getPartie().getGestionnaireNotes().getNotes().size());
+        for (Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
+            System.out.println(note);
         }
 
         // On met à jour les cases du tableau
