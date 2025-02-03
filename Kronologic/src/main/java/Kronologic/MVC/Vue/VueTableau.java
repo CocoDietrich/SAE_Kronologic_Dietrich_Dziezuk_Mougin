@@ -1,9 +1,6 @@
 package Kronologic.MVC.Vue;
 
-import Kronologic.Jeu.Elements.Note;
-import Kronologic.Jeu.Elements.Personnage;
-import Kronologic.Jeu.Elements.Realite;
-import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
@@ -17,9 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,6 +34,7 @@ public class VueTableau extends BorderPane implements Observateur {
     public Button filmRealite;
     public TextArea historique;
     public List<TextCase> listeCases = new ArrayList<>();
+    public boolean temps1Instance = false;
 
     public VueTableau() {
         super();
@@ -203,7 +199,6 @@ public class VueTableau extends BorderPane implements Observateur {
         tableau.setAlignment(Pos.TOP_RIGHT);
         tableau.setVgap(12);
 
-
         for (int i = 0; i < 6; i++) {
             Image image = Images.Personnages.get(i);
             ImageView imageView = new ImageView(image);
@@ -350,6 +345,10 @@ public class VueTableau extends BorderPane implements Observateur {
 
     @Override
     public void actualiser() {
+        if (!temps1Instance){
+            creerNoteNombreTemps1();
+        }
+
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
         if (!ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
             if (historique.getText().isEmpty()) {
@@ -413,8 +412,18 @@ public class VueTableau extends BorderPane implements Observateur {
                             text.setEtat("présent");
 
                             // On met les autres cases en absent
-
-                            break;
+                            for (TextCase t : listeCases) {
+                                if (t.getInfo().contains("Nombre") &&
+                                        t.getInfo().contains(lieu) &&
+                                        t.getInfo().contains(String.valueOf(temps.getValeur())) &&
+                                        !Objects.equals(t.getEtat(), "présent")) {
+                                    t.setFill(Color.GRAY);
+                                    t.setStyle("-fx-font-weight: normal; " +
+                                            "-fx-strikethrough: true;" +
+                                            "-fx-cursor: hand;");
+                                    t.setEtat("absent");
+                                }
+                            }
                         }
                     }
                 }
@@ -475,5 +484,40 @@ public class VueTableau extends BorderPane implements Observateur {
         }
 
         return count;
+    }
+
+    public void creerNoteNombreTemps1(){
+        // On crée la liste de lieux
+        List<String> lieux = new ArrayList<>();
+
+        // On ajoute les lieux
+        for (int i = 0; i < 6; i++){
+            lieux.add(Images.Lieux.getLieux().get(i + 1));
+        }
+
+        // On compte le nombre d'occurence dans chaque lieu et on met à jour la liste
+        Map<String, Integer> occurences = new HashMap<>();
+
+        // On l'initialise
+        for (String s : lieux) {
+            occurences.put(s, 0);
+        }
+
+        // On met à jour à chauque fois
+        for(Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
+            if (note.getTemps().getValeur() == 1) {
+                occurences.replace(note.getLieu().getNom(), occurences.get(note.getLieu().getNom()) + 1);
+            }
+        }
+
+        // On crée les notes
+        for (int i = 0; i < occurences.size(); i++){
+            ModeleJeu.getPartie().getGestionnaireNotes()
+                    .ajouterNote(new Note(new Lieu(lieux.get(i), i+1, List.of()),
+                            new Temps(1),
+                            occurences.get(lieux.get(i))));
+        }
+
+        temps1Instance = true;
     }
 }

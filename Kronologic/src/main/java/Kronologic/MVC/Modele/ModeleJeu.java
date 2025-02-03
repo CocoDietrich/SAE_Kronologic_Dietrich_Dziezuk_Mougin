@@ -434,7 +434,6 @@ public class ModeleJeu implements Sujet {
     }
 
     public void ajouterPion(Note note, Image image, int x, int y) {
-        System.out.println(image.getUrl());
         Pion pion = new Pion(note, image.getUrl());
         pion.deplacerPion(x, y);
         partie.ajouterPion(pion);

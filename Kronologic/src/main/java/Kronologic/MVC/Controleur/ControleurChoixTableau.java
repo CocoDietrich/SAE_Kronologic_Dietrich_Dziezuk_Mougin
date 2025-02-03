@@ -80,7 +80,6 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 if (personnage != null) {
                     this.modeleJeu.ajouterNote(lieu, temps,  personnage);
                 } else {
-                    System.out.println("coucou");
                     this.modeleJeu.ajouterNote(lieu, temps, nbPersonnage);
                 }
                 break;

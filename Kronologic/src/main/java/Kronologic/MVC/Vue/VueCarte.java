@@ -919,6 +919,7 @@ public class VueCarte extends BorderPane implements Observateur {
                                             pion.setFitHeight(30);
                                             pion.setFitWidth(30);
                                         }
+
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
                                         pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
