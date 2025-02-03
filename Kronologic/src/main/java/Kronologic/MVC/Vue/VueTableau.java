@@ -19,6 +19,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -360,18 +361,16 @@ public class VueTableau extends BorderPane implements Observateur {
             }
         }
 
-        System.out.println("Notes : " + ModeleJeu.getPartie().getGestionnaireNotes().getNotes().size());
-        for (Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
-            System.out.println(note);
+        for (TextCase t : listeCases){
+            t.setFill(Color.LIGHTGRAY);
+            t.setStyle("-fx-font-weight: normal; " +
+                    "-fx-strikethrough: false;" +
+                    "-fx-cursor: hand;");
+            t.setEtat("neutre");
         }
 
         // On met à jour les cases du tableau
         for (TextCase text : listeCases) {
-            text.setFill(Color.LIGHTGRAY);
-            text.setStyle("-fx-font-weight: normal; " +
-                    "-fx-strikethrough: false;" +
-                    "-fx-cursor: hand;");
-            text.setEtat("neutre");
             List<String> elements = List.of("GF", "GE", "SA", "SC", "FD", "FC");
             String valeur = "";
             if (elements.contains(text.getText())) {
@@ -385,7 +384,6 @@ public class VueTableau extends BorderPane implements Observateur {
 
             String lieu = ""; // Pour le tableau de gauche
             String personnage = ""; // Pour le tableau de droite
-
 
             if (Images.Lieux.getLieux().containsValue(text.getInfo().split(" - ")[2])) {
                 lieu = text.getInfo().split(" - ")[2];
@@ -413,11 +411,14 @@ public class VueTableau extends BorderPane implements Observateur {
                                     "-fx-strikethrough: false;" +
                                     "-fx-cursor: hand;");
                             text.setEtat("présent");
+
+                            // On met les autres cases en absent
+
                             break;
                         }
                     }
                 }
-                else if (lieu.isEmpty() && note.getNbPersonnages() == 0){ // Pour le tableau de droite
+                else if (lieu.isEmpty() && note.getNbPersonnages() == 0 && note.getPersonnage() != null){ // Pour le tableau de droite
                     if (note.getPersonnage().getNom().equals(personnage)
                             && note.getTemps().getValeur() == temps.getValeur()
                             && note.getLieu().getNom().equals(valeur)){
@@ -435,10 +436,31 @@ public class VueTableau extends BorderPane implements Observateur {
                                     "-fx-strikethrough: false;" +
                                     "-fx-cursor: hand;");
                             text.setEtat("présent");
-                            break;
+
+                            // On met les autres cases en absent
+                            for (TextCase t : listeCases) {
+                                if (t.getInfo().contains("Lieu") &&
+                                        t.getInfo().contains(personnage) &&
+                                        t.getInfo().contains(String.valueOf(temps.getValeur())) &&
+                                        !Objects.equals(t.getEtat(), "présent")) {
+                                    t.setFill(Color.GRAY);
+                                    t.setStyle("-fx-font-weight: normal; " +
+                                            "-fx-strikethrough: true;" +
+                                            "-fx-cursor: hand;");
+                                    t.setEtat("absent");
+                                }
+                            }
                         }
                     }
                 }
+            }
+        }
+
+        // On enlève la possibilité de cliquer sur les pions du temps 1
+
+        for (TextCase t : listeCases){
+            if (t.getInfo().split(" - ")[1].equals("1")) {
+                t.setStyle(t.getStyle().split("-fx-cursor: hand;")[0] + "-fx-cursor: default;");
             }
         }
     }

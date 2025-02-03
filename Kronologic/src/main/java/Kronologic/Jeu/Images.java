@@ -190,6 +190,10 @@ public class Images {
             };
         }
 
+        public static List<Integer> getNombres() {
+            return List.of(0, 1, 2, 3, 4, 5);
+        }
+
         // Méthode pour récupérer l'URL
         public String getUrl() {
             return url;

@@ -89,7 +89,9 @@ public class ModeleAccueil implements Sujet {
                 vueFilmRealite.slider.valueProperty().addListener(controleurFilmRealite);
 
                 for (TextCase tc : vueTableau.listeCases){
-                    tc.setOnMouseClicked(controleurChoixTableau);
+                    if (!tc.getInfo().split(" - ")[1].equals("1")) {
+                        tc.setOnMouseClicked(controleurChoixTableau);
+                    }
                 }
 
                 vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);

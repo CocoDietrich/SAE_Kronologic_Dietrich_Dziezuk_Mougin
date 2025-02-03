@@ -252,7 +252,8 @@ public class ModeleJeu implements Sujet {
         }
         assert vueCarte != null;
 
-        Pion pion = new Pion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))).getUrl());
+        Pion pion = new Pion(n,
+                Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))).getUrl());
         pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
 
         ajouterPion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))), 0, 0);
@@ -262,7 +263,7 @@ public class ModeleJeu implements Sujet {
         notifierObservateurs();
     }
 
-    // Méthode permettant de stocker les déplacements de pions de personnage du joueur
+    // Méthode permettant de stocker les déplacements de pions de nombers du joueur
     public void ajouterNote(Lieu l, Temps t, int nbPersonnages) {
         Note n = new Note(l, t, nbPersonnages);
         VueCarte vueCarte = null;
@@ -275,8 +276,13 @@ public class ModeleJeu implements Sujet {
         assert vueCarte != null;
 
         // On ajoute la note à la liste des notes
-        partie.ajouterNote(n);
+        Pion pion = new Pion(n,
+                Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)).getUrl());
+        pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
 
+        ajouterPion(n, Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)), 0, 0);
+
+        vueCarte.pions.add(pion);
         notifierObservateurs();
     }
 
@@ -339,7 +345,7 @@ public class ModeleJeu implements Sujet {
         partie.modifierNote(n, absence, hypothese);
 
         for (Pion pion : vueCarte.pions) {
-            if (pion.getNote().equals(n)) {
+            if (pion.getNote() != null && pion.getNote().equals(n)) {
                 pion.getNote().setEstAbsence(absence);
                 pion.getNote().setEstHypothese(hypothese);
             }
@@ -410,7 +416,7 @@ public class ModeleJeu implements Sujet {
         assert vueCarte != null;
 
         for (Pion pion : vueCarte.pions) {
-            if (pion.getNote().equals(n)) {
+            if (pion.getNote() != null && pion.getNote().equals(n)) {
                 vueCarte.pions.remove(pion);
                 vueCarte.getChildren().remove(pion);
                 supprimerPion(pion);
@@ -428,6 +434,7 @@ public class ModeleJeu implements Sujet {
     }
 
     public void ajouterPion(Note note, Image image, int x, int y) {
+        System.out.println(image.getUrl());
         Pion pion = new Pion(note, image.getUrl());
         pion.deplacerPion(x, y);
         partie.ajouterPion(pion);

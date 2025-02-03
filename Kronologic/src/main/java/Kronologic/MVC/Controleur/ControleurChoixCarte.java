@@ -25,7 +25,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
     @Override
     public void handle(DragEvent dragEvent) {
-        System.out.println("--------------------");
+        //System.out.println("--------------------");
         Pion pionAvant = (Pion) dragEvent.getGestureSource();
 
         VueCarte vueCarte = null;
@@ -204,9 +204,9 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
         }
 
-        System.out.println("Liste des notes : ");
-        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
-            System.out.println(n);
-        }
+//        System.out.println("Liste des notes : ");
+//        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
+//            System.out.println(n);
+//        }
     }
 }

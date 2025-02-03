@@ -880,8 +880,7 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // On actualise les pions
         for (Pion pion : pions) {
-            if (pion.getUserData() != null) {
-                String placement = (String) pion.getUserData();
+            if (pion.getUserData() != null && pion.getUserData() instanceof String placement) {
                 // Cas où faut le placer
                 if (placement.split("-").length == 2) {
                     for (Polygon zone : zonesDeJeu) {
@@ -899,8 +898,14 @@ public class VueCarte extends BorderPane implements Observateur {
                                     }
                                     if (pion.getUserData() == placement) {
                                         pion.setUserData(zone.getUserData());
-                                        pion.setFitWidth(30);
-                                        pion.setFitHeight(30);
+
+                                        if (pion.getNote().getPersonnage() == null) {
+                                            pion.setFitHeight(47.5);
+                                            pion.setFitWidth(47.5);
+                                        } else {
+                                            pion.setFitHeight(30);
+                                            pion.setFitWidth(30);
+                                        }
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
                                         pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
