@@ -84,10 +84,8 @@ public class TestPartieSupprimerNote {
     public void test_01_supprimerNote() {
         Note note = new Note(new Lieu("Salle", 3, List.of()), new Temps(1), new Personnage("Aventurière"));
         partie.ajouterNote(note);
-        System.out.println(partie.getHistorique());
         assertEquals(1, partie.getHistorique().get(0).size(), "La note devrait être ajoutée");
         partie.supprimerNote(note);
-        System.out.println(partie.getHistorique());
         assertFalse(partie.getGestionnaireNotes().getNotes().contains(note), "La note devrait être supprimée");
         assertEquals(0, partie.getHistorique().get(0).size(), "La note devrait être ajoutée");
     }

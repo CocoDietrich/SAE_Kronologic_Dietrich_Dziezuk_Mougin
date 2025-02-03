@@ -1,0 +1,138 @@
+Fonctionnalités développées au cours de l'itération 3 :
+
+- Permettre au joueur de visualiser les règles
+
+Condition de validation :
+    - Un bouton permet au joueur d’afficher les règles du jeu ainsi que le rôle de chaque bouton.
+
+
+- Permettre au joueur de visualiser le film des déplacements des personnages
+
+Condition de validation :
+    - Un bouton permet d’afficher le trajet que les personnages ont suivis, conformément au scénario de l’enquête.
+    - Un bouton permet d’afficher le trajet de chacun des personnages selon les hypothèses du joueur.
+
+
+- Réalisation de l'IA de déduction utilisant Choco-Solver
+  (l'IA de déduction heuristique sera capable de faire la même chose une fois terminée)
+
+Cette IA est capable de :
+    - Analyser les indices collectés et en tirer des conclusions logiques
+
+    Conditions de validation :
+        - L’IA croise les indices disponibles et déduit des informations supplémentaires non explicites avec les indices.
+          Ces conclusions sont affichées dans un historique de déduction, lorsque le joueur le demande.
+        - Les suspects impossibles sont exclus en temps réel après chaque nouvel indice.
+
+    - Proposer une hypothèse logique basée sur les indices
+
+    Conditions de validation :
+        - L’IA utilise les indices pour formuler une hypothèse probable (coupable, lieu, moment).
+        - L’hypothèse est mise en évidence dans l’historique des déductions.
+
+
+
+Cas d'utilisation développés au cours de l'itération 3 :
+
+- Cas d’utilisation : Permettre au joueur de visualiser les règles
+
+Acteur principal : Joueur.
+Objectifs : Offrir un accès rapide et clair aux règles du jeu pour aider le joueur à comprendre les fonctionnalités qui lui sont proposées.
+Préconditions : Une partie est en cours et le joueur souhaite consulter les règles.
+Postconditions : Les règles sont affichées et lisibles.
+Scénario principal :
+- Le joueur appuie sur le bouton Règles du jeu.
+- Une fenêtre ou une page dédiée s’ouvre, affichant les règles complètes.
+- Les règles incluent les explications sur :
+    - Les déplacements des personnages.
+    - Les indices publics et privés.
+    - Les conditions de victoire.
+    - L’utilisation des pions et hypothèses.
+- Le joueur peut revenir à l’interface principale.
+
+
+- Cas d’utilisation : Permettre au joueur de visualiser les films des déplacements des personnages
+
+Acteur principal : Joueur.
+Objectifs : Montrer les trajets suivis par les personnages, selon les scénarios et les hypothèses du joueur.
+Préconditions : Une partie est en cours et le joueur a formulé des hypothèses et renseigné des informations.
+Postconditions : Les trajets des personnages sont affichés selon le choix du joueur.
+Scénario principal :
+- Soit le joueur appuie sur le bouton Film des déplacements du Joueur :
+    - Afficher les déplacements hypothétiques selon les pions placés par le joueur.
+- Soit le joueur appuie sur le bouton Film des déplacements du Partie :
+    - Afficher les déplacements réels des personnages selon le scénario.
+- Le film des déplacements s’affiche à l’écran.
+- Le joueur peut repasser ou quitter le film à tout moment.
+
+
+- Cas d’utilisation : Analyser les indices collectés et en tirer des conclusions logiques
+
+Acteur principal : IA de déduction (heuristique et Choco-Solver).
+Objectifs : Exploiter les indices disponibles pour produire des déductions logiques supplémentaires et tenir à jour un historique des déductions.
+Préconditions : Des indices ont été collectés par le joueur ou par l’IA.
+Postconditions : Les informations déduites sont visibles dans un historique de déduction et les suspects impossibles sont exclus en temps réel.
+Scénario principal :
+- L’IA examine les indices collectés.
+- Elle croise les données pour identifier des relations logiques non explicites (par exemple, un personnage innocenté en fonction de sa localisation).
+- Les suspects impossibles sont automatiquement écartés des hypothèses.
+- Les déductions supplémentaires sont enregistrées et mises à jour dans l’historique.
+- Le joueur peut consulter l’historique en appuyant sur le bouton Déduction de l’IA.
+
+
+- Cas d’utilisation : Proposer une hypothèse logique basée sur les indices
+
+Acteur principal : IA de déduction (heuristique et Choco-Solver).
+Objectifs : Formuler une hypothèse probable concernant le coupable, le lieu et le moment du crime.
+Préconditions : Des indices suffisants ont été collectés pour permettre à l’IA de formuler une hypothèse.
+Postconditions : Une hypothèse logique est générée et affichée dans l’historique des déductions.
+Scénario principal :
+- L’IA examine les indices disponibles pour identifier les suspects potentiels, le lieu probable du crime et l’heure associée.
+- Elle génère une hypothèse basée sur une analyse logique des données.
+- Cette hypothèse est mise en avant dans l’historique des déductions.
+- Le joueur peut consulter cette hypothèse en appuyant sur le bouton Déduction de l’IA.
+
+
+- Cas d’utilisation : Permettre au joueur de formuler des hypothèses
+
+Acteur principal : Joueur.
+Objectifs : Offrir au joueur la possibilité de formuler et d’enregistrer des hypothèses sur les positions des personnages, en fonction de la vue choisie.
+Préconditions : Le joueur a récolté des indices et souhaite les exploiter pour formuler des hypothèses.
+Postconditions : Les hypothèses sont enregistrées et visibles dans la vue carte uniquement.
+Scénario principal :
+- Le joueur utilise l’interface pour formuler ses hypothèses :
+    Vue Carte :
+    - Le joueur place des pions sur les lieux des cartes.
+    - Les pions peuvent être configurés en hypothèses, absences, ou hypothèses d’absence à l’aide des cases à cocher disponibles.
+    Vue Tableaux :
+    - Le joueur renseigne directement les indices dans les tableaux.
+    - Il indique les présences et le nombre de personnages par lieu et par pas de temps.
+- Les hypothèses sont enregistrées dans le système.
+- Les hypothèses peuvent être modifiées ou supprimées par le joueur.
+
+(Nous n'avions pas prévu de cas d'utilisation pour la gestion des notes du joueur. Cependant, cette fonctionnalité
+a bien été développée et intégrée au jeu.)
+
+
+Rôle des membres du groupe :
+
+Mathieu :
+
+- Terminer la réalisation de l'IA de déduction utilisant Choco-Solver.
+- Commencer le développement de l'IA de déduction heuristique.
+- Analyser les indices collectés et en tirer des conclusions logiques.
+- Proposer une hypothèse logique basée sur les indices.
+
+Enzo :
+
+- Permettre au joueur de visualiser le film des déplacements des personnages.
+- Réaliser un jeu de tests permettant de vérifier le bon fonctionnement des fonctionnalités développées.
+
+Corentin :
+
+- Permettre au joueur de visualiser les règles.
+- Gestion des pions et des notes du joueur.
+
+Enzo et Corentin :
+
+- Gestion du placement automatique des pions et des sous-zones.

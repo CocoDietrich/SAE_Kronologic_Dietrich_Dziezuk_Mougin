@@ -155,8 +155,6 @@ public class TestPartieMAJHistorique {
         // Ajout de la note
         partie.ajouterNote(n2);
 
-        System.out.println(partie.getHistorique());
-
         // Vérification de la mise à jour de l'historique
         assertEquals(2, partie.getHistorique().size());
         assertEquals(n2, partie.getHistorique().get(1).getLast());

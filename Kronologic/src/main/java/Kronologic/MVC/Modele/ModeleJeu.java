@@ -480,10 +480,10 @@ public class ModeleJeu implements Sujet {
         Collections.sort(tours);
 
         // Parcourir chaque tour dans l'ordre
-        if (tours.isEmpty()) {
-            System.out.println("Aucune note n'a été posé.");
-            return;
-        }
+//        if (tours.isEmpty()) {
+//            System.out.println("Aucune note n'a été posé.");
+//            return;
+//        }
         for (int i = 0; i <= tours.getLast(); i++) {
             System.out.println("--------------------");
             // Afficher le numéro du tour
@@ -565,7 +565,6 @@ public class ModeleJeu implements Sujet {
             }
         }
 
-        System.out.println(vueRegle.retour.getOnAction());
 
         BorderPane bp = new BorderPane(vueRegle);
 
