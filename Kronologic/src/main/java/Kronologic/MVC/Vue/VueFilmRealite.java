@@ -510,7 +510,6 @@ public class VueFilmRealite extends GridPane implements Observateur {
         // On affiche le tour actuel dans le terminal
         // On en profite pour créer les pions du tour actuel
         List<Pion> pionsTourActuel = new ArrayList<>();
-        System.out.println("Tour " + Math.round(slider.getValue()) + " :");
         for (Realite r : positions) {
             if (r.getTemps().getValeur() == Math.round(slider.getValue())) {
                 String img = "";
@@ -521,9 +520,7 @@ public class VueFilmRealite extends GridPane implements Observateur {
                         break;
                     }
                 }
-
                 pionsTourActuel.add(new Pion(new Note(r.getLieu(), r.getTemps(), r.getPersonnage()), img));
-                System.out.println(r.toString());
             }
         }
 

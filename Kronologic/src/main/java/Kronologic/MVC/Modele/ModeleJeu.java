@@ -396,6 +396,10 @@ public class ModeleJeu implements Sujet {
             }
         }
 
+        if (partie.getGestionnaireNotes().getNotes().contains(n)){
+            partie.supprimerNote(n);
+        }
+
         notifierObservateurs();
     }
 
@@ -433,6 +437,10 @@ public class ModeleJeu implements Sujet {
                 }
                 break;
             }
+        }
+
+        if (partie.getGestionnaireNotes().getNotes().contains(n)){
+            partie.supprimerNote(n);
         }
 
         notifierObservateurs();

@@ -892,30 +892,6 @@ public class VueCarte extends BorderPane implements Observateur {
                 }
             }
         }
-
-//        Polygon zone = zonesDeJeu.stream()
-//                .filter(p -> p.getUserData().equals(finalUserDataZone))
-//                .findFirst()
-//                .orElse(null);
-//
-//        if (zone != null) {
-//            System.out.println("Zone trouvée : " + zone.getUserData());
-//            // Créer le pion et définir ses propriétés
-//            Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
-//            pion.setFitHeight(30);
-//            pion.setFitWidth(30);
-//            Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
-//            System.out.println("Point : " + point);
-//            pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
-//            pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
-//            System.out.println("Layout : " + pion.getLayoutX() + " " + pion.getLayoutY());
-//            pion.setPreserveRatio(true);
-//            pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
-//            pion.setUserData(userDataZone);
-//
-//            this.getChildren().add(pion);
-//            this.zonesContenantPions.add(zone);
-//        }
     }
 
     @Override
@@ -933,6 +909,9 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // On actualise les pions
         for (Pion pion : pions) {
+            if (pion.getNote() == null){
+                continue;
+            }
             if (pion.getUserData() != null && pion.getUserData() instanceof String placement) {
                 // Cas où faut le placer
                 if (placement.split("-").length == 2) {
@@ -951,7 +930,9 @@ public class VueCarte extends BorderPane implements Observateur {
                                     }
                                     if (pion.getUserData() == placement) {
                                         pion.setUserData(zone.getUserData());
+                                        pion.setId(pion.getImage().getUrl());
 
+                                        // On cherche à modifier l'image du pion
                                         if (pion.getNote().getPersonnage() == null) {
                                             pion.setFitHeight(47.5);
                                             pion.setFitWidth(47.5);
@@ -963,7 +944,6 @@ public class VueCarte extends BorderPane implements Observateur {
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);
                                         pion.setLayoutY(point.getY() - pion.getFitHeight() / 2);
-                                        pion.setId(pion.getImage().getUrl());
                                         pion.setPreserveRatio(true);
                                         pion.setStyle("-fx-cursor: hand;");
 
@@ -998,11 +978,41 @@ public class VueCarte extends BorderPane implements Observateur {
                         }
                     }
                 }
+                else {
+                    // On regarde s'il faut changer les images
+                    // Cas où il faut changer l'image en absence
+                    if (pion.getNote().estAbsence() && !(pion.getId()).contains("absence")){
+                        // On regarde si c'est un pion de nombre
+                        if (pion.getId().contains("Pion de Nombres")){
+                            pion.setImageView("file:img/pions_nombres/pions_absences/Pion de Nombres_" + pion.getNote().getNbPersonnages() + ".png");
+                            pion.setId("file:img/pions_nombres/pions_absences/Pion de Nombres_" + pion.getNote().getNbPersonnages() + ".png");
+                        }
+                        else {
+                            pion.setImageView("file:img/pions_personnages/pions_absences/" + pion.getNote().getPersonnage().getNom() + ".png");
+                            pion.setId("file:img/pions_personnages/pions_absences/" + pion.getNote().getPersonnage().getNom() + ".png");
+                        }
+                    }
+                    // Cas inverse
+                    else if (!pion.getNote().estAbsence() && ((String)pion.getUserData()).contains("absence")){
+                        // On regarde si c'est un pion de nombre
+                        if (((String) pion.getUserData()).contains("Pion de Nombres")){
+                            pion.setImageView("file:img/pions_nombres/Pion de Nombres_" + pion.getNote().getNbPersonnages() + ".png");
+                            pion.setId("file:img/pions_nombres/Pion de Nombres_" + pion.getNote().getNbPersonnages() + ".png");
+                        }
+                        else {
+                            pion.setImageView("file:img/pions_personnages/" + pion.getNote().getPersonnage().getNom() + ".png");
+                            pion.setId("file:img/pions_personnages/" + pion.getNote().getPersonnage().getNom() + ".png");
+                        }
+                    }
+                }
             }
         }
 
         // On actualise les images des pions
         for (Pion p : pions) {
+            if (p.getId() == null) {
+                continue;
+            }
             if (p.getUserData() == null || p.getUserData() instanceof Integer) {
                 String nomPion = p.getId().substring(p.getId().lastIndexOf("/") + 1, p.getId().lastIndexOf("."));
                 // Si on a coché les deux options "Hypothèse" et "Absence"
