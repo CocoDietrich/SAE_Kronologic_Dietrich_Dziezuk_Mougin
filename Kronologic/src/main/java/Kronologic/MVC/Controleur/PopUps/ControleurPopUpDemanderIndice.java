@@ -1,6 +1,7 @@
 package Kronologic.MVC.Controleur.PopUps;
 
 import Kronologic.MVC.Modele.ModeleJeu;
+import Kronologic.MVC.Vue.VueIndiceRecommande;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -22,7 +23,13 @@ public class ControleurPopUpDemanderIndice implements EventHandler<ActionEvent> 
         if (((Button) actionEvent.getSource()).getId().equals("annuler")) {
             stage.close();
         } else if (((Button) actionEvent.getSource()).getId().equals("valider")) {
-            this.modele.demanderIndice();
+            String message = modele.demanderIndice();  // Récupérer la question optimisée
+            String erreurs = modele.afficherMauvaisesDeductions();  // Récupérer les erreurs du joueur
+
+            VueIndiceRecommande vue = new VueIndiceRecommande(message, erreurs);
+            vue.afficher();
+            modele.notifierObservateurs();
+            stage.close();
         }
     }
 }
