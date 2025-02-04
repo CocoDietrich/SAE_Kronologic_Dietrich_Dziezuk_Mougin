@@ -538,20 +538,8 @@ public class ModeleJeu implements Sujet {
         Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
         stage.setScene(scene);
         stage.show();
-
-        // Récupération du déroulement de la partie
-        List<Realite> positions = partie.getDeroulement().getListePositions();
-
-        for (int i = 1; i < 7; i++) {
-            System.out.println("--------------------");
-            System.out.println("Tour " + i + " :");
-            for (Realite r : positions) {
-                if (r.getTemps().getValeur() == i) {
-                    System.out.println(r.toString());
-                }
-            }
-        }
     }
+
 
     public void actualiserFilmRealite() {
         VueFilmRealite vueFilmRealite = null;
@@ -561,24 +549,20 @@ public class ModeleJeu implements Sujet {
                 break;
             }
         }
-
         assert vueFilmRealite != null;
 
-        for (Node node : vueFilmRealite.getChildren()) {
-            if (node instanceof HBox h) {
-                if (h.getId() != null) {
-                    if (h.getId().equals("carte")) {
-                        vueFilmRealite.getChildren().remove(h);
-                        // On met à jour la carte
-                        HBox nouvelleHbox = vueFilmRealite.afficherCarte(this);
-                        vueFilmRealite.add(nouvelleHbox, 1, 1);
-                        break;
-                    }
-                }
-            }
-        }
+        // On supprime et recrée la carte pour éviter les doublons
+        vueFilmRealite.getChildren().removeIf(node ->
+                node instanceof HBox && "carte".equals(((HBox) node).getId())
+        );
+
+        HBox nouvelleHbox = vueFilmRealite.afficherCarte(this);
+        vueFilmRealite.add(nouvelleHbox, 1, 1);
+
+        // Actualisation finale
         vueFilmRealite.actualiser();
     }
+
 
     public void visualiserRegle(Stage stage) {
         VueRegle vueRegle = new VueRegle();

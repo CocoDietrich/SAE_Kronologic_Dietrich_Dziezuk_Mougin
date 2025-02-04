@@ -22,9 +22,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
@@ -848,13 +846,33 @@ public class VueCarte extends BorderPane implements Observateur {
                     pion.setPreserveRatio(true);
                     pion.setStyle("-fx-cursor: default;"); // Curseur par défaut (pas de drag and drop)
 
-                    Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
-                    System.out.println("Point : " + point);
-                    pion.setLayoutX(point.getX() - pion.getFitWidth());
-                    pion.setLayoutY(point.getY() - pion.getFitHeight());
+                    // On calcule la position du pion dans la grille par rapport à la sous zone
+                    int positionX = 0;
+                    int positionY = 0;
+                    int index = Integer.parseInt(((String) zone.getUserData()).split("-SousZone")[1]);
+                    // Cas des 4 premières zones
+                    // [1, 2]
+                    // [3, 4]
+                    // [5, 6]
+                    switch (index) {
+                        case 2 -> positionX = 1;
+                        case 3 -> positionY = 1;
+                        case 4 -> {
+                            positionX = 1;
+                            positionY = 1;
+                        }
+                        case 5 -> positionY = 2;
+                        case 6 -> {
+                            positionX = 1;
+                            positionY = 2;
+                        }
+                    }
 
                     // On ajoute le pion à la liste des pions
                     pions.add(pion);
+
+                    GridPane.setColumnIndex(pion, positionX);
+                    GridPane.setRowIndex(pion, positionY);
 
                     for (int i = 1; i < Images.Lieux.getLieux().size()+1; i++){
                         if (userDataZone.contains(Images.Lieux.getLieux().get(i))){
