@@ -52,41 +52,47 @@ public class IAAssistanceChocoSolver extends IAAssistance {
     @Override
     public String corrigerDeductions() {
         StringBuilder correction = new StringBuilder();
-        correction.append("===== Correction des Déductions du Joueur =====\n");
 
         // Récupération des notes du joueur
         List<Note> notesJoueur = partie.getGestionnaireNotes().getNotes();
-
-        // Vérification rapide : si le joueur n'a fait aucune hypothèse, inutile de continuer
-        if (notesJoueur.isEmpty()) {
-            correction.append("Aucune hypothèse à corriger.\n");
-            return correction.toString();
-        }
 
         // Récupération des positions de l'IA Choco-Solver
         IntVar[][] positionsIA = deduction.getModele().getPositions();
 
         // Comparaison des hypothèses du joueur avec celles de l'IA
         for (Note note : notesJoueur) {
-            if (note.estHypothese()) { // On ne vérifie que les hypothèses du joueur
-                int indexPersonnage = deduction.getModele().getIndexPersonnage(note.getPersonnage().getNom());
+            // on ne s'occupe pas des pions du temps 1 et des notes de nombre de perso dans une salle
+            if (note.getTemps().getValeur() != 1 || note.getPersonnage() != null) {
+                int indexPersonnage = deduction.getModele().getIndexPersonnage(note.getPersonnage().getNom().substring(0, 1));
                 int temps = note.getTemps().getValeur() - 1;
                 int lieuJoueur = note.getLieu().getId();
 
-                // Vérifier si l'IA exclut ce lieu pour ce personnage à ce temps
-                if (!positionsIA[indexPersonnage][temps].contains(lieuJoueur)) {
-                    correction.append(String.format("⚠️ Erreur : %s ne peut pas être en %s au temps %d ! ❌\n",
-                            note.getPersonnage().getNom(), note.getLieu().getNom(), note.getTemps().getValeur()));
+                IntVar domaineIA = positionsIA[indexPersonnage][temps];
+
+                if (!note.estAbsence() && !note.estHypothese()) { // Présence
+                    if (!domaineIA.contains(lieuJoueur)) {
+                        correction.append(String.format("⚠️ Erreur : La note de présence sur %s en %s au temps %d est fausse. ❌\n",
+                                note.getPersonnage().getNom(), note.getLieu().getNom(), note.getTemps().getValeur()));
+                    }
+                } else if (note.estAbsence() && !note.estHypothese()) { // Absence
+                    if (domaineIA.contains(lieuJoueur)) {
+                        correction.append(String.format("⚠️ Erreur : La note d'absence de %s en %s au temps %d est fausse. ❌\n",
+                                note.getPersonnage().getNom(), note.getLieu().getNom(), note.getTemps().getValeur()));
+                    }
+                }else if (note.estAbsence() && note.estHypothese()) { // Hypothèse d'absence
+                    if (domaineIA.contains(lieuJoueur)) {
+                        correction.append(String.format("⚠️ Erreur : L'hypothèse d'absence de %s en %s au temps %d est fausse. ❌\n",
+                                note.getPersonnage().getNom(), note.getLieu().getNom(), note.getTemps().getValeur()));
+                    }
                 }
             }
         }
 
         // Si aucune erreur trouvée
-        if (correction.toString().equals("===== Correction des Déductions du Joueur =====\n")) {
+        if (correction.isEmpty()) {
             correction.append("✅ Toutes vos hypothèses sont correctes ! 🎉\n");
         }
 
         return correction.toString();
     }
-
 }

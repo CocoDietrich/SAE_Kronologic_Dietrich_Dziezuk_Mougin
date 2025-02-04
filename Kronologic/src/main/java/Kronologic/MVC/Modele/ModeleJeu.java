@@ -476,7 +476,7 @@ public class ModeleJeu implements Sujet {
     }
 
     public String afficherMauvaisesDeductions() {
-        return iaAssistanceHeuristique.corrigerDeductions();
+        return iaAssistanceChocoSolver.corrigerDeductions();
     }
 
     public void visualiserFilmJoueur(Stage stage) {
