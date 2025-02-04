@@ -44,6 +44,9 @@ public class VueCarte extends BorderPane implements Observateur {
     public TextArea historique;
     public CheckBox hypothese;
     public CheckBox absence;
+    public CheckBox masquerHypothese;
+    public CheckBox afficherPresences;
+    public CheckBox afficherAbsences;
     public List<Polygon> zonesDeJeu = new ArrayList<>();
     public List<Polygon> zonesContenantPions = new ArrayList<>();
     public List<Pion> pions = new ArrayList<>();
@@ -121,7 +124,7 @@ public class VueCarte extends BorderPane implements Observateur {
         ImageView pionNombre = afficherPionNombre();
         hypothese = afficherHypothese();
         absence = afficherAbsence();
-        CheckBox masquerHypothese = afficherMasquerHypothese();
+        masquerHypothese = afficherMasquerHypothese();
         masquerHypothese.setAlignment(Pos.CENTER);
         hboxBas.getChildren().addAll(hypothese, pionNombre, absence);
         hboxBas.setAlignment(Pos.CENTER);
@@ -395,6 +398,8 @@ public class VueCarte extends BorderPane implements Observateur {
                 // Ajout de la zone où on a déposé le pion à la liste des zones contenant des pions
                 zonesContenantPions.add(polygon);
 
+                System.out.println(event.getGestureSource());
+
                 if (db.hasImage()) {
 
                     // Création du pion déplacé
@@ -405,6 +410,10 @@ public class VueCarte extends BorderPane implements Observateur {
                     } else {
                         pionDeplace.setFitHeight(30);
                         pionDeplace.setFitWidth(30);
+                        if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("hypotheses")) {
+                            pionDeplace.setScaleX(1.3);
+                            pionDeplace.setScaleY(1.3);
+                        }
                     }
                     pionDeplace.setId(event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                     pionDeplace.setPreserveRatio(true);
@@ -500,7 +509,6 @@ public class VueCarte extends BorderPane implements Observateur {
                 .orElse(null);
     }
 
-
     private HBox afficherPionsPersonnages() {
         HBox pionsPersonnages = new HBox(15);
         pionsPersonnages.setAlignment(Pos.CENTER);
@@ -571,9 +579,21 @@ public class VueCarte extends BorderPane implements Observateur {
                         int value = Integer.parseInt(input); // Vérifie que c'est un entier
                         if (value >= 0 && value <= 5) {
                             // Mise à jour de l'image du pion
-                            pionNombre.setImage(new Image(imagesPionNombre[value + 1]));
+                            String nomImage = imagesPionNombre[value + 1].substring(imagesPionNombre[value + 1].lastIndexOf("/") + 1);
                             pionNombre.setUserData(value);
-                            pionNombre.setId(imagesPionNombre[value + 1]);
+                            if (!hypothese.isSelected() && !absence.isSelected()) {
+                                pionNombre.setImageView(imagesPionNombre[value + 1]);
+                                pionNombre.setId(imagesPionNombre[value + 1]);
+                            } else if (hypothese.isSelected() && absence.isSelected()) {
+                                pionNombre.setImageView("file:img/pions_nombres/pions_hypotheses_absences/" + nomImage);
+                                pionNombre.setId("file:img/pions_nombres/pions_hypotheses_absences/" + nomImage);
+                            } else if (hypothese.isSelected()) {
+                                pionNombre.setImageView("file:img/pions_nombres/pions_hypotheses/" + nomImage);
+                                pionNombre.setId("file:img/pions_nombres/pions_hypotheses/" + nomImage);
+                            } else {
+                                pionNombre.setImageView("file:img/pions_nombres/pions_absences/" + nomImage);
+                                pionNombre.setId("file:img/pions_nombres/pions_absences/" + nomImage);
+                            }
                         } else {
                             showAlert("Le nombre doit être entre 0 et 5 !");
                         }
@@ -791,10 +811,12 @@ public class VueCarte extends BorderPane implements Observateur {
     }
 
     public List<CheckBox> afficherPresenceAbsence() {
-        CheckBox afficherPresences = new CheckBox("Afficher les présences");
+        afficherPresences = new CheckBox("Afficher les présences");
+        afficherPresences.setSelected(true);
         afficherPresences.setStyle("-fx-text-fill: #FFCC66; -fx-font-size: 12px;");
 
-        CheckBox afficherAbsences = new CheckBox("Afficher les absences");
+        afficherAbsences = new CheckBox("Afficher les absences");
+        afficherAbsences.setSelected(true);
         afficherAbsences.setStyle("-fx-text-fill: #FFCC66; -fx-font-size: 12px;");
 
         return List.of(afficherPresences, afficherAbsences);
@@ -957,6 +979,85 @@ public class VueCarte extends BorderPane implements Observateur {
                             break;
                         }
                     }
+                }
+            }
+        }
+
+        // On actualise les images des pions
+        for (Pion p : pions) {
+            if (p.getUserData() == null || p.getUserData() instanceof Integer) {
+                String nomPion = p.getId().substring(p.getId().lastIndexOf("/") + 1, p.getId().lastIndexOf("."));
+                // Si on a coché les deux options "Hypothèse" et "Absence"
+                if (hypothese.isSelected() && absence.isSelected()) {
+                    // On change l'image en pion d'hypothèse d'absence
+                    if (nomPion.contains("Pion de Nombres")) {
+                        p.setImageView("file:img/pions_nombres/pions_hypotheses_absences/" + nomPion + ".png");
+                        p.setId("file:img/pions_nombres/pions_hypotheses_absences/" + nomPion + ".png");
+                    } else {
+                        p.setImageView("file:img/pions_personnages/pions_hypotheses_absences/" + nomPion + ".png");
+                        p.setScaleX(1.3);
+                        p.setScaleY(1.3);
+                        p.setId("file:img/pions_personnages/pions_hypotheses_absences/" + nomPion + ".png");
+                    }
+                // Si on a coché l'option "Hypothèse"
+                } else if (hypothese.isSelected()) {
+                    // On change l'image en pion d'hypothèse
+                    if (nomPion.contains("Pion de Nombres")) {
+                        p.setImageView("file:img/pions_nombres/pions_hypotheses/" + nomPion + ".png");
+                        p.setId("file:img/pions_nombres/pions_hypotheses/" + nomPion + ".png");
+                    } else {
+                        p.setImageView("file:img/pions_personnages/pions_hypotheses/" + nomPion + ".png");
+                        p.setScaleX(1.3);
+                        p.setScaleY(1.3);
+                        p.setId("file:img/pions_personnages/pions_hypotheses/" + nomPion + ".png");
+                    }
+                // Si on a coché l'option "Absence"
+                } else if (absence.isSelected()) {
+                    // On change l'image en pion d'absence
+                    if (nomPion.contains("Pion de Nombres")) {
+                        p.setImageView("file:img/pions_nombres/pions_absences/" + nomPion + ".png");
+                        p.setId("file:img/pions_nombres/pions_absences/" + nomPion + ".png");
+                    } else {
+                        p.setImageView("file:img/pions_personnages/pions_absences/" + nomPion + ".png");
+                        p.setScaleX(1);
+                        p.setScaleY(1);
+                        p.setId("file:img/pions_personnages/pions_absences/" + nomPion + ".png");
+                    }
+                }
+                // Si on a coché aucune option
+                if (!hypothese.isSelected() && !absence.isSelected()) {
+                    // On change l'image en pion normal
+                    if (nomPion.contains("Pion de Nombres")) {
+                        p.setImageView("file:img/pions_nombres/" + nomPion + ".png");
+                        p.setId("file:img/pions_nombres/" + nomPion + ".png");
+                    } else {
+                        p.setImageView("file:img/pions_personnages/" + nomPion + ".png");
+                        p.setScaleX(1);
+                        p.setScaleY(1);
+                        p.setId("file:img/pions_personnages/" + nomPion + ".png");
+                    }
+                }
+            }
+        }
+
+        // On affiche ou pas les pions de présence, d'hypothèse, d'absence et d'hypothèse d'absence
+        // en fonction des checkbox cochées
+        for (Pion p : pions) {
+            if (p.getUserData() != null && !(p.getUserData() instanceof Integer)) {
+                if (masquerHypothese.isSelected()) {
+                    if (p.getId().contains("hypotheses")) {
+                        p.setVisible(false);
+                    }
+                } else if (!afficherPresences.isSelected()) {
+                    if (!p.getId().contains("hypotheses") && !p.getId().contains("absences")) {
+                        p.setVisible(false);
+                    }
+                } else if (!afficherAbsences.isSelected()) {
+                    if (p.getId().contains("absences")) {
+                        p.setVisible(false);
+                    }
+                } else {
+                    p.setVisible(true);
                 }
             }
         }

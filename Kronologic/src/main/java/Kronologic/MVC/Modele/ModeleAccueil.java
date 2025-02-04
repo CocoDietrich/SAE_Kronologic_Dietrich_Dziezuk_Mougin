@@ -64,6 +64,7 @@ public class ModeleAccueil implements Sujet {
                 ControleurVisualiserFilmRealite controleurVisualiserFilmRealite = new ControleurVisualiserFilmRealite(modeleJeu);
                 ControleurFilmJoueur controleurFilmJoueur = new ControleurFilmJoueur(modeleJeu);
                 ControleurFilmRealite controleurFilmRealite = new ControleurFilmRealite(modeleJeu);
+                ControleurImagePions controleurImagePions = new ControleurImagePions(modeleJeu);
 
                 vueCarte.retour.setOnAction(controleurQuitter);
                 vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
@@ -73,6 +74,11 @@ public class ModeleAccueil implements Sujet {
                 vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
                 vueCarte.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
                 vueCarte.filmRealite.setOnAction(controleurVisualiserFilmRealite);
+                vueCarte.hypothese.setOnAction(controleurImagePions);
+                vueCarte.absence.setOnAction(controleurImagePions);
+                vueCarte.masquerHypothese.setOnAction(controleurImagePions);
+                vueCarte.afficherPresences.setOnAction(controleurImagePions);
+                vueCarte.afficherAbsences.setOnAction(controleurImagePions);
                 vueTableau.retour.setOnAction(controleurQuitter);
                 vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
                 vueTableau.changerAffichage.setOnAction(controleurAffichage);

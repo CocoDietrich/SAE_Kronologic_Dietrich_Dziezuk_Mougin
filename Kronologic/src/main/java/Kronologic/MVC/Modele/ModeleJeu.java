@@ -240,6 +240,11 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
+    // Méthode permettant de changer l'image des pions en fonction des checkbox cochées
+    public void changerImagePions() {
+        notifierObservateurs();
+    }
+
     // Méthode permettant de stocker les déplacements de pions de personnage du joueur
     public void ajouterNote(Lieu l, Temps t, Personnage p) {
         Note n = new Note(l, t, p);

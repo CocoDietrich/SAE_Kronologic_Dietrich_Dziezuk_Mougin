@@ -130,12 +130,32 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
 
             Note note = null;
-            if ((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].contains("Pion de Nombres")){
+            if ((pionActuel.getImage().getUrl().contains("Pion de Nombres"))) {
                 // On crée la note
-                note = new Note(nouveauLieu, temps, Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].split("_")[1]));
+                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                    int nombre = Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0].split("_")[1]);
+                    note = new Note(nouveauLieu, temps, nombre);
+                } else {
+                    int nombre = Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].split("_")[1]);
+                    note = new Note(nouveauLieu, temps, nombre);
+                }
             } else {
                 // On crée la note
-                note = new Note(nouveauLieu, temps, new Personnage((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0]));
+                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                    Personnage personnage = new Personnage((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0]);
+                    note = new Note(nouveauLieu, temps, personnage);
+                } else {
+                    Personnage personnage = new Personnage((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0]);
+                    note = new Note(nouveauLieu, temps, personnage);
+                }
+            }
+
+            // On vérifie si c'est une hypothèse ou une absence ou une hypothèse d'absence
+            if (vueCarte.hypothese.isSelected()) {
+                note.setEstHypothese(true);
+            }
+            if (vueCarte.absence.isSelected()) {
+                note.setEstAbsence(true);
             }
 
             vueCarte.pions.getLast().setNote(note);
@@ -166,12 +186,32 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
 
             Note note = null;
-            if ((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].contains("Pion de Nombres")){
+            if ((pionActuel.getImage().getUrl().contains("Pion de Nombres"))) {
                 // On crée la note
-                note = new Note(nouveauLieu, temps, Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].split("_")[1]));
+                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                    int nombre = Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0].split("_")[1]);
+                    note = new Note(nouveauLieu, temps, nombre);
+                } else {
+                    int nombre = Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0].split("_")[1]);
+                    note = new Note(nouveauLieu, temps, nombre);
+                }
             } else {
                 // On crée la note
-                note = new Note(nouveauLieu, temps, new Personnage((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0]));
+                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                    Personnage personnage = new Personnage((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0]);
+                    note = new Note(nouveauLieu, temps, personnage);
+                } else {
+                    Personnage personnage = new Personnage((pionActuel.getImage().getUrl().split("/"))[2].split(".png")[0]);
+                    note = new Note(nouveauLieu, temps, personnage);
+                }
+            }
+
+            // On vérifie si c'est une hypothèse ou une absence ou une hypothèse d'absence
+            if (vueCarte.hypothese.isSelected()) {
+                note.setEstHypothese(true);
+            }
+            if (vueCarte.absence.isSelected()) {
+                note.setEstAbsence(true);
             }
 
             //System.out.println("Note : " + note);
@@ -201,9 +241,9 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
         }
 
-//        System.out.println("Liste des notes : ");
-//        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
-//            System.out.println(n);
-//        }
+        /*System.out.println("Liste des notes : ");
+        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
+            System.out.println(n);
+        }*/
     }
 }
