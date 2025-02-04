@@ -43,8 +43,8 @@ public class ModeleJeu implements Sujet {
         this.vueCarte = true;
         this.iaDeductionChocoSolver = new IADeductionChocoSolver(partie);
         this.iaDeductionHeuristique = new IADeductionHeuristique(partie);
-        this.iaAssistanceChocoSolver = new IAAssistanceChocoSolver(partie);
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristique(partie);
+        this.iaAssistanceChocoSolver = new IAAssistanceChocoSolver(this.iaDeductionChocoSolver,partie);
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristique(this.iaDeductionHeuristique,partie);
     }
 
     // Méthode permettant de retourner à la vue de la carte
@@ -462,8 +462,21 @@ public class ModeleJeu implements Sujet {
         return iaDeductionHeuristique.afficherHistoriqueDeduction();
     }
 
-    public void demanderIndice() {
-        //TODO
+    public String demanderIndice() {
+        String[] question = iaAssistanceChocoSolver.recommanderQuestionOptimal();
+
+        if (!question[0].equals("Aucune recommandation")) {
+            // (malus)
+            partie.setNbQuestion(partie.getNbQuestion() + 1);
+
+            return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
+        } else {
+            return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
+        }
+    }
+
+    public String afficherMauvaisesDeductions() {
+        return iaAssistanceHeuristique.corrigerDeductions();
     }
 
     public void visualiserFilmJoueur(Stage stage) {

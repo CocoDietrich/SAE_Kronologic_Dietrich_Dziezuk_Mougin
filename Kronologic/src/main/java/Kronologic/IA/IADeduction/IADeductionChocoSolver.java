@@ -1,12 +1,8 @@
 package Kronologic.IA.IADeduction;
 
 import Kronologic.Jeu.Elements.*;
-import Kronologic.Jeu.Indice.Indice;
-import Kronologic.Jeu.Indice.IndicePersonnage;
-import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
-
-import java.util.List;
+import org.chocosolver.solver.variables.IntVar;
 
 public class IADeductionChocoSolver extends IADeduction {
 
@@ -34,5 +30,9 @@ public class IADeductionChocoSolver extends IADeduction {
     @Override
     public String afficherHistoriqueDeduction() {
         return model.affichagePropagate();
+    }
+
+    public ModeleChocoSolver getModele(){
+        return model;
     }
 }

@@ -171,4 +171,8 @@ public class Partie {
     public Map<Integer, List<Note>> getHistorique() {
         return historique;
     }
+
+    public void setNbQuestion(int nbQuestion) {
+        this.nbQuestion = nbQuestion;
+    }
 }

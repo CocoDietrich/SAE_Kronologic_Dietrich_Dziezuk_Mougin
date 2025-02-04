@@ -1,20 +1,23 @@
 package Kronologic.IA.IAAssistance;
 
+import Kronologic.IA.IADeduction.IADeductionHeuristique;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Partie;
 
 public class IAAssistanceHeuristique extends IAAssistance {
+    private IADeductionHeuristique iaDeductionHeuristique;
     private Partie partie;
 
-    public IAAssistanceHeuristique(Partie partie) {
+    public IAAssistanceHeuristique(IADeductionHeuristique iaDeductionHeuristique,Partie partie) {
         super();
+        this.iaDeductionHeuristique = iaDeductionHeuristique;
         this.partie = partie;
     }
 
     @Override
-    public Indice recommanderQuestionOptimal() {
+    public String[] recommanderQuestionOptimal() {
         // TODO : Implémenter une heuristique pour recommander une question
         return null;
     }
@@ -25,7 +28,8 @@ public class IAAssistanceHeuristique extends IAAssistance {
     }
 
     @Override
-    public void corrigerDeductions() {
+    public String corrigerDeductions() {
         // TODO : Comparer les déductions du joueur avec une logique heuristique
+        return null;
     }
 }
