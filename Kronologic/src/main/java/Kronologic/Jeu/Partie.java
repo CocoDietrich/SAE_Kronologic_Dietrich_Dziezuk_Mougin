@@ -109,10 +109,24 @@ public class Partie {
 
     // Méthode permettant de supprimer un pion
     public void supprimerPion(Pion pion) {
-        if (pion == null || !gestionnairePions.getPions().contains(pion)) {
+        if (pion == null) {
             return;
         }
+
+        boolean pionTrouve = false;
+        for (Pion p : gestionnairePions.getPions()){
+            if (p.getNote().equals(pion.getNote())){
+                System.out.println("Pion trouvé");
+                pionTrouve = true;
+            }
+        }
+
+        if (!pionTrouve){
+            return;
+        }
+
         gestionnairePions.supprimerPion(pion);
+        System.out.println("note du pion : " + pion.getNote());
         if (pion.getNote() != null){
             System.out.println("Suppression de la note : " + pion.getNote().toString());
             gestionnaireNotes.supprimerNote(pion.getNote());

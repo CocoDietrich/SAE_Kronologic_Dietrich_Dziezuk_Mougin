@@ -537,11 +537,6 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                 Images.Nombre.NOMBRE5.getUrl()
         );
 
-        for (int i = 0; i < ModeleJeu.getPartie().getHistorique().size(); i++){
-            System.out.println("Tour " + i);
-            System.out.println(ModeleJeu.getPartie().getHistorique().get(i));
-        }
-
         // On récupère les pions correspondant à la valeur actuelle du slider (tour actuel)
         List<Note> notesTour = ModeleJeu.getPartie().getHistorique().get((int) Math.round(slider.getValue()));
 

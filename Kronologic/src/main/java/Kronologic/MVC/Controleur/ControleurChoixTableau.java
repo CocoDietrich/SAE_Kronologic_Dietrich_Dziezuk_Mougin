@@ -85,19 +85,15 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 break;
             case "absent":
                 if (personnage != null) {
-                    System.out.println("modif");
                     this.modeleJeu.modifierNote(lieu, temps, personnage, true, false);
                 } else {
-                    System.out.println("modif");
                     this.modeleJeu.modifierNote(lieu, temps, nbPersonnage, true, false);
                 }
                 break;
                 case "neutre":
                     if (personnage != null) {
-                        System.out.println("suppr");
                         this.modeleJeu.supprimerNote(lieu, temps, personnage);
                     } else {
-                        System.out.println("suppr");
                         this.modeleJeu.supprimerNote(lieu, temps, nbPersonnage);
                     }
                 break;
@@ -120,7 +116,6 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
         // Basculer entre les états : neutre -> sélectionné -> absence -> neutre
         switch (etat) {
             case "neutre":
-                System.out.println("neutre");
                 // État sélectionné : texte noir et gras
                 text.setFill(Color.BLACK);
                 text.setStyle("-fx-font-weight: bold; " +
@@ -130,7 +125,6 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 gestionNote(text, elements, text.getEtat());
                 break;
             case "présent":
-                System.out.println("présent");
                 // État absence : texte gris et barré
                 text.setFill(Color.GRAY);
                 text.setStyle("-fx-font-weight: normal; " +
@@ -141,7 +135,6 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 break;
 
             case "absent":
-                System.out.println("absent");
                 // Retour à l'état neutre
                 text.setFill(Color.LIGHTGRAY);
                 text.setStyle("-fx-font-weight: normal; " +
@@ -152,5 +145,11 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 break;
         }
         modeleJeu.actualiserFilmJoueur();
+        modeleJeu.actualiserVueCarte();
+
+        System.out.println("Liste des notes : ");
+        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
+            System.out.println(n);
+        }
     }
 }

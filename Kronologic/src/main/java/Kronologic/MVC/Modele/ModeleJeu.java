@@ -318,7 +318,8 @@ public class ModeleJeu implements Sujet {
         partie.modifierNote(n, absence, hypothese);
 
         for (Pion pion : vueCarte.pions) {
-            if (pion.getNote() != null && pion.getNote().equals(n)) {
+            if (pion.getNote() != null
+                    && pion.getNote().equals(n)) {
                 pion.getNote().setEstAbsence(absence);
                 pion.getNote().setEstHypothese(hypothese);
             }
@@ -460,6 +461,30 @@ public class ModeleJeu implements Sujet {
 
     public void supprimerPion(Pion pion) {
         partie.supprimerPion(pion);
+    }
+
+    public void actualiserVueCarte(){
+        VueCarte vueCarte = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueCarte) {
+                vueCarte = (VueCarte) o;
+                break;
+            }
+        }
+        assert vueCarte != null;
+        vueCarte.actualiser();
+    }
+
+    public void actualiserVueTableau(){
+        VueTableau vueTableau = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueTableau) {
+                vueTableau = (VueTableau) o;
+                break;
+            }
+        }
+        assert vueTableau != null;
+        vueTableau.actualiser();
     }
 
     // Méthode pour afficher les déductions de l'IA ChocoSolver

@@ -42,7 +42,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         } else {
             pionActuel = vueCarte.pions.getLast();
         }
-
         // Si un pion représentant le même personnage ou le pion de nombre est déjà présent dans le même lieu et au même temps
         // On ne peut pas ajouter un autre pion représentant le même personnage ou le pion de nombre
 
@@ -242,9 +241,10 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         }
 
         modeleJeu.actualiserFilmJoueur();
-        /*System.out.println("Liste des notes : ");
+        modeleJeu.actualiserVueTableau();
+        System.out.println("Liste des notes : ");
         for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
             System.out.println(n);
-        }*/
+        }
     }
 }
