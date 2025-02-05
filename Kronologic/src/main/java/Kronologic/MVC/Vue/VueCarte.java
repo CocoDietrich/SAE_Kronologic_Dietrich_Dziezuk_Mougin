@@ -403,8 +403,8 @@ public class VueCarte extends BorderPane implements Observateur {
                     // Création du pion déplacé
                     Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                     if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
-                        pionDeplace.setFitHeight(47.5);
-                        pionDeplace.setFitWidth(47.5);
+                        pionDeplace.setFitHeight(30);
+                        pionDeplace.setFitWidth(30);
                     } else {
                         pionDeplace.setFitHeight(30);
                         pionDeplace.setFitWidth(30);
@@ -558,8 +558,8 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // Création de l'image par défaut (non modifiée)
         Pion pionNombre = new Pion(null, imagesPionNombre[0]);
-        pionNombre.setFitWidth(90);
-        pionNombre.setFitHeight(90);
+        pionNombre.setFitWidth(45);
+        pionNombre.setFitHeight(45);
         pionNombre.setPreserveRatio(true);
         pionNombre.setStyle("-fx-cursor: hand;");
         pionNombre.setId(imagesPionNombre[0]);
@@ -933,13 +933,9 @@ public class VueCarte extends BorderPane implements Observateur {
                                         pion.setId(pion.getImage().getUrl());
 
                                         // On cherche à modifier l'image du pion
-                                        if (pion.getNote().getPersonnage() == null) {
-                                            pion.setFitHeight(47.5);
-                                            pion.setFitWidth(47.5);
-                                        } else {
-                                            pion.setFitHeight(30);
-                                            pion.setFitWidth(30);
-                                        }
+                                        pion.setFitHeight(30);
+                                        pion.setFitWidth(30);
+
 
                                         Point2D point = zone.localToScene(zone.getBoundsInLocal().getCenterX(), zone.getBoundsInLocal().getCenterY());
                                         pion.setLayoutX(point.getX() - pion.getFitWidth() / 2);

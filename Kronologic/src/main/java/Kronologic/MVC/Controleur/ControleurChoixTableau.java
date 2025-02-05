@@ -151,5 +151,6 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 gestionNote(text, elements, text.getEtat());
                 break;
         }
+        modeleJeu.actualiserFilmJoueur();
     }
 }

@@ -241,6 +241,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
         }
 
+        modeleJeu.actualiserFilmJoueur();
         /*System.out.println("Liste des notes : ");
         for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
             System.out.println(n);

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Partie {
     private int nbQuestion;
@@ -42,6 +43,7 @@ public class Partie {
         nbQuestion++;
         Indice i = gestionnaireIndices.poserQuestionPersonnage(l, p);
         ajouterIndice(i);
+        mettreAJourHistorique();
         return i;
     }
 
@@ -50,6 +52,7 @@ public class Partie {
         nbQuestion++;
         Indice i = gestionnaireIndices.poserQuestionTemps(l, t);
         ajouterIndice(i);
+        mettreAJourHistorique();
         return i;
     }
 
@@ -125,7 +128,22 @@ public class Partie {
 
     public void mettreAJourHistorique(){
         // Copier la liste de notes pour éviter les références partagées
-        List<Note> notesCopiees = new ArrayList<>(gestionnaireNotes.getNotes());
+        List<Note> notesCopiees = gestionnaireNotes.getNotes()
+                .stream()
+                .map(n -> {
+                    Note copie = (n.getPersonnage() != null)
+                            ? new Note(n.getLieu(), n.getTemps(), n.getPersonnage())
+                            : new Note(n.getLieu(), n.getTemps(), n.getNbPersonnages());
+
+                    // Copier les valeurs des attributs supplémentaires
+                    copie.setEstAbsence(n.estAbsence());
+                    copie.setEstHypothese(n.estHypothese());
+
+                    return copie;
+                })
+                .collect(Collectors.toList());
+
+
 
         // Mettre à jour l'historique avec une copie
         historique.put(nbQuestion, notesCopiees);

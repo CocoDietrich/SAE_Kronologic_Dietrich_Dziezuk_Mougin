@@ -27,6 +27,8 @@ import javafx.stage.Stage;
 
 import java.util.*;
 
+import static javafx.scene.layout.GridPane.setColumnSpan;
+
 public class ModeleJeu implements Sujet {
 
     private final List<Observateur> observateurs;
@@ -516,20 +518,20 @@ public class ModeleJeu implements Sujet {
 //            System.out.println("Aucune note n'a été posé.");
 //            return;
 //        }
-        for (int i = 0; i <= tours.getLast(); i++) {
-            System.out.println("--------------------");
-            // Afficher le numéro du tour
-            System.out.println("Tour " + i + " :");
-
-            // Afficher les notes associées au tour
-            if (!historique.containsKey(i)) {
-                continue;
-            }
-            List<Note> notes = historique.get(i);
-            for (Note note : notes) {
-                System.out.println(note);
-            }
-        }
+//        for (int i = 0; i <= tours.getLast(); i++) {
+//            System.out.println("--------------------");
+//            // Afficher le numéro du tour
+//            System.out.println("Tour " + i + " :");
+//
+//            // Afficher les notes associées au tour
+//            if (!historique.containsKey(i)) {
+//                continue;
+//            }
+//            List<Note> notes = historique.get(i);
+//            for (Note note : notes) {
+//                System.out.println(note);
+//            }
+//        }
     }
 
     public void visualiserFilmRealite(Stage stage) {
@@ -569,6 +571,30 @@ public class ModeleJeu implements Sujet {
 
         // Actualisation finale
         vueFilmRealite.actualiser();
+    }
+
+    public void actualiserFilmJoueur() {
+        VueFilmJoueur vueFilmJoueur = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueFilmJoueur) {
+                vueFilmJoueur = (VueFilmJoueur) o;
+                break;
+            }
+        }
+        assert vueFilmJoueur != null;
+
+        // On supprime et recrée la carte pour éviter les doublons
+        vueFilmJoueur.getChildren().removeIf(node ->
+                node instanceof HBox && "carte".equals(((HBox) node).getId())
+        );
+
+        List<HBox> nouvelleHbox = vueFilmJoueur.afficherCarte(this);
+        vueFilmJoueur.add(nouvelleHbox.getFirst(), 0, 1);
+        vueFilmJoueur.add(nouvelleHbox.getLast(), 0, 2);
+        setColumnSpan(nouvelleHbox.getFirst(), 2);
+        setColumnSpan(nouvelleHbox.getLast(), 2);
+
+        vueFilmJoueur.actualiser();
     }
 
 

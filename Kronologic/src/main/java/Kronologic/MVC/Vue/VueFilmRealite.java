@@ -385,8 +385,8 @@ public class VueFilmRealite extends GridPane implements Observateur {
                     // Création du pion déplacé
                     Pion pionDeplace = new Pion(null, event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")));
                     if (event.getGestureSource().toString().substring(8, event.getGestureSource().toString().indexOf(",")).contains("Pion de Nombres")) {
-                        pionDeplace.setFitHeight(47.5);
-                        pionDeplace.setFitWidth(47.5);
+                        pionDeplace.setFitHeight(30);
+                        pionDeplace.setFitWidth(30);
                     } else {
                         pionDeplace.setFitHeight(30);
                         pionDeplace.setFitWidth(30);

@@ -349,10 +349,6 @@ public class VueTableau extends BorderPane implements Observateur {
             creerNoteNombreTemps1();
         }
 
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        System.out.println(ModeleJeu.getPartie().getGestionnaireNotes().getNotes().getLast());
-
-
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
         if (!ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
             if (historique.getText().isEmpty()) {
@@ -510,7 +506,7 @@ public class VueTableau extends BorderPane implements Observateur {
             occurences.put(s, 0);
         }
 
-        // On met à jour à chauque fois
+        // On met à jour à chaque fois
         for(Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
             if (note.getTemps().getValeur() == 1) {
                 occurences.replace(note.getLieu().getNom(), occurences.get(note.getLieu().getNom()) + 1);
