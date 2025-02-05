@@ -3,6 +3,7 @@ package Kronologic.IA.IAAssistance;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
+import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Partie;
 
@@ -23,8 +24,13 @@ public class IAAssistanceHeuristique extends IAAssistance {
     }
 
     @Override
-    public void simulerQuestion(Lieu lieu, Personnage personnage) {
-        // TODO : Simuler les conséquences de poser une question sur le lieu/personnage
+    public int simulerQuestionTemps(Lieu lieu, Temps temps) {
+        return 0;
+    }
+
+    @Override
+    public int simulerQuestionPersonnage(Lieu lieu, Personnage personnage) {
+        return 0;
     }
 
     @Override

@@ -2,7 +2,6 @@ package Kronologic.IA.IADeduction;
 
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Partie;
-import org.chocosolver.solver.variables.IntVar;
 
 public class IADeductionChocoSolver extends IADeduction {
 

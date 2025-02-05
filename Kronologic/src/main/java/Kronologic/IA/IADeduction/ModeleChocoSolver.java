@@ -26,6 +26,7 @@ public class ModeleChocoSolver {
         definirVariables();
         definirContraintesInitiales(positionsInitiales);
         definirContraintesRegles(sallesAdjacentes);
+        definirContrainteCoupable();
 
         propagerContraintes();
     }
@@ -81,7 +82,6 @@ public class ModeleChocoSolver {
         if (temps >= 1 && temps <= 6) {
             model.arithm(positions[indexPersonnage][temps - 1], "=", lieu.getId()).post();
         }
-        mettreAJourCoupables();
         propagerContraintes();
     }
 
@@ -103,7 +103,6 @@ public class ModeleChocoSolver {
         // Contraindre la somme des présences au nombre de passages
         model.sum(presences, "=", nbPassages).post();
 
-        mettreAJourCoupables();
         propagerContraintes();
     }
 
@@ -124,71 +123,70 @@ public class ModeleChocoSolver {
         // Contraindre le nombre total de personnes présentes dans le lieu
         model.sum(presences, "=", nbPersonnages).post();
 
-        mettreAJourCoupables();
         propagerContraintes();
     }
 
-    private void mettreAJourCoupables() {
-        System.out.println("Début de la mise à jour des coupables...");
+    public void definirContrainteCoupable() {
+        Tuples tableCoupable = new Tuples(true);
 
-        // 🔹 Création des suspects
-        IntVar[] suspects = new IntVar[personnages.length];
-        for (int i = 0; i < personnages.length; i++) {
-            suspects[i] = model.intVar("Suspect_" + personnages[i], 0, 1);
-            System.out.println("Initialisation suspect : " + personnages[i] + " -> Domaine : " + suspects[i]);
-        }
+        for (int t = 2; t <= 6; t++) { // Temps commence à 2 (pas de crime au temps 1)
+            IntVar[] presences = new IntVar[personnages.length];
 
-        // 🔹 Création des variables binaires pour les présences
-        IntVar[] presences = new IntVar[personnages.length];
-        for (int i = 0; i < personnages.length; i++) {
-            presences[i] = model.intVar("Presence_" + personnages[i], 0, 1);
-            System.out.println("Initialisation présence : " + personnages[i] + " -> Domaine : " + presences[i]);
+            for (int i = 0; i < personnages.length; i++) {
+                presences[i] = model.intVar("Presence_" + personnages[i] + "_T" + t, 0, 1);
 
-            // Liaison entre positions des personnages et leur présence dans la salle du crime
-            Tuples tablePresence = new Tuples(true);
-            for (int lieu = 1; lieu <= 6; lieu++) {
-                tablePresence.add(lieu, 1); // Présent dans le lieu
-                tablePresence.add(lieu, 0); // Absent du lieu
+                // Vérifier si le personnage est présent dans la même salle que le détective
+                model.ifThenElse(
+                        model.arithm(positions[i][t - 1], "=", positions[getIndexPersonnage("D")][t - 1]),
+                        model.arithm(presences[i], "=", 1),
+                        model.arithm(presences[i], "=", 0)
+                );
             }
-            for (int t = 2; t <= 6; t++) {
-                model.table(new IntVar[]{positions[i][t - 1], presences[i]}, tablePresence).post();
-            }
-        }
 
-        // 🔹 Contrainte : il doit y avoir exactement 2 personnes présentes dans la salle au moment du crime
-        System.out.println("Ajout de la contrainte : il doit y avoir exactement 2 personnes présentes.");
-        model.sum(presences, "=", 2).post();
+            // On impose qu'il y ait **exactement** 2 personnes dans la salle au moment du crime
+            IntVar nbPersonnes = model.intVar("NbPersonnes_T" + t, 0, personnages.length);
+            model.sum(presences, "=", nbPersonnes).post();
 
-        // 🔹 Relation `CoupablePersonnage` - `CoupableLieu` - `CoupableTemps`
-        Tuples tableSuspects = new Tuples(true);
-        for (int lieu = 1; lieu <= 6; lieu++) {
-            for (int t = 2; t <= 6; t++) {
-                for (int i = 0; i < personnages.length; i++) {
-                    if (!personnages[i].equals("D") && positions[i][t - 1].contains(lieu)) {
-                        tableSuspects.add(i, lieu, t);
+            // Si deux personnes sont présentes, on **fixe** le temps et le lieu du crime
+            model.ifThen(
+                    model.arithm(nbPersonnes, "=", 2),
+                    model.and(
+                            model.arithm(coupableTemps, "=", t),
+                            model.arithm(coupableLieu, "=", positions[getIndexPersonnage("D")][t - 1])
+                    )
+            );
+
+            // Ajout de toutes les combinaisons possibles pour restreindre le coupable
+            for (int i = 0; i < personnages.length; i++) {
+                if (!personnages[i].equals("D")) { // Exclure le détective
+                    for (int lieu = 1; lieu <= 6; lieu++) {
+                        if (positions[i][t - 1].contains(lieu)) {
+                            tableCoupable.add(i, t, lieu);
+                        }
                     }
                 }
             }
-        }
-        System.out.println("Ajout de la tableSuspects pour restreindre coupable à ceux présents dans la salle.");
-        model.table(new IntVar[]{coupablePersonnage, coupableLieu, coupableTemps}, tableSuspects).post();
 
-        // 🔹 Il doit y avoir **exactement** 1 coupable
-        model.sum(suspects, "=", 1).post();
-        System.out.println("Ajout de la contrainte : il doit y avoir exactement 1 coupable.");
-
-        // 🔹 Logs finaux pour vérifier la réduction du domaine
-        System.out.println("CoupablePersonnage domaine : " + coupablePersonnage);
-        System.out.println("CoupableLieu domaine : " + coupableLieu);
-        System.out.println("CoupableTemps domaine : " + coupableTemps);
-
-        for (int i = 0; i < personnages.length; i++) {
-            System.out.println("Suspect_" + personnages[i] + " domaine : " + suspects[i]);
-            System.out.println("Presence_" + personnages[i] + " domaine : " + presences[i]);
+            // Réduction immédiate des suspects
+            for (int i = 0; i < personnages.length; i++) {
+                if (!personnages[i].equals("D")) {
+                    model.ifThen(
+                            model.and(
+                                    model.arithm(nbPersonnes, "=", 2),
+                                    model.arithm(positions[i][t - 1], "=", positions[getIndexPersonnage("D")][t - 1])
+                            ),
+                            model.arithm(coupablePersonnage, "=", i)
+                    );
+                }
+            }
         }
 
-        System.out.println("Mise à jour des coupables terminée.");
+        // Relier les suspects, le temps et le lieu du crime avec la tableCoupable
+        model.table(new IntVar[]{coupablePersonnage, coupableTemps, coupableLieu}, tableCoupable).post();
+
+        propagerContraintes();
     }
+
 
     private void propagerContraintes() {
         try {
@@ -210,13 +208,14 @@ public class ModeleChocoSolver {
     public String affichagePropagate() {
         StringBuilder historique = new StringBuilder();
 
-        // Afficher les suspects,lieux,temps
-        historique.append(suspetcs());
+        // Afficher les suspects, lieux et temps réduits
+        historique.append(suspects());
 
-        historique.append("===== Historique des Déductions =====\n");
+        historique.append("===== 📜 Historique des Déductions =====\n\n");
+
         // Affichage des domaines des personnages
         for (int i = 0; i < personnages.length; i++) {
-            historique.append(personnages[i]).append(" :\n");
+            historique.append(String.format("🕵️‍♂️ %s :\n", personnages[i]));
 
             for (int t = 0; t < 6; t++) {
                 IntVar position = positions[i][t];
@@ -241,42 +240,30 @@ public class ModeleChocoSolver {
         return historique.toString();
     }
 
-    public StringBuilder suspetcs() {
+
+    public StringBuilder suspects() {
         StringBuilder historique = new StringBuilder();
 
-        // Afficher les suspects
-        historique.append("===== Suspects =====\n");
-        for (int i = 0; i < personnages.length; i++) {
-            if (!personnages[i].equals("D")) {
-                if (coupablePersonnage.contains(i)) {
-                    historique.append(personnages[i]).append(",");
-                }
-            }
-        }
-        historique.deleteCharAt(historique.length() - 1);
-        historique.append("\n");
+        // Vérifier si toutes les variables coupables sont réduites à une seule valeur
+        boolean coupableTrouve = coupablePersonnage.isInstantiated() &&
+                coupableLieu.isInstantiated() &&
+                coupableTemps.isInstantiated();
 
-        // Afficher les lieux avec leur domaine
-        historique.append("===== Lieux =====\n");
-        StringBuilder lieux = new StringBuilder();
-        for (int lieu = 1; lieu <= 6; lieu++) {
-            if (coupableLieu.contains(lieu)) {
-                lieux.append("Lieu ").append(lieu).append(",");
-            }
-        }
-        lieux.deleteCharAt(lieux.length() - 1);
-        historique.append(lieux).append("\n");
+        if (coupableTrouve) {
+            historique.append("===== 🎯 Coupable Identifié ! =====\n");
 
-        // Afficher les temps avec leur domaine
-        historique.append("===== Temps =====\n");
-        StringBuilder temps = new StringBuilder();
-        for (int t = 1; t <= 6; t++) {
-            if (coupableTemps.contains(t)) {
-                temps.append("Temps ").append(t).append(",");
-            }
+            String nomCoupable = personnages[coupablePersonnage.getValue()];
+            int lieuCrime = coupableLieu.getValue();
+            int tempsCrime = coupableTemps.getValue();
+
+            historique.append(String.format("👤 Coupable : %s\n", nomCoupable));
+            historique.append(String.format("📍 Lieu du crime : %d\n", lieuCrime));
+            historique.append(String.format("⏳ Temps du crime : %d\n\n", tempsCrime));
+
+        } else {
+            historique.append("===== 🔍 Impossible d'identifier un coupable pour le moment =====\n");
+            historique.append("⚠ Continuez à poser des questions pour réduire les suspects !\n\n");
         }
-        temps.deleteCharAt(temps.length() - 1);
-        historique.append(temps).append("\n");
 
         return historique;
     }
@@ -286,20 +273,15 @@ public class ModeleChocoSolver {
         return positions;
     }
 
-    public IntVar getCoupablePersonnage() {
-        return coupablePersonnage;
-    }
-
-    public IntVar getCoupableLieu() {
-        return coupableLieu;
-    }
-
-    public IntVar getCoupableTemps() {
-        return coupableTemps;
-    }
-
     public String[] getPersonnages() {
         return personnages;
     }
 
+    public Model getModel() {
+        return model;
+    }
+
+    public String getPersonnageNom(int i) {
+        return personnages[i];
+    }
 }
