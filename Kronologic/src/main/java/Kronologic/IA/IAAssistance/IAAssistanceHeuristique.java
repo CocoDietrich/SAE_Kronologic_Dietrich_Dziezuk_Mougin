@@ -24,12 +24,14 @@ public class IAAssistanceHeuristique extends IAAssistance {
     }
 
     @Override
-    public int simulerQuestionTemps(Lieu lieu, Temps temps) {
+    public int predireTemps(Lieu lieu, Temps temps) {
+        // TODO : Implémenter une heuristique pour prédire le temps
         return 0;
     }
 
     @Override
-    public int simulerQuestionPersonnage(Lieu lieu, Personnage personnage) {
+    public int predirePersonnage(Lieu lieu, Personnage personnage) {
+        // TODO : Implémenter une heuristique pour prédire le personnage
         return 0;
     }
 

@@ -498,16 +498,17 @@ public class ModeleJeu implements Sujet {
     }
 
     public String demanderIndice() {
-        String[] question = iaAssistanceChocoSolver.recommanderQuestionOptimal();
-
-        if (!question[0].equals("Aucune recommandation")) {
-            // (malus)
-            partie.setNbQuestion(partie.getNbQuestion() + 1);
-
-            return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
-        } else {
-            return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
-        }
+        return "Work in progress";
+//        String[] question = iaAssistanceChocoSolver.recommanderQuestionOptimal();
+//
+//        if (!question[0].equals("Aucune recommandation")) {
+//            // (malus)
+//            partie.setNbQuestion(partie.getNbQuestion() + 1);
+//
+//            return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
+//        } else {
+//            return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
+//        }
     }
 
     public String afficherMauvaisesDeductions() {
