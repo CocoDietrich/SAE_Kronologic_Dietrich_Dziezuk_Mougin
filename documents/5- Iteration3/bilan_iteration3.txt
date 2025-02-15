@@ -57,7 +57,7 @@ Les interactions utilisateur, le placement des pions et la synchronisation des d
 améliorés, offrant une expérience plus fluide et conforme à la maquette prévue. De plus, des progrès ont été réalisés
 dans l'intégration de l'IA, notamment avec l'utilisation de Choco-Solver.
 
-Pour l'itération 3, nous prévoyons de :
+Pour l'itération 4, nous prévoyons de :
     - Terminer le développement de l'IA de déduction heuristique.
     - Développer une IA d’assistance au joueur en utilisant Choco-Solver.
     - Finaliser les films des déductions du joueur et de la partie pour enrichir l'expérience visuelle.
