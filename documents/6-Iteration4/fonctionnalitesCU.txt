@@ -1,0 +1,88 @@
+Fonctionnalités développées au cours de l'itération 3 :
+
+- Correction de quelques bugs liés aux différentes affichages des vues Carte et Tableaux
+
+- Permettre au joueur de formuler des "absences" et des "hypothèses"
+
+Conditions de validation :
+    - Le joueur peut placer des pions dans chaque lieu aux différents pas de temps sur la feuille de jeu en fonction
+      des indices qu’il connaît et des déductions qu’il réalise.
+    - Le joueur peut modifier le rôle de ces pions en cochant les checkbox de modification.
+    - La checkbox hypothèse transforme tous les pions en pion “hypothèse” (permet au joueur de déduire la position
+      éventuelle d’un personnage sans pouvoir l’affirmer),
+    - La checkbox absence transforme tous les pions en pion d’absence (permet au joueur d’affirmer l’absence d’un
+      personnage dans un lieu pour un temps donné).
+    - Les deux checkbox interagissent entre elles : Si les deux sont activés, les pions sont des pions d’hypothèse
+      d’absence et si les deux sont désactivés, alors les pions sont des pions de présence.
+
+- Permettre au joueur de visualiser le film des déplacements réels des personnages ainsi que le film des déductions
+  du joueur
+
+Conditions de validation :
+    - Un bouton permet d’afficher le trajet que les personnages ont suivis, conformément au scénario de l’enquête.
+    - Un bouton permet d’afficher le trajet de chacun des personnages selon les hypothèses du joueur.
+
+- Finalisation de l'IA de déduction utilisant Choco-Solver
+
+- Continuation du développement de l'IA de déduction heuristique
+
+- Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver
+
+
+Cas d'utilisation développés au cours de l'itération 4 :
+
+- Cas d’utilisation : Permettre au joueur de formuler des hypothèses
+
+Acteur principal : Joueur.
+Objectifs : Offrir au joueur la possibilité de formuler et d’enregistrer des hypothèses sur les positions des personnages,
+            en fonction de la vue choisie.
+Préconditions : Le joueur a récolté des indices et souhaite les exploiter pour formuler des hypothèses.
+Postconditions : Les hypothèses sont enregistrées et visibles dans la vue carte uniquement.
+Scénario principal :
+    - Le joueur utilise l’interface pour formuler ses hypothèses :
+        Vue Carte :
+            - Le joueur place des pions sur les lieux des cartes.
+            - Les pions peuvent être configurés en hypothèses, absences, ou hypothèses d’absence.
+        Vue Tableaux :
+            - Le joueur renseigne directement les indices dans les tableaux.
+            - Il indique les présences et le nombre de personnages par lieu et par pas de temps.
+    - Les hypothèses sont enregistrées dans le système.
+    - Les hypothèses peuvent être modifiées ou supprimées par le joueur.
+
+
+- Cas d’utilisation : Permettre au joueur de visualiser les films des déplacements des personnages
+
+Acteur principal : Joueur.
+Objectifs : Montrer les trajets suivis par les personnages, selon les scénarios et les hypothèses du joueur.
+Préconditions : Une partie est en cours et le joueur a formulé des hypothèses et renseigné des informations.
+Postconditions : Les trajets des personnages sont affichés selon le choix du joueur.
+Scénario principal :
+- Soit le joueur appuie sur le bouton Film des déplacements du Joueur :
+    - Afficher les déplacements hypothétiques selon les pions placés par le joueur.
+- Soit le joueur appuie sur le bouton Film des déplacements du Partie :
+    - Afficher les déplacements réels des personnages selon le scénario.
+- Le film des déplacements s’affiche à l’écran.
+- Le joueur peut repasser ou quitter le film à tout moment.
+
+(Les cas d'utilisation développés restent les mêmes pour les IA de déduction.)
+(L'IA d'assistance au joueur a seulement commencée à être implémentée, elle sera donc détaillée dans l'itération 5.)
+
+Rôle des membres du groupe :
+
+Mathieu :
+
+- Finalisation de l'IA de déduction utilisant Choco-Solver.
+- Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver.
+- Corriger les déductions du joueur grâce à l'IA d'assistance.
+
+Enzo :
+
+- Correction des bugs liés aux différentes affichages des vues Carte et Tableaux.
+- Réalisation du film de la partie.
+- Réalisation du film des hypothèses du joueur.
+
+Corentin :
+
+- Gestion des pions d'hypothèses et d'absences (données et affichage).
+- Continuation du développement de l'IA de déduction heuristique.
+- Réduction de domaines à chaque nouvel indice collecté.

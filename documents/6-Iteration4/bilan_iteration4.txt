@@ -1,0 +1,58 @@
+Bilan de l'Itération 4 :
+
+1. État Actuel de la Version
+
+Fonctionnalités Développées :
+
+ - Correction de quelques bugs liés aux différentes affichages des vues Carte et Tableaux
+ - Afficher le film des déplacements des personnages au cours de la partie
+ - Afficher le film des hypothèses du joueur
+ - Permettre au joueur de formuler des "absences" et des "hypothèses"
+ - Finalisation de l'IA de déduction utilisant Choco-Solver
+ - Continuation du développement de l'IA de déduction heuristique
+ - Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver
+
+
+2. Validation des Choix de Conception
+
+Conformité à l'Étude Préalable :
+
+ - Respect de l'architecture MVC :
+     - Maintien d’une structure bien organisée entre modèle, vue et contrôleur.
+     - Synchronisation des vues Carte et Tableaux améliorée, garantissant une meilleure cohérence entre les informations affichées.
+     - Optimisation du système de gestion des pions pour éviter les erreurs d’affichage.
+
+  - Interaction Utilisateur :
+     - Le joueur peut désormais placer, modifier et supprimer des pions d’hypothèses et d’absences de manière intuitive.
+     - La gestion des films des déplacements permet une meilleure compréhension des événements du jeu.
+     - Les nouvelles fonctionnalités garantissent une lisibilité accrue des informations, facilitant la prise de décision.
+
+  - IA et Traitement des Données :
+     - L’IA de déduction heuristique est désormais capable de traiter progressivement les indices collectés et d’affiner ses conclusions.
+     - Les déductions du joueur peuvent être validées par l’IA d’assistance, évitant ainsi les erreurs de raisonnement.
+     - L’IA d’assistance utilisant Choco-Solver commence à être implémentée pour aider le joueur à poser les bonnes questions.
+
+
+ 3. Problèmes Rencontrés et Bugs Restants
+
+ - Problèmes d'affichage des films des déplacements : Certains déplacements ne s’affichaient pas correctement et ont
+   nécessité des ajustements dans le stockage des trajets.
+
+ - Gestion des pions d’hypothèses et d’absences : Des erreurs dans les conditions d'affichage des pions ont été corrigées
+   pour assurer une cohérence visuelle et fonctionnelle.
+
+ - Réduction de domaine de l’IA heuristique : Quelques incohérences ont été rencontrées dans l’application des contraintes
+   et ont dû être ajustées.
+
+
+ 4. Conclusion et Perspectives
+
+ L'itération 4 a permis d'apporter des améliorations majeures en termes de déduction et d’expérience utilisateur.
+ L’IA de déduction heuristique est désormais plus fonctionnelle, tandis que la gestion des pions d’hypothèses et d’absences
+ permet au joueur de mieux organiser ses indices. L'ajout des films des déplacements renforce la compréhension du
+ déroulement de la partie et constitue une avancée notable en matière d'ergonomie.
+
+ Pour l’itération 5, les objectifs seront :
+     - Finaliser l’IA de Déduction Heuristique, en implémentant la recherche du coupable et en s'assurant de sa fiabilité.
+     - Comparer les performances des IA heuristique et Choco-Solver afin de déterminer leur efficacité respective.
+     - Poursuivre l’implémentation de l’IA d’Assistance, qui devra être capable de suggérer les meilleures questions possibles.
