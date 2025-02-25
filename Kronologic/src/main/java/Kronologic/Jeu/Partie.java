@@ -207,4 +207,5 @@ public class Partie {
     public void setNbQuestion(int nbQuestion) {
         this.nbQuestion = nbQuestion;
     }
+
 }
