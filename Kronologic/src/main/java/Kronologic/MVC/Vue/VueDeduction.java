@@ -39,7 +39,7 @@ public class VueDeduction extends BorderPane implements Observateur {
         this.setPadding(new Insets(20));
         this.setStyle("-fx-background-color: #800000;");
 
-        // Ajouter le titre
+        // Titre
         Text titre = new Text("Effectuer votre déduction :");
         titre.setFont(Font.font("Arial", 28));
         titre.setFill(Color.WHITE);
@@ -48,13 +48,13 @@ public class VueDeduction extends BorderPane implements Observateur {
         titreBox.setAlignment(Pos.CENTER);
         this.setTop(titreBox);
 
-        // Afficher le contenu principal
+        // Contenu principal
         VBox contenuPrincipal = afficherContenu();
 
-        // Ajouter les boutons directement après le contenu principal
+        // Boutons
         HBox boutons = afficherBoutons();
 
-        VBox centre = new VBox(10); // Réduire l'espacement entre le contenu et les boutons
+        VBox centre = new VBox(10);
         centre.setAlignment(Pos.CENTER);
         centre.getChildren().addAll(contenuPrincipal, boutons);
 
@@ -65,17 +65,14 @@ public class VueDeduction extends BorderPane implements Observateur {
         VBox contenu = new VBox(30);
         contenu.setAlignment(Pos.CENTER);
 
-        // Lieux
+        // Section lieux
         HBox lieuxBox = creerSectionHorizontal("Choisissez le Lieu du meurtre :", creerBoutonsLieux());
 
-        // Temps et personnages
+        // Sections temps et personnages
         HBox tempsEtPersos = new HBox(50);
         tempsEtPersos.setAlignment(Pos.CENTER);
 
-        // Temps (vertical, 2 colonnes)
         VBox tempsBox = creerSectionVertical("Choisissez le Moment du meurtre :", creerBoutonsTemps());
-
-        // Personnages (vertical, 2 colonnes)
         VBox personnagesBox = creerSectionVertical("Choisissez le Meurtrier :", creerBoutonsPersonnages());
 
         tempsEtPersos.getChildren().addAll(tempsBox, personnagesBox);
@@ -130,8 +127,8 @@ public class VueDeduction extends BorderPane implements Observateur {
             lieuButtons.add(lieuButton);
             lieuxBox.getChildren().add(lieuButton);
 
-            // Définir une taille relative (en pourcentage) basée sur la taille de la scène ou d'un conteneur parent stable
-            DoubleBinding largeurConteneur = this.widthProperty().multiply(0.15); // 15% de la largeur de la scène
+            // Lier les tailles des boutons
+            DoubleBinding largeurConteneur = this.widthProperty().multiply(0.15);
             lieuButton.prefWidthProperty().bind(largeurConteneur);
         }
 
@@ -160,8 +157,8 @@ public class VueDeduction extends BorderPane implements Observateur {
             tempsButtons.add(tempsButton);
             tempsGrid.add(tempsButton, i % 2, i / 2);
 
-            // Lier les tailles des boutons à un pourcentage de la largeur du conteneur parent
-            DoubleBinding largeurConteneur = tempsGrid.widthProperty().multiply(0.2); // 20% de la largeur
+            // Lier les tailles des boutons
+            DoubleBinding largeurConteneur = tempsGrid.widthProperty().multiply(0.2);
             tempsButton.prefWidthProperty().bind(largeurConteneur);
         }
 
@@ -190,8 +187,8 @@ public class VueDeduction extends BorderPane implements Observateur {
             personnageButtons.add(personnageButton);
             persosGrid.add(personnageButton, i % 2, i / 2);
 
-            // Lier les tailles des boutons à un pourcentage de la largeur du conteneur parent
-            DoubleBinding largeurConteneur = persosGrid.widthProperty().multiply(0.2); // 20% de la largeur
+            // Lier les tailles des boutons
+            DoubleBinding largeurConteneur = persosGrid.widthProperty().multiply(0.2);
             personnageButton.prefWidthProperty().bind(largeurConteneur);
         }
 
@@ -201,7 +198,7 @@ public class VueDeduction extends BorderPane implements Observateur {
     private HBox afficherBoutons() {
         HBox boutonsBox = new HBox(40);
         boutonsBox.setAlignment(Pos.CENTER);
-        boutonsBox.setPadding(new Insets(60, 0, 0, 0)); // Réduction de l'espacement supérieur
+        boutonsBox.setPadding(new Insets(60, 0, 0, 0));
 
         retour = creerBouton("Retour");
         retour.setPrefSize(120, 40);

@@ -16,8 +16,9 @@ public class ControleurVisualiserDeduction implements EventHandler<ActionEvent> 
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // On passe à la vue de déduction
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        this.modele.visualiserDeduction(stage);
+        if (actionEvent.getSource() instanceof Button) {
+            Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+            this.modele.visualiserDeduction(stage);
+        }
     }
 }

@@ -6,7 +6,7 @@ import javafx.event.ActionEvent;
 
 public class ControleurQuitterJeu implements EventHandler<ActionEvent> {
 
-    private ModeleAccueil modele;
+    private final ModeleAccueil modele;
 
     public ControleurQuitterJeu(ModeleAccueil modele) {
         this.modele = modele;
@@ -14,6 +14,10 @@ public class ControleurQuitterJeu implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        this.modele.quitterJeu();
+        try {
+            modele.quitterJeu();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la fermeture du jeu : " + e.getMessage());
+        }
     }
 }

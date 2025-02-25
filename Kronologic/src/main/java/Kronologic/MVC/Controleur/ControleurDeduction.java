@@ -11,106 +11,123 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class ControleurDeduction implements EventHandler<ActionEvent> {
-    private ModeleJeu modele;
+import java.util.List;
 
-    public ControleurDeduction(ModeleJeu modele) {
-        this.modele = modele;
+public class ControleurDeduction implements EventHandler<ActionEvent> {
+
+    private ModeleJeu modeleJeu;
+
+    // Constantes pour les identifiants
+    private static final String RETOUR = "Retour";
+    private static final String VALIDER = "Valider";
+    private static final String ANNULER = "Annuler mes choix";
+
+    public ControleurDeduction(ModeleJeu modeleJeu) {
+        this.modeleJeu = modeleJeu;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        Lieu lieu = null;
-        Temps temps = null;
-        Personnage personnage = null;
+        String id = ((Button) actionEvent.getSource()).getId();
 
         VueDeduction vueDeduction = null;
         // On récupère la vue de la pose de question
-        for (Observateur o : modele.getObservateurs()) {
+        for (Observateur o : modeleJeu.getObservateurs()) {
             if (o instanceof VueDeduction) {
                 vueDeduction = (VueDeduction) o;
                 break;
             }
         }
 
-        // On récupère l'id du bouton
-        String id = ((Button) actionEvent.getSource()).getId();
-        if (id.equals("Retour")) {
-            // On retourne à la vue de la carte
-            this.modele.retourVueCarte(stage);
+        assert vueDeduction != null;
 
-        } else if (id.startsWith("Lieu")) {
-            // On récupère le nom et l'index du lieu
-            String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));
-            int indexLieu = Integer.parseInt(id.substring(id.lastIndexOf("_") + 1));
-            lieu = new Lieu(nomLieu, indexLieu, null);
+        switch (id) {
+            case RETOUR:
+                this.modeleJeu.retourVueCarte(stage);
+                break;
+            case VALIDER:
+                validerChoix(vueDeduction);
+                break;
+            case ANNULER:
+                annulerChoix(vueDeduction);
+                break;
+            default:
+                traiterChoix(id, vueDeduction);
+                break;
+        }
+    }
 
-            // On désactive les boutons des autres lieux
-            for (Button b : vueDeduction.lieuButtons) {
-                if (!b.getId().equals(id)) {
-                    b.setDisable(true);
-                }
-            }
-            modele.setLieuChoisi(lieu, vueDeduction);
+    private void validerChoix(VueDeduction vueDeduction) {
+        reactiverBoutons(vueDeduction.lieuButtons);
+        reactiverBoutons(vueDeduction.tempsButtons);
+        reactiverBoutons(vueDeduction.personnageButtons);
+        modeleJeu.getModeleQuestionDeduction().faireDeduction();
+    }
 
+    private void reactiverBoutons(List<Button> buttons) {
+        for (Button b : buttons) {
+            b.setDisable(false);
+        }
+    }
+
+    private void annulerChoix(VueDeduction vueDeduction) {
+        reactiverBoutons(vueDeduction.lieuButtons);
+        reactiverBoutons(vueDeduction.tempsButtons);
+        reactiverBoutons(vueDeduction.personnageButtons);
+        modeleJeu.getModeleQuestionDeduction().setLieuChoisi(null, vueDeduction);
+        modeleJeu.getModeleQuestionDeduction().setTempsChoisi(null, vueDeduction);
+        modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(null, vueDeduction);
+    }
+
+    private void traiterChoix(String id, VueDeduction vueDeduction) {
+        if (id.startsWith("Lieu")) {
+            traiterLieu(id, vueDeduction);
         } else if (id.startsWith("temps")) {
-            // On récupère l'index du temps
-            int indexTemps = Integer.parseInt(id.substring(5));
-            temps = new Temps(indexTemps);
-
-            // On désactive les boutons des autres temps
-            for (Button b : vueDeduction.tempsButtons) {
-                if (!b.getId().equals(id)) {
-                    b.setDisable(true);
-                }
-            }
-            modele.setTempsChoisi(temps, vueDeduction);
-
-        } else if (id.equals("Valider")) {
-            // On réactive tous les boutons pour les prichaines questions
-            for (Button b : vueDeduction.lieuButtons) {
-                b.setDisable(false);
-            }
-            for (Button b : vueDeduction.tempsButtons) {
-                b.setDisable(false);
-            }
-            for (Button b : vueDeduction.personnageButtons) {
-                b.setDisable(false);
-            }
-            // On pose la question
-            modele.faireDeduction();
-
-        } else if (id.equals("Annuler mes choix")) {
-            // On réactive les boutons des lieux
-            assert vueDeduction != null;
-            for (Button b : vueDeduction.lieuButtons) {
-                b.setDisable(false);
-            }
-            // On réactive les boutons des temps
-            for (Button b : vueDeduction.tempsButtons) {
-                b.setDisable(false);
-            }
-            // On réactive les boutons des personnages
-            for (Button b : vueDeduction.personnageButtons) {
-                b.setDisable(false);
-            }
-            // On réinitialise les choix
-            modele.setLieuChoisi(null, vueDeduction);
-            modele.setTempsChoisi(null, vueDeduction);
-            modele.setPersonnageChoisi(null, vueDeduction);
+            traiterTemps(id, vueDeduction);
         } else {
-            // On récupère l'id du personnage
-            personnage = new Personnage(id);
+            traiterPersonnage(id, vueDeduction);
+        }
+    }
 
-            // On désactive les boutons des autres personnages
-            assert vueDeduction != null;
-            for (Button b : vueDeduction.personnageButtons) {
-                if (!b.getId().equals(id)) {
-                    b.setDisable(true);
-                }
+    private void traiterLieu(String id, VueDeduction vueDeduction) {
+        String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));
+        int indexLieu = Integer.parseInt(id.substring(id.lastIndexOf("_") + 1));
+        Lieu lieu = new Lieu(nomLieu, indexLieu, null);
+        desactiverAutresBoutons(lieu, vueDeduction.lieuButtons);
+        modeleJeu.getModeleQuestionDeduction().setLieuChoisi(lieu, vueDeduction);
+    }
+
+    private void traiterTemps(String id, VueDeduction vueDeduction) {
+        int indexTemps = Integer.parseInt(id.substring(5));
+        Temps temps = new Temps(indexTemps);
+        desactiverAutresBoutons(temps, vueDeduction.tempsButtons);
+        modeleJeu.getModeleQuestionDeduction().setTempsChoisi(temps, vueDeduction);
+    }
+
+    private void traiterPersonnage(String id, VueDeduction vueDeduction) {
+        Personnage personnage = new Personnage(id);
+        desactiverAutresBoutons(personnage, vueDeduction.personnageButtons);
+        modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(personnage, vueDeduction);
+    }
+
+    private void desactiverAutresBoutons(Object choix, List<Button> buttons) {
+        if (choix instanceof Lieu l){
+            desactiverSelectionBouton(l.getNom(), buttons);
+        }
+        else if (choix instanceof Temps t){
+            desactiverSelectionBouton(String.valueOf(t.getValeur()), buttons);
+        }
+        else if (choix instanceof Personnage p){
+            desactiverSelectionBouton(p.getNom(), buttons);
+        }
+    }
+
+    private void desactiverSelectionBouton(String s, List<Button> buttons) {
+        for (Button b : buttons) {
+            if (!b.getId().contains(s)) {
+                b.setDisable(true);
             }
-            modele.setPersonnageChoisi(personnage, vueDeduction);
         }
     }
 }

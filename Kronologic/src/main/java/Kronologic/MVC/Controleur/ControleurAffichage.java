@@ -8,15 +8,22 @@ import javafx.stage.Stage;
 
 public class ControleurAffichage implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
 
     public ControleurAffichage(ModeleJeu modele) {
         this.modele = modele;
     }
 
-
     @Override
     public void handle(ActionEvent actionEvent) {
-        this.modele.changerAffichage((Stage) ((Button) actionEvent.getSource()).getScene().getWindow());
+        Object source = actionEvent.getSource();
+        if (!(source instanceof Button button)) {
+            return;
+        }
+
+        Stage stage = (Stage) button.getScene().getWindow();
+        if (stage != null) {
+            modele.changerAffichage(stage);
+        }
     }
 }

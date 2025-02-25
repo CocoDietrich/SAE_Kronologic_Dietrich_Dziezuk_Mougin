@@ -5,14 +5,18 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 public class ControleurFilmRealite implements ChangeListener<Number> {
-    private ModeleJeu modele;
+    private ModeleJeu modeleJeu;
 
-    public ControleurFilmRealite(ModeleJeu modele) {
-        this.modele = modele;
+    public ControleurFilmRealite(ModeleJeu modeleJeu) {
+        this.modeleJeu = modeleJeu;
     }
 
     @Override
-    public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-        modele.actualiserFilmRealite();
+    public void changed(ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) {
+        try {
+            modeleJeu.getModeleFilms().actualiserFilmRealite(modeleJeu);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'actualisation du film de réalité : " + e.getMessage());
+        }
     }
 }

@@ -1,52 +1,54 @@
 package Kronologic.MVC.Modele;
 
-import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
-import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
-import Kronologic.IA.IADeduction.IADeductionChocoSolver;
-import Kronologic.IA.IADeduction.IADeductionHeuristique;
-import Kronologic.Jeu.Elements.*;
-import Kronologic.Jeu.Images;
-import Kronologic.Jeu.Indice.Indice;
-import Kronologic.Jeu.Indice.IndicePersonnage;
-import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleFilms;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleIA;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleNotes;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleQuestionDeduction;
 import Kronologic.MVC.Vue.*;
-import Kronologic.MVC.Vue.PopUps.VuePopUpDeduction;
 import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
-import Kronologic.MVC.Vue.PopUps.VuePopUpPoseQuestion;
 import Kronologic.MVC.Vue.PopUps.VuePopUpQuitter;
-import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
 import java.util.*;
 
-import static javafx.scene.layout.GridPane.setColumnSpan;
 
 public class ModeleJeu implements Sujet {
 
     private final List<Observateur> observateurs;
+
+    // TODO : A terme, inutile
     private static Partie partie;
-    private boolean vueCarte;
-    private final IADeductionChocoSolver iaDeductionChocoSolver;
-    private final IADeductionHeuristique iaDeductionHeuristique;
-    private final IAAssistanceChocoSolver iaAssistanceChocoSolver;
-    private final IAAssistanceHeuristique iaAssistanceHeuristique;
+
+    private boolean estVueCarte;
+
+    // Sous-modèles
+    private final ModeleNotes modeleNotes;
+    private final ModeleQuestionDeduction modeleQuestionDeduction;
+    private final ModeleIA modeleIA;
+    private final ModeleFilms modeleFilms;
 
     public ModeleJeu(Partie partie) {
         this.observateurs = new ArrayList<>();
         ModeleJeu.partie = partie;
-        this.vueCarte = true;
-        this.iaDeductionChocoSolver = new IADeductionChocoSolver(partie);
-        this.iaDeductionHeuristique = new IADeductionHeuristique(partie);
-        this.iaAssistanceChocoSolver = new IAAssistanceChocoSolver(this.iaDeductionChocoSolver,partie);
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristique(this.iaDeductionHeuristique,partie);
+        this.estVueCarte = true;
+        this.modeleNotes = new ModeleNotes(partie);
+        this.modeleQuestionDeduction = new ModeleQuestionDeduction(partie);
+        this.modeleIA = new ModeleIA(partie);
+        this.modeleFilms = new ModeleFilms(partie);
+    }
+
+    public void changerAffichage(Stage stage) {
+        this.estVueCarte = !this.estVueCarte;
+        if (this.estVueCarte) {
+            retourVueCarte(stage);
+        } else {
+            retourVueTableau(stage);
+        }
     }
 
     // Méthode permettant de retourner à la vue de la carte
@@ -83,547 +85,6 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    // Méthode permettant de stocker le lieu choisi pour la question posée ou la déduction faite par le joueur
-    public void setLieuChoisi(Lieu lieu, Observateur vue) {
-        assert vue != null;
-        if (vue instanceof VuePoseQuestion vuePoseQuestion) {
-            vuePoseQuestion.lieuChoisi = lieu;
-        } else {
-            VueDeduction vueDeduction = (VueDeduction) vue;
-            vueDeduction.lieuMeurtre = lieu;
-        }
-    }
-
-    // Méthode permettant de stocker le temps choisi pour la question posée ou la déduction faite par le joueur
-    public void setTempsChoisi(Temps temps, Observateur vue) {
-        assert vue != null;
-        if (vue instanceof VuePoseQuestion) {
-            VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
-            vuePoseQuestion.tempsChoisi = temps;
-        } else {
-            VueDeduction vueDeduction = (VueDeduction) vue;
-            vueDeduction.tempsMeurtre = temps;
-        }
-    }
-
-    // Méthode permettant de stocker le personnage choisi pour la question posée ou la déduction faite par le joueur
-    public void setPersonnageChoisi(Personnage personnage, Observateur vue) {
-        assert vue != null;
-        if (vue instanceof VuePoseQuestion) {
-            VuePoseQuestion vuePoseQuestion = (VuePoseQuestion) vue;
-            vuePoseQuestion.personnageChoisi = personnage;
-        } else {
-            VueDeduction vueDeduction = (VueDeduction) vue;
-            vueDeduction.meurtrier = personnage;
-        }
-    }
-
-    public void changerAffichage(Stage stage) {
-        this.vueCarte = !this.vueCarte;
-        if (this.vueCarte) {
-            retourVueCarte(stage);
-        } else {
-            retourVueTableau(stage);
-        }
-    }
-
-    public Indice poserQuestion(Stage stage) {
-        VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VuePoseQuestion) {
-                vuePoseQuestion = (VuePoseQuestion) o;
-                break;
-            }
-        }
-
-        assert vuePoseQuestion != null;
-        Indice i;
-        if (vuePoseQuestion.personnageChoisi != null) {
-            i = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
-
-            // Ajouter contraintes publiques et privées
-            IndicePersonnage ip = (IndicePersonnage) i;
-            iaDeductionChocoSolver.poserQuestionPersonnage(
-                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
-            );
-            iaDeductionHeuristique.poserQuestionPersonnage(
-                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
-            );
-        } else {
-            i = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
-
-            // Ajouter contraintes publiques et privées
-            IndiceTemps it = (IndiceTemps) i;
-            iaDeductionChocoSolver.poserQuestionTemps(
-                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
-            );
-            iaDeductionHeuristique.poserQuestionTemps(
-                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
-            );
-        }
-
-        partie.ajouterIndice(i);
-        notifierObservateurs();
-        System.out.println("Réponse à la question posée : " + i);
-
-        VuePopUpPoseQuestion vuePopUpPoseQuestion = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VuePopUpPoseQuestion) {
-                vuePopUpPoseQuestion = (VuePopUpPoseQuestion) o;
-                break;
-            }
-        }
-        assert vuePopUpPoseQuestion != null;
-        vuePopUpPoseQuestion.afficherPopUp(i);
-        if (isVueCarte()) {
-            retourVueCarte(stage);
-        } else {
-            retourVueTableau(stage);
-        }
-        return i;
-    }
-
-    // Méthode permettant d'afficher la vue de pose de question
-    public void visualiserPoseQuestion(Stage stage) {
-        // On récupère la vuePoseQuestion dans la liste des observateurs
-        VuePoseQuestion vuePoseQuestion = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VuePoseQuestion) {
-                vuePoseQuestion = (VuePoseQuestion) o;
-                break;
-            }
-        }
-
-        BorderPane bp = new BorderPane(vuePoseQuestion);
-
-        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public void faireDeduction() {
-        VueDeduction vueDeduction = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueDeduction) {
-                vueDeduction = (VueDeduction) o;
-                break;
-            }
-        }
-        assert vueDeduction != null;
-        boolean resultat = partie.faireDeduction(vueDeduction.lieuMeurtre, vueDeduction.meurtrier, vueDeduction.tempsMeurtre);
-
-        VuePopUpDeduction vuePopUpDeduction = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VuePopUpDeduction) {
-                vuePopUpDeduction = (VuePopUpDeduction) o;
-                break;
-            }
-        }
-        assert vuePopUpDeduction != null;
-        vuePopUpDeduction.afficherPopUp(resultat, partie.verifierLoupe());
-
-        notifierObservateurs();
-    }
-
-    public void visualiserDeduction(Stage stage) {
-        // On récupère la vuePoseQuestion dans la liste des observateurs
-        VueDeduction vueDeduction = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueDeduction) {
-                vueDeduction = (VueDeduction) o;
-                break;
-            }
-        }
-
-        BorderPane bp = new BorderPane(vueDeduction);
-
-        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    // Méthode permettant de changer l'image des pions en fonction des checkbox cochées
-    public void changerImagePions() {
-        notifierObservateurs();
-    }
-
-    // Méthode permettant de stocker les déplacements de pions de personnage du joueur
-    public void ajouterNote(Lieu l, Temps t, Personnage p) {
-        Note n = new Note(l, t, p);
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-
-        Pion pion = new Pion(n,
-                Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))).getUrl());
-        pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
-
-        ajouterPion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))), 0, 0);
-
-
-        vueCarte.pions.add(pion);
-        notifierObservateurs();
-    }
-
-    // Méthode permettant de stocker les déplacements de pions de nombers du joueur
-    public void ajouterNote(Lieu l, Temps t, int nbPersonnages) {
-        Note n = new Note(l, t, nbPersonnages);
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-
-        // On ajoute la note à la liste des notes
-        Pion pion = new Pion(n,
-                Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)).getUrl());
-        pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
-
-        ajouterPion(n, Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)), 0, 0);
-
-        vueCarte.pions.add(pion);
-        notifierObservateurs();
-    }
-
-    public void modifierNote(Lieu l, Temps t, Personnage p, boolean absence, boolean hypothese) {
-        // On retrouve la note correspondante au pion placé
-        Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()) {
-            if (note.getLieu().getNom().equals(l.getNom())
-                    && note.getTemps().getValeur() == t.getValeur()
-                    && note.getPersonnage().getNom().equals(p.getNom())) {
-                n = note;
-                break;
-            }
-        }
-
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-
-        // On modifie la note
-        partie.modifierNote(n, absence, hypothese);
-
-        for (Pion pion : vueCarte.pions) {
-            if (pion.getNote() != null
-                    && pion.getNote().equals(n)) {
-                pion.getNote().setEstAbsence(absence);
-                pion.getNote().setEstHypothese(hypothese);
-            }
-        }
-
-        notifierObservateurs();
-    }
-
-    public void modifierNote(Lieu l, Temps t, int nbPersonnage, boolean absence, boolean hypothese) {
-        // On retrouve la note correspondante au pion placé
-        Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()) {
-            if (note.getLieu().getNom().equals(l.getNom())
-                    && note.getTemps().getValeur() == t.getValeur()
-                    && note.getNbPersonnages() == nbPersonnage) {
-                n = note;
-                break;
-            }
-        }
-
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-
-        // On modifie la note
-        partie.modifierNote(n, absence, hypothese);
-
-        for (Pion pion : vueCarte.pions) {
-            if (pion.getNote() != null && pion.getNote().equals(n)) {
-                pion.getNote().setEstAbsence(absence);
-                pion.getNote().setEstHypothese(hypothese);
-            }
-        }
-
-        notifierObservateurs();
-    }
-
-    // Méthode permettant de supprimer une note du joueur
-    public void supprimerNote(Lieu l, Temps t, Personnage p) {
-        // On retrouve la note correspondante au pion placé
-        Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()) {
-            if (note.getLieu().getNom().equals(l.getNom())
-                    && note.getTemps().getValeur() == t.getValeur()
-                    && note.getPersonnage().getNom().equals(p.getNom())) {
-                n = note;
-                break;
-            }
-        }
-
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-
-        for (Pion pion : vueCarte.pions) {
-            if (pion.getNote() != null && pion.getNote().equals(n)) {
-                vueCarte.pions.remove(pion);
-                vueCarte.getChildren().remove(pion);
-                supprimerPion(pion);
-                for (Polygon zone : vueCarte.zonesContenantPions) {
-                    if (zone.getUserData().equals(pion.getUserData())) {
-                        vueCarte.zonesContenantPions.remove(zone);
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-
-        if (partie.getGestionnaireNotes().getNotes().contains(n)){
-            partie.supprimerNote(n);
-        }
-
-        notifierObservateurs();
-    }
-
-    public void supprimerNote(Lieu l, Temps t, int nbPersonnages) {
-        // On retrouve la note correspondante au pion placé
-        Note n = null;
-        for (Note note : partie.getGestionnaireNotes().getNotes()) {
-            if (note.getLieu().getNom().equals(l.getNom())
-                    && note.getTemps().getValeur() == t.getValeur()
-                    && note.getNbPersonnages() == nbPersonnages) {
-                n = note;
-                break;
-            }
-        }
-
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-
-        for (Pion pion : vueCarte.pions) {
-            if (pion.getNote() != null && pion.getNote().equals(n)) {
-                vueCarte.pions.remove(pion);
-                vueCarte.getChildren().remove(pion);
-                supprimerPion(pion);
-                for (Polygon zone : vueCarte.zonesContenantPions) {
-                    if (zone.getUserData().equals(pion.getUserData())) {
-                        vueCarte.zonesContenantPions.remove(zone);
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-
-        if (partie.getGestionnaireNotes().getNotes().contains(n)){
-            partie.supprimerNote(n);
-        }
-
-        notifierObservateurs();
-    }
-
-    public void ajouterPion(Note note, Image image, int x, int y) {
-        Pion pion = new Pion(note, image.getUrl());
-        pion.deplacerPion(x, y);
-        partie.ajouterPion(pion);
-    }
-
-    public void deplacerPion(Pion pion, Lieu nouveauLieu, Temps nouveauTemps, int x, int y) {
-        partie.deplacerPion(pion, nouveauLieu, nouveauTemps, x, y);
-    }
-
-    public void supprimerPion(Pion pion) {
-        partie.supprimerPion(pion);
-    }
-
-    public void actualiserVueCarte(){
-        VueCarte vueCarte = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueCarte) {
-                vueCarte = (VueCarte) o;
-                break;
-            }
-        }
-        assert vueCarte != null;
-        vueCarte.actualiser();
-    }
-
-    public void actualiserVueTableau(){
-        VueTableau vueTableau = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueTableau) {
-                vueTableau = (VueTableau) o;
-                break;
-            }
-        }
-        assert vueTableau != null;
-        vueTableau.actualiser();
-    }
-
-    // Méthode pour afficher les déductions de l'IA ChocoSolver
-    public String voirDeductionIAChocoSolver() {
-        return iaDeductionChocoSolver.afficherHistoriqueDeduction();
-    }
-
-    // Méthode pour afficher les déductions de l'IA Heuristique
-    public String voirDeductionIAHeuristique() {
-        return iaDeductionHeuristique.afficherHistoriqueDeduction();
-    }
-
-    public String demanderIndice() {
-        return "Work in progress";
-//        String[] question = iaAssistanceChocoSolver.recommanderQuestionOptimal();
-//
-//        if (!question[0].equals("Aucune recommandation")) {
-//            // (malus)
-//            partie.setNbQuestion(partie.getNbQuestion() + 1);
-//
-//            return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
-//        } else {
-//            return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
-//        }
-    }
-
-    public String afficherMauvaisesDeductions() {
-        return iaAssistanceChocoSolver.corrigerDeductions();
-    }
-
-    public void visualiserFilmJoueur(Stage stage) {
-        VueFilmJoueur vueFilmJoueur = new VueFilmJoueur(this);
-        for (Observateur o : observateurs) {
-            if (o instanceof VueFilmJoueur) {
-                vueFilmJoueur = (VueFilmJoueur) o;
-                break;
-            }
-        }
-
-        notifierObservateurs();
-
-        BorderPane bp = new BorderPane(vueFilmJoueur);
-
-        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
-        stage.setScene(scene);
-        stage.show();
-
-        // Récupération de l'historique
-        Map<Integer, List<Note>> historique = partie.getHistorique();
-
-        // Tri des tours pour garantir l'ordre croissant
-        List<Integer> tours = new ArrayList<>(historique.keySet());
-        Collections.sort(tours);
-
-        // Parcourir chaque tour dans l'ordre
-//        if (tours.isEmpty()) {
-//            System.out.println("Aucune note n'a été posé.");
-//            return;
-//        }
-//        for (int i = 0; i <= tours.getLast(); i++) {
-//            System.out.println("--------------------");
-//            // Afficher le numéro du tour
-//            System.out.println("Tour " + i + " :");
-//
-//            // Afficher les notes associées au tour
-//            if (!historique.containsKey(i)) {
-//                continue;
-//            }
-//            List<Note> notes = historique.get(i);
-//            for (Note note : notes) {
-//                System.out.println(note);
-//            }
-//        }
-    }
-
-    public void visualiserFilmRealite(Stage stage) {
-        VueFilmRealite vueFilmRealite = new VueFilmRealite(this);
-        for (Observateur o : observateurs) {
-            if (o instanceof VueFilmRealite) {
-                vueFilmRealite = (VueFilmRealite) o;
-                break;
-            }
-        }
-
-        BorderPane bp = new BorderPane(vueFilmRealite);
-
-        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
-        stage.setScene(scene);
-        stage.show();
-    }
-
-
-    public void actualiserFilmRealite() {
-        VueFilmRealite vueFilmRealite = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueFilmRealite) {
-                vueFilmRealite = (VueFilmRealite) o;
-                break;
-            }
-        }
-        assert vueFilmRealite != null;
-
-        // On supprime et recrée la carte pour éviter les doublons
-        vueFilmRealite.getChildren().removeIf(node ->
-                node instanceof HBox && "carte".equals(((HBox) node).getId())
-        );
-
-        HBox nouvelleHbox = vueFilmRealite.afficherCarte(this);
-        vueFilmRealite.add(nouvelleHbox, 1, 1);
-
-        // Actualisation finale
-        vueFilmRealite.actualiser();
-    }
-
-    public void actualiserFilmJoueur() {
-        VueFilmJoueur vueFilmJoueur = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueFilmJoueur) {
-                vueFilmJoueur = (VueFilmJoueur) o;
-                break;
-            }
-        }
-        assert vueFilmJoueur != null;
-
-        // On supprime et recrée la carte pour éviter les doublons
-        vueFilmJoueur.getChildren().removeIf(node ->
-                node instanceof HBox && "carte".equals(((HBox) node).getId())
-        );
-
-        List<HBox> nouvelleHbox = vueFilmJoueur.afficherCarte(this);
-        vueFilmJoueur.add(nouvelleHbox.getFirst(), 0, 1);
-        vueFilmJoueur.add(nouvelleHbox.getLast(), 0, 2);
-        setColumnSpan(nouvelleHbox.getFirst(), 2);
-        setColumnSpan(nouvelleHbox.getLast(), 2);
-
-        vueFilmJoueur.actualiser();
-    }
-
-
     public void visualiserRegle(Stage stage) {
         VueRegle vueRegle = new VueRegle();
         for (Observateur o : observateurs) {
@@ -633,16 +94,11 @@ public class ModeleJeu implements Sujet {
             }
         }
 
-
         BorderPane bp = new BorderPane(vueRegle);
 
         Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
         stage.setScene(scene);
         stage.show();
-    }
-
-    public void valider() {
-        //TODO
     }
 
     // Méthode affichant le pop-up de confirmation de quitter la partie
@@ -690,21 +146,6 @@ public class ModeleJeu implements Sujet {
         }
     }
 
-    // Méthode affichant le pop-up de demande d'indice à l'IA
-    public void afficherPopUpDemanderIndice() {
-        VuePopUpDemanderIndice vuePopUpDemanderIndice = null;
-
-        for (Observateur o : observateurs) {
-            if (o instanceof VuePopUpDemanderIndice) {
-                vuePopUpDemanderIndice = (VuePopUpDemanderIndice) o;
-                break;
-            }
-        }
-
-        assert vuePopUpDemanderIndice != null;
-        vuePopUpDemanderIndice.afficherPopUp();
-    }
-
     @Override
     public void enregistrerObservateur(Observateur o) {
         this.observateurs.add(o);
@@ -730,7 +171,74 @@ public class ModeleJeu implements Sujet {
         return partie;
     }
 
-    public boolean isVueCarte() {
-        return vueCarte;
+    public boolean estVueCarte() {
+        return estVueCarte;
+    }
+
+    public ModeleNotes getModeleNotes() {
+        return modeleNotes;
+    }
+
+    public ModeleQuestionDeduction getModeleQuestionDeduction() {
+        return modeleQuestionDeduction;
+    }
+
+    public ModeleIA getModeleIA() {
+        return modeleIA;
+    }
+
+    public ModeleFilms getModeleFilms() {
+        return modeleFilms;
+    }
+
+    // Méthode permettant d'afficher la vue de pose de question
+    public void visualiserPoseQuestion(Stage stage) {
+        // On récupère la vuePoseQuestion dans la liste des observateurs
+        VuePoseQuestion vuePoseQuestion = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePoseQuestion) {
+                vuePoseQuestion = (VuePoseQuestion) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vuePoseQuestion);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    public void visualiserDeduction(Stage stage) {
+        // On récupère la vuePoseQuestion dans la liste des observateurs
+        VueDeduction vueDeduction = null;
+        for (Observateur o : observateurs) {
+            if (o instanceof VueDeduction) {
+                vueDeduction = (VueDeduction) o;
+                break;
+            }
+        }
+
+        BorderPane bp = new BorderPane(vueDeduction);
+
+        Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    // Méthode affichant le pop-up de demande d'indice à l'IA
+    // TODO : à vérifier
+    public void afficherPopUpDemanderIndice() {
+        VuePopUpDemanderIndice vuePopUpDemanderIndice = null;
+
+        for (Observateur o : observateurs) {
+            if (o instanceof VuePopUpDemanderIndice) {
+                vuePopUpDemanderIndice = (VuePopUpDemanderIndice) o;
+                break;
+            }
+        }
+
+        assert vuePopUpDemanderIndice != null;
+        vuePopUpDemanderIndice.afficherPopUp();
     }
 }

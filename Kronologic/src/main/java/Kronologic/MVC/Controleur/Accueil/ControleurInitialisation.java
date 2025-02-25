@@ -1,5 +1,6 @@
 package Kronologic.MVC.Controleur.Accueil;
 
+import Kronologic.MVC.InitialisationJeu;
 import Kronologic.MVC.Modele.ModeleAccueil;
 import javafx.event.EventHandler;
 import javafx.event.ActionEvent;
@@ -16,8 +17,8 @@ public class ControleurInitialisation implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // TODO : à modifier pour récupérer le titre du bouton
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        this.modele.initialiserPartie(((Button)actionEvent.getSource()).getText(), stage);
+        this.modele.initialiserPartie(((Button)actionEvent.getSource()).getText());
+        InitialisationJeu initialisation = new InitialisationJeu((Stage)((Button)actionEvent.getSource()).getScene().getWindow());
+        initialisation.initialiser();
     }
 }

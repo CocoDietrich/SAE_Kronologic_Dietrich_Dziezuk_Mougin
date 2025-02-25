@@ -23,8 +23,23 @@ public class VueDeductionIA extends BorderPane implements Observateur {
 
     public VueDeductionIA() {
         super();
+        this.setBackground(creerFond());
 
-        this.setBackground(new Background(
+        Text titre = creerTitre();
+        affichage = creerZoneDeTexte();
+
+        boutonChocoSolver = creerBouton("IA ChocoSolver");
+        boutonHeuristique = creerBouton("IA Heuristique");
+
+        HBox boutons = creerHBoxBoutons(boutonChocoSolver, boutonHeuristique);
+        VBox centre = new VBox(30, titre, affichage, boutons);
+        centre.setAlignment(Pos.CENTER);
+
+        this.setCenter(centre);
+    }
+
+    private Background creerFond() {
+        return new Background(
                 new BackgroundFill(
                         new javafx.scene.paint.LinearGradient(0, 0, 1, 0, true,
                                 javafx.scene.paint.CycleMethod.NO_CYCLE,
@@ -33,44 +48,45 @@ public class VueDeductionIA extends BorderPane implements Observateur {
                         CornerRadii.EMPTY,
                         null
                 )
-        ));
+        );
+    }
 
-        // Titre avec ombre
-        Text titre = new Text("Déductions de l'IA");
-        titre.setFont(Font.font("Arial", 36));
-        titre.setFill(Color.DARKRED);
-        titre.setTextAlignment(TextAlignment.CENTER);
+    private Text creerTitre() {
+        Text title = new Text("Déductions de l'IA");
+        title.setFont(Font.font("Arial", 36));
+        title.setFill(Color.DARKRED);
+        title.setTextAlignment(TextAlignment.CENTER);
+
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setOffsetX(3);
         shadow.setOffsetY(3);
-        titre.setEffect(shadow);
+        title.setEffect(shadow);
 
-        // Zone d'affichage
-        affichage = new TextArea();
-        affichage.setEditable(false);  // Lecture seule
-        affichage.setWrapText(true);   // Ajuster le texte
-        affichage.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
-        affichage.setPrefHeight(300);
+        return title;
+    }
 
-        // Boutons
-        boutonChocoSolver = new Button("IA ChocoSolver");
-        boutonChocoSolver.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        boutonChocoSolver.setOnMouseEntered(e -> boutonChocoSolver.setStyle("-fx-background-color: #FFA500; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: #8B0000; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
-        boutonChocoSolver.setOnMouseExited(e -> boutonChocoSolver.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+    private TextArea creerZoneDeTexte() {
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);  // Lecture seule
+        textArea.setWrapText(true);   // Ajuster le texte
+        textArea.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
+        textArea.setPrefHeight(300);
+        return textArea;
+    }
 
-        boutonHeuristique = new Button("IA Heuristique");
-        boutonHeuristique.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        boutonHeuristique.setOnMouseEntered(e -> boutonHeuristique.setStyle("-fx-background-color: #FFA500; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: #8B0000; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
-        boutonHeuristique.setOnMouseExited(e -> boutonHeuristique.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+    private Button creerBouton(String buttonText) {
+        Button button = new Button(buttonText);
+        button.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #FFA500; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: #8B0000; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        return button;
+    }
 
-        HBox boutons = new HBox(15, boutonChocoSolver, boutonHeuristique);
-        boutons.setAlignment(Pos.CENTER);
-
-        VBox centre = new VBox(30, titre, affichage, boutons);
-        centre.setAlignment(Pos.CENTER);
-
-        this.setCenter(centre);
+    private HBox creerHBoxBoutons(Button... buttons) {
+        HBox buttonBox = new HBox(15, buttons);
+        buttonBox.setAlignment(Pos.CENTER);
+        return buttonBox;
     }
 
     public Button getBoutonChocoSolver() {
@@ -87,6 +103,6 @@ public class VueDeductionIA extends BorderPane implements Observateur {
 
     @Override
     public void actualiser() {
-
+        // Mettre à jour l'interface si nécessaire
     }
 }

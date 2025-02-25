@@ -28,6 +28,7 @@ import java.util.List;
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
 import static Kronologic.MVC.Vue.VueTableau.compterOccurrencesRegex;
 
+// TODO : à simplifier
 public class VueCarte extends BorderPane implements Observateur {
 
     public Button retour;
@@ -476,7 +477,7 @@ public class VueCarte extends BorderPane implements Observateur {
                         }
 
                         // Déléguer la logique métier au contrôleur
-                        new ControleurChoixCarte(modeleJeu).handle(e);
+                        new ControleurChoixCarte(modeleJeu.getModeleNotes()).handle(e);
                         e.consume();
                     });
 
@@ -826,7 +827,7 @@ public class VueCarte extends BorderPane implements Observateur {
         // Initialisation des pions immobiles pour le temps 1
         for (int i = 0; i < listePionTemps1.size(); i++) {
             ajouterPionImbougeable("Temps " + listePionTemps1.get(i).getTemps().getValeur()
-                    + "-" + listePionTemps1.get(i).getLieu().getNom(),
+                            + "-" + listePionTemps1.get(i).getLieu().getNom(),
                     listePionTemps1.get(i).getPersonnage().getNom());
         }
     }
@@ -876,9 +877,9 @@ public class VueCarte extends BorderPane implements Observateur {
 
                     for (int i = 1; i < Images.Lieux.getLieux().size()+1; i++){
                         if (userDataZone.contains(Images.Lieux.getLieux().get(i))){
-                            modeleJeu.ajouterPion(new Note(new Lieu(userDataZone.split("-")[1], i, null),
-                                    new Temps(Integer.parseInt(userDataZone.replaceAll("[^0-9]", ""))),
-                                    new Personnage(personnage)),
+                            modeleJeu.getModeleNotes().ajouterPion(new Note(new Lieu(userDataZone.split("-")[1], i, null),
+                                            new Temps(Integer.parseInt(userDataZone.replaceAll("[^0-9]", ""))),
+                                            new Personnage(personnage)),
                                     new Image("file:img/pions_personnages/" + personnage + ".png"),
                                     0,
                                     0);
@@ -959,7 +960,7 @@ public class VueCarte extends BorderPane implements Observateur {
                                             }
 
                                             // Déléguer la logique métier au contrôleur
-                                            new ControleurChoixCarte(modeleJeu).handle(e);
+                                            new ControleurChoixCarte(modeleJeu.getModeleNotes()).handle(e);
                                             e.consume();
                                         });
 
@@ -1023,7 +1024,7 @@ public class VueCarte extends BorderPane implements Observateur {
                         p.setScaleY(1.3);
                         p.setId("file:img/pions_personnages/pions_hypotheses_absences/" + nomPion + ".png");
                     }
-                // Si on a coché l'option "Hypothèse"
+                    // Si on a coché l'option "Hypothèse"
                 } else if (hypothese.isSelected()) {
                     // On change l'image en pion d'hypothèse
                     if (nomPion.contains("Pion de Nombres")) {
@@ -1035,7 +1036,7 @@ public class VueCarte extends BorderPane implements Observateur {
                         p.setScaleY(1.3);
                         p.setId("file:img/pions_personnages/pions_hypotheses/" + nomPion + ".png");
                     }
-                // Si on a coché l'option "Absence"
+                    // Si on a coché l'option "Absence"
                 } else if (absence.isSelected()) {
                     // On change l'image en pion d'absence
                     if (nomPion.contains("Pion de Nombres")) {

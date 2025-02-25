@@ -1,4 +1,4 @@
-package Kronologic.MVC.Vue;
+package Kronologic.MVC;
 
 import javafx.scene.text.Text;
 import java.util.List;

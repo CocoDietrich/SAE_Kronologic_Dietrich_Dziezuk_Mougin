@@ -5,124 +5,136 @@ import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.Observateur;
+import Kronologic.MVC.Vue.VueDeduction;
 import Kronologic.MVC.Vue.VuePoseQuestion;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
-    private ModeleJeu modele;
+import java.util.List;
+import java.util.Optional;
 
-    public ControleurPoseQuestion(ModeleJeu modele) {
-        this.modele = modele;
+public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
+
+    private ModeleJeu modeleJeu;
+
+    // Constantes pour les identifiants
+    private static final String RETOUR = "Retour";
+    private static final String VALIDER = "Valider";
+    private static final String ANNULER = "Annuler mes choix";
+
+    public ControleurPoseQuestion(ModeleJeu modeleJeu) {
+        this.modeleJeu = modeleJeu;
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        Lieu lieu = null;
-        Temps temps = null;
-        Personnage personnage = null;
+        String id = ((Button) actionEvent.getSource()).getId();
 
         VuePoseQuestion vuePoseQuestion = null;
         // On récupère la vue de la pose de question
-        for (Observateur o : modele.getObservateurs()) {
+        for (Observateur o : modeleJeu.getObservateurs()) {
             if (o instanceof VuePoseQuestion) {
                 vuePoseQuestion = (VuePoseQuestion) o;
                 break;
             }
         }
 
-        // On récupère l'id du bouton
-        String id = ((Button) actionEvent.getSource()).getId();
-        if (id.equals("Retour")) {
-            // On retourne à la vue de la carte
-            if(this.modele.isVueCarte()){
-                this.modele.retourVueCarte(stage);
-            } else {
-                this.modele.retourVueTableau(stage);
-            }
-        } else if (id.startsWith("Lieu")) {
-            // On récupère le nom et l'index du lieu
-            String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));
-            int indexLieu = Integer.parseInt(id.substring(id.lastIndexOf("_") + 1));
-            lieu = new Lieu(nomLieu, indexLieu, null);
+        assert vuePoseQuestion != null;
 
-            // On désactive les boutons des autres lieux
-            for (Button b : vuePoseQuestion.lieuButtons) {
-                if (!b.getId().equals(id)) {
-                    b.setDisable(true);
-                }
-            }
-            modele.setLieuChoisi(lieu, vuePoseQuestion);
+        switch (id) {
+            case RETOUR:
+                this.modeleJeu.retourVueCarte(stage);
+                break;
+            case VALIDER:
+                validerChoix(stage, vuePoseQuestion);
+                break;
+            case ANNULER:
+                annulerChoix(vuePoseQuestion);
+                break;
+            default:
+                traiterChoix(id, vuePoseQuestion);
+                break;
+        }
+    }
 
+    private void validerChoix(Stage stage, VuePoseQuestion vuePoseQuestion) {
+        reactiverBoutons(vuePoseQuestion.lieuButtons);
+        reactiverBoutons(vuePoseQuestion.tempsButtons);
+        reactiverBoutons(vuePoseQuestion.personnageButtons);
+        modeleJeu.getModeleIA().ajoutContraintesQuestion(modeleJeu.getModeleQuestionDeduction().poserQuestion(stage, modeleJeu));
+    }
+
+    private void reactiverBoutons(List<Button> buttons) {
+        for (Button b : buttons) {
+            b.setDisable(false);
+        }
+    }
+
+    private void annulerChoix(VuePoseQuestion vuePoseQuestion) {
+        reactiverBoutons(vuePoseQuestion.lieuButtons);
+        reactiverBoutons(vuePoseQuestion.tempsButtons);
+        reactiverBoutons(vuePoseQuestion.personnageButtons);
+        modeleJeu.getModeleQuestionDeduction().setLieuChoisi(null, vuePoseQuestion);
+        modeleJeu.getModeleQuestionDeduction().setTempsChoisi(null, vuePoseQuestion);
+        modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(null, vuePoseQuestion);
+    }
+
+    private void traiterChoix(String id, VuePoseQuestion vuePoseQuestion) {
+        if (id.startsWith("Lieu")) {
+            traiterLieu(id, vuePoseQuestion);
         } else if (id.startsWith("temps")) {
-            // On récupère l'index du temps
-            int indexTemps = Integer.parseInt(id.substring(5));
-            temps = new Temps(indexTemps);
-
-            // On désactive les boutons des autres temps
-            for (Button b : vuePoseQuestion.tempsButtons) {
-                if (!b.getId().equals(id)) {
-                    b.setDisable(true);
-                }
-            }
-            // On désactive les boutons des personnages
-            for (Button b : vuePoseQuestion.personnageButtons) {
-                b.setDisable(true);
-            }
-            modele.setTempsChoisi(temps, vuePoseQuestion);
-            modele.setPersonnageChoisi(null, vuePoseQuestion);
-        } else if (id.equals("Valider")) {
-            // On réactive tous les boutons pour les prichaines questions
-            for (Button b : vuePoseQuestion.lieuButtons) {
-                b.setDisable(false);
-            }
-            for (Button b : vuePoseQuestion.tempsButtons) {
-                b.setDisable(false);
-            }
-            for (Button b : vuePoseQuestion.personnageButtons) {
-                b.setDisable(false);
-            }
-            // On pose la question
-            modele.poserQuestion(stage);
-
-        } else if (id.equals("Annuler mes choix")) {
-            // On réactive les boutons des lieux
-            assert vuePoseQuestion != null;
-            for (Button b : vuePoseQuestion.lieuButtons) {
-                b.setDisable(false);
-            }
-            // On réactive les boutons des temps
-            for (Button b : vuePoseQuestion.tempsButtons) {
-                b.setDisable(false);
-            }
-            // On réactive les boutons des personnages
-            for (Button b : vuePoseQuestion.personnageButtons) {
-                b.setDisable(false);
-            }
-            // On réinitialise les choix
-            modele.setLieuChoisi(null, vuePoseQuestion);
-            modele.setTempsChoisi(null, vuePoseQuestion);
-            modele.setPersonnageChoisi(null, vuePoseQuestion);
+            traiterTemps(id, vuePoseQuestion);
         } else {
-            // On récupère l'id du personnage
-            personnage = new Personnage(id);
+            traiterPersonnage(id, vuePoseQuestion);
+        }
+    }
 
-            // On désactive les boutons des autres personnages
-            assert vuePoseQuestion != null;
-            for (Button b : vuePoseQuestion.personnageButtons) {
-                if (!b.getId().equals(id)) {
-                    b.setDisable(true);
-                }
-            }
-            // On désactive les boutons des temps
-            for (Button b : vuePoseQuestion.tempsButtons) {
+    private void traiterLieu(String id, VuePoseQuestion vuePoseQuestion) {
+        String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));
+        int indexLieu = Integer.parseInt(id.substring(id.lastIndexOf("_") + 1));
+        Lieu lieu = new Lieu(nomLieu, indexLieu, null);
+        desactiverAutresBoutons(lieu, vuePoseQuestion.lieuButtons, null);
+        modeleJeu.getModeleQuestionDeduction().setLieuChoisi(lieu, vuePoseQuestion);
+    }
+
+    private void traiterTemps(String id, VuePoseQuestion vuePoseQuestion) {
+        int indexTemps = Integer.parseInt(id.substring(5));
+        Temps temps = new Temps(indexTemps);
+        desactiverAutresBoutons(temps, vuePoseQuestion.tempsButtons, vuePoseQuestion.personnageButtons);
+        modeleJeu.getModeleQuestionDeduction().setTempsChoisi(temps, vuePoseQuestion);
+    }
+
+    private void traiterPersonnage(String id, VuePoseQuestion vuePoseQuestion) {
+        Personnage personnage = new Personnage(id);
+        desactiverAutresBoutons(personnage, vuePoseQuestion.personnageButtons, vuePoseQuestion.tempsButtons);
+        modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(personnage, vuePoseQuestion);
+    }
+
+    private void desactiverAutresBoutons(Object choix, List<Button> buttons, List<Button> tempsOuPersonnage) {
+        if (choix instanceof Lieu l){
+            desactiverSelectionBouton(l.getNom(), buttons, tempsOuPersonnage);
+        }
+        else if (choix instanceof Temps t){
+            desactiverSelectionBouton(String.valueOf(t.getValeur()), buttons, tempsOuPersonnage);
+        }
+        else if (choix instanceof Personnage p){
+            desactiverSelectionBouton(p.getNom(), buttons, tempsOuPersonnage);
+        }
+    }
+
+    private void desactiverSelectionBouton(String s, List<Button> buttons, List<Button> tempsOuPersonnage) {
+        for (Button b : buttons) {
+            if (!b.getId().contains(s)) {
                 b.setDisable(true);
             }
-            modele.setPersonnageChoisi(personnage, vuePoseQuestion);
-            modele.setTempsChoisi(null, vuePoseQuestion);
+        }
+        if (tempsOuPersonnage != null) {
+            for (Button b : tempsOuPersonnage){
+                b.setDisable(true);
+            }
         }
     }
 }

@@ -12,9 +12,12 @@ public class ControleurImagePions implements EventHandler<ActionEvent> {
         this.modele = modele;
     }
 
-
     @Override
     public void handle(ActionEvent actionEvent) {
-        this.modele.changerImagePions();
+        try {
+            this.modele.notifierObservateurs();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la notification des observateurs : " + e.getMessage());
+        }
     }
 }

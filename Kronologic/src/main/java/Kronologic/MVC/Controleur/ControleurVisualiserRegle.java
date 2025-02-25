@@ -16,6 +16,11 @@ public class ControleurVisualiserRegle implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        this.modele.visualiserRegle((Stage) ((Button) actionEvent.getSource()).getScene().getWindow());
+        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        try {
+            this.modele.visualiserRegle(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

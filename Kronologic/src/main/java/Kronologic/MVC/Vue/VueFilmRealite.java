@@ -6,11 +6,9 @@ import Kronologic.Jeu.Elements.Realite;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -25,9 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+// TODO : à vérifier
 public class VueFilmRealite extends GridPane implements Observateur {
 
     public Button retour;
@@ -454,7 +452,7 @@ public class VueFilmRealite extends GridPane implements Observateur {
                         }
 
                         // Déléguer la logique métier au contrôleur
-                        new ControleurChoixCarte(modeleJeu).handle(e);
+                        new ControleurChoixCarte(modeleJeu.getModeleNotes()).handle(e);
                         e.consume();
                     });
 

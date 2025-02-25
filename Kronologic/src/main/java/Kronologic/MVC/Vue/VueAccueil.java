@@ -18,18 +18,22 @@ public class VueAccueil extends BorderPane implements Observateur {
     public Button IAJoueuse;
     public Button quitter;
 
+    private static final String BOUTON_STYLE_NORMAL = "-fx-background-color: #FFCC66; -fx-text-fill: #800000; -fx-background-radius: 20px;";
+    private static final String BOUTON_STYLE_HOVER = "-fx-background-color: #E6B85C; -fx-text-fill: #800000; -fx-background-radius: 20px; -fx-cursor: hand;";
+    private static final String COULEUR_FOND = "#800000";
+    private static final String COULEUR_TITRE = "#FFCC66";
+    private static final String POLICE_ECRITURE = "Arial";
+
     public VueAccueil() {
         super();
-        this.setStyle("-fx-background-color: #800000;");
+        this.setStyle("-fx-background-color: " + COULEUR_FOND + ";");
 
         Text titre = new Text("Kronologic");
-        titre.setFont(Font.font("Arial", 60));
-        titre.setFill(Color.web("#FFCC66"));
+        titre.setFont(Font.font(POLICE_ECRITURE, 60));
+        titre.setFill(Color.web(COULEUR_TITRE));
 
         VBox titreBox = new VBox(titre);
         titreBox.setAlignment(Pos.CENTER);
-
-        // Utilisation de Bindings pour un padding en %
         titreBox.paddingProperty().bind(Bindings.createObjectBinding(
                 () -> new Insets(getHeight() * 0.05, 0, 0, 0),
                 heightProperty()
@@ -42,8 +46,6 @@ public class VueAccueil extends BorderPane implements Observateur {
 
         VBox boutonsBox = new VBox(20);
         boutonsBox.setAlignment(Pos.CENTER);
-
-        // Padding en fonction de la hauteur de la fenêtre
         boutonsBox.paddingProperty().bind(Bindings.createObjectBinding(
                 () -> new Insets(getHeight() * 0.02),
                 heightProperty()
@@ -61,35 +63,13 @@ public class VueAccueil extends BorderPane implements Observateur {
     public static Button creerBouton(String s) {
         Button bouton = new Button(s);
         bouton.setId(s);
-        bouton.setFont(Font.font("Arial", 18));
-        bouton.setStyle(
-                "-fx-background-color: #FFCC66; " +
-                        "-fx-text-fill: #800000; " +
-                        "-fx-background-radius: 20px;"
-        );
+        bouton.setFont(Font.font(POLICE_ECRITURE, 18));
+        bouton.setStyle(BOUTON_STYLE_NORMAL);
 
         // Effets au survol de la souris
-        bouton.setOnMouseEntered(e -> {
-            bouton.setStyle(
-                    "-fx-background-color: #E6B85C; " +
-                            "-fx-text-fill: #800000; " +
-                            "-fx-background-radius: 20px; " +
-                            "-fx-cursor: hand;"
-            );
-            bouton.setScaleX(1.1);
-            bouton.setScaleY(1.1);
-        });
-        bouton.setOnMouseExited(e -> {
-            bouton.setStyle(
-                    "-fx-background-color: #FFCC66; " +
-                            "-fx-text-fill: #800000; " +
-                            "-fx-background-radius: 20px;"
-            );
-            bouton.setScaleX(1);
-            bouton.setScaleY(1);
-        });
+        bouton.setOnMouseEntered(e -> bouton.setStyle(BOUTON_STYLE_HOVER));
+        bouton.setOnMouseExited(e -> bouton.setStyle(BOUTON_STYLE_NORMAL));
 
-        // Laisser JavaFX gérer la taille en fonction du texte
         bouton.setMinWidth(Button.USE_COMPUTED_SIZE);
         bouton.setPrefWidth(Button.USE_COMPUTED_SIZE);
         bouton.setMaxWidth(Button.USE_COMPUTED_SIZE);
@@ -143,6 +123,6 @@ public class VueAccueil extends BorderPane implements Observateur {
 
     @Override
     public void actualiser() {
-        // TODO
+        // À implémenter si nécessaire
     }
 }

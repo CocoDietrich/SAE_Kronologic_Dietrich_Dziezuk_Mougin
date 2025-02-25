@@ -3,6 +3,7 @@ package Kronologic.MVC.Vue;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Images;
 import Kronologic.MVC.Modele.ModeleJeu;
+import Kronologic.MVC.TextCase;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -21,6 +22,7 @@ import java.util.regex.Pattern;
 import static Kronologic.MVC.Controleur.ControleurChoixTableau.nomLieu;
 import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
 
+// TODO : à vérifier
 public class VueTableau extends BorderPane implements Observateur {
 
     public Button retour;

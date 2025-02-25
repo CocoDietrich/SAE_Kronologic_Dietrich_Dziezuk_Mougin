@@ -3,21 +3,24 @@ package Kronologic.MVC.Controleur;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Modele.ModeleJeu;
-import Kronologic.MVC.Vue.TextCase;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleNotes;
+import Kronologic.MVC.TextCase;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
-import javax.sound.sampled.LineUnavailableException;
-import java.io.FilterOutputStream;
 import java.util.List;
 
 public class ControleurChoixTableau implements EventHandler<MouseEvent> {
 
-    private ModeleJeu modeleJeu;
+    private ModeleNotes modeleNotes;
+    // Ajout de constantes pour les états
+    private static final String ETAT_PRESENT = "présent";
+    private static final String ETAT_ABSENT = "absent";
+    private static final String ETAT_NEUTRE = "neutre";
 
-    public ControleurChoixTableau(ModeleJeu modeleJeu) {
-        this.modeleJeu = modeleJeu;
+    public ControleurChoixTableau(ModeleNotes modeleNotes) {
+        this.modeleNotes = modeleNotes;
     }
 
     public static String nomLieu(String nomCourt){
@@ -32,70 +35,62 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
         };
     }
 
+    // Méthode pour récupérer un lieu par son nom
+    private Lieu recupererLieuParNom(String nom, List<Lieu> lieux) {
+        return lieux.stream()
+                .filter(l -> l.getNom().equals(nom))
+                .findFirst()
+                .orElse(null);
+    }
+
+    // Méthode pour récupérer un personnage par son nom
+    private Personnage recupererPersonnageParNom(String nom, List<Personnage> personnages) {
+        return personnages.stream()
+                .filter(p -> p.getNom().equals(nom))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void gestionNote(TextCase text, Elements elements, String etat) {
-        // On récupère les lieux et les personnages
         List<Lieu> lieux = elements.getLieux();
         List<Personnage> personnages = elements.getPersonnages();
 
         Lieu lieu = null;
         Personnage personnage = null;
         int nbPersonnage = 0;
-        Temps temps = null;
+        Temps temps = new Temps(Integer.parseInt(text.getInfo().split(" - ")[1]));
 
+        // Récupérer les éléments en fonction de l'état
         if (text.getInfo().split(" - ")[0].equals("Nombre")) {
-            // Cas du nombre de Personnages
-
-            // On récupère le Lieu
-            for (Lieu l : lieux) {
-                if (l.getNom().equals(text.getInfo().split(" - ")[2])) {
-                    lieu = l;
-                }
-            }
-
-            // On récupère le nombre de Personnages
+            lieu = recupererLieuParNom(text.getInfo().split(" - ")[2], lieux);
             nbPersonnage = Integer.parseInt(text.getText());
         } else {
-            // Cas de la position du personnage
-
-            // On récupère le Personnage
-            for (Personnage p : personnages) {
-                if (p.getNom().equals(text.getInfo().split(" - ")[2])) {
-                    personnage = p;
-                }
-            }
-
-            // On récupère le Lieu
-            for (Lieu l : lieux) {
-                if (l.getNom().equals(nomLieu(text.getText()))) {
-                    lieu = l;
-                }
-            }
+            personnage = recupererPersonnageParNom(text.getInfo().split(" - ")[2], personnages);
+            lieu = recupererLieuParNom(nomLieu(text.getText()), lieux);
         }
 
-        // On récupère le Temps
-        temps = new Temps(Integer.parseInt(text.getInfo().split(" - ")[1]));
-
+        // Traitement des notes
         switch (etat) {
-            case "présent":
+            case ETAT_PRESENT:
                 if (personnage != null) {
-                    this.modeleJeu.ajouterNote(lieu, temps,  personnage);
+                    this.modeleNotes.ajouterNote(lieu, temps, personnage);
                 } else {
-                    this.modeleJeu.ajouterNote(lieu, temps, nbPersonnage);
+                    this.modeleNotes.ajouterNote(lieu, temps, nbPersonnage);
                 }
                 break;
-            case "absent":
+            case ETAT_ABSENT:
                 if (personnage != null) {
-                    this.modeleJeu.modifierNote(lieu, temps, personnage, true, false);
+                    this.modeleNotes.modifierNote(lieu, temps, personnage, true, false);
                 } else {
-                    this.modeleJeu.modifierNote(lieu, temps, nbPersonnage, true, false);
+                    this.modeleNotes.modifierNote(lieu, temps, nbPersonnage, true, false);
                 }
                 break;
-                case "neutre":
-                    if (personnage != null) {
-                        this.modeleJeu.supprimerNote(lieu, temps, personnage);
-                    } else {
-                        this.modeleJeu.supprimerNote(lieu, temps, nbPersonnage);
-                    }
+            case ETAT_NEUTRE:
+                if (personnage != null) {
+                    this.modeleNotes.supprimerNote(lieu, temps, personnage);
+                } else {
+                    this.modeleNotes.supprimerNote(lieu, temps, nbPersonnage);
+                }
                 break;
             default:
                 break;
@@ -144,8 +139,7 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 gestionNote(text, elements, text.getEtat());
                 break;
         }
-        modeleJeu.actualiserFilmJoueur();
-        modeleJeu.actualiserVueCarte();
+        modeleNotes.notifierObservateurs();
 
         System.out.println("Liste des notes : ");
         for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {

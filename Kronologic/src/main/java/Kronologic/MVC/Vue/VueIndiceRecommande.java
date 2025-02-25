@@ -25,47 +25,74 @@ public class VueIndiceRecommande {
         this.stage = new Stage();
         this.stage.setTitle("Indice et Correction");
 
-        // Titre de la fenêtre avec effet d'ombre et couleur dorée
-        Text titre = new Text("Indice Recommandé");
-        titre.setFont(Font.font("Arial", 24));
-        titre.setFill(Color.GOLD);
+        Text titre = creerTitre();
+        this.messageIndice = creerMessageIndice(indice);
+        this.zoneErreurs = creerChampErreur(erreurs);
+
+        VBox encadreMessage = creerContenaireMessage(messageIndice);
+        VBox encadreErreurs = creerContenaireErreur(zoneErreurs);
+
+        Button fermer = creerBoutonQuitter();
+
+        VBox layout = creerStructure(titre, encadreMessage, encadreErreurs, fermer);
+        Scene scene = new Scene(layout, 600, 400);
+        stage.setScene(scene);
+    }
+
+    private Text creerTitre() {
+        Text title = new Text("Indice Recommandé");
+        title.setFont(Font.font("Arial", 24));
+        title.setFill(Color.GOLD);
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
         shadow.setOffsetX(3);
         shadow.setOffsetY(3);
-        titre.setEffect(shadow);
+        title.setEffect(shadow);
+        return title;
+    }
 
-        // Message contenant l'indice recommandé
-        this.messageIndice = new Text(indice);
-        messageIndice.setFont(Font.font("Arial", 18));
-        messageIndice.setFill(Color.BLACK);
-        messageIndice.setWrappingWidth(450);
+    private Text creerMessageIndice(String indice) {
+        Text message = new Text(indice);
+        message.setFont(Font.font("Arial", 18));
+        message.setFill(Color.BLACK);
+        message.setWrappingWidth(450);
+        return message;
+    }
 
-        // Encadré pour l'indice
-        VBox encadreMessage = new VBox(messageIndice);
-        encadreMessage.setAlignment(Pos.CENTER);
-        encadreMessage.setPadding(new Insets(20));
-        encadreMessage.setStyle("-fx-background-color: white; -fx-border-color: #B22222; -fx-border-width: 3px; -fx-border-radius: 10px;");
+    private TextArea creerChampErreur(String erreurs) {
+        TextArea textArea = new TextArea(erreurs);
+        textArea.setEditable(false);
+        textArea.setWrapText(true);
+        textArea.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
+        textArea.setPrefHeight(150);
+        return textArea;
+    }
 
-        // Zone pour afficher les erreurs du joueur (comme l'IA Déduction)
-        this.zoneErreurs = new TextArea(erreurs);
-        zoneErreurs.setEditable(false);
-        zoneErreurs.setWrapText(true);
-        zoneErreurs.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
-        zoneErreurs.setPrefHeight(150);
+    private VBox creerContenaireMessage(Text message) {
+        VBox container = new VBox(message);
+        container.setAlignment(Pos.CENTER);
+        container.setPadding(new Insets(20));
+        container.setStyle("-fx-background-color: white; -fx-border-color: #B22222; -fx-border-width: 3px; -fx-border-radius: 10px;");
+        return container;
+    }
 
-        VBox encadreErreurs = new VBox(new Text("🔍 Vérification de vos hypothèses :"), zoneErreurs);
-        encadreErreurs.setAlignment(Pos.CENTER);
-        encadreErreurs.setPadding(new Insets(10));
+    private VBox creerContenaireErreur(TextArea textArea) {
+        VBox container = new VBox(new Text("🔍 Vérification de vos hypothèses :"), textArea);
+        container.setAlignment(Pos.CENTER);
+        container.setPadding(new Insets(10));
+        return container;
+    }
 
-        // Bouton de fermeture avec effet de survol
-        Button fermer = new Button("Fermer");
-        fermer.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;");
-        fermer.setOnMouseEntered(e -> fermer.setStyle("-fx-background-color: #a5001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
-        fermer.setOnMouseExited(e -> fermer.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
-        fermer.setOnAction(e -> stage.close());
+    private Button creerBoutonQuitter() {
+        Button button = new Button("Fermer");
+        button.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;");
+        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #a5001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
+        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
+        button.setOnAction(e -> stage.close());
+        return button;
+    }
 
-        // Mise en page avec un fond dégradé
+    private VBox creerStructure(Text titre, VBox encadreMessage, VBox encadreErreurs, Button fermer) {
         VBox layout = new VBox(20, titre, encadreMessage, encadreErreurs, fermer);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(25));
@@ -75,9 +102,7 @@ public class VueIndiceRecommande {
                         new Stop(1, Color.ORANGERED)),
                 CornerRadii.EMPTY, Insets.EMPTY
         )));
-
-        Scene scene = new Scene(layout, 600, 400);
-        stage.setScene(scene);
+        return layout;
     }
 
     public void afficher() {

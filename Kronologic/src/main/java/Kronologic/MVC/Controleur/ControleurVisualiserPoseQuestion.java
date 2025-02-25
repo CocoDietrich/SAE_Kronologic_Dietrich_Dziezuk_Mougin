@@ -16,8 +16,11 @@ public class ControleurVisualiserPoseQuestion implements EventHandler<ActionEven
 
     @Override
     public void handle(ActionEvent actionEvent) {
-        // On passe à la vue de pose de question
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        this.modele.visualiserPoseQuestion(stage);
+        try {
+            this.modele.visualiserPoseQuestion(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

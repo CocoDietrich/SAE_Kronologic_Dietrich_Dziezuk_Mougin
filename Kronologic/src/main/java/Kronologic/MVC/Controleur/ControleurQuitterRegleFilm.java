@@ -17,7 +17,7 @@ public class ControleurQuitterRegleFilm implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent actionEvent) {
         Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        if(this.modele.isVueCarte()){
+        if(this.modele.estVueCarte()){
             this.modele.retourVueCarte(stage);
         } else {
             this.modele.retourVueTableau(stage);

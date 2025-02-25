@@ -1,42 +1,45 @@
 package Kronologic.MVC.Controleur;
 
-import Kronologic.MVC.Modele.ModeleJeu;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleIA;
 import Kronologic.MVC.Vue.VueDeductionIA;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-import javafx.scene.control.Button;
+public class ControleurVisualiserDeductionIA implements EventHandler<ActionEvent> {
 
-public class ControleurVoirDeductionIA implements EventHandler<ActionEvent> {
+    private ModeleIA modeleIA;
 
-    private ModeleJeu modele;
+    public ControleurVisualiserDeductionIA(ModeleIA modeleIA) {
+        this.modeleIA = modeleIA;
+    }
 
-    public ControleurVoirDeductionIA(ModeleJeu modele) {
-        this.modele = modele;
+    private void initialiserBoutons(VueDeductionIA vueDeductionIA){
+        // Définir l'action des boutons
+        Button boutonChocoSolver = vueDeductionIA.getBoutonChocoSolver();
+        Button boutonHeuristique = vueDeductionIA.getBoutonHeuristique();
+
+        boutonChocoSolver.setOnAction(e -> {
+            String historiqueChocoSolver = modeleIA.voirDeductionIAChocoSolver();
+            vueDeductionIA.afficherDeduction(historiqueChocoSolver);
+        });
+
+        boutonHeuristique.setOnAction(e -> {
+            String historiqueHeuristique = modeleIA.voirDeductionIAHeuristique();
+            vueDeductionIA.afficherDeduction(historiqueHeuristique);
+        });
     }
 
     @Override
     public void handle(ActionEvent actionEvent) {
         VueDeductionIA vueDeductionIA = new VueDeductionIA();
 
-        // Définir l'action des boutons
-        Button boutonChocoSolver = vueDeductionIA.getBoutonChocoSolver();
-        Button boutonHeuristique = vueDeductionIA.getBoutonHeuristique();
-
-        boutonChocoSolver.setOnAction(e -> {
-            String historiqueChocoSolver = modele.voirDeductionIAChocoSolver();
-            vueDeductionIA.afficherDeduction(historiqueChocoSolver);
-        });
-
-        boutonHeuristique.setOnAction(e -> {
-            String historiqueHeuristique = modele.voirDeductionIAHeuristique();
-            vueDeductionIA.afficherDeduction(historiqueHeuristique);
-        });
+        initialiserBoutons(vueDeductionIA);
 
         // Afficher la vue initiale avec ChocoSolver par défaut
-        String historique = modele.voirDeductionIAChocoSolver();
+        String historique = modeleIA.voirDeductionIAChocoSolver();
         vueDeductionIA.afficherDeduction(historique);
 
         Stage stage = new Stage();

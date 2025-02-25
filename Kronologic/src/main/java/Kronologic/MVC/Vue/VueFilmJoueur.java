@@ -24,6 +24,7 @@ import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO : A verifier
 public class VueFilmJoueur extends GridPane implements Observateur {
 
     public Button retour;
@@ -44,8 +45,7 @@ public class VueFilmJoueur extends GridPane implements Observateur {
         this.setVgap(50);
 
         // Flèche de retour
-        HBox retourBox = afficherRetour();
-        this.add(retourBox, 0, 0);
+        this.add(afficherRetour(), 0, 0);
 
         // Slider
         HBox sliderBox = afficherSlider();
@@ -447,7 +447,7 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                         }
 
                         // Déléguer la logique métier au contrôleur
-                        new ControleurChoixCarte(modeleJeu).handle(e);
+                        new ControleurChoixCarte(modeleJeu.getModeleNotes()).handle(e);
                         e.consume();
                     });
 
@@ -543,13 +543,13 @@ public class VueFilmJoueur extends GridPane implements Observateur {
         // On place les notes
         for (Note note : notesTour){
             if (note.getTemps().getValeur() == 1
-                && note.getPersonnage() == null){
+                    && note.getPersonnage() == null){
                 continue;
             }
             for (Polygon zone : zonesDeJeu){
                 if (((String) zone.getUserData()).split("-SousZone").length == 1
-                    || zonesContenantPions.contains(zone)
-                    || zone.getParent() == null) {
+                        || zonesContenantPions.contains(zone)
+                        || zone.getParent() == null) {
                     continue;
                 }
                 if (((String) zone.getUserData()).split("-SousZone")[0].equals("Temps "

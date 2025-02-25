@@ -6,6 +6,7 @@ import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.Jeu.Elements.Pion;
+import Kronologic.MVC.Modele.SousModeleJeu.ModeleNotes;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.VueCarte;
 import javafx.event.EventHandler;
@@ -15,12 +16,13 @@ import javafx.scene.shape.Polygon;
 import java.util.ArrayList;
 import java.util.Objects;
 
+// TODO : A REFACTORISER
 public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
-    private ModeleJeu modeleJeu;
+    private ModeleNotes modeleNotes;
 
-    public ControleurChoixCarte(ModeleJeu modeleJeu) {
-        this.modeleJeu = modeleJeu;
+    public ControleurChoixCarte(ModeleNotes modeleNotes) {
+        this.modeleNotes = modeleNotes;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         Pion pionAvant = (Pion) dragEvent.getGestureSource();
 
         VueCarte vueCarte = null;
-        for (Observateur observateur : modeleJeu.getObservateurs()) {
+        for (Observateur observateur : modeleNotes.getObservateurs()) {
             if (observateur instanceof VueCarte) {
                 vueCarte = (VueCarte) observateur;
             }
@@ -107,7 +109,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                         vueCarte.pions.remove(pionAvant);
                         vueCarte.pions.remove(pionActuel);
                         vueCarte.pions.remove(pionActuel);
-                        modeleJeu.supprimerPion(pionAvant);
+                        modeleNotes.supprimerPion(pionAvant);
                         return;
                     }
                 }
@@ -158,11 +160,11 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
 
             vueCarte.pions.getLast().setNote(note);
-            modeleJeu.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
+            modeleNotes.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
         } else if (!Objects.equals(pionAvant.getId(), pionActuel.getId())) {
             // Cas du pion déplacé depuis un lieu vers un autre lieu
-            modeleJeu.supprimerPion(pionAvant);
+            modeleNotes.supprimerPion(pionAvant);
             vueCarte.pions.removeLast();
             vueCarte.pions.remove(pionAvant);
             for (Polygon p : vueCarte.zonesContenantPions) {
@@ -221,7 +223,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 //            System.out.println("Nouveau lieu : " + nouveauLieu);
 //            System.out.println("Temps : " + temps);
 
-            modeleJeu.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
+            modeleNotes.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
             vueCarte.pions.remove(pionAvant);
 
             for (Polygon p : vueCarte.zonesContenantPions) {
@@ -240,8 +242,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
         }
 
-        modeleJeu.actualiserFilmJoueur();
-        modeleJeu.actualiserVueTableau();
+        modeleNotes.notifierObservateurs();
         System.out.println("Liste des notes : ");
         for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
             System.out.println(n);

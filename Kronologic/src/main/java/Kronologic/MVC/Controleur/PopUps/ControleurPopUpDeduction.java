@@ -1,45 +1,66 @@
 package Kronologic.MVC.Controleur.PopUps;
 
+import Kronologic.MVC.Controleur.ControleurFilmRealite;
 import Kronologic.MVC.Modele.ModeleJeu;
-import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.PopUps.VuePopUpDeduction;
+import Kronologic.MVC.Vue.VueFilmRealite;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private static final String QUITTER = "Quitter";
+    private static final String VOIR_FILM = "Voir le film";
+
+    private final ModeleJeu modele;
 
     public ControleurPopUpDeduction(ModeleJeu modele) {
         this.modele = modele;
     }
 
+    private void finDeJeu(Stage stage){
+        stage.close();
+        Optional<VuePopUpDeduction> vuePopUpDeduction = modele.getObservateurs().stream()
+                .filter(VuePopUpDeduction.class::isInstance)
+                .map(VuePopUpDeduction.class::cast)
+                .findFirst();
+
+        vuePopUpDeduction.ifPresent(vue -> modele.quitter("retour", vue.getStage()));
+    }
+
     @Override
     public void handle(ActionEvent actionEvent) {
-        Stage stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        Object source = actionEvent.getSource();
+        if (!(source instanceof Button button)) {
+            return;
+        }
 
-        // On récupère l'id du bouton
-        String texte = ((Button) actionEvent.getSource()).getText();
+        Stage stage = (Stage) button.getScene().getWindow();
+        String texte = button.getText();
 
-        // Si on clique sur le bouton de retour, on ferme le stage du pop-up
-        if (texte.equals("Quitter")) {
-            stage.close();
+        if (QUITTER.equals(texte)) {
+            finDeJeu(stage);
+        } else if (VOIR_FILM.equals(texte)) {
+            VueFilmRealite vueFilmRealite = new VueFilmRealite(modele);
+            ControleurFilmRealite controleurFilmRealite = new ControleurFilmRealite(modele);
+            vueFilmRealite.retour.setOnAction(e -> finDeJeu(stage));
+            vueFilmRealite.slider.valueProperty().addListener(controleurFilmRealite);
+            this.modele.getModeleFilms().enregistrerObservateur(vueFilmRealite);
 
-            VuePopUpDeduction vuePopUpDeduction = null;
-            // On récupère la vue du pop-up de déduction
-            for (Observateur o : modele.getObservateurs()) {
-                if (o instanceof VuePopUpDeduction) {
-                    vuePopUpDeduction = (VuePopUpDeduction) o;
-                    break;
-                }
-            }
-            // On retourne à la vue de la carte
-            assert vuePopUpDeduction != null;
-            this.modele.quitter("retour", vuePopUpDeduction.getStage());
-        } else if (texte.equals("Voir le film")) {
-            this.modele.visualiserFilmRealite(stage);
+            BorderPane bp = new BorderPane(vueFilmRealite);
+
+            Scene scene = new Scene(bp);
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+
+            modele.notifierObservateurs();
         }
     }
 }
