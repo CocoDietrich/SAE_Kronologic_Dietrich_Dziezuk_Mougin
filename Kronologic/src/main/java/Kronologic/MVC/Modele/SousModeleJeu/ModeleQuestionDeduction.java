@@ -49,6 +49,7 @@ public class ModeleQuestionDeduction implements Sujet {
     public void setTempsChoisi(Temps temps, Observateur vue) {
         if (vue instanceof VuePoseQuestion vuePoseQuestion) {
             vuePoseQuestion.tempsChoisi = temps;
+            vuePoseQuestion.personnageChoisi = null;
         } else if (vue instanceof VueDeduction vueDeduction) {
             vueDeduction.tempsMeurtre = temps;
         }
@@ -58,6 +59,7 @@ public class ModeleQuestionDeduction implements Sujet {
     public void setPersonnageChoisi(Personnage personnage, Observateur vue) {
         if (vue instanceof VuePoseQuestion vuePoseQuestion) {
             vuePoseQuestion.personnageChoisi = personnage;
+            vuePoseQuestion.tempsChoisi = null;
         } else if (vue instanceof VueDeduction vueDeduction) {
             vueDeduction.meurtrier = personnage;
         }
@@ -67,17 +69,21 @@ public class ModeleQuestionDeduction implements Sujet {
         VuePoseQuestion vuePoseQuestion = getVue(VuePoseQuestion.class);
         if (vuePoseQuestion == null) return null;
 
-        Indice i = (vuePoseQuestion.personnageChoisi != null)
-                ? partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi)
-                : partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
 
-        partie.ajouterIndice(i);
+        Indice indice = null;
+        if (vuePoseQuestion.personnageChoisi != null) {
+            indice = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
+        } else {
+            indice = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
+        }
+
+        partie.ajouterIndice(indice);
         notifierObservateurs();
-        System.out.println("Réponse à la question posée : " + i);
+        System.out.println("Réponse à la question posée : " + indice);
 
         VuePopUpPoseQuestion vuePopUpPoseQuestion = getVue(VuePopUpPoseQuestion.class);
         if (vuePopUpPoseQuestion != null) {
-            vuePopUpPoseQuestion.afficherPopUp(i);
+            vuePopUpPoseQuestion.afficherPopUp(indice);
         }
 
         if (modeleJeu.estVueCarte()) {
@@ -85,7 +91,7 @@ public class ModeleQuestionDeduction implements Sujet {
         } else {
             modeleJeu.retourVueTableau(stage);
         }
-        return i;
+        return indice;
     }
 
     public void faireDeduction() {
