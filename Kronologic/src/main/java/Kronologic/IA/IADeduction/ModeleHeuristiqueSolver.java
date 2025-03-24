@@ -17,15 +17,12 @@ public class ModeleHeuristiqueSolver {
     private final String[] personnages;
     private final boolean[][][] domainesPersonnages = new boolean[6][6][6]; // Temps × Personnages × Lieux
     private final int[][] sallesAdjacentes;
-    private final boolean[][][] solutionsMeurtre = new boolean[6][6][6]; // [Personnages sauf détective] x [Lieux] x [Temps]
 
     public ModeleHeuristiqueSolver(String[] personnages, int[][] sallesAdjacentes, List<Realite> positionsInitiales) {
         this.personnages = personnages;
         this.sallesAdjacentes = sallesAdjacentes;
 
-        System.out.println("INIT");
         initialiserDomaines();
-        initialiserSolutionsMeurtre();
         appliquerPositionsInitiales(positionsInitiales);
     }
 
@@ -35,20 +32,6 @@ public class ModeleHeuristiqueSolver {
             for (int p = 0; p < 6; p++) {
                 for (int l = 0; l < 6; l++) {
                     domainesPersonnages[t][p][l] = true; // Tous les lieux sont initialement possibles
-                }
-            }
-        }
-    }
-
-    public void initialiserSolutionsMeurtre() {
-        int indexDetective = getIndexPersonnage("D");
-
-        for (int p = 0; p < 6; p++) {
-            if (p == indexDetective) continue; // Exclure le détective
-
-            for (int l = 0; l < 6; l++) {
-                for (int t = 0; t < 6; t++) { // Temps 1 exclu
-                    solutionsMeurtre[p][l][t] = t != 0; // Temps 0 exclu
                 }
             }
         }
@@ -84,7 +67,6 @@ public class ModeleHeuristiqueSolver {
                 }
             }
         }
-
     }
 
 
@@ -101,7 +83,15 @@ public class ModeleHeuristiqueSolver {
         afficherUniquementLieuxAdjacents(personnageIndex, lieuIndex, temps + 1);
 
         appliquerContraintesDeplacements();
-        mettreAJourSolutionsMeurtre();
+
+        // On regarde qui peut être le coupable
+        for (int t = 0; t < 6; t++) {
+            for (int l = 0; l < 6; l++) {
+                for (int p = 0; p < 6; p++) {
+                    peutEtreCoupable(p, l, t);
+                }
+            }
+        }
     }
 
     // Ajouter une contrainte sur le nombre de passages
@@ -150,7 +140,15 @@ public class ModeleHeuristiqueSolver {
         }
 
         appliquerContraintesDeplacements();
-        mettreAJourSolutionsMeurtre();
+
+        // On regarde qui peut être le coupable
+        for (int t = 0; t < 6; t++) {
+            for (int l = 0; l < 6; l++) {
+                for (int p = 0; p < 6; p++) {
+                    peutEtreCoupable(p, l, t);
+                }
+            }
+        }
     }
 
     // Ajouter une contrainte sur le nombre de personnes dans une salle
@@ -176,7 +174,15 @@ public class ModeleHeuristiqueSolver {
         }
 
         appliquerContraintesDeplacements();
-        mettreAJourSolutionsMeurtre();
+
+        // On regarde qui peut être le coupable
+        for (int t = 0; t < 6; t++) {
+            for (int l = 0; l < 6; l++) {
+                for (int p = 0; p < 6; p++) {
+                    peutEtreCoupable(p, l, t);
+                }
+            }
+        }
     }
 
     // Méthode qui renvoie les temps où un personnage est sûr de se trouver dans un lieu
@@ -277,34 +283,8 @@ public class ModeleHeuristiqueSolver {
         return historique.toString();
     }
 
-    public void mettreAJourSolutionsMeurtre() {
-        boolean auMoinsUneSolution = false;
 
-        for (int p = 0; p < 6; p++) {
-            for (int l = 0; l < 6; l++) {
-                for (int t = 1; t < 6; t++) { // On exclut le temps 1
-                    System.out.println("🔍 Vérification pour " + personnages[p] + " au temps " + (t + 1) + " dans le lieu " + (l + 1));
-                    if (!peutEtreCoupable(p, l, t)) {
-                        System.out.println("❌ " + personnages[p] + " ne peut pas être le coupable !");
-                        solutionsMeurtre[p][l][t] = false;
-                    } else {
-                        System.out.println("✅ " + personnages[p] + " peut être le coupable !");
-                        auMoinsUneSolution = true;
-                    }
-                }
-            }
-        }
-
-        // 🔹 Vérification pour éviter d'éliminer toutes les solutions d’un coup
-        if (!auMoinsUneSolution) {
-            System.out.println("⚠️ Attention : Toutes les solutions ont été éliminées ! Vérification nécessaire.");
-        } else {
-            afficherSolutionsMeurtre();
-        }
-    }
-
-
-    private boolean peutEtreCoupable(int p, int l, int t) {
+    private void peutEtreCoupable(int p, int l, int t) {
         if (personnages[p].equals("C") && l == 3 && t == 6) {
             System.out.println("ZONE OMBRE");
             System.out.println("VERIF SI C ET D SONT LA");
@@ -314,7 +294,7 @@ public class ModeleHeuristiqueSolver {
 
         // Vérifier que le détective et le suspect sont bien présents
         if (!domainesPersonnages[t][p][l] || !domainesPersonnages[t][getIndexPersonnage("D")][l]) {
-            return false;
+            return;
         }
 
         if (personnages[p].equals("C") && l == 3 && t == 6) {
@@ -331,11 +311,11 @@ public class ModeleHeuristiqueSolver {
             }
             // Cas du personnage testé présent dans un autre lieu
             if (domainesPersonnages[t][p][i] && i != l) {
-                return true;
+                return;
             }
             // Cas du détective présent dans un autre lieu
             if (domainesPersonnages[t][getIndexPersonnage("D")][i] && i != l) {
-                return true;
+                return;
             }
         }
 
@@ -359,89 +339,21 @@ public class ModeleHeuristiqueSolver {
                 }
                 // Si le personnage est présent que dans un lieu, on renvoie faux
                 if (!autrePersonnageAbsent) {
-                    return false;
+                    return;
                 }
             }
         }
 
         if (!autrePersonnageAbsent) {
-            // Méthode c'est lui
+            afficherCoupable(p, l, t);
         }
-        return true;
     }
 
-    public void afficherSolutionsMeurtre() {
-        List<Map<String, Integer>> solutionsRestantes = new ArrayList<>();
-
-        for (int p = 0; p < 6; p++) {
-            for (int t = 0; t < 6; t++) {
-                for (int l = 1; l < 6; l++) {
-                    if (solutionsMeurtre[p][l][t]) {
-                        Map<String, Integer> solution = new HashMap<>();
-                        solution.put("Coupable", p);
-                        solution.put("Lieu", l);
-                        solution.put("Temps", t);
-                        solutionsRestantes.add(solution);
-                    }
-                }
-            }
-        }
-
-        // On affiche toutes les positions
-        for (int p = 0; p < 6; p++) {
-            for (int t = 0; t < 6; t++) {
-                for (int l = 0; l < 6; l++) {
-                    if (personnages[p].equals("C") || personnages[p].equals("D")) {
-                        System.out.println("DOMAINE : " + personnages[p] + " - Temps " + (t + 1) + " - Lieu " + (l + 1) + " : " + domainesPersonnages[t][p][l]);
-                        System.out.println("SOLUTIONS : " + personnages[p] + " - Temps " + (t + 1) + " - Lieu " + (l + 1) + " : " + solutionsMeurtre[t][p][l]);
-                    }
-                }
-            }
-        }
-
-        if (solutionsRestantes.isEmpty()) {
-            System.out.println("❌ Aucune solution valide restante !");
-        } else if (solutionsRestantes.size() == 1) {
-            Map<String, Integer> solution = solutionsRestantes.getFirst();
-            System.out.println("✅ Coupable trouvé !");
-            System.out.println("Coupable : " + personnages[solution.get("Coupable")]);
-            System.out.println("Lieu du crime : " + (solution.get("Lieu") + 1));
-            System.out.println("Temps du crime : " + (solution.get("Temps") + 1));
-        } else {
-            System.out.println("🔍 Solutions encore possibles (" + solutionsRestantes.size() + ") :");
-            for (Map<String, Integer> sol : solutionsRestantes) {
-                System.out.println("- Coupable : " + personnages[sol.get("Coupable")] +
-                        ", Lieu : " + (sol.get("Lieu") + 1) +
-                        ", Temps : " + (sol.get("Temps") + 1));
-                // On regarde si le coupable est bien dans un lieu où est le détective (OK)
-                // On regarde si le détective est obligatoirement dans cette salle
-                int indexDetective = getIndexPersonnage("D");
-                int nombreFalse = 0;
-                for (int l = 0; l < 6; l++) {
-                    if (!domainesPersonnages[sol.get("Temps")][indexDetective][l]){
-                        nombreFalse++;
-                    }
-                }
-                if (nombreFalse != 5) {
-                    System.out.print("// PAS SUR");
-                    System.out.println();
-                }
-                else {
-                    int nombrePersonnes = 0;
-                    for (int i = 0; i < personnages.length; i++) {
-                        if (domainesPersonnages[sol.get("Temps")][i][sol.get("Lieu")]) {
-                            nombrePersonnes++;
-                        }
-                    }
-                    if (nombrePersonnes != 2) {
-                        System.out.println("// TOUJOURS FAUX");
-                    }
-                    else {
-                        System.out.println("OH LALA LE COUPABLE LA C'EST LUI REGARDE ICI LAAAAAAAAAAAAAAAAAAA");
-                    }
-                }
-            }
-        }
+    public void afficherCoupable(int p, int l, int t) {
+        StringBuilder coupable = new StringBuilder();
+        coupable.append(String.format("👤 Coupable : %s\n", personnages[p]));
+        coupable.append(String.format("📍 Lieu du crime : %d\n", l + 1));
+        coupable.append(String.format("⏳ Temps du crime : %d\n\n", t + 1));
     }
 
     public int getIndexPersonnage(String personnage) {
