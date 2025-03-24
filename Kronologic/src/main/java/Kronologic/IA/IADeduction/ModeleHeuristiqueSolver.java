@@ -4,24 +4,21 @@ import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Realite;
 import Kronologic.Jeu.Elements.Temps;
-import Kronologic.Jeu.Indice.Indice;
-import Kronologic.Jeu.Indice.IndicePersonnage;
-import Kronologic.Jeu.Indice.IndiceTemps;
-import Kronologic.MVC.Modele.ModeleJeu;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ModeleHeuristiqueSolver {
 
     private final String[] personnages;
     private final boolean[][][] domainesPersonnages = new boolean[6][6][6]; // Temps × Personnages × Lieux
     private final int[][] sallesAdjacentes;
+    private final int[][] nombrePersonnageContrainte = new int[6][6]; // Temps × Lieux × NbPersonnages
 
     public ModeleHeuristiqueSolver(String[] personnages, int[][] sallesAdjacentes, List<Realite> positionsInitiales) {
         this.personnages = personnages;
         this.sallesAdjacentes = sallesAdjacentes;
 
+        initialiserNombrePassage();
         initialiserDomaines();
         appliquerPositionsInitiales(positionsInitiales);
     }
@@ -33,6 +30,15 @@ public class ModeleHeuristiqueSolver {
                 for (int l = 0; l < 6; l++) {
                     domainesPersonnages[t][p][l] = true; // Tous les lieux sont initialement possibles
                 }
+            }
+        }
+    }
+
+    // Initialiser les contraintes de nombre de passages
+    public void initialiserNombrePassage() {
+        for (int t = 0; t < 6; t++) {
+            for (int l = 0; l < 6; l++) {
+                nombrePersonnageContrainte[t][l] = -1; // Nombre de passages non défini
             }
         }
     }
@@ -83,6 +89,7 @@ public class ModeleHeuristiqueSolver {
         afficherUniquementLieuxAdjacents(personnageIndex, lieuIndex, temps + 1);
 
         appliquerContraintesDeplacements();
+        appliquerContrainteNombrePersonnage();
 
         // On regarde qui peut être le coupable
         for (int t = 0; t < 6; t++) {
@@ -140,6 +147,7 @@ public class ModeleHeuristiqueSolver {
         }
 
         appliquerContraintesDeplacements();
+        appliquerContrainteNombrePersonnage();
 
         // On regarde qui peut être le coupable
         for (int t = 0; t < 6; t++) {
@@ -153,6 +161,7 @@ public class ModeleHeuristiqueSolver {
 
     // Ajouter une contrainte sur le nombre de personnes dans une salle
     public void ajouterContrainteTemps(Lieu lieu, Temps temps, int nbPersonnages) {
+        this.nombrePersonnageContrainte[temps.getValeur() - 1][lieu.getId() - 1] = nbPersonnages;
 
         int lieuIndex = lieu.getId() - 1;
         int tempsIndex = temps.getValeur() - 1;
@@ -174,12 +183,31 @@ public class ModeleHeuristiqueSolver {
         }
 
         appliquerContraintesDeplacements();
+        appliquerContrainteNombrePersonnage();
 
         // On regarde qui peut être le coupable
         for (int t = 0; t < 6; t++) {
             for (int l = 0; l < 6; l++) {
                 for (int p = 0; p < 6; p++) {
                     peutEtreCoupable(p, l, t);
+                }
+            }
+        }
+    }
+
+    // Appliquer les contraintes de nombre de personnes dans une salle
+    public void appliquerContrainteNombrePersonnage() {
+        for (int t = 0; t < 6; t++) {
+            for (int l = 0; l < 6; l++) {
+                if (nombrePersonnageContrainte[t][l] != -1) {
+                    for (int p = 0; p < 6; p++) {
+                        ArrayList<Integer> personnagesSurs = trouverPersonnagesSurs(l, t);
+                        if (personnagesSurs.size() == nombrePersonnageContrainte[t][l]) {
+                            if (!personnagesSurs.contains(p)) {
+                                domainesPersonnages[t][p][l] = false;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -285,11 +313,8 @@ public class ModeleHeuristiqueSolver {
 
 
     private void peutEtreCoupable(int p, int l, int t) {
-        if (personnages[p].equals("C") && l == 3 && t == 6) {
-            System.out.println("ZONE OMBRE");
-            System.out.println("VERIF SI C ET D SONT LA");
-            System.out.println("C " + domainesPersonnages[t][p][l]);
-            System.out.println("D " + domainesPersonnages[t][getIndexPersonnage("D")][l]);
+        if (personnages[p].equals("D")) {
+            return;
         }
 
         // Vérifier que le détective et le suspect sont bien présents
@@ -297,18 +322,8 @@ public class ModeleHeuristiqueSolver {
             return;
         }
 
-        if (personnages[p].equals("C") && l == 3 && t == 6) {
-            System.out.println("VERIF LIEUX SURS");
-        }
-
         // On vérifie s'ils sont sûrs d'être là
         for (int i = 0; i < 6; i++) {
-            if (personnages[p].equals("D") && l == 3 && t == 6) {
-                System.out.println("DE C");
-                System.out.println("Lieu " + i + " : " + domainesPersonnages[t][p][i]);
-                System.out.println("DE D");
-                System.out.println("Lieu " + i + " : " + domainesPersonnages[t][p][i]);
-            }
             // Cas du personnage testé présent dans un autre lieu
             if (domainesPersonnages[t][p][i] && i != l) {
                 return;
@@ -317,10 +332,6 @@ public class ModeleHeuristiqueSolver {
             if (domainesPersonnages[t][getIndexPersonnage("D")][i] && i != l) {
                 return;
             }
-        }
-
-        if (personnages[p].equals("C") && l == 3 && t == 6) {
-            System.out.println("VERIF AUTRES PERSONNAGES");
         }
 
         // On est sûr que le détective et le personnage sont présents
@@ -350,10 +361,10 @@ public class ModeleHeuristiqueSolver {
     }
 
     public void afficherCoupable(int p, int l, int t) {
-        StringBuilder coupable = new StringBuilder();
-        coupable.append(String.format("👤 Coupable : %s\n", personnages[p]));
-        coupable.append(String.format("📍 Lieu du crime : %d\n", l + 1));
-        coupable.append(String.format("⏳ Temps du crime : %d\n\n", t + 1));
+        String coupable = String.format("👤 Coupable : %s\n", personnages[p]) +
+                String.format("📍 Lieu du crime : %d\n", l + 1) +
+                String.format("⏳ Temps du crime : %d\n\n", t + 1);
+        System.out.println(coupable);
     }
 
     public int getIndexPersonnage(String personnage) {
