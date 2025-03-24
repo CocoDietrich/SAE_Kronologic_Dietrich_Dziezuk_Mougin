@@ -1,14 +1,21 @@
 package Kronologic.IA.IAAssistance;
 
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
+import Kronologic.IA.IADeduction.ModeleChocoSolver;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Indice.Indice;
+import Kronologic.Jeu.Indice.IndicePersonnage;
+import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import org.chocosolver.solver.variables.IntVar;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class IAAssistanceChocoSolver extends IAAssistance {
     private final IADeductionChocoSolver deduction;
@@ -21,22 +28,133 @@ public class IAAssistanceChocoSolver extends IAAssistance {
     }
 
     @Override
-    public String[] recommanderQuestionOptimal() {
-        //mettre que c'est work in progress
-        return new String[]{"Work in progress"};
+    public String[] recommanderQuestionOptimaleTriche() {
+        List<Indice> indices = partie.getGestionnaireIndices().getListeIndices();
+
+        int maxReduction = -1;
+        String meilleurType = "Aucune";
+        String meilleurValeur = "?";
+        Lieu meilleurLieu = null;
+
+        for (Indice indice : indices) {
+            if (indice instanceof IndicePersonnage indicePerso) {
+                int reduction = simulerPersonnage(
+                        indicePerso.getLieu(),
+                        indicePerso.getPersonnage(),
+                        indicePerso.getInfoPublic(),
+                        indicePerso.getInfoPrive()
+                );
+
+                if (reduction > maxReduction) {
+                    maxReduction = reduction;
+                    meilleurType = "Personnage";
+                    meilleurValeur = indicePerso.getPersonnage().getNom();
+                    meilleurLieu = indicePerso.getLieu();
+                }
+            } else if (indice instanceof IndiceTemps indiceTemps) {
+                int reduction = simulerTemps(
+                        indiceTemps.getLieu(),
+                        indiceTemps.getTemps(),
+                        indiceTemps.getInfoPublic(),
+                        indiceTemps.getInfoPrive()
+                );
+
+                if (reduction > maxReduction) {
+                    maxReduction = reduction;
+                    meilleurType = "Temps";
+                    meilleurValeur = String.valueOf(indiceTemps.getTemps().getValeur());
+                    meilleurLieu = indiceTemps.getLieu();
+                }
+            }
+        }
+
+        return meilleurLieu != null ?
+                new String[]{"Lieu : " + meilleurLieu.getNom(), meilleurType + " : " + meilleurValeur} :
+                new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
+    }
+
+    @Override
+    public String[] recommanderQuestionOptimaleTrichePas() {
+        return new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
     }
 
 
-    @Override
-    public int predireTemps(Lieu lieu, Temps temps){
-        //TODO
-        return 0;
+    public int simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
+        ModeleChocoSolver copie = copie();
+
+        IntVar[][] positions = copie.getPositions();
+        Map<IntVar, List<Integer>> domainesAvant = new HashMap<>();
+        for (IntVar[] ligne : positions) {
+            for (IntVar var : ligne) {
+                domainesAvant.put(var, extraireDomaine(var));
+            }
+        }
+
+        if (!infoPrive.equals("Rejouer")) {
+            copie.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
+        }
+        copie.ajouterContrainteTemps(lieu, temps, infoPublic);
+
+        return calculerReduction(copie, domainesAvant);
     }
 
-    @Override
-    public int predirePersonnage(Lieu lieu, Personnage personnage){
-        //TODO
-        return 0;
+
+    public int simulerPersonnage(Lieu lieu, Personnage personnage, int infoPublic, int infoPrive) {
+        ModeleChocoSolver copie = copie();
+
+        IntVar[][] positions = copie.getPositions();
+        Map<IntVar, List<Integer>> domainesAvant = new HashMap<>();
+        for (IntVar[] ligne : positions) {
+            for (IntVar var : ligne) {
+                domainesAvant.put(var, extraireDomaine(var));
+            }
+        }
+
+        copie.ajouterContraintePersonnage(personnage, lieu, infoPrive);
+        copie.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
+
+        return calculerReduction(copie, domainesAvant);
+    }
+
+    private ModeleChocoSolver copie() {
+        ModeleChocoSolver copie = new ModeleChocoSolver(
+                deduction.getPersonnagesNoms(),
+                deduction.getSallesAdjacentes(),
+                deduction.getPositionsInitiales()
+        );
+        for (Indice indice : partie.getIndicesDecouverts()) {
+            if (indice instanceof IndicePersonnage indicePerso) {
+                copie.ajouterContraintePersonnage(indicePerso.getPersonnage(), indicePerso.getLieu(), indicePerso.getInfoPrive());
+                copie.ajouterContrainteNombreDePassages(indicePerso.getPersonnage(), indicePerso.getLieu(), indicePerso.getInfoPublic());
+            } else if (indice instanceof IndiceTemps indiceTemps) {
+                copie.ajouterContrainteTemps(indiceTemps.getLieu(), indiceTemps.getTemps(), indiceTemps.getInfoPublic());
+                if (!indiceTemps.getInfoPrive().equals("Rejouer")) {
+                    copie.ajouterContraintePersonnage(new Personnage(indiceTemps.getInfoPrive()), indiceTemps.getLieu(), indiceTemps.getTemps().getValeur());
+                }
+            }
+        }
+        return copie;
+    }
+
+    private int calculerReduction(ModeleChocoSolver copie, Map<IntVar, List<Integer>> domainesAvant) {
+        int reduction = 0;
+        IntVar[][] positions = copie.getPositions();
+        for (IntVar[] ligne : positions) {
+            for (IntVar var : ligne) {
+                List<Integer> avant = domainesAvant.get(var);
+                List<Integer> apres = extraireDomaine(var);
+                reduction += (int) avant.stream().filter(val -> !apres.contains(val)).count();
+            }
+        }
+        return reduction;
+    }
+
+    private List<Integer> extraireDomaine(IntVar var) {
+        List<Integer> valeurs = new ArrayList<>();
+        for (int val = var.getLB(); val <= var.getUB(); val = var.nextValue(val)) {
+            valeurs.add(val);
+        }
+        return valeurs;
     }
 
 

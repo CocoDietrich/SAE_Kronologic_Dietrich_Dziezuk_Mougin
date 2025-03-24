@@ -10,6 +10,8 @@ import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Modele.Sujet;
 import Kronologic.MVC.Vue.Observateur;
+import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
+import javafx.scene.control.Button;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,8 @@ public class ModeleIA implements Sujet {
     private final IAAssistanceHeuristique iaAssistanceHeuristique;
     private final Partie partie;
     private final List<Observateur> observateurs;
+    private boolean iaAssistanceChocoActive = true;
+    private boolean iaTricheActive = true;
 
     public ModeleIA(Partie partie) {
         this.observateurs = new ArrayList<>();
@@ -69,18 +73,25 @@ public class ModeleIA implements Sujet {
     }
 
     public String demanderIndice() {
-        return "Work in progress";
-//        String[] question = iaAssistanceChocoSolver.recommanderQuestionOptimal();
-//
-//        if (!question[0].equals("Aucune recommandation")) {
-//            // (malus)
-//            partie.setNbQuestion(partie.getNbQuestion() + 1);
-//
-//            return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
-//        } else {
-//            return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
-//        }
+        String[] question;
+
+        if (iaAssistanceChocoActive) {
+            question = iaTricheActive
+                    ? iaAssistanceChocoSolver.recommanderQuestionOptimaleTriche()
+                    : iaAssistanceChocoSolver.recommanderQuestionOptimaleTrichePas();
+        } else {
+            question = iaTricheActive
+                    ? iaAssistanceHeuristique.recommanderQuestionOptimaleTriche()
+                    : iaAssistanceHeuristique.recommanderQuestionOptimaleTrichePas();
+        }
+
+        if (!question[0].equals("Aucune recommandation")) {
+            return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
+        } else {
+            return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
+        }
     }
+
 
     @Override
     public void enregistrerObservateur(Observateur o) {
@@ -102,4 +113,61 @@ public class ModeleIA implements Sujet {
     public List<Observateur> getObservateurs() {
         return observateurs;
     }
+
+    public void utiliserIAAssistanceChoco() {
+        this.iaAssistanceChocoActive = true;
+    }
+
+    public void utiliserIAAssistanceHeuristique() {
+        this.iaAssistanceChocoActive = false;
+    }
+
+    public void activerTriche() {
+        this.iaTricheActive = true;
+    }
+
+    public void desactiverTriche() {
+        this.iaTricheActive = false;
+    }
+
+    // Méthode affichant le pop-up de demande d'indice à l'IA
+    public void afficherPopUpDemanderIndice() {
+        VuePopUpDemanderIndice vuePopUpDemanderIndice = (VuePopUpDemanderIndice) observateurs.stream().filter(o -> o instanceof VuePopUpDemanderIndice).findFirst().orElse(null);
+
+        assert vuePopUpDemanderIndice != null;
+        vuePopUpDemanderIndice.afficherPopUp();
+
+        // IA
+        vuePopUpDemanderIndice.boutonChoco.setOnAction(e -> {
+            utiliserIAAssistanceChoco();
+            activerSelection(vuePopUpDemanderIndice.boutonChoco, vuePopUpDemanderIndice.boutonHeuristique);
+        });
+
+        vuePopUpDemanderIndice.boutonHeuristique.setOnAction(e -> {
+            utiliserIAAssistanceHeuristique();
+            activerSelection(vuePopUpDemanderIndice.boutonHeuristique, vuePopUpDemanderIndice.boutonChoco);
+        });
+
+// Triche
+        vuePopUpDemanderIndice.boutonTriche.setOnAction(e -> {
+            activerTriche();
+            activerSelection(vuePopUpDemanderIndice.boutonTriche, vuePopUpDemanderIndice.boutonSansTriche);
+        });
+
+        vuePopUpDemanderIndice.boutonSansTriche.setOnAction(e -> {
+            desactiverTriche();
+            activerSelection(vuePopUpDemanderIndice.boutonSansTriche, vuePopUpDemanderIndice.boutonTriche);
+        });
+
+
+    }
+
+    private void activerSelection(Button actif, Button inactif) {
+        actif.setDisable(true);
+        actif.setOpacity(0.5); // effet transparent
+        inactif.setDisable(false);
+        inactif.setOpacity(1.0); // effet normal
+    }
+
+
 }

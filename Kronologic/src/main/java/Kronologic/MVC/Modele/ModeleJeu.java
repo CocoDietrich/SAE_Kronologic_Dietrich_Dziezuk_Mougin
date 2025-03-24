@@ -8,7 +8,6 @@ import Kronologic.MVC.Modele.SousModeleJeu.ModeleIA;
 import Kronologic.MVC.Modele.SousModeleJeu.ModeleNotes;
 import Kronologic.MVC.Modele.SousModeleJeu.ModeleQuestionDeduction;
 import Kronologic.MVC.Vue.*;
-import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
 import Kronologic.MVC.Vue.PopUps.VuePopUpQuitter;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
@@ -226,19 +225,5 @@ public class ModeleJeu implements Sujet {
         stage.show();
     }
 
-    // Méthode affichant le pop-up de demande d'indice à l'IA
-    // TODO : à vérifier
-    public void afficherPopUpDemanderIndice() {
-        VuePopUpDemanderIndice vuePopUpDemanderIndice = null;
 
-        for (Observateur o : observateurs) {
-            if (o instanceof VuePopUpDemanderIndice) {
-                vuePopUpDemanderIndice = (VuePopUpDemanderIndice) o;
-                break;
-            }
-        }
-
-        assert vuePopUpDemanderIndice != null;
-        vuePopUpDemanderIndice.afficherPopUp();
-    }
 }
