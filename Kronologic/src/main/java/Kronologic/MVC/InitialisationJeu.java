@@ -51,7 +51,7 @@ public class InitialisationJeu {
         ControleurAffichage controleurAffichage = new ControleurAffichage(modeleJeu);
         ControleurVisualiserDeductionIA controleurVoirDeductionIA = new ControleurVisualiserDeductionIA(modeleJeu.getModeleIA());
         ControleurChoixTableau controleurChoixTableau = new ControleurChoixTableau(modeleJeu.getModeleNotes());
-        ControleurDemanderIndice controleurDemanderIndice = new ControleurDemanderIndice(modeleJeu);
+        ControleurDemanderIndice controleurDemanderIndice = new ControleurDemanderIndice(modeleJeu.getModeleIA());
         ControleurVisualiserDeduction controleurVisualiserDeduction = new ControleurVisualiserDeduction(modeleJeu);
         ControleurDeduction controleurDeduction = new ControleurDeduction(modeleJeu);
         // Controleurs
@@ -154,9 +154,9 @@ public class InitialisationJeu {
 
         // Modele IA
         modeleJeu.getModeleIA().enregistrerObservateur(vueDeductionIA);
-
-
+        modeleJeu.getModeleIA().enregistrerObservateur(vuePopUpDemanderIndice);
         afficherVuePrincipale();
+
     }
 
     private void afficherVuePrincipale() {

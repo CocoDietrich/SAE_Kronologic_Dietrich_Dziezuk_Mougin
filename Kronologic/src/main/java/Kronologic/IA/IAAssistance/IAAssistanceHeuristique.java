@@ -18,19 +18,22 @@ public class IAAssistanceHeuristique extends IAAssistance {
     }
 
     @Override
-    public String[] recommanderQuestionOptimal() {
+    public String[] recommanderQuestionOptimaleTriche() {
         // TODO : Implémenter une heuristique pour recommander une question
-        return null;
+        return new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
     }
 
     @Override
-    public int predireTemps(Lieu lieu, Temps temps) {
+    public String[] recommanderQuestionOptimaleTrichePas() {
+        return new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
+    }
+
+    public int simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         // TODO : Implémenter une heuristique pour prédire le temps
         return 0;
     }
 
-    @Override
-    public int predirePersonnage(Lieu lieu, Personnage personnage) {
+    public int simulerPersonnage(Lieu lieu, Personnage personnage, int infoPublic, int infoPrive) {
         // TODO : Implémenter une heuristique pour prédire le personnage
         return 0;
     }
