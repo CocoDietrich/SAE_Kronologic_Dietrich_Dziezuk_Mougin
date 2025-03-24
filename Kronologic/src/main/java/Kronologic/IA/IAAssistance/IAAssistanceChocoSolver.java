@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class IAAssistanceChocoSolver extends IAAssistance {
     private final IADeductionChocoSolver deduction;
@@ -71,11 +72,6 @@ public class IAAssistanceChocoSolver extends IAAssistance {
         return meilleurLieu != null ?
                 new String[]{"Lieu : " + meilleurLieu.getNom(), meilleurType + " : " + meilleurValeur} :
                 new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
-    }
-
-    @Override
-    public String[] recommanderQuestionOptimaleTrichePas() {
-        return new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
     }
 
 
@@ -155,6 +151,125 @@ public class IAAssistanceChocoSolver extends IAAssistance {
             valeurs.add(val);
         }
         return valeurs;
+    }
+
+    @Override
+    public String[] recommanderQuestionOptimaleTrichePas() {
+        String meilleureQuestion = "Aucune recommandation";
+        String meilleureValeur = "Vous avez déjà toutes les informations.";
+        double meilleurScore = -1;
+
+        int strategie = (int) (Math.random() * 3); // 0 = min, 1 = max, 2 = moyenne
+        System.out.println("📊 Stratégie IA choisie (0=min, 1=max, 2=moyenne) : " + strategie);
+
+        for (Lieu lieu : partie.getElements().getLieux()) {
+            for (int temps = 1; temps <= 6; temps++) {
+                double score = simulerToutesReponsesTemps(lieu, temps, strategie);
+                if (score > meilleurScore) {
+                    meilleurScore = score;
+                    meilleureQuestion = "Lieu : " + lieu.getNom();
+                    meilleureValeur = "Temps : " + temps;
+                    System.out.printf("✅ Nouvelle meilleure question trouvée : [%s, %s] avec un score de %.2f\n", meilleureQuestion, meilleureValeur, meilleurScore);
+                }
+            }
+
+            for (Personnage perso : partie.getElements().getPersonnages()) {
+                double score = simulerToutesReponsesPersonnage(perso, lieu, strategie);
+                if (score > meilleurScore) {
+                    meilleurScore = score;
+                    meilleureQuestion = "Lieu : " + lieu.getNom();
+                    meilleureValeur = "Personnage : " + perso.getNom();
+                    System.out.printf("✅ Nouvelle meilleure question trouvée : [%s, %s] avec un score de %.2f\n", meilleureQuestion, meilleureValeur, meilleurScore);
+                }
+            }
+        }
+
+        return new String[]{meilleureQuestion, meilleureValeur};
+    }
+
+    private double simulerToutesReponsesTemps(Lieu lieu, int temps, int strategie) {
+        List<Double> reductions = new ArrayList<>();
+
+
+        for (int infoPublic = 0; infoPublic <= 6; infoPublic++) {
+            for (Personnage p : partie.getElements().getPersonnages()) {
+                int finalInfoPublic = infoPublic;
+                silencieux(() -> {
+                    try {
+                        ModeleChocoSolver copie = copie();
+                        Map<IntVar, List<Integer>> domainesAvant = capturerDomaines(copie);
+                        copie.ajouterContrainteTemps(lieu, new Temps(temps), finalInfoPublic);
+                        if (!p.getNom().equals("Rejouer")) {
+                            copie.ajouterContraintePersonnage(p, lieu, temps);
+                        }
+                        copie.getModel().getSolver().propagate();
+                        double reduction = calculerReduction(copie, domainesAvant);
+                        reductions.add(reduction);
+                    } catch (Exception ignored) {
+                    }
+                });
+            }
+
+        }
+        return calculerScore(reductions, strategie);
+    }
+
+    private double simulerToutesReponsesPersonnage(Personnage perso, Lieu lieu, int strategie) {
+        List<Double> reductions = new ArrayList<>();
+
+        for (int infoPublic = 0; infoPublic <= 6; infoPublic++) {
+            int finalInfoPublic = infoPublic;
+            silencieux(() -> {
+                try {
+                    ModeleChocoSolver copie = copie();
+                    Map<IntVar, List<Integer>> domainesAvant = capturerDomaines(copie);
+                    copie.ajouterContrainteNombreDePassages(perso, lieu, finalInfoPublic);
+                    for (int temps = 1; temps <= 6; temps++) {
+                        copie.ajouterContraintePersonnage(perso, lieu, temps);
+                        copie.getModel().getSolver().propagate();
+                        double reduction = calculerReduction(copie, domainesAvant);
+                        reductions.add(reduction);
+                    }
+                } catch (Exception ignored) {
+                }
+            });
+        }
+
+        return calculerScore(reductions, strategie);
+    }
+
+    private double calculerScore(List<Double> reductions, int strategie) {
+        if (reductions.isEmpty()) return -1;
+
+        return switch (strategie) {
+            case 0 -> reductions.stream().min(Double::compareTo).orElse(-1.0); // Pessimiste
+            case 1 -> reductions.stream().max(Double::compareTo).orElse(-1.0); // Optimiste
+            case 2 -> reductions.stream().mapToDouble(Double::doubleValue).average().orElse(-1.0); // Moyenne
+            default -> -1;
+        };
+    }
+
+    private Map<IntVar, List<Integer>> capturerDomaines(ModeleChocoSolver modele) {
+        Map<IntVar, List<Integer>> domaines = new HashMap<>();
+        for (IntVar[] ligne : modele.getPositions()) {
+            for (IntVar var : ligne) {
+                domaines.put(var, extraireDomaine(var));
+            }
+        }
+        return domaines;
+    }
+
+    private void silencieux(Runnable action) {
+        java.io.PrintStream originalErr = System.err;
+        try {
+            System.setErr(new java.io.PrintStream(new java.io.OutputStream() {
+                public void write(int b) {
+                } // Ne fait rien
+            }));
+            action.run();
+        } finally {
+            System.setErr(originalErr);
+        }
     }
 
 
