@@ -13,6 +13,10 @@ public class ModeleHeuristiqueSolver {
     private final boolean[][][] domainesPersonnages = new boolean[6][6][6]; // Temps × Personnages × Lieux
     private final int[][] sallesAdjacentes;
     private final int[][] nombrePersonnageContrainte = new int[6][6]; // Temps × Lieux × NbPersonnages
+    private boolean coupableTrouve = false;
+    private int coupablePersonnage = -1;
+    private int coupableLieu = -1;
+    private int coupableTemps = -1;
 
     public ModeleHeuristiqueSolver(String[] personnages, int[][] sallesAdjacentes, List<Realite> positionsInitiales) {
         this.personnages = personnages;
@@ -282,9 +286,25 @@ public class ModeleHeuristiqueSolver {
     public String affichagePropagate() {
         StringBuilder historique = new StringBuilder();
 
-        historique.append("===== Historique des Déductions =====\n");
+        if (coupableTrouve) {
+            historique.append("===== 🎯 Coupable Identifié ! =====\n");
+
+            String nomCoupable = personnages[coupablePersonnage];
+            int lieuCrime = coupableLieu;
+            int tempsCrime = coupableTemps;
+
+            historique.append(String.format("👤 Coupable : %s\n", nomCoupable));
+            historique.append(String.format("📍 Lieu du crime : %d\n", lieuCrime));
+            historique.append(String.format("⏳ Temps du crime : %d\n\n", tempsCrime));
+
+        } else {
+            historique.append("===== 🔍 Impossible d'identifier un coupable pour le moment =====\n");
+            historique.append("⚠ Continuez à poser des questions pour réduire les suspects !\n\n");
+        }
+
+        historique.append("===== 📜 Historique des Déductions =====\n\n");
         for (int p = 0; p < personnages.length; p++) {
-            historique.append(personnages[p]).append(" :\n");
+            historique.append("🕵️‍ ").append(personnages[p]).append(" :\n");
             for (int t = 0; t < 6; t++) {
                 StringBuilder domaine = new StringBuilder("{");
                 boolean hasValidDomain = false;
@@ -365,6 +385,10 @@ public class ModeleHeuristiqueSolver {
                 String.format("📍 Lieu du crime : %d\n", l + 1) +
                 String.format("⏳ Temps du crime : %d\n\n", t + 1);
         System.out.println(coupable);
+        coupableTrouve = true;
+        coupablePersonnage = p;
+        coupableLieu = l;
+        coupableTemps = t;
     }
 
     public int getIndexPersonnage(String personnage) {
