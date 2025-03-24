@@ -1,7 +1,9 @@
 package Kronologic.MVC;
 
 import Kronologic.Data.JsonReader;
+import Kronologic.IA.GenerateurScenarios.GenerateurScenario;
 import Kronologic.Jeu.Elements.Pion;
+import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.*;
 import Kronologic.MVC.Controleur.PopUps.ControleurPopUpDeduction;
 import Kronologic.MVC.Controleur.PopUps.ControleurPopUpDemanderIndice;
@@ -11,9 +13,14 @@ import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.PopUps.*;
 import Kronologic.MVC.Vue.*;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.Optional;
 
 public class InitialisationJeu {
 
@@ -28,8 +35,34 @@ public class InitialisationJeu {
     }
 
     public void initialiser() {
+
+        // Choix du type d'enquête
+        Alert choixAlert = new Alert(Alert.AlertType.NONE);
+        choixAlert.setTitle("Choix de l'enquête");
+        choixAlert.setHeaderText("Choisissez votre type d'enquête :");
+
+        ButtonType btnClassique = new ButtonType("Enquête classique");
+        ButtonType btnGeneree = new ButtonType("Enquête générée");
+
+        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree);
+
+        Optional<ButtonType> resultat = choixAlert.showAndWait();
+        String fichierJson;
+
+        if (resultat.isPresent() && resultat.get() == btnGeneree) {
+            try {
+                Partie partieGeneree = GenerateurScenario.genererScenario();
+                GenerateurScenario.exporterJson(partieGeneree, "data/enquete_generee.json");
+                fichierJson = "data/enquete_generee.json";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            fichierJson = "data/enquete_base.json";
+        }
         // Création du modèle
-        ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson("data/enquete_base.json"));
+        ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson(fichierJson));
 
         // Création des vues
         this.vuePopUpEnigme = new VuePopUpEnigme(stage);
