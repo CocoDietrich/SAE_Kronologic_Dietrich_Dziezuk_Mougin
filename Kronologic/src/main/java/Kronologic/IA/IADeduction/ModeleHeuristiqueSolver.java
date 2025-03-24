@@ -94,15 +94,7 @@ public class ModeleHeuristiqueSolver {
 
         appliquerContraintesDeplacements();
         appliquerContrainteNombrePersonnage();
-
-        // On regarde qui peut être le coupable
-        for (int t = 0; t < 6; t++) {
-            for (int l = 0; l < 6; l++) {
-                for (int p = 0; p < 6; p++) {
-                    peutEtreCoupable(p, l, t);
-                }
-            }
-        }
+        essayerDeTrouverCoupable();
     }
 
     // Ajouter une contrainte sur le nombre de passages
@@ -127,7 +119,7 @@ public class ModeleHeuristiqueSolver {
             }
 
             if (nbPassages == 3) {
-                int tempsSur = tempsSurs.get(0) + 1;
+                int tempsSur = tempsSurs.getFirst() + 1;
                 // Si un personnage est passé 3 fois dans une salle, on peut en déduire qu'il y est passé à 2 pas
                 // de temps d'intervalle à chaque fois
                 if (tempsSur%2 == 0) {
@@ -152,15 +144,7 @@ public class ModeleHeuristiqueSolver {
 
         appliquerContraintesDeplacements();
         appliquerContrainteNombrePersonnage();
-
-        // On regarde qui peut être le coupable
-        for (int t = 0; t < 6; t++) {
-            for (int l = 0; l < 6; l++) {
-                for (int p = 0; p < 6; p++) {
-                    peutEtreCoupable(p, l, t);
-                }
-            }
-        }
+        essayerDeTrouverCoupable();
     }
 
     // Ajouter une contrainte sur le nombre de personnes dans une salle
@@ -189,14 +173,7 @@ public class ModeleHeuristiqueSolver {
         appliquerContraintesDeplacements();
         appliquerContrainteNombrePersonnage();
 
-        // On regarde qui peut être le coupable
-        for (int t = 0; t < 6; t++) {
-            for (int l = 0; l < 6; l++) {
-                for (int p = 0; p < 6; p++) {
-                    peutEtreCoupable(p, l, t);
-                }
-            }
-        }
+        essayerDeTrouverCoupable();
     }
 
     // Appliquer les contraintes de nombre de personnes dans une salle
@@ -282,6 +259,20 @@ public class ModeleHeuristiqueSolver {
         }
     }
 
+    public void essayerDeTrouverCoupable(){
+        // On regarde qui peut être le coupable
+        for (int t = 1; t < 6; t++) {
+            for (int l = 0; l < 6; l++) {
+                for (int p = 0; p < 6; p++) {
+                    if (personnages[p].equals("D")) {
+                        continue;
+                    }
+                    peutEtreCoupable(p, l, t);
+                }
+            }
+        }
+    }
+
     // Affichage des domaines
     public String affichagePropagate() {
         StringBuilder historique = new StringBuilder();
@@ -333,10 +324,6 @@ public class ModeleHeuristiqueSolver {
 
 
     private void peutEtreCoupable(int p, int l, int t) {
-        if (personnages[p].equals("D")) {
-            return;
-        }
-
         // Vérifier que le détective et le suspect sont bien présents
         if (!domainesPersonnages[t][p][l] || !domainesPersonnages[t][getIndexPersonnage("D")][l]) {
             return;
@@ -366,6 +353,7 @@ public class ModeleHeuristiqueSolver {
                     if (domainesPersonnages[t][i][j] && j != l) {
                         // Le personnage est là dans un autre lieu
                         autrePersonnageAbsent = true;
+                        break;
                     }
                 }
                 // Si le personnage est présent que dans un lieu, on renvoie faux
