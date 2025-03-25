@@ -1,13 +1,16 @@
 package Kronologic.MVC.Modele.SousModeleJeu;
 
+import Kronologic.IA.IAAssistance.IAAssistance;
 import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
 import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
+import Kronologic.IA.IAJoueuse;
 import Kronologic.Jeu.Indice.Indice;
 import Kronologic.Jeu.Indice.IndicePersonnage;
 import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
+import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Modele.Sujet;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
@@ -22,14 +25,12 @@ public class ModeleIA implements Sujet {
     private final IADeductionHeuristique iaDeductionHeuristique;
     private final IAAssistanceChocoSolver iaAssistanceChocoSolver;
     private final IAAssistanceHeuristique iaAssistanceHeuristique;
-    private final Partie partie;
     private final List<Observateur> observateurs;
     private boolean iaAssistanceChocoActive = true;
     private boolean iaTricheActive = true;
 
     public ModeleIA(Partie partie) {
         this.observateurs = new ArrayList<>();
-        this.partie = partie;
         this.iaDeductionChocoSolver = new IADeductionChocoSolver(partie);
         this.iaDeductionHeuristique = new IADeductionHeuristique(partie);
         this.iaAssistanceChocoSolver = new IAAssistanceChocoSolver(this.iaDeductionChocoSolver, partie);
@@ -110,6 +111,19 @@ public class ModeleIA implements Sujet {
         }
     }
 
+    public void lancerIAJoueuse() {
+        Thread threadIA = new Thread(() -> {
+            IAJoueuse ia = new IAJoueuse(iaAssistanceChocoSolver, ModeleJeu.getPartie());
+            ia.jouerJusquaTrouverCoupable();
+
+            notifierObservateurs();
+        });
+
+        threadIA.setDaemon(true);
+        threadIA.start();
+    }
+
+
     public List<Observateur> getObservateurs() {
         return observateurs;
     }
@@ -169,5 +183,9 @@ public class ModeleIA implements Sujet {
         inactif.setOpacity(1.0); // effet normal
     }
 
+
+    public IAAssistanceChocoSolver getIaAssistanceChocoSolver() {
+        return iaAssistanceChocoSolver;
+    }
 
 }

@@ -23,12 +23,4 @@ public class ControleurDemanderIndice implements EventHandler<ActionEvent> {
             }
         }
     }
-
-    // 👇 Ajouter cette méthode pour attacher les boutons de choix d'IA
-    public void attacherChoixIA(Button boutonChoco, Button boutonHeuris, Button boutonTriche, Button boutonSansTriche) {
-        boutonChoco.setOnAction(e -> modeleIA.utiliserIAAssistanceChoco());
-        boutonHeuris.setOnAction(e -> modeleIA.utiliserIAAssistanceHeuristique());
-        boutonTriche.setOnAction(e -> modeleIA.activerTriche());
-        boutonSansTriche.setOnAction(e -> modeleIA.desactiverTriche());
-    }
 }

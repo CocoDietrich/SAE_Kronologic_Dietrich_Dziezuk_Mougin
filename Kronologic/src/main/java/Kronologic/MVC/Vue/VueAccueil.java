@@ -1,5 +1,6 @@
 package Kronologic.MVC.Vue;
 
+import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -11,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class VueAccueil extends BorderPane implements Observateur {
 
@@ -125,4 +127,5 @@ public class VueAccueil extends BorderPane implements Observateur {
     public void actualiser() {
         // À implémenter si nécessaire
     }
+
 }
