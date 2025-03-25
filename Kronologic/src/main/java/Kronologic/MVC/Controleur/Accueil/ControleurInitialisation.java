@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class ControleurInitialisation implements EventHandler<ActionEvent> {
 
-    private ModeleAccueil modele;
+    private final ModeleAccueil modele;
 
     public ControleurInitialisation(ModeleAccueil modele) {
         this.modele = modele;
