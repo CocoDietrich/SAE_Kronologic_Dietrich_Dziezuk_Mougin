@@ -5,13 +5,16 @@ import Kronologic.IA.GenerateurScenarios.GenerateurScenario;
 import Kronologic.Jeu.Elements.Pion;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Controleur.*;
+import Kronologic.MVC.Controleur.Accueil.ControleurIAJoueuse;
 import Kronologic.MVC.Controleur.PopUps.ControleurPopUpDeduction;
 import Kronologic.MVC.Controleur.PopUps.ControleurPopUpDemanderIndice;
 import Kronologic.MVC.Controleur.PopUps.ControleurPopUpPoseQuestion;
 import Kronologic.MVC.Controleur.PopUps.ControleurPopUpQuitter;
+import Kronologic.MVC.Modele.ModeleAccueil;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.PopUps.*;
 import Kronologic.MVC.Vue.*;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -63,6 +66,7 @@ public class InitialisationJeu {
         }
         // Création du modèle
         ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson(fichierJson));
+        ModeleAccueil modeleAccueil = new ModeleAccueil();
 
         // Création des vues
         this.vuePopUpEnigme = new VuePopUpEnigme(stage);
@@ -76,6 +80,7 @@ public class InitialisationJeu {
         VueRegle vueRegle = new VueRegle();
         VuePopUpDemanderIndice vuePopUpDemanderIndice = new VuePopUpDemanderIndice(stage);
         VuePopUpPoseQuestion vuePopUpPoseQuestion = new VuePopUpPoseQuestion(stage);
+        VueAccueil vueAccueil = new VueAccueil();
 
         // Création des controleurs
         ControleurQuitter controleurQuitter = new ControleurQuitter(modeleJeu);
@@ -188,6 +193,9 @@ public class InitialisationJeu {
         // Modele IA
         modeleJeu.getModeleIA().enregistrerObservateur(vueDeductionIA);
         modeleJeu.getModeleIA().enregistrerObservateur(vuePopUpDemanderIndice);
+
+        modeleAccueil.enregistrerObservateur(vueAccueil);
+        vueAccueil.IAJoueuse.setOnAction(e -> modeleAccueil.initialiserPartie("IAJoueuse"));
         afficherVuePrincipale();
 
     }
@@ -201,4 +209,12 @@ public class InitialisationJeu {
         // Affichage de la pop-up d'énigme
         vuePopUpEnigme.afficherPopUp(ModeleJeu.getPartie().getEnquete());
     }
+
+    public void initialiserAvecIA() {
+        Partie partie = JsonReader.lirePartieDepuisJson("data/enquete_base.json");
+        ModeleJeu modeleJeu = new ModeleJeu(partie);
+        ControleurIAJoueuse controleurIA = new ControleurIAJoueuse(modeleJeu);
+        controleurIA.handle(new ActionEvent());
+    }
+
 }

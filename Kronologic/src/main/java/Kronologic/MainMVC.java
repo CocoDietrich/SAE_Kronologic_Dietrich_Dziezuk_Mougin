@@ -11,10 +11,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainMVC extends Application {
-    public static void main(String[] args) {
+    public static void main() {
         launch();
     }
-
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -29,7 +28,6 @@ public class MainMVC extends Application {
 
         ControleurInitialisation controleurInitialisation = new ControleurInitialisation(modeleAccueil);
         vueAccueil.jouer.setOnAction(controleurInitialisation);
-        vueAccueil.IAJoueuse.setOnAction(controleurInitialisation);
 
         ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
         vueAccueil.quitter.setOnAction(controleurQuitterJeu);
