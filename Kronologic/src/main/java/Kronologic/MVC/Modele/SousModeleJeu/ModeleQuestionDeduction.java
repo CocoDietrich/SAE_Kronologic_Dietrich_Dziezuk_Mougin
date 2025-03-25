@@ -70,7 +70,7 @@ public class ModeleQuestionDeduction implements Sujet {
         if (vuePoseQuestion == null) return null;
 
 
-        Indice indice = null;
+        Indice indice;
         if (vuePoseQuestion.personnageChoisi != null) {
             indice = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
         } else {

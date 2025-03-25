@@ -34,4 +34,10 @@ public class IADeductionChocoSolver extends IADeduction {
     public ModeleChocoSolver getModele(){
         return model;
     }
+
+    public boolean solutionTrouvee() {
+        return model.getCoupablePersonnage().isInstantiated()
+                && model.getCoupableLieu().isInstantiated()
+                && model.getCoupableTemps().isInstantiated();
+    }
 }

@@ -318,4 +318,8 @@ public class IAAssistanceChocoSolver extends IAAssistance {
 
         return correction.toString();
     }
+
+    public IADeductionChocoSolver getDeductionChocoSolver() {
+        return this.deduction;
+    }
 }

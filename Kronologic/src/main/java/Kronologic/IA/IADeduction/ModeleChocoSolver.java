@@ -184,30 +184,7 @@ public class ModeleChocoSolver {
 
         // Relier les suspects, le temps et le lieu du crime avec la tableCoupable
         model.table(new IntVar[]{coupablePersonnage, coupableTemps, coupableLieu}, tableCoupable).post();
-
-        // 🔹 Résolution avec Choco-Solver
-//        while (model.getSolver().solve()) {
-//            System.out.println("🎯 Coupable identifié !");
-//            System.out.println("👤 Coupable : " + personnages[coupablePersonnage.getValue()]);
-//            System.out.println("📍 Lieu du crime : " + coupableLieu.getValue());
-//            System.out.println("⏳ Temps du crime : " + coupableTemps.getValue());
-//        }
     }
-
-
-    private long getEstimation() {
-        BigInteger domainePositions = BigInteger.ONE;
-        for (int i = 0; i < personnages.length; i++) {
-            for (int t = 0; t < 6; t++) {
-                domainePositions = domainePositions.multiply(BigInteger.valueOf(positions[i][t].getDomainSize()));
-            }
-        }
-        long domaineCoupablePersonnage = coupablePersonnage.getDomainSize();
-        long domaineCoupableLieu = coupableLieu.getDomainSize();
-        long domaineCoupableTemps = coupableTemps.getDomainSize();
-        return domaineCoupablePersonnage * domaineCoupableLieu * domaineCoupableTemps * domainePositions.longValue();
-    }
-
 
     private void propagerContraintes() {
         try {
@@ -264,7 +241,6 @@ public class ModeleChocoSolver {
 
     public StringBuilder suspects() {
         StringBuilder historique = new StringBuilder();
-        definirContrainteCoupable();
 
         // Vérifier si toutes les variables coupables sont réduites à une seule valeur
         boolean coupableTrouve = coupablePersonnage.isInstantiated() &&
@@ -306,4 +282,11 @@ public class ModeleChocoSolver {
     public String getPersonnageNom(int i) {
         return personnages[i];
     }
+
+    public IntVar getCoupablePersonnage() {
+        System.out.println(coupablePersonnage);
+        return coupablePersonnage; }
+    public IntVar getCoupableLieu() { return coupableLieu; }
+    public IntVar getCoupableTemps() { return coupableTemps; }
+
 }
