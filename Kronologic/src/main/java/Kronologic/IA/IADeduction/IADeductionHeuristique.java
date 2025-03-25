@@ -2,14 +2,9 @@ package Kronologic.IA.IADeduction;
 
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
-import Kronologic.Jeu.Elements.Realite;
 import Kronologic.Jeu.Elements.Temps;
-import Kronologic.Jeu.Indice.Indice;
-import Kronologic.Jeu.Indice.IndicePersonnage;
-import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 
-import java.util.List;
 
 public class IADeductionHeuristique extends IADeduction {
 
@@ -39,5 +34,9 @@ public class IADeductionHeuristique extends IADeduction {
     @Override
     public String afficherHistoriqueDeduction() {
         return model.affichagePropagate();
+    }
+
+    public boolean[][][] recupererDomainesPersonnages() {
+        return model.getDomainesPersonnages();
     }
 }
