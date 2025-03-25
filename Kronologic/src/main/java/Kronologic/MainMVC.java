@@ -3,6 +3,7 @@ package Kronologic;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Modele.ModeleAccueil;
+import Kronologic.MVC.Vue.PopUps.ControleurIAAccueil;
 import Kronologic.MVC.Vue.VueAccueil;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -18,18 +19,18 @@ public class MainMVC extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         ModeleAccueil modeleAccueil = new ModeleAccueil();
-
         VueAccueil vueAccueil = new VueAccueil();
-
         modeleAccueil.enregistrerObservateur(vueAccueil);
 
         BorderPane bp = new BorderPane();
         bp.setCenter(vueAccueil);
 
         ControleurInitialisation controleurInitialisation = new ControleurInitialisation(modeleAccueil);
-        vueAccueil.jouer.setOnAction(controleurInitialisation);
-
+        ControleurIAAccueil controleurIAAccueil = new ControleurIAAccueil(modeleAccueil);
         ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
+
+        vueAccueil.jouer.setOnAction(controleurInitialisation);
+        vueAccueil.IAJoueuse.setOnAction(controleurIAAccueil);
         vueAccueil.quitter.setOnAction(controleurQuitterJeu);
 
         Scene scene = new Scene(bp);

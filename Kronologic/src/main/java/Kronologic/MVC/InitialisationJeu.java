@@ -28,8 +28,6 @@ import java.util.Optional;
 public class InitialisationJeu {
 
     private final Stage stage;
-
-    // Vues
     private VuePopUpEnigme vuePopUpEnigme;
     private VueCarte vueCarte;
 
@@ -46,10 +44,15 @@ public class InitialisationJeu {
 
         ButtonType btnClassique = new ButtonType("Enquête classique");
         ButtonType btnGeneree = new ButtonType("Enquête générée");
+        ButtonType btnAnnuler = ButtonType.CANCEL;
 
-        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree);
+        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree, btnAnnuler);
 
         Optional<ButtonType> resultat = choixAlert.showAndWait();
+        if (resultat.isEmpty()) {
+            return;
+        }
+
         String fichierJson;
 
         if (resultat.isPresent() && resultat.get() == btnGeneree) {
@@ -61,8 +64,10 @@ public class InitialisationJeu {
                 e.printStackTrace();
                 return;
             }
-        } else {
+        } else if (resultat.isPresent() && resultat.get() == btnClassique) {
             fichierJson = "data/enquete_base.json";
+        } else {
+            return;
         }
         // Création du modèle
         ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson(fichierJson));
@@ -195,7 +200,6 @@ public class InitialisationJeu {
         modeleJeu.getModeleIA().enregistrerObservateur(vuePopUpDemanderIndice);
 
         modeleAccueil.enregistrerObservateur(vueAccueil);
-        vueAccueil.IAJoueuse.setOnAction(e -> modeleAccueil.initialiserPartie("IAJoueuse"));
         afficherVuePrincipale();
 
     }
@@ -211,10 +215,35 @@ public class InitialisationJeu {
     }
 
     public void initialiserAvecIA() {
-        Partie partie = JsonReader.lirePartieDepuisJson("data/enquete_base.json");
+        // Choix du type d'enquête
+        Alert choixAlert = new Alert(Alert.AlertType.NONE);
+        choixAlert.setTitle("Choix de l'enquête pour l'IA");
+        choixAlert.setHeaderText("L'IA Joueuse va résoudre une enquête.\nQuel type de scénario souhaitez-vous utiliser ?");
+
+        ButtonType btnClassique = new ButtonType("Enquête classique");
+        ButtonType btnGeneree = new ButtonType("Enquête générée");
+        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree);
+
+        Optional<ButtonType> resultat = choixAlert.showAndWait();
+        String fichierJson;
+
+        if (resultat.isPresent() && resultat.get() == btnGeneree) {
+            try {
+                Partie partieGeneree = GenerateurScenario.genererScenario();
+                GenerateurScenario.exporterJson(partieGeneree, "data/enquete_generee.json");
+                fichierJson = "data/enquete_generee.json";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            fichierJson = "data/enquete_base.json";
+        }
+
+        // Création du modèle et lancement de l'IA Joueuse
+        Partie partie = JsonReader.lirePartieDepuisJson(fichierJson);
         ModeleJeu modeleJeu = new ModeleJeu(partie);
         ControleurIAJoueuse controleurIA = new ControleurIAJoueuse(modeleJeu);
         controleurIA.handle(new ActionEvent());
     }
-
 }
