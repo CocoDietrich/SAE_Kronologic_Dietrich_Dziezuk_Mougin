@@ -375,8 +375,8 @@ public class ModeleHeuristiqueSolver {
         System.out.println(coupable);
         coupableTrouve = true;
         coupablePersonnage = p;
-        coupableLieu = l;
-        coupableTemps = t;
+        coupableLieu = l+1;
+        coupableTemps = t+1;
     }
 
     public int getIndexPersonnage(String personnage) {
