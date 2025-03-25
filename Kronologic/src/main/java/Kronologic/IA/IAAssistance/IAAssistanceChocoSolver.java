@@ -31,14 +31,14 @@ public class IAAssistanceChocoSolver extends IAAssistance {
     public String[] recommanderQuestionOptimaleTriche() {
         List<Indice> indices = partie.getGestionnaireIndices().getListeIndices();
 
-        int maxReduction = -1;
+        double maxReduction = -1;
         String meilleurType = "Aucune";
         String meilleurValeur = "?";
         Lieu meilleurLieu = null;
 
         for (Indice indice : indices) {
             if (indice instanceof IndicePersonnage indicePerso) {
-                int reduction = simulerPersonnage(
+                double reduction = simulerPersonnage(
                         indicePerso.getLieu(),
                         indicePerso.getPersonnage(),
                         indicePerso.getInfoPublic(),
@@ -52,7 +52,7 @@ public class IAAssistanceChocoSolver extends IAAssistance {
                     meilleurLieu = indicePerso.getLieu();
                 }
             } else if (indice instanceof IndiceTemps indiceTemps) {
-                int reduction = simulerTemps(
+                double reduction = simulerTemps(
                         indiceTemps.getLieu(),
                         indiceTemps.getTemps(),
                         indiceTemps.getInfoPublic(),
@@ -73,43 +73,42 @@ public class IAAssistanceChocoSolver extends IAAssistance {
                 new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
     }
 
+    public double simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
+        final double[] reduction = { -1 };
+        silencieux(() -> {
+            try {
+                ModeleChocoSolver copie = copie();
+                Map<IntVar, List<Integer>> domainesAvant = capturerDomaines(copie);
 
-    public int simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
-        ModeleChocoSolver copie = copie();
+                if (!infoPrive.equals("Rejouer")) {
+                    copie.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
+                }
+                copie.ajouterContrainteTemps(lieu, temps, infoPublic);
 
-        IntVar[][] positions = copie.getPositions();
-        Map<IntVar, List<Integer>> domainesAvant = new HashMap<>();
-        for (IntVar[] ligne : positions) {
-            for (IntVar var : ligne) {
-                domainesAvant.put(var, extraireDomaine(var));
-            }
-        }
-
-        if (!infoPrive.equals("Rejouer")) {
-            copie.ajouterContraintePersonnage(new Personnage(infoPrive), lieu, temps.getValeur());
-        }
-        copie.ajouterContrainteTemps(lieu, temps, infoPublic);
-
-        return calculerReduction(copie, domainesAvant);
+                copie.getModel().getSolver().propagate();
+                reduction[0] = calculerReduction(copie, domainesAvant);
+            } catch (Exception ignored) {}
+        });
+        return reduction[0];
     }
 
+    public double simulerPersonnage(Lieu lieu, Personnage personnage, int infoPublic, int infoPrive) {
+        final double[] reduction = { -1 };
+        silencieux(() -> {
+            try {
+                ModeleChocoSolver copie = copie();
+                Map<IntVar, List<Integer>> domainesAvant = capturerDomaines(copie);
 
-    public int simulerPersonnage(Lieu lieu, Personnage personnage, int infoPublic, int infoPrive) {
-        ModeleChocoSolver copie = copie();
+                copie.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
+                copie.ajouterContraintePersonnage(personnage, lieu, infoPrive);
 
-        IntVar[][] positions = copie.getPositions();
-        Map<IntVar, List<Integer>> domainesAvant = new HashMap<>();
-        for (IntVar[] ligne : positions) {
-            for (IntVar var : ligne) {
-                domainesAvant.put(var, extraireDomaine(var));
-            }
-        }
-
-        copie.ajouterContraintePersonnage(personnage, lieu, infoPrive);
-        copie.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
-
-        return calculerReduction(copie, domainesAvant);
+                copie.getModel().getSolver().propagate();
+                reduction[0] = calculerReduction(copie, domainesAvant);
+            } catch (Exception ignored) {}
+        });
+        return reduction[0];
     }
+
 
     private ModeleChocoSolver copie() {
         ModeleChocoSolver copie = new ModeleChocoSolver(
@@ -162,23 +161,43 @@ public class IAAssistanceChocoSolver extends IAAssistance {
         System.out.println("📊 Stratégie IA choisie (0=min, 1=max, 2=moyenne) : " + strategie);
 
         for (Lieu lieu : partie.getElements().getLieux()) {
-            for (int temps = 1; temps <= 6; temps++) {
-                double score = simulerToutesReponsesTemps(lieu, temps, strategie);
+            for (int temps = 2; temps <= 6; temps++) {
+                List<Double> reductions = new ArrayList<>();
+
+                for (int infoPublic = 0; infoPublic <= 6; infoPublic++) {
+                    for (Personnage p : partie.getElements().getPersonnages()) {
+                        double r = simulerTemps(lieu, new Temps(temps), infoPublic, p.getNom());
+                        if (r >= 0) reductions.add(r);
+                    }
+                    double r = simulerTemps(lieu, new Temps(temps), infoPublic, "Rejouer");
+                    if (r >= 0) reductions.add(r);
+                }
+
+                double score = calculerScore(reductions, strategie);
                 if (score > meilleurScore) {
                     meilleurScore = score;
                     meilleureQuestion = "Lieu : " + lieu.getNom();
                     meilleureValeur = "Temps : " + temps;
-                    System.out.printf("✅ Nouvelle meilleure question trouvée : [%s, %s] avec un score de %.2f\n", meilleureQuestion, meilleureValeur, meilleurScore);
+                    System.out.printf("✅ Nouvelle meilleure question trouvée : [%s, %s] avec un score de %.2f\n", meilleureQuestion, meilleureValeur, score);
                 }
             }
 
             for (Personnage perso : partie.getElements().getPersonnages()) {
-                double score = simulerToutesReponsesPersonnage(perso, lieu, strategie);
+                List<Double> reductions = new ArrayList<>();
+
+                for (int infoPublic = 0; infoPublic <= 3; infoPublic++) {
+                    for (int temps = 1; temps <= 6; temps++) {
+                        double r = simulerPersonnage(lieu, perso, infoPublic, temps);
+                        if (r >= 0) reductions.add(r);
+                    }
+                }
+
+                double score = calculerScore(reductions, strategie);
                 if (score > meilleurScore) {
                     meilleurScore = score;
                     meilleureQuestion = "Lieu : " + lieu.getNom();
                     meilleureValeur = "Personnage : " + perso.getNom();
-                    System.out.printf("✅ Nouvelle meilleure question trouvée : [%s, %s] avec un score de %.2f\n", meilleureQuestion, meilleureValeur, meilleurScore);
+                    System.out.printf("✅ Nouvelle meilleure question trouvée : [%s, %s] avec un score de %.2f\n", meilleureQuestion, meilleureValeur, score);
                 }
             }
         }
@@ -186,56 +205,6 @@ public class IAAssistanceChocoSolver extends IAAssistance {
         return new String[]{meilleureQuestion, meilleureValeur};
     }
 
-    private double simulerToutesReponsesTemps(Lieu lieu, int temps, int strategie) {
-        List<Double> reductions = new ArrayList<>();
-
-
-        for (int infoPublic = 0; infoPublic <= 6; infoPublic++) {
-            for (Personnage p : partie.getElements().getPersonnages()) {
-                int finalInfoPublic = infoPublic;
-                silencieux(() -> {
-                    try {
-                        ModeleChocoSolver copie = copie();
-                        Map<IntVar, List<Integer>> domainesAvant = capturerDomaines(copie);
-                        copie.ajouterContrainteTemps(lieu, new Temps(temps), finalInfoPublic);
-                        if (!p.getNom().equals("Rejouer")) {
-                            copie.ajouterContraintePersonnage(p, lieu, temps);
-                        }
-                        copie.getModel().getSolver().propagate();
-                        double reduction = calculerReduction(copie, domainesAvant);
-                        reductions.add(reduction);
-                    } catch (Exception ignored) {
-                    }
-                });
-            }
-
-        }
-        return calculerScore(reductions, strategie);
-    }
-
-    private double simulerToutesReponsesPersonnage(Personnage perso, Lieu lieu, int strategie) {
-        List<Double> reductions = new ArrayList<>();
-
-        for (int infoPublic = 0; infoPublic <= 6; infoPublic++) {
-            int finalInfoPublic = infoPublic;
-            silencieux(() -> {
-                try {
-                    ModeleChocoSolver copie = copie();
-                    Map<IntVar, List<Integer>> domainesAvant = capturerDomaines(copie);
-                    copie.ajouterContrainteNombreDePassages(perso, lieu, finalInfoPublic);
-                    for (int temps = 1; temps <= 6; temps++) {
-                        copie.ajouterContraintePersonnage(perso, lieu, temps);
-                        copie.getModel().getSolver().propagate();
-                        double reduction = calculerReduction(copie, domainesAvant);
-                        reductions.add(reduction);
-                    }
-                } catch (Exception ignored) {
-                }
-            });
-        }
-
-        return calculerScore(reductions, strategie);
-    }
 
     private double calculerScore(List<Double> reductions, int strategie) {
         if (reductions.isEmpty()) return -1;
