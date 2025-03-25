@@ -46,10 +46,15 @@ public class InitialisationJeu {
 
         ButtonType btnClassique = new ButtonType("Enquête classique");
         ButtonType btnGeneree = new ButtonType("Enquête générée");
+        ButtonType btnAnnuler = ButtonType.CANCEL;
 
-        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree);
+        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree, btnAnnuler);
 
         Optional<ButtonType> resultat = choixAlert.showAndWait();
+        if (resultat.isEmpty()) {
+            return;
+        }
+
         String fichierJson;
 
         if (resultat.isPresent() && resultat.get() == btnGeneree) {
@@ -61,8 +66,10 @@ public class InitialisationJeu {
                 e.printStackTrace();
                 return;
             }
-        } else {
+        } else if (resultat.isPresent() && resultat.get() == btnClassique) {
             fichierJson = "data/enquete_base.json";
+        } else {
+            return;
         }
         // Création du modèle
         ModeleJeu modeleJeu = new ModeleJeu(JsonReader.lirePartieDepuisJson(fichierJson));
