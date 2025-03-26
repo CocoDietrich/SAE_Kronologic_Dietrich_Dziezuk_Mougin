@@ -25,37 +25,56 @@ public class GenerateurScenario {
     private static final Random random = new Random();
 
     public static Partie genererScenario() {
-        List<Lieu> lieux = creerLieux();
-        List<Temps> temps = new ArrayList<>();
-        for (int i = 1; i <= NB_TEMPS; i++) temps.add(new Temps(i));
+        while (true) {
+            List<Lieu> lieux = creerLieux();
+            List<Temps> temps = new ArrayList<>();
+            for (int i = 1; i <= NB_TEMPS; i++) temps.add(new Temps(i));
 
-        List<String> noms = List.of("Aventurière", "Baronne", "Chauffeur", "Détective", "Journaliste", "Servante");
-        List<Personnage> personnages = noms.stream().map(Personnage::new).collect(Collectors.toList());
+            List<String> noms = List.of("Aventurière", "Baronne", "Chauffeur", "Détective", "Journaliste", "Servante");
+            List<Personnage> personnages = noms.stream().map(Personnage::new).collect(Collectors.toList());
 
-        List<Realite> positions = genererTrajetsValidés(personnages, lieux, temps);
+            List<Realite> positions = genererTrajetsValidés(personnages, lieux, temps);
 
-        Personnage detective = personnages.stream().filter(p -> p.getNom().equals("Détective")).findFirst().orElseThrow();
-        Optional<Realite> sceneMeurtre = trouverSceneMeurtre(positions, detective);
-        if (sceneMeurtre.isEmpty()) throw new RuntimeException("Aucune scène de meurtre valide trouvée.");
+            Personnage detective = personnages.stream().filter(p -> p.getNom().equals("Détective")).findFirst().orElseThrow();
+            Optional<Realite> sceneMeurtre = trouverSceneMeurtre(positions, detective);
+            if (sceneMeurtre.isEmpty()) continue;
 
-        Realite crime = sceneMeurtre.get();
-        Lieu lieuCrime = crime.getLieu();
-        Temps tempsCrime = crime.getTemps();
-        Personnage meurtrier = crime.getPersonnage().getNom().equals("Détective") ?
-                trouverAutrePersonnagePresent(positions, lieuCrime, tempsCrime, detective) : crime.getPersonnage();
+            Realite crime = sceneMeurtre.get();
+            Lieu lieuCrime = crime.getLieu();
+            Temps tempsCrime = crime.getTemps();
 
-        List<Indice> indices = genererIndices(lieux, temps, personnages, positions);
+            // Le meurtre ne peut pas avoir lieu au temps 1
+            if (tempsCrime.getValeur() == 1) continue;
 
-        Enquete enquete = new Enquete(2, "Poison Mondain",
-                "17 octobre 1922, au petit matin, Denis, le célèbre Détective est retrouvé mort dans son lit, manifestement empoisonné ! La veille, il enquêtait à l'Opéra de Paris où se déroulait un gala de bienfaisance. Retracez sa soirée ainsi que celle des suspects de cette enquête, pour identifier l'assassin.",
-                "L'assassin a dû se retrouver seul(e) avec le Détective pour l'empoisonner. Qui a empoisonné le Détective ? Dans quel Lieu ? A quel Temps ?",
-                12, 19, meurtrier, lieuCrime, tempsCrime);
-        Deroulement deroulement = new Deroulement(new ArrayList<>(positions));
+            Personnage meurtrier = crime.getPersonnage().getNom().equals("Détective") ?
+                    trouverAutrePersonnagePresent(positions, lieuCrime, tempsCrime, detective) : crime.getPersonnage();
 
-        return new Partie(enquete, deroulement,
-                new GestionnaireIndices(indices),
-                new GestionnaireNotes(), new GestionnairePions(),
-                new Elements(personnages, lieux));
+            // Vérifier que c'est le seul moment où le détective est seul avec une autre personne
+            long momentsSeulAvecUn = temps.stream()
+                    .filter(t -> {
+                        List<Realite> prs = positions.stream()
+                                .filter(r -> r.getTemps().equals(t) && r.getLieu().equals(
+                                        positions.stream().filter(x -> x.getPersonnage().equals(detective) && x.getTemps().equals(t))
+                                                .map(Realite::getLieu).findFirst().orElse(null)))
+                                .toList();
+                        return prs.size() == 2 && prs.stream().anyMatch(r -> r.getPersonnage().equals(detective));
+                    }).count();
+
+            if (momentsSeulAvecUn != 1) continue;
+
+            List<Indice> indices = genererIndices(lieux, temps, personnages, positions);
+
+            Enquete enquete = new Enquete(2, "Poison Mondain",
+                    "17 octobre 1922, au petit matin, Denis, le célèbre Détective est retrouvé mort dans son lit, manifestement empoisonné ! La veille, il enquêtait à l'Opéra de Paris où se déroulait un gala de bienfaisance. Retracez sa soirée ainsi que celle des suspects de cette enquête, pour identifier l'assassin.",
+                    "L'assassin a dû se retrouver seul(e) avec le Détective pour l'empoisonner. Qui a empoisonné le Détective ? Dans quel Lieu ? A quel Temps ?",
+                    12, 19, meurtrier, lieuCrime, tempsCrime);
+            Deroulement deroulement = new Deroulement(new ArrayList<>(positions));
+
+            return new Partie(enquete, deroulement,
+                    new GestionnaireIndices(indices),
+                    new GestionnaireNotes(), new GestionnairePions(),
+                    new Elements(personnages, lieux));
+        }
     }
 
     public static void exporterJson(Partie partie, String chemin) throws IOException {
@@ -161,11 +180,10 @@ public class GenerateurScenario {
 
     private static Optional<Realite> trouverSceneMeurtre(List<Realite> realites, Personnage detective) {
         return realites.stream()
-                .filter(r -> r.getPersonnage().getNom().equals("Détective"))
+                .filter(r -> r.getPersonnage().equals(detective))
                 .filter(r -> {
                     long nbPersos = realites.stream()
-                            .filter(x -> x.getTemps().equals(r.getTemps()))
-                            .filter(x -> x.getLieu().equals(r.getLieu()))
+                            .filter(x -> x.getTemps().equals(r.getTemps()) && x.getLieu().equals(r.getLieu()))
                             .count();
                     return nbPersos == 2;
                 }).findFirst();
@@ -175,7 +193,7 @@ public class GenerateurScenario {
         return realites.stream()
                 .filter(r -> r.getLieu().equals(lieu) && r.getTemps().equals(temps))
                 .map(Realite::getPersonnage)
-                .filter(p -> !p.getNom().equals(except.getNom()))
+                .filter(p -> !p.equals(except))
                 .findFirst().orElseThrow();
     }
 
