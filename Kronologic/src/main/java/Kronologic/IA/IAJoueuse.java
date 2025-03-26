@@ -38,7 +38,7 @@ public class IAJoueuse {
                 }
             }
 
-            String[] question = iaAssistance.recommanderQuestionOptimaleTriche();
+            String[] question = iaAssistance.recommanderQuestionOptimale();
 
             if (question[0].startsWith("Lieu :") && question[1].startsWith("Temps :")) {
                 // Question temps

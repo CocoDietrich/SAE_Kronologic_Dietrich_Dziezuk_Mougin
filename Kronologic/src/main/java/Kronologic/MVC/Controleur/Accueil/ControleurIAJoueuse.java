@@ -22,7 +22,7 @@ public class ControleurIAJoueuse implements EventHandler<ActionEvent> {
         vueChargement.afficher();
 
         Thread threadIA = new Thread(() -> {
-            IAAssistance iaActive = modeleJeu.getModeleIA().getIaAssistanceChocoSolver();
+            IAAssistance iaActive = modeleJeu.getModeleIA().getIaAssistanceActive();
             IAJoueuse iaJoueuse = new IAJoueuse(iaActive, ModeleJeu.getPartie());
 
             iaJoueuse.jouerJusquaTrouverCoupable();

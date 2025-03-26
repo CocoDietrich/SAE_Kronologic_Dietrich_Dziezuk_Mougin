@@ -1,14 +1,9 @@
 package Kronologic.MVC.Modele.SousModeleJeu;
 
-import Kronologic.IA.IAAssistance.IAAssistance;
-import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
-import Kronologic.IA.IAAssistance.IAAssistanceHeuristique;
+import Kronologic.IA.IAAssistance.*;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
-import Kronologic.IA.IAJoueuse;
-import Kronologic.Jeu.Indice.Indice;
-import Kronologic.Jeu.Indice.IndicePersonnage;
-import Kronologic.Jeu.Indice.IndiceTemps;
+import Kronologic.Jeu.Indice.*;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Modele.Sujet;
@@ -23,68 +18,46 @@ public class ModeleIA implements Sujet {
 
     private final IADeductionChocoSolver iaDeductionChocoSolver;
     private final IADeductionHeuristique iaDeductionHeuristique;
-    private final IAAssistanceChocoSolver iaAssistanceChocoSolver;
-    private final IAAssistanceHeuristique iaAssistanceHeuristique;
+
+    private IAAssistance iaAssistanceChoco;
+    private IAAssistance iaAssistanceHeuristique;
+
     private final List<Observateur> observateurs;
     private boolean iaAssistanceChocoActive = true;
-    private boolean iaTricheActive = true;
 
     public ModeleIA(Partie partie) {
         this.observateurs = new ArrayList<>();
         this.iaDeductionChocoSolver = new IADeductionChocoSolver(partie);
         this.iaDeductionHeuristique = new IADeductionHeuristique(partie);
-        this.iaAssistanceChocoSolver = new IAAssistanceChocoSolver(this.iaDeductionChocoSolver, partie);
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristique(this.iaDeductionHeuristique, partie);
+
+        this.iaAssistanceChoco = new IAAssistanceChocoTriche(iaDeductionChocoSolver, partie);
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, partie);
     }
 
-    // Méthode pour afficher les déductions de l'IA ChocoSolver
     public String voirDeductionIAChocoSolver() {
         return iaDeductionChocoSolver.afficherHistoriqueDeduction();
     }
 
-    // Méthode pour afficher les déductions de l'IA Heuristique
     public String voirDeductionIAHeuristique() {
         return iaDeductionHeuristique.afficherHistoriqueDeduction();
     }
 
     public String afficherMauvaisesDeductions() {
-        return iaAssistanceChocoSolver.corrigerDeductions();
+        return iaAssistanceChoco.corrigerDeductions();
     }
 
-    public void ajoutContraintesQuestion(Indice i){
-        if (i instanceof IndicePersonnage ip){
-            // Ajouter contraintes publiques et privées
-            iaDeductionChocoSolver.poserQuestionPersonnage(
-                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
-            );
-            iaDeductionHeuristique.poserQuestionPersonnage(
-                    ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive()
-            );
-        }
-        else {
-            // Ajouter contraintes publiques et privées
-            IndiceTemps it = (IndiceTemps) i;
-            iaDeductionChocoSolver.poserQuestionTemps(
-                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
-            );
-            iaDeductionHeuristique.poserQuestionTemps(
-                    it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive()
-            );
+    public void ajoutContraintesQuestion(Indice i) {
+        if (i instanceof IndicePersonnage ip) {
+            iaDeductionChocoSolver.poserQuestionPersonnage(ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive());
+            iaDeductionHeuristique.poserQuestionPersonnage(ip.getPersonnage(), ip.getLieu(), ip.getInfoPublic(), ip.getInfoPrive());
+        } else if (i instanceof IndiceTemps it) {
+            iaDeductionChocoSolver.poserQuestionTemps(it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive());
+            iaDeductionHeuristique.poserQuestionTemps(it.getLieu(), it.getTemps(), it.getInfoPublic(), it.getInfoPrive());
         }
     }
 
     public String demanderIndice() {
-        String[] question;
-
-        if (iaAssistanceChocoActive) {
-            question = iaTricheActive
-                    ? iaAssistanceChocoSolver.recommanderQuestionOptimaleTriche()
-                    : iaAssistanceChocoSolver.recommanderQuestionOptimaleTrichePas();
-        } else {
-            question = iaTricheActive
-                    ? iaAssistanceHeuristique.recommanderQuestionOptimaleTriche()
-                    : iaAssistanceHeuristique.recommanderQuestionOptimaleTrichePas();
-        }
+        String[] question = getIaAssistanceActive().recommanderQuestionOptimale();
 
         if (!question[0].equals("Aucune recommandation")) {
             return "Demandez une question avec " + question[0] + " et " + question[1] + ".";
@@ -92,7 +65,6 @@ public class ModeleIA implements Sujet {
             return "Vous avez déjà trouvé la réponse, relancez une partie pour recommencer.";
         }
     }
-
 
     @Override
     public void enregistrerObservateur(Observateur o) {
@@ -111,19 +83,6 @@ public class ModeleIA implements Sujet {
         }
     }
 
-    public void lancerIAJoueuse() {
-        Thread threadIA = new Thread(() -> {
-            IAJoueuse ia = new IAJoueuse(iaAssistanceChocoSolver, ModeleJeu.getPartie());
-            ia.jouerJusquaTrouverCoupable();
-
-            notifierObservateurs();
-        });
-
-        threadIA.setDaemon(true);
-        threadIA.start();
-    }
-
-
     public List<Observateur> getObservateurs() {
         return observateurs;
     }
@@ -137,55 +96,54 @@ public class ModeleIA implements Sujet {
     }
 
     public void activerTriche() {
-        this.iaTricheActive = true;
+        this.iaAssistanceChoco = new IAAssistanceChocoTriche(iaDeductionChocoSolver, ModeleJeu.getPartie());
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, ModeleJeu.getPartie()); // ✅ NEW
     }
 
     public void desactiverTriche() {
-        this.iaTricheActive = false;
+        this.iaAssistanceChoco = new IAAssistanceChocoTrichePas(iaDeductionChocoSolver, ModeleJeu.getPartie());
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTrichePas(iaDeductionHeuristique, ModeleJeu.getPartie()); // ✅ NEW
     }
 
-    // Méthode affichant le pop-up de demande d'indice à l'IA
+
     public void afficherPopUpDemanderIndice() {
-        VuePopUpDemanderIndice vuePopUpDemanderIndice = (VuePopUpDemanderIndice) observateurs.stream().filter(o -> o instanceof VuePopUpDemanderIndice).findFirst().orElse(null);
+        VuePopUpDemanderIndice vue = (VuePopUpDemanderIndice) observateurs.stream()
+                .filter(o -> o instanceof VuePopUpDemanderIndice)
+                .findFirst()
+                .orElse(null);
 
-        assert vuePopUpDemanderIndice != null;
-        vuePopUpDemanderIndice.afficherPopUp();
+        assert vue != null;
+        vue.afficherPopUp();
 
-        // IA
-        vuePopUpDemanderIndice.boutonChoco.setOnAction(e -> {
+        vue.boutonChoco.setOnAction(e -> {
             utiliserIAAssistanceChoco();
-            activerSelection(vuePopUpDemanderIndice.boutonChoco, vuePopUpDemanderIndice.boutonHeuristique);
+            activerSelection(vue.boutonChoco, vue.boutonHeuristique);
         });
 
-        vuePopUpDemanderIndice.boutonHeuristique.setOnAction(e -> {
+        vue.boutonHeuristique.setOnAction(e -> {
             utiliserIAAssistanceHeuristique();
-            activerSelection(vuePopUpDemanderIndice.boutonHeuristique, vuePopUpDemanderIndice.boutonChoco);
+            activerSelection(vue.boutonHeuristique, vue.boutonChoco);
         });
 
-// Triche
-        vuePopUpDemanderIndice.boutonTriche.setOnAction(e -> {
+        vue.boutonTriche.setOnAction(e -> {
             activerTriche();
-            activerSelection(vuePopUpDemanderIndice.boutonTriche, vuePopUpDemanderIndice.boutonSansTriche);
+            activerSelection(vue.boutonTriche, vue.boutonSansTriche);
         });
 
-        vuePopUpDemanderIndice.boutonSansTriche.setOnAction(e -> {
+        vue.boutonSansTriche.setOnAction(e -> {
             desactiverTriche();
-            activerSelection(vuePopUpDemanderIndice.boutonSansTriche, vuePopUpDemanderIndice.boutonTriche);
+            activerSelection(vue.boutonSansTriche, vue.boutonTriche);
         });
-
-
     }
 
     private void activerSelection(Button actif, Button inactif) {
         actif.setDisable(true);
-        actif.setOpacity(0.5); // effet transparent
+        actif.setOpacity(0.5);
         inactif.setDisable(false);
-        inactif.setOpacity(1.0); // effet normal
+        inactif.setOpacity(1.0);
     }
 
-
-    public IAAssistanceChocoSolver getIaAssistanceChocoSolver() {
-        return iaAssistanceChocoSolver;
+    public IAAssistance getIaAssistanceActive() {
+        return iaAssistanceChocoActive ? iaAssistanceChoco : iaAssistanceHeuristique;
     }
-
 }
