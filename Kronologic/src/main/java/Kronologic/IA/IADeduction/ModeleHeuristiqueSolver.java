@@ -56,23 +56,45 @@ public class ModeleHeuristiqueSolver {
     }
 
     private void appliquerContraintesDeplacements() {
-        for (int t = 0; t < 5; t++) { // Temps de 0 à 4
-            for (int p = 0; p < personnages.length; p++) {
-                boolean[] lieuxAccessibles = new boolean[6];
+        for (int iteration = 0; iteration < 2; iteration++) { // 2 passes : avant + arrière
+            // ⏩ Propagation avant (t ➜ t+1)
+            for (int t = 0; t < 5; t++) {
+                for (int p = 0; p < personnages.length; p++) {
+                    boolean[] lieuxAccessibles = new boolean[6];
 
-                // Réunion des lieux accessibles depuis tous les lieux possibles au temps `t`
-                for (int l = 0; l < 6; l++) {
-                    if (domainesPersonnages[t][p][l]) { // Si le lieu `l` est possible au temps `t`
-                        for (int adj : sallesAdjacentes[l]) {
-                            lieuxAccessibles[adj - 1] = true; // Marquer comme accessible au temps suivant
+                    for (int l = 0; l < 6; l++) {
+                        if (domainesPersonnages[t][p][l]) {
+                            for (int adj : sallesAdjacentes[l]) {
+                                lieuxAccessibles[adj - 1] = true;
+                            }
+                        }
+                    }
+
+                    for (int l = 0; l < 6; l++) {
+                        if (!lieuxAccessibles[l]) {
+                            domainesPersonnages[t + 1][p][l] = false;
                         }
                     }
                 }
+            }
 
-                // Appliquer les lieux accessibles au temps `t+1`
-                for (int l = 0; l < 6; l++) {
-                    if (!lieuxAccessibles[l]) {
-                        domainesPersonnages[t + 1][p][l] = false; // Désactiver les lieux non accessibles
+            // ⏪ Propagation arrière (t+1 ➜ t)
+            for (int t = 5; t > 0; t--) {
+                for (int p = 0; p < personnages.length; p++) {
+                    boolean[] lieuxAccessiblesInverse = new boolean[6];
+
+                    for (int l = 0; l < 6; l++) {
+                        if (domainesPersonnages[t][p][l]) {
+                            for (int adj : sallesAdjacentes[l]) {
+                                lieuxAccessiblesInverse[adj - 1] = true;
+                            }
+                        }
+                    }
+
+                    for (int l = 0; l < 6; l++) {
+                        if (!lieuxAccessiblesInverse[l]) {
+                            domainesPersonnages[t - 1][p][l] = false;
+                        }
                     }
                 }
             }
@@ -122,9 +144,9 @@ public class ModeleHeuristiqueSolver {
                 int tempsSur = tempsSurs.getFirst() + 1;
                 // Si un personnage est passé 3 fois dans une salle, on peut en déduire qu'il y est passé à 2 pas
                 // de temps d'intervalle à chaque fois
-                if (tempsSur%2 == 0) {
+                if (tempsSur % 2 == 0) {
                     for (int t = 0; t < 6; t++) {
-                        if (t%2 != 0) {
+                        if (t % 2 != 0) {
                             for (int l = 0; l < 6; l++) {
                                 domainesPersonnages[t][personnageIndex][l] = l == lieuIndex;
                             }
@@ -132,7 +154,7 @@ public class ModeleHeuristiqueSolver {
                     }
                 } else {
                     for (int t = 0; t < 6; t++) {
-                        if (t%2 == 0) {
+                        if (t % 2 == 0) {
                             for (int l = 0; l < 6; l++) {
                                 domainesPersonnages[t][personnageIndex][l] = l == lieuIndex;
                             }
@@ -242,7 +264,7 @@ public class ModeleHeuristiqueSolver {
         boolean[] tempsSuivant = new boolean[6];
         if (temps == 1) {
             tempsSuivant = domainesPersonnages[temps][personnage];
-        } else if (temps == 6){
+        } else if (temps == 6) {
             tempsPrecedent = domainesPersonnages[temps - 2][personnage];
         } else if (1 <= temps && temps <= 5) {
             tempsPrecedent = domainesPersonnages[temps - 2][personnage];
@@ -252,14 +274,14 @@ public class ModeleHeuristiqueSolver {
         int[] sallesAdj = sallesAdjacentes[lieu];
         for (int l = 0; l < 6; l++) {
             int finalL = l;
-            if (Arrays.stream(sallesAdj).noneMatch(x -> x == finalL +1)) {
+            if (Arrays.stream(sallesAdj).noneMatch(x -> x == finalL + 1)) {
                 tempsPrecedent[l] = false;
                 tempsSuivant[l] = false;
             }
         }
     }
 
-    public void essayerDeTrouverCoupable(){
+    public void essayerDeTrouverCoupable() {
         // On regarde qui peut être le coupable
         for (int t = 1; t < 6; t++) {
             for (int l = 0; l < 6; l++) {
@@ -375,8 +397,8 @@ public class ModeleHeuristiqueSolver {
         System.out.println(coupable);
         coupableTrouve = true;
         coupablePersonnage = p;
-        coupableLieu = l+1;
-        coupableTemps = t+1;
+        coupableLieu = l + 1;
+        coupableTemps = t + 1;
     }
 
     public int getIndexPersonnage(String personnage) {

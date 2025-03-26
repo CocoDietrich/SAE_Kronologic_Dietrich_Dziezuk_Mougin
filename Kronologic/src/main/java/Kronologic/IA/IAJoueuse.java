@@ -73,7 +73,7 @@ public class IAJoueuse {
                 }
 
             } else {
-                System.out.println("❌ Aucune nouvelle question possible.");
+                System.out.println("Aucune nouvelle question possible.");
                 break;
             }
 

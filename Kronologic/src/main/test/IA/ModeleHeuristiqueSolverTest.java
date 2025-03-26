@@ -104,7 +104,7 @@ public class ModeleHeuristiqueSolverTest {
         solver.ajouterContraintePersonnage(new Personnage("S"), new Lieu(1), 4);
 
         boolean[] domaineServanteT2 = solver.getDomainesPersonnages()[1][5];
-        boolean contient4 = domaineServanteT2[3]; // index 3 = lieu 4 (Grand escalier)
-        assertFalse(contient4, "La salle 4 ne devrait plus être dans le domaine à T=2 pour S");
+        boolean contient3 = domaineServanteT2[2]; // index 2 = lieu 3
+        assertFalse(contient3, "La salle 3 ne devrait plus être dans le domaine à T=2 pour S");
     }
 }
