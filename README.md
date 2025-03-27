@@ -116,3 +116,97 @@ Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponi
 - Formuler des hypothèses : Tous les bugs liés au déplacement des pions ont été corrigés. De plus, la gestion des notes a été ajoutée.
 - IA de déduction : Avoir accès aux déductions faites (en se basant sur les indices collectés) par l'IA utilisant Choco-Solver grâce au bouton "Déduction de l'IA".
 - Films de la partie et du joueur (en cours de développement) : Le joueur peut voir les déplacements des personnages au cours de la partie (réalité) ainsi que l'évolution des hypothèse du joueur au fil des tours de jeu.
+
+## Itération 4
+
+### 1. Répartition des Tâches
+
+#### Mathieu :
+- Finalisation de l'IA de déduction utilisant Choco-Solver.
+- Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver.
+- Corriger les déductions du joueur grâce à l'IA d'assistance.
+          
+#### Enzo :
+- Correction des bugs liés aux différentes affichages des vues Carte et Tableaux.
+- Réalisation du film de la partie.
+- Réalisation du film des hypothèses du joueur.
+
+#### Corentin :
+- Gestion des pions d'hypothèses et d'absences (données et affichage).
+- Continuation du développement de l'IA de déduction heuristique.
+- Réduction de domaines à chaque nouvel indice collecté.
+
+### 2. Fonctionnalités Développées
+
+ - Correction de quelques bugs liés aux différentes affichages des vues Carte et Tableaux
+ - Afficher le film des déplacements des personnages au cours de la partie
+ - Afficher le film des hypothèses du joueur
+ - Permettre au joueur de formuler des "absences" et des "hypothèses"
+ - Finalisation de l'IA de déduction utilisant Choco-Solver
+ - Continuation du développement de l'IA de déduction heuristique
+ - Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver
+
+### 3. Mode d’Emploi
+
+Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponibles.
+
+#### Fonctionnalités Disponibles (en plus des fonctionnalités implémentées dans l'itération précédente) :
+
+- Absences et hypothèses : Le joueur peut en formuler grâce à des pions spécifiques sur la VueCarte.
+- IA de déduction heuristique : Avoir accès aux déductions faites (en se basant sur les indices collectés) par l'IA grâce au bouton "Déduction de l'IA".
+- Films de la partie et du joueur : Le joueur peut voir les déplacements des personnages au cours de la partie (réalité) ainsi que l'évolution des hypothèse du joueur au fil des tours de jeu.
+
+## Itération 5
+
+### 1. Répartition des Tâches
+
+#### Mathieu :
+- Finalisation de l'IA de déduction utilisant Choco-Solver.
+- Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver.
+- Corriger les déductions du joueur grâce à l'IA d'assistance.
+          
+#### Enzo :
+- Réalisation du film de la partie.
+- Réalisation du film des hypothèses du joueur.
+- Correction des bugs et amélioration de l'interface graphique.
+
+#### Corentin :
+- Gestion des pions d'hypothèses et d'absences (données et affichage).
+- Continuation du développement de l'IA de déduction heuristique.
+- Réduction de domaines à chaque nouvel indice collecté.
+
+### 2. Fonctionnalités Développées
+
+ - Gestion des pions d'absence, d'hypothèse et d'hypothèse d'absence
+ - Gestion de l'affichage des présences, des absences et des hypothèses
+ - Ajout de la possibilité de visualiser le film de la Réalité en fin de Partie
+ - Restructuration du MVC
+ - Finalisation de l'IA de déduction utilisant Choco-Solver
+ - Développement de l'IA de déduction heuristique
+ - Implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver (commencement)
+
+## Itération 5
+
+### 1. Répartition des Tâches
+
+#### Mathieu :
+- Terminer l'IA d'assistance Choco-Solver.
+- Début de l'implémentation de l'IA joueuse.
+          
+#### Enzo :
+- Comparaison de l'efficacité des deux IA de déduction.
+- Recherche du coupable via l'IA de déduction heuristique.
+- Commencement de l'implémentation de l'IA d'assistance heuristique.
+
+#### Corentin :
+- Recherche du coupable via l'IA de déduction heuristique.
+- Génération de scénarios pour renouveler l'expérience de jeu.
+
+### 2. Fonctionnalités Développées
+
+ - Comparaison de l'efficacité des deux IA de déduction
+ - Recherche du coupable via l'IA de déduction heuristique
+ - Terminer l'IA d'assistance Choco-Solver
+ - Début de l'implémentation de l'IA joueuse
+ - Génération de scénarios pour renouveler l'expérience de jeu
+ - Commencement de l'implémentation de l'IA d'assistance heuristique
