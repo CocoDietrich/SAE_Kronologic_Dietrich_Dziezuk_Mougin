@@ -1,0 +1,33 @@
+Bilan de l'Itération 6 :
+
+1. État Actuel de la Version
+
+Fonctionnalités Développées :
+
+ - Comparaison de l'efficacité des deux IA de déduction
+ - Recherche du coupable via l'IA de déduction heuristique
+ - Terminer l'IA d'assistance Choco-Solver
+ - Début de l'implémentation de l'IA joueuse
+ - Génération de scénarios pour renouveler l'expérience de jeu
+ - Commencement de l'implémentation de l'IA d'assistance heuristique
+
+
+ 2. Problèmes Rencontrés et Bugs Restants
+
+ - Recherche du coupable : Nous avons dû revoir plusieurs fois la façon dont on modélisait le problème pour que l'IA
+   réussisse à trouver le coupable. Nous avons finalement réussi à obtenir des résultats satisfaisants.
+
+ - IA d'assistance heuristique : Nous avons commencé à implémenter cette IA mais nous n'avons pas encore pu la tester
+   correctement. Nous avons rencontré des problèmes de performances et de complexité qui nous ont empêché de la terminer.
+
+
+ 4. Conclusion et Perspectives
+
+ L'itération 6 a été très productive. Nous avons réussi à terminer l'IA d'assistance Choco-Solver et à avoir un premier
+ prototype d'algorithme de génération de scénarios. Nous avons également commencé à implémenter l'IA joueuse et l'IA d'assistance
+ heuristique. Nous allons continuer à travailler sur ces deux dernières fonctionnalités lors de la prochaine itération.
+
+ Nos objectifs pour la dernière itération de ce projet sont les suivants :
+    - Terminer l'implémentation de l'IA joueuse
+    - Terminer l'implémentation de l'IA d'assistance heuristique
+    - Optimiser le code et corriger les bugs restants

@@ -1,0 +1,118 @@
+Fonctionnalités développées au cours de l'itération 5 :
+
+- Comparaison de l'efficacité des deux IA de déduction
+
+- Recherche du coupable via l'IA de déduction heuristique
+
+- Fonctionnalités liées aux IA d'assistance :
+
+1. Recommander une question optimale à poser
+    Condition de validation :
+        - L’IA analyse les indices et suggère la meilleure question à poser pour maximiser les informations obtenues.
+          La recommandation est visible.
+
+2. Simuler les conséquences de différentes questions
+    Condition de validation :
+        - L’IA évalue plusieurs scénarios potentiels basés sur des questions possibles et propose l’option faisant
+          avancer le plus l’enquête.
+
+3. Corriger les déductions du joueur
+    Condition de validation :
+        - L’IA compare ses déductions avec celles du joueur et le corrige si elle remarque des erreurs dans ses
+          hypothèses.
+
+- Début de l'implémentation de l'IA joueuse
+
+Cette IA se servira des IA de déduction et d’assistance afin de fonctionner. Elle sera capable de :
+
+    - Raisonner sur les indices collectés et en tirer des déductions logiques.
+    - Poser les questions permettant d’obtenir les informations les plus pertinentes pour la complétion de l’enquête.
+    - Générer des hypothèses intermédiaires qui seront ajustées en fonction des nouveaux indices.
+    - Éliminer les options impossibles au fur et à mesure afin de pouvoir raisonner sur un ensemble d’informations plus petit.
+    - Formuler une déduction une fois qu’elle a trouvé le coupable, le temps et le lieu du crime.
+
+- Génération de scénarios pour renouveler l'expérience de jeu
+
+    - Permettre au joueur de choisir entre un scénario prédéfini ou un nouveau scénario généré aléatoirement.
+
+    - Permettre au joueur de choisir la difficulté du scénario à générer.
+
+    - Tester la faisabilité du scénario grâce à l’IA joueuse avant de le proposer au joueur (une seule solution
+      possible et trouvable).
+
+Cas d'utilisation développés au cours de l'itération 6 :
+
+- Cas d’utilisation : Permettre au joueur de demander de l’aide à l’IA assistante
+
+Acteur principal : Joueur.
+Objectifs : Faciliter le raisonnement du joueur en proposant des actions pertinentes.
+Préconditions : L’IA assistante est active, et le joueur a récolté des indices.
+Postconditions : Le joueur obtient un nouvel indice.
+Scénario principal :
+- Le joueur appuie sur le bouton Demander un indice.
+- L’IA analyse les indices disponibles et détermine la meilleure question à poser.
+- L’indice obtenu est révélé au joueur.
+- L’indice est ajouté à l’historique et manuellement ou automatiquement (selon la volonté du joueur) intégré à la feuille de jeu.
+
+
+- Cas d’utilisation : Recommander une question optimale à poser
+
+Acteur principal : IA d’assistance (heuristique et Choco-Solver).
+Objectifs : Suggérer au joueur la meilleure question à poser pour maximiser les informations obtenues et faire avancer l’enquête.
+Préconditions : Le joueur a collecté des indices, mais l’enquête n’est pas encore résolue.
+Postconditions : Une recommandation claire est affichée pour guider le joueur.
+Scénario principal :
+- L’IA analyse les indices collectés et évalue les informations manquantes.
+- Elle identifie la question qui a le plus de chances d’apporter des données pertinentes.
+- La recommandation est affichée dans l’interface, visible par le joueur.
+- Le joueur peut choisir de poser la question suggérée ou d’ignorer la recommandation.
+
+
+- Cas d’utilisation : Simuler les conséquences de différentes questions
+
+Acteur principal : IA d’assistance (heuristique et Choco-Solver).
+Objectifs : Évaluer plusieurs scénarios potentiels en fonction des questions possibles et proposer celle qui avance le plus l’enquête.
+Préconditions : Une liste de questions possibles est définie et des indices ont été collectés.
+Postconditions : L’IA propose l’option qui a le plus grand impact sur l’avancement de l’enquête.
+Scénario principal :
+- L’IA examine les indices collectés et les lacunes restantes.
+- Elle simule les scénarios possibles pour chaque question envisageable.
+- Elle calcule l’impact potentiel de chaque option sur l’avancement de l’enquête.
+- Elle propose la question ayant l’effet le plus significatif.
+- La recommandation est affichée dans l’interface et le joueur peut choisir de suivre ou non l’avis de l’IA.
+
+
+- Cas d’utilisation : Corriger les déductions du joueur
+
+Acteur principal : IA d’assistance (heuristique et Choco-Solver).
+Objectifs : Comparer les hypothèses du joueur avec celles de l’IA et fournir des corrections si des erreurs sont détectées.
+Préconditions : Le joueur a formulé des hypothèses basées sur les indices disponibles.
+Postconditions : Les corrections de l’IA sont affichées et le joueur peut ajuster ses hypothèses.
+Scénario principal :
+- Le joueur formule ses hypothèses et les enregistre.
+- L’IA compare ces hypothèses avec ses propres déductions.
+- Si des erreurs sont détectées (par exemple, un suspect incorrect ou un personnage mal placé à un pas de temps), l’IA affiche les corrections nécessaires.
+- Les suggestions de l’IA sont présentées clairement, permettant au joueur d’ajuster ses hypothèses.
+
+
+(Les cas d'utilisation développés restent les mêmes pour les IA de déduction.)
+(Nous n'avions pas réfléchi à des cas d'utilisation pour l'IA joueuse et la génération de scénarios car il s'agissait
+à la base de fonctionnalités que nous devions développer uniquement dans le cas où nous aurions le temps de le faire.)
+
+Rôle des membres du groupe :
+
+Mathieu :
+
+- Terminer l'IA d'assistance Choco-Solver.
+- Début de l'implémentation de l'IA joueuse.
+
+Enzo :
+
+- Comparaison de l'efficacité des deux IA de déduction
+- Recherche du coupable via l'IA de déduction heuristique
+- Commencement de l'implémentation de l'IA d'assistance heuristique
+
+Corentin :
+
+- Recherche du coupable via l'IA de déduction heuristique
+- Génération de scénarios pour renouveler l'expérience de jeu
