@@ -1,0 +1,60 @@
+Bilan de l'Itération 5 :
+
+1. État Actuel de la Version
+
+Fonctionnalités Développées :
+
+ - Gestion des pions d'absence, d'hypothèse et d'hypothèse d'absence
+ - Gestion de l'affichage des présences, des absences et des hypothèses
+ - Ajout de la possibilité de visualiser le film de la Réalité en fin de Partie
+ - Restructuration du MVC
+ - Finalisation de l'IA de déduction utilisant Choco-Solver
+ - Développement de l'IA de déduction heuristique
+ - Implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver (commencement)
+
+
+2. Validation des Choix de Conception
+
+Conformité à l'Étude Préalable :
+
+ - Respect du planning initial :
+     - Les fonctionnalités liées à l'interface graphique et à l'architecture MVC ont été développées en 5 itérations.
+     - Les 2 dernières itérations ont été consacrées à l'implémentation des IA et à l'algorithme de création de scénarios.
+
+  - Interaction Utilisateur :
+     - Le joueur peut désormais placer, modifier et supprimer des pions d’hypothèses et d’absences de manière intuitive.
+     - La gestion des films des déplacements permet une meilleure compréhension des événements du jeu.
+     - Les nouvelles fonctionnalités garantissent une lisibilité accrue des informations, facilitant la prise de décision.
+
+  - IA et Traitement des Données :
+     - L’IA de déduction heuristique est désormais capable de traiter progressivement les indices collectés et d’affiner ses conclusions.
+     - Les déductions du joueur peuvent être validées par l’IA d’assistance, évitant ainsi les erreurs de raisonnement.
+     - L’IA d’assistance utilisant Choco-Solver commence à être implémentée pour aider le joueur à poser les bonnes questions.
+
+
+ 3. Problèmes Rencontrés et Bugs Restants
+
+ - Réduction de domaine de l’IA heuristique : Quelques incohérences ont été rencontrées dans l’application des contraintes
+   et ont dû être ajustées.
+
+ - Recherche du coupable : L’IA de déduction heuristique ne parvient pas encore à déterminer le coupable de manière fiable.
+   Des améliorations sont nécessaires pour garantir la pertinence des conclusions.
+
+ - IA d’Assistance : L’IA d’assistance n’est pas encore fonctionnelle et nécessite des ajustements pour suggérer des questions
+   pertinentes au joueur.
+
+
+ 4. Conclusion et Perspectives
+
+ L'itération 5 a permis de finaliser les fonctionnalités de base du jeu et d'implémenter les IA de déduction et d’assistance.
+ Les prochaines itérations seront consacrées à l’amélioration des performances des IA déjà commencées et à l'implémentation
+ des fonctionnalités restantes (IA joueuse, génération de scénarios...).
+
+ Nos objectifs pour l'itération 6 sont les suivants :
+    - Améliorer l’IA de déduction heuristique pour déterminer le coupable de manière fiable.
+    - Finaliser l’IA d’assistance pour aider le joueur à poser les bonnes questions.
+    - Implémenter l’IA joueuse pour proposer des scénarios pertinents.
+    - Développer la génération de scénarios pour renouveler l’expérience de jeu.
+
+ Bien qu'il sera très compliqué de développer toutes ces fonctionnalités, nous espérons au moins les commencer au cours
+ de l'itération suivante.

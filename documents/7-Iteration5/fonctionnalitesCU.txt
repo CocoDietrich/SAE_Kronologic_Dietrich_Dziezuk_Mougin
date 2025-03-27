@@ -1,6 +1,4 @@
-Fonctionnalités développées au cours de l'itération 4 :
-
-- Correction de quelques bugs liés aux différentes affichages des vues Carte et Tableaux
+Fonctionnalités développées au cours de l'itération 5 :
 
 - Permettre au joueur de formuler des "absences" et des "hypothèses"
 
@@ -29,7 +27,7 @@ Conditions de validation :
 - Commencement de l'implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver
 
 
-Cas d'utilisation développés au cours de l'itération 4 :
+Cas d'utilisation développés au cours de l'itération 5 :
 
 - Cas d’utilisation : Permettre au joueur de formuler des hypothèses
 
@@ -77,9 +75,9 @@ Mathieu :
 
 Enzo :
 
-- Correction des bugs liés aux différentes affichages des vues Carte et Tableaux.
 - Réalisation du film de la partie.
 - Réalisation du film des hypothèses du joueur.
+- Correction des bugs et amélioration de l'interface graphique.
 
 Corentin :
 
