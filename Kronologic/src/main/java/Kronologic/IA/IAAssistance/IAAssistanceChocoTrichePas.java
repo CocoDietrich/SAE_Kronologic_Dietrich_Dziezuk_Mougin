@@ -68,9 +68,4 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
             default -> -1;
         };
     }
-
-    @Override
-    public String corrigerDeductions() {
-        return "(non implémenté)";
-    }
 }

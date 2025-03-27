@@ -57,7 +57,7 @@ public class ModeleHeuristiqueSolver {
 
     private void appliquerContraintesDeplacements() {
         for (int iteration = 0; iteration < 2; iteration++) { // 2 passes : avant + arrière
-            // ⏩ Propagation avant (t ➜ t+1)
+            // Propagation avant (t ➜ t+1)
             for (int t = 0; t < 5; t++) {
                 for (int p = 0; p < personnages.length; p++) {
                     boolean[] lieuxAccessibles = new boolean[6];
@@ -78,7 +78,7 @@ public class ModeleHeuristiqueSolver {
                 }
             }
 
-            // ⏪ Propagation arrière (t+1 ➜ t)
+            // Propagation arrière (t+1 ➜ t)
             for (int t = 5; t > 0; t--) {
                 for (int p = 0; p < personnages.length; p++) {
                     boolean[] lieuxAccessiblesInverse = new boolean[6];
@@ -114,9 +114,7 @@ public class ModeleHeuristiqueSolver {
 
         afficherUniquementLieuxAdjacents(personnageIndex, lieuIndex, temps + 1);
 
-        appliquerContraintesDeplacements();
-        appliquerContrainteNombrePersonnage();
-        essayerDeTrouverCoupable();
+        propagerEtEvaluer();
     }
 
     // Ajouter une contrainte sur le nombre de passages
@@ -164,9 +162,7 @@ public class ModeleHeuristiqueSolver {
             }
         }
 
-        appliquerContraintesDeplacements();
-        appliquerContrainteNombrePersonnage();
-        essayerDeTrouverCoupable();
+        propagerEtEvaluer();
     }
 
     // Ajouter une contrainte sur le nombre de personnes dans une salle
@@ -192,11 +188,15 @@ public class ModeleHeuristiqueSolver {
             }
         }
 
+        propagerEtEvaluer();
+    }
+
+    private void propagerEtEvaluer() {
         appliquerContraintesDeplacements();
         appliquerContrainteNombrePersonnage();
-
         essayerDeTrouverCoupable();
     }
+
 
     // Appliquer les contraintes de nombre de personnes dans une salle
     public void appliquerContrainteNombrePersonnage() {
