@@ -25,9 +25,9 @@ public class ControleurIAJoueuse implements EventHandler<ActionEvent> {
             IAAssistance iaActive = modeleJeu.getModeleIA().getIaAssistanceActive();
             IAJoueuse iaJoueuse = new IAJoueuse(iaActive, ModeleJeu.getPartie());
 
-            iaJoueuse.jouerJusquaTrouverCoupable();
+            String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
 
-            Platform.runLater(() -> vueChargement.afficherResultat("🎯 L’IA a trouvé le coupable !"));
+            Platform.runLater(() -> vueChargement.afficherResultat("L’IA a trouvé le coupable :\n" + resultat));
         });
 
         threadIA.setDaemon(true);

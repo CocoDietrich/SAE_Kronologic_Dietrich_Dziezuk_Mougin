@@ -19,7 +19,7 @@ public class IAJoueuse {
         this.partie = partie;
     }
 
-    public void jouerJusquaTrouverCoupable() {
+    public String jouerJusquaTrouverCoupable() {
         int tour = 1;
 
         while (true) {
@@ -32,9 +32,7 @@ public class IAJoueuse {
                     String nom = partie.getEnquete().getMeurtrier().getNom();
                     String lieu = partie.getEnquete().getLieuMeurtre().getNom();
                     int temps = partie.getEnquete().getTempsMeurtre().getValeur();
-                    System.out.printf("🎯 Choco a trouvé ! Coupable : %s, Lieu : %s, Temps : %d\n", nom, lieu, temps);
-                    System.out.println(iaDeduction.afficherHistoriqueDeduction());
-                    break;
+                    return String.format("👤 Coupable : %s\n📍 Lieu : %s\n⏳ Temps : %d", nom, lieu, temps);
                 }
             }
 
@@ -73,8 +71,7 @@ public class IAJoueuse {
                 }
 
             } else {
-                System.out.println("Aucune nouvelle question possible.");
-                break;
+                return "❌ L’IA n’a pas trouvé de solution.";
             }
 
             tour++;
