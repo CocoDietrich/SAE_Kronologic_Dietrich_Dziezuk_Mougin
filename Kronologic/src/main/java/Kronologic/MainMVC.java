@@ -3,7 +3,7 @@ package Kronologic;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Modele.ModeleAccueil;
-import Kronologic.MVC.Vue.PopUps.ControleurIAAccueil;
+import Kronologic.MVC.Controleur.Accueil.ControleurIAAccueil;
 import Kronologic.MVC.Vue.VueAccueil;
 import javafx.application.Application;
 import javafx.scene.Scene;

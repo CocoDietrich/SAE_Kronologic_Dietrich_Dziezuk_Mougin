@@ -18,6 +18,7 @@ public class ControleurIAJoueuse implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
+        System.out.println("2");
         VueChargementIA vueChargement = new VueChargementIA();
         vueChargement.afficher();
 

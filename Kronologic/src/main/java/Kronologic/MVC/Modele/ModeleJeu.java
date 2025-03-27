@@ -1,6 +1,7 @@
 package Kronologic.MVC.Modele;
 
 import Kronologic.Jeu.Partie;
+import Kronologic.MVC.Controleur.Accueil.ControleurIAAccueil;
 import Kronologic.MVC.Controleur.Accueil.ControleurInitialisation;
 import Kronologic.MVC.Controleur.Accueil.ControleurQuitterJeu;
 import Kronologic.MVC.Modele.SousModeleJeu.ModeleFilms;
@@ -129,10 +130,11 @@ public class ModeleJeu implements Sujet {
                 bp.setCenter(vueAccueil);
 
                 ControleurInitialisation controleurInitialisation = new ControleurInitialisation(modeleAccueil);
-                vueAccueil.jouer.setOnAction(controleurInitialisation);
-                vueAccueil.IAJoueuse.setOnAction(controleurInitialisation);
-
+                ControleurIAAccueil controleurIAAccueil = new ControleurIAAccueil(modeleAccueil);
                 ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
+
+                vueAccueil.jouer.setOnAction(controleurInitialisation);
+                vueAccueil.IAJoueuse.setOnAction(controleurIAAccueil);
                 vueAccueil.quitter.setOnAction(controleurQuitterJeu);
 
 

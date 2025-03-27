@@ -1,4 +1,4 @@
-package Kronologic.MVC.Vue.PopUps;
+package Kronologic.MVC.Controleur.Accueil;
 
 import Kronologic.MVC.InitialisationJeu;
 import Kronologic.MVC.Modele.ModeleAccueil;
@@ -17,6 +17,7 @@ public class ControleurIAAccueil implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
+        System.out.println("3");
         InitialisationJeu init = new InitialisationJeu((Stage)((Button)actionEvent.getSource()).getScene().getWindow());
         init.initialiserAvecIA();
     }

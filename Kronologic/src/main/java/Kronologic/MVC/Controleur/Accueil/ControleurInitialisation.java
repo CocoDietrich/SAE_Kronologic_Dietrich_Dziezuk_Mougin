@@ -17,6 +17,7 @@ public class ControleurInitialisation implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent actionEvent) {
+        System.out.println("1");
         this.modele.initialiserPartie(((Button)actionEvent.getSource()).getText());
         InitialisationJeu initialisation = new InitialisationJeu((Stage)((Button)actionEvent.getSource()).getScene().getWindow());
         initialisation.initialiser();
