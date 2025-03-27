@@ -41,9 +41,4 @@ public class IAAssistanceChocoTriche extends IAAssistanceChocoSolver {
                 new String[]{"Lieu : " + meilleurLieu.getNom(), meilleurType + " : " + meilleurValeur} :
                 new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
     }
-
-    @Override
-    public String corrigerDeductions() {
-        return "(non implémenté)";
-    }
 }
