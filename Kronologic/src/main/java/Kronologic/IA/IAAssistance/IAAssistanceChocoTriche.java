@@ -37,7 +37,6 @@ public class IAAssistanceChocoTriche extends IAAssistanceChocoSolver {
             }
         }
 
-
         return meilleurLieu != null ?
                 new String[]{"Lieu : " + meilleurLieu.getNom(), meilleurType + " : " + meilleurValeur} :
                 new String[]{"Aucune recommandation", "Vous avez déjà toutes les informations."};
