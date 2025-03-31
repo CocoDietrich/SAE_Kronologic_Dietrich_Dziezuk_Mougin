@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class ControleurQuitterRegleFilm implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
 
     public ControleurQuitterRegleFilm(ModeleJeu modele) {
         this.modele = modele;

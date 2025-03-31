@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ModeleAccueil implements Sujet {
 
+    private final static String JOUER = "Jouer";
+    private final static String IAJOUEUSE = "IAJoueuse";
+
     private final List<Observateur> observateurs;
 
     public ModeleAccueil() {
@@ -16,9 +19,9 @@ public class ModeleAccueil implements Sujet {
     }
 
     public void initialiserPartie(String s) {
-        if (s.equals("Jouer")) {
+        if (s.equals(JOUER)) {
             notifierObservateurs();
-        } else if (s.equals("IAJoueuse")) {
+        } else if (s.equals(IAJOUEUSE)) {
             InitialisationJeu ij = new InitialisationJeu(new Stage());
             ij.initialiserAvecIA();
         }

@@ -10,7 +10,9 @@ import javafx.stage.Stage;
 
 public class ControleurVisualiserDeductionIA implements EventHandler<ActionEvent> {
 
-    private ModeleIA modeleIA;
+    private final static String TITRE = "Déductions de l'IA";
+
+    private final ModeleIA modeleIA;
 
     public ControleurVisualiserDeductionIA(ModeleIA modeleIA) {
         this.modeleIA = modeleIA;
@@ -21,12 +23,12 @@ public class ControleurVisualiserDeductionIA implements EventHandler<ActionEvent
         Button boutonChocoSolver = vueDeductionIA.getBoutonChocoSolver();
         Button boutonHeuristique = vueDeductionIA.getBoutonHeuristique();
 
-        boutonChocoSolver.setOnAction(e -> {
+        boutonChocoSolver.setOnAction(_ -> {
             String historiqueChocoSolver = modeleIA.voirDeductionIAChocoSolver();
             vueDeductionIA.afficherDeduction(historiqueChocoSolver);
         });
 
-        boutonHeuristique.setOnAction(e -> {
+        boutonHeuristique.setOnAction(_ -> {
             String historiqueHeuristique = modeleIA.voirDeductionIAHeuristique();
             vueDeductionIA.afficherDeduction(historiqueHeuristique);
         });
@@ -43,7 +45,7 @@ public class ControleurVisualiserDeductionIA implements EventHandler<ActionEvent
         vueDeductionIA.afficherDeduction(historique);
 
         Stage stage = new Stage();
-        stage.setTitle("Déductions de l'IA");
+        stage.setTitle(TITRE);
         Scene scene = new Scene(vueDeductionIA, 600, 400);
         stage.setScene(scene);
         stage.show();

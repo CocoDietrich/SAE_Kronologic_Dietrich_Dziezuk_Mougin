@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ControleurChoixTableau implements EventHandler<MouseEvent> {
 
-    private ModeleNotes modeleNotes;
+    private final ModeleNotes modeleNotes;
     // Ajout de constantes pour les états
     private static final String ETAT_PRESENT = "présent";
     private static final String ETAT_ABSENT = "absent";
@@ -55,7 +55,7 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
         List<Lieu> lieux = elements.lieux();
         List<Personnage> personnages = elements.personnages();
 
-        Lieu lieu = null;
+        Lieu lieu;
         Personnage personnage = null;
         int nbPersonnage = 0;
         Temps temps = new Temps(Integer.parseInt(text.getInfo().split(" - ")[1]));
@@ -110,32 +110,31 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
 
         // Basculer entre les états : neutre -> sélectionné -> absence -> neutre
         switch (etat) {
-            case "neutre":
+            case ETAT_NEUTRE:
                 // État sélectionné : texte noir et gras
                 text.setFill(Color.BLACK);
                 text.setStyle("-fx-font-weight: bold; " +
                         "-fx-strikethrough: false;" +
                         "-fx-cursor: hand;");
-                text.setEtat("présent");
+                text.setEtat(ETAT_PRESENT);
                 gestionNote(text, elements, text.getEtat());
                 break;
-            case "présent":
+            case ETAT_PRESENT:
                 // État absence : texte gris et barré
                 text.setFill(Color.GRAY);
                 text.setStyle("-fx-font-weight: normal; " +
                         "-fx-strikethrough: true;" +
                         "-fx-cursor: hand;");
-                text.setEtat("absent");
+                text.setEtat(ETAT_ABSENT);
                 gestionNote(text, elements, text.getEtat());
                 break;
-
-            case "absent":
+            case ETAT_ABSENT:
                 // Retour à l'état neutre
                 text.setFill(Color.LIGHTGRAY);
                 text.setStyle("-fx-font-weight: normal; " +
                         "-fx-strikethrough: false;" +
                         "-fx-cursor: hand;");
-                text.setEtat("neutre");
+                text.setEtat(ETAT_PRESENT);
                 gestionNote(text, elements, text.getEtat());
                 break;
         }

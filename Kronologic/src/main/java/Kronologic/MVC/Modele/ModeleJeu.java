@@ -19,6 +19,9 @@ import java.util.*;
 
 public class ModeleJeu implements Sujet {
 
+    private final static String RETOUR = "retour";
+    private final static String QUITTER = "quitter";
+
     private final List<Observateur> observateurs;
 
     // TODO : A terme, inutile
@@ -39,7 +42,7 @@ public class ModeleJeu implements Sujet {
         this.modeleNotes = new ModeleNotes(partie);
         this.modeleQuestionDeduction = new ModeleQuestionDeduction(partie);
         this.modeleIA = new ModeleIA(partie);
-        this.modeleFilms = new ModeleFilms(partie);
+        this.modeleFilms = new ModeleFilms();
     }
 
     public void changerAffichage(Stage stage) {
@@ -119,7 +122,7 @@ public class ModeleJeu implements Sujet {
     // Méthode permettant de quitter la partie
     public void quitter(String idBouton, Stage stage) {
         switch (idBouton) {
-            case "retour":
+            case RETOUR:
                 ModeleAccueil modeleAccueil = new ModeleAccueil();
 
                 VueAccueil vueAccueil = new VueAccueil();
@@ -137,11 +140,10 @@ public class ModeleJeu implements Sujet {
                 vueAccueil.IAJoueuse.setOnAction(controleurIAAccueil);
                 vueAccueil.quitter.setOnAction(controleurQuitterJeu);
 
-
                 Scene scene = new Scene(bp, stage.getWidth(), stage.getHeight());
                 stage.setScene(scene);
                 break;
-            case "quitter":
+            case QUITTER:
                 System.exit(0);
                 break;
         }
@@ -168,6 +170,7 @@ public class ModeleJeu implements Sujet {
         return observateurs;
     }
 
+    // TODO : A corriger
     public static Partie getPartie() {
         return partie;
     }

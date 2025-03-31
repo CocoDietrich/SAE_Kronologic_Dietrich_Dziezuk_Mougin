@@ -1,7 +1,6 @@
 package Kronologic.MVC.Controleur;
 
 import Kronologic.MVC.Modele.ModeleJeu;
-import Kronologic.MVC.Vue.VueFilmJoueur;
 import Kronologic.MVC.Vue.VueFilmRealite;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -11,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class ControleurVisualiserFilmRealite implements EventHandler<ActionEvent> {
-    private ModeleJeu modeleJeu;
+    private final ModeleJeu modeleJeu;
 
     public ControleurVisualiserFilmRealite(ModeleJeu modele) {
         this.modeleJeu = modele;

@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class ControleurVisualiserDeduction implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
 
     public ControleurVisualiserDeduction(ModeleJeu modele) {
         this.modele = modele;

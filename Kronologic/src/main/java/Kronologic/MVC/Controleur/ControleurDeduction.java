@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ControleurDeduction implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modeleJeu;
+    private final ModeleJeu modeleJeu;
 
     // Constantes pour les identifiants
     private static final String RETOUR = "Retour";

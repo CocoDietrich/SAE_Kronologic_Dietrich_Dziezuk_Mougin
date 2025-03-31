@@ -19,7 +19,7 @@ import java.util.Objects;
 // TODO : A REFACTORISER
 public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
-    private ModeleNotes modeleNotes;
+    private final ModeleNotes modeleNotes;
 
     public ControleurChoixCarte(ModeleNotes modeleNotes) {
         this.modeleNotes = modeleNotes;
@@ -38,7 +38,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         }
         assert vueCarte != null;
 
-        Pion pionActuel = null;
+        Pion pionActuel;
         if (vueCarte.pions.getLast().getParent() == null && vueCarte.pions.get(vueCarte.pions.size() - 2).getParent() instanceof VueCarte) {
             pionActuel = vueCarte.pions.get(vueCarte.pions.size() - 2);
         } else {
@@ -153,7 +153,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             String nomTemps = ((String) pionActuel.getUserData()).split("-")[0];
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
 
-            Note note = null;
+            Note note;
             if ((pionActuel.getImage().getUrl().contains("Pion de Nombres"))) {
                 // On crée la note
                 if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
@@ -209,7 +209,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             String nomTemps = ((String) pionActuel.getUserData()).split("-")[0];
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
 
-            Note note = null;
+            Note note;
             if ((pionActuel.getImage().getUrl().contains("Pion de Nombres"))) {
                 // On crée la note
                 if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {

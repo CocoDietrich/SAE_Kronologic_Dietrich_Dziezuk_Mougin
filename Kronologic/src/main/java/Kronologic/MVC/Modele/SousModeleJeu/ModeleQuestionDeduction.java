@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ModeleQuestionDeduction implements Sujet {
 
-    private Partie partie;
+    private final Partie partie;
     private final List<Observateur> observateurs;
 
     public ModeleQuestionDeduction(Partie partie) {

@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class ModeleNotes implements Sujet {
 
-    private Partie partie;
+    private final Partie partie;
     private final List<Observateur> observateurs;
 
     public ModeleNotes(Partie partie) {
