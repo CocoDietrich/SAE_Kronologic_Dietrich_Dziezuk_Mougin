@@ -15,14 +15,17 @@ import javafx.stage.Stage;
 
 public class VuePopUpEnigme extends BorderPane implements Observateur {
 
-        private final Stage stage;
-        public Stage stageGlobal;
-        public Button valider;
+        private final static String VALIDER = "Valider";
 
-        public VuePopUpEnigme(Stage stageGlobal) {
+        private final static int LARGEUR = 500;
+        private final static int INSETS = 20;
+
+        private final Stage stage;
+        private final Button valider;
+
+        public VuePopUpEnigme() {
                 this.stage = new Stage();
-                this.stageGlobal = stageGlobal;
-                this.valider = new Button("Valider");
+                this.valider = new Button(VALIDER);
         }
 
         public void afficherPopUp(Enquete enquete) {
@@ -32,27 +35,27 @@ public class VuePopUpEnigme extends BorderPane implements Observateur {
                 Text synopsis = new Text(enquete.getSynopsis());
                 synopsis.setStyle("-fx-font-size: 18px; -fx-fill: #7b001e;");
                 synopsis.setTextAlignment(TextAlignment.CENTER);
-                synopsis.setWrappingWidth(500); // Largeur maximale pour le texte multi-lignes
+                synopsis.setWrappingWidth(LARGEUR); // Largeur maximale pour le texte multi-lignes
 
                 // Enigme
                 Text enigme = new Text(enquete.getEnigme());
                 enigme.setStyle("-fx-font-size: 18px; -fx-fill: #7b001e; -fx-font-weight: bold;");
                 enigme.setTextAlignment(TextAlignment.CENTER);
-                enigme.setWrappingWidth(500); // Largeur maximale pour le texte multi-lignes
+                enigme.setWrappingWidth(LARGEUR); // Largeur maximale pour le texte multi-lignes
 
                 // Bouton
-                valider.setId("valider");
+                valider.setId(VALIDER.toLowerCase());
                 valider.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
-                valider.setOnAction(e -> stage.close());
+                valider.setOnAction(_ -> stage.close());
 
                 // Layout pour le bouton
-                HBox boutonsBox = new HBox(20, valider);
+                HBox boutonsBox = new HBox(INSETS, valider);
                 boutonsBox.setAlignment(Pos.CENTER);
 
                 // Layout principal
-                VBox layout = new VBox(20, synopsis, enigme, boutonsBox);
+                VBox layout = new VBox(INSETS, synopsis, enigme, boutonsBox);
                 layout.setAlignment(Pos.TOP_CENTER); // Centrer en haut
-                layout.setPadding(new Insets(20));
+                layout.setPadding(new Insets(INSETS));
                 layout.setStyle("-fx-background-color: #f5a623;");
 
                 // Scène adaptative
@@ -65,7 +68,5 @@ public class VuePopUpEnigme extends BorderPane implements Observateur {
         }
 
         @Override
-        public void actualiser() {
-
-        }
+        public void actualiser() {}
 }

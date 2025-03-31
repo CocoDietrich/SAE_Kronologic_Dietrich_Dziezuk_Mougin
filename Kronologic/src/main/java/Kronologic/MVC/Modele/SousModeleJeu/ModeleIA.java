@@ -115,24 +115,24 @@ public class ModeleIA implements Sujet {
         assert vue != null;
         vue.afficherPopUp();
 
-        vue.boutonChoco.setOnAction(_ -> {
+        vue.getBoutonChoco().setOnAction(_ -> {
             utiliserIAAssistanceChoco();
-            activerSelection(vue.boutonChoco, vue.boutonHeuristique);
+            activerSelection(vue.getBoutonChoco(), vue.getBoutonHeuristique());
         });
 
-        vue.boutonHeuristique.setOnAction(_ -> {
+        vue.getBoutonHeuristique().setOnAction(_ -> {
             utiliserIAAssistanceHeuristique();
-            activerSelection(vue.boutonHeuristique, vue.boutonChoco);
+            activerSelection(vue.getBoutonHeuristique(), vue.getBoutonChoco());
         });
 
-        vue.boutonTriche.setOnAction(_ -> {
+        vue.getBoutonTriche().setOnAction(_ -> {
             activerTriche();
-            activerSelection(vue.boutonTriche, vue.boutonSansTriche);
+            activerSelection(vue.getBoutonTriche(), vue.getBoutonSansTriche());
         });
 
-        vue.boutonSansTriche.setOnAction(_ -> {
+        vue.getBoutonSansTriche().setOnAction(_ -> {
             desactiverTriche();
-            activerSelection(vue.boutonSansTriche, vue.boutonTriche);
+            activerSelection(vue.getBoutonSansTriche(), vue.getBoutonTriche());
         });
     }
 

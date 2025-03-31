@@ -12,11 +12,25 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class VuePopUpDeduction extends BorderPane implements Observateur {
+
+    private final static int LARGEUR = 800;
+    private final static int HAUTEUR = 500;
+    private final static int INSETS = 20;
+
+    private final static int LARGEUR_QUITTER = 120;
+    private final static int LARGEUR_VOIR_FILM = 180;
+    private final static int HAUTEUR_BOUTON = 50;
+
+    private final static String STYLE_BOUTON = "-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;";
+
+    private final static String QUITTER = "Quitter";
+    private final static String VOIR_FILM = "Voir le film";
+
     private final Stage stage;
     private final Stage nouveauStage;
     private Text message;
-    public Button quitter;
-    public Button voirFilm;
+    private Button quitter;
+    private Button voirFilm;
 
     public VuePopUpDeduction(Stage stage, Stage nouveauStage) {
         this.stage = stage;
@@ -30,23 +44,22 @@ public class VuePopUpDeduction extends BorderPane implements Observateur {
         message = new Text();
         message.setStyle("-fx-font-size: 30px; -fx-fill: #7b001e; -fx-font-weight: bold;");
 
-        quitter = new Button("Quitter");
-        quitter.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
-        quitter.setPrefSize(120, 50);
+        quitter = new Button(QUITTER);
+        quitter.setStyle(STYLE_BOUTON);
+        quitter.setPrefSize(LARGEUR_QUITTER, HAUTEUR_BOUTON);
 
-        voirFilm = new Button("Voir le film");
-        voirFilm.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
-        voirFilm.setPrefSize(180, 50);
+        voirFilm = new Button(VOIR_FILM);
+        voirFilm.setStyle(STYLE_BOUTON);
+        voirFilm.setPrefSize(LARGEUR_VOIR_FILM, HAUTEUR_BOUTON);
     }
-
 
     public void afficherPopUp(boolean victoire, String loupe) {
         this.setCenter(null);
         this.setBottom(null);
 
-        VBox contenuPrincipal = new VBox(20);
+        VBox contenuPrincipal = new VBox(INSETS);
         contenuPrincipal.setAlignment(Pos.CENTER);
-        contenuPrincipal.setPadding(new Insets(20));
+        contenuPrincipal.setPadding(new Insets(INSETS));
 
         if (victoire) {
             message.setText("Bravo ! Vous avez résolu l'énigme !"
@@ -59,29 +72,34 @@ public class VuePopUpDeduction extends BorderPane implements Observateur {
 
             HBox quitterBox = new HBox(quitter);
             quitterBox.setAlignment(Pos.BOTTOM_LEFT);
-            quitterBox.setPadding(new Insets(20));
+            quitterBox.setPadding(new Insets(INSETS));
 
             BorderPane boutonsPane = new BorderPane();
             boutonsPane.setBottom(voirFilm);
-            BorderPane.setMargin(voirFilm, new Insets(20));
+            BorderPane.setMargin(voirFilm, new Insets(INSETS));
             BorderPane.setAlignment(voirFilm, Pos.BOTTOM_RIGHT);
 
             this.setCenter(contenuPrincipal);
             this.setBottom(new BorderPane(null, null, boutonsPane, null, quitterBox));
         }
 
-        Scene scene = new Scene(this, 800, 500);
+        Scene scene = new Scene(this, LARGEUR, HAUTEUR);
         nouveauStage.setScene(scene);
         nouveauStage.show();
     }
 
-
     @Override
-    public void actualiser() {
-
-    }
+    public void actualiser() {}
 
     public Stage getStage() {
         return stage;
+    }
+
+    public Button getQuitter() {
+        return quitter;
+    }
+
+    public Button getVoirFilm() {
+        return voirFilm;
     }
 }

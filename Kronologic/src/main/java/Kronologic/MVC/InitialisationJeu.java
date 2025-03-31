@@ -30,7 +30,6 @@ public class InitialisationJeu {
     private final Stage stage;
     private VuePopUpEnigme vuePopUpEnigme;
     private VueCarte vueCarte;
-    private ModeleJeu modeleJeu;
 
     public InitialisationJeu(Stage stage) {
         this.stage = stage;
@@ -75,7 +74,7 @@ public class InitialisationJeu {
         ModeleAccueil modeleAccueil = new ModeleAccueil();
 
         // Création des vues
-        this.vuePopUpEnigme = new VuePopUpEnigme(stage);
+        this.vuePopUpEnigme = new VuePopUpEnigme();
         this.vueCarte = new VueCarte(modeleJeu);
         VueTableau vueTableau = new VueTableau();
         VuePoseQuestion vuePoseQuestion = new VuePoseQuestion();
@@ -84,8 +83,8 @@ public class InitialisationJeu {
         VuePopUpDeduction vuePopUpDeduction = new VuePopUpDeduction(stage, new Stage());
         VuePopUpQuitter vuePopUpQuitter = new VuePopUpQuitter(stage);
         VueRegle vueRegle = new VueRegle();
-        VuePopUpDemanderIndice vuePopUpDemanderIndice = new VuePopUpDemanderIndice(stage);
-        VuePopUpPoseQuestion vuePopUpPoseQuestion = new VuePopUpPoseQuestion(stage);
+        VuePopUpDemanderIndice vuePopUpDemanderIndice = new VuePopUpDemanderIndice();
+        VuePopUpPoseQuestion vuePopUpPoseQuestion = new VuePopUpPoseQuestion();
         VueAccueil vueAccueil = new VueAccueil();
 
         // Création des controleurs
@@ -112,27 +111,30 @@ public class InitialisationJeu {
 
         // Assignation des controleurs aux vues
         vueCarte.retour.setOnAction(controleurQuitter);
+        vueTableau.retour.setOnAction(controleurQuitter);
         vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
+        vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
         vueCarte.changerAffichage.setOnAction(controleurAffichage);
+        vueTableau.changerAffichage.setOnAction(controleurAffichage);
         vueCarte.regle.setOnAction(controleurVisualiserRegle);
+        vueTableau.regle.setOnAction(controleurVisualiserRegle);
         vueCarte.demanderIndice.setOnAction(controleurDemanderIndice);
+        vueTableau.demanderIndice.setOnAction(controleurDemanderIndice);
         vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
+        vueTableau.deductionIA.setOnAction(controleurVoirDeductionIA);
         vueCarte.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
+        vueTableau.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
         vueCarte.filmRealite.setOnAction(controleurVisualiserFilmRealite);
+        vueTableau.filmRealite.setOnAction(controleurVisualiserFilmRealite);
+        vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
+        vueTableau.faireDeduction.setOnAction(controleurVisualiserDeduction);
+
         vueCarte.hypothese.setOnAction(controleurImagePions);
         vueCarte.absence.setOnAction(controleurImagePions);
         vueCarte.masquerHypothese.setOnAction(controleurImagePions);
         vueCarte.afficherPresences.setOnAction(controleurImagePions);
         vueCarte.afficherAbsences.setOnAction(controleurImagePions);
-        vueTableau.retour.setOnAction(controleurQuitter);
-        vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
-        vueTableau.changerAffichage.setOnAction(controleurAffichage);
-        vueTableau.regle.setOnAction(controleurVisualiserRegle);
-        vueTableau.deductionIA.setOnAction(controleurVoirDeductionIA);
-        vueTableau.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
-        vueTableau.filmRealite.setOnAction(controleurVisualiserFilmRealite);
-        vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
-        vueTableau.faireDeduction.setOnAction(controleurVisualiserDeduction);
+
         vueRegle.retour.setOnAction(controleurQuitterRegleFilm);
         for (TextCase tc : vueTableau.listeCases) {
             if (!tc.getInfo().split(" - ")[1].equals("1")) {
@@ -166,13 +168,13 @@ public class InitialisationJeu {
         for (Pion p : vueCarte.pions){
             p.setOnDragDone(controleurChoixCarte);
         }
-        vuePopUpDeduction.quitter.setOnAction(controleurPopUpDeduction);
-        vuePopUpDeduction.voirFilm.setOnAction(controleurPopUpDeduction);
-        vuePopUpQuitter.annuler.setOnAction(controleurPopUpQuitter);
-        vuePopUpQuitter.valider.setOnAction(controleurPopUpQuitter);
-        vuePopUpDemanderIndice.annuler.setOnAction(controleurPopUpDemanderIndice);
-        vuePopUpDemanderIndice.valider.setOnAction(controleurPopUpDemanderIndice);
-        vuePopUpPoseQuestion.continuer.setOnAction(controleurPopUpPoseQuestion);
+        vuePopUpDeduction.getQuitter().setOnAction(controleurPopUpDeduction);
+        vuePopUpDeduction.getVoirFilm().setOnAction(controleurPopUpDeduction);
+        vuePopUpQuitter.getAnnuler().setOnAction(controleurPopUpQuitter);
+        vuePopUpQuitter.getValider().setOnAction(controleurPopUpQuitter);
+        vuePopUpDemanderIndice.getAnnuler().setOnAction(controleurPopUpDemanderIndice);
+        vuePopUpDemanderIndice.getValider().setOnAction(controleurPopUpDemanderIndice);
+        vuePopUpPoseQuestion.getContinuer().setOnAction(controleurPopUpPoseQuestion);
 
         // Enregistrement des observateurs
         // Modele Jeu
@@ -212,7 +214,7 @@ public class InitialisationJeu {
         stage.show();
 
         // Affichage de la pop-up d'énigme
-        vuePopUpEnigme.afficherPopUp(modeleJeu.getPartie().getEnquete());
+        vuePopUpEnigme.afficherPopUp(ModeleJeu.getPartie().getEnquete());
     }
 
     public void initialiserAvecIA() {

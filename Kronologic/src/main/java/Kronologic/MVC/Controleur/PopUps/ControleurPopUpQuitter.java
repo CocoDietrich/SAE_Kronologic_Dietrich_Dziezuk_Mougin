@@ -41,7 +41,7 @@ public class ControleurPopUpQuitter implements EventHandler<ActionEvent> {
                     .findFirst();
 
             if (vuePopUpQuitter.isPresent()) {
-                Stage stageGlobal = vuePopUpQuitter.get().stageGlobal;
+                Stage stageGlobal = vuePopUpQuitter.get().getStageGlobal();
                 modele.quitter(RETOUR, stageGlobal);
             } else {
                 System.err.println("Erreur : VuePopUpQuitter non trouvée parmi les observateurs.");

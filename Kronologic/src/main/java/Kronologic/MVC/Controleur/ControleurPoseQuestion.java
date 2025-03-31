@@ -44,7 +44,12 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
 
         switch (id) {
             case RETOUR:
-                this.modeleJeu.retourVueCarte(stage);
+                if (this.modeleJeu.estVueCarte()){
+                    this.modeleJeu.retourVueCarte(stage);
+                }
+                else {
+                    this.modeleJeu.retourVueTableau(stage);
+                }
                 break;
             case VALIDER:
                 validerChoix(stage, vuePoseQuestion);
