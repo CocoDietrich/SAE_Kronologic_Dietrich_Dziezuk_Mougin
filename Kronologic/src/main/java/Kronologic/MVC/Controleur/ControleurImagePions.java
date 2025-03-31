@@ -6,7 +6,7 @@ import javafx.event.EventHandler;
 
 public class ControleurImagePions implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
 
     public ControleurImagePions(ModeleJeu modele) {
         this.modele = modele;

@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class ControleurVisualiserPoseQuestion implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
 
     public ControleurVisualiserPoseQuestion(ModeleJeu modele) {
         this.modele = modele;

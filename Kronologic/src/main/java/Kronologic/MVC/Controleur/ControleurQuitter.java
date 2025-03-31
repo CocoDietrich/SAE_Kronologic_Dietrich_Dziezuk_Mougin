@@ -7,7 +7,7 @@ import javafx.scene.control.Button;
 
 public class ControleurQuitter implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
     private static final String ID_RETOUR = "retour";
 
     public ControleurQuitter(ModeleJeu modele) {

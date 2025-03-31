@@ -97,12 +97,12 @@ public class ModeleIA implements Sujet {
 
     public void activerTriche() {
         this.iaAssistanceChoco = new IAAssistanceChocoTriche(iaDeductionChocoSolver, ModeleJeu.getPartie());
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, ModeleJeu.getPartie()); // ✅ NEW
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, ModeleJeu.getPartie());
     }
 
     public void desactiverTriche() {
         this.iaAssistanceChoco = new IAAssistanceChocoTrichePas(iaDeductionChocoSolver, ModeleJeu.getPartie());
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTrichePas(iaDeductionHeuristique, ModeleJeu.getPartie()); // ✅ NEW
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTrichePas(iaDeductionHeuristique, ModeleJeu.getPartie());
     }
 
 
@@ -115,22 +115,22 @@ public class ModeleIA implements Sujet {
         assert vue != null;
         vue.afficherPopUp();
 
-        vue.boutonChoco.setOnAction(e -> {
+        vue.boutonChoco.setOnAction(_ -> {
             utiliserIAAssistanceChoco();
             activerSelection(vue.boutonChoco, vue.boutonHeuristique);
         });
 
-        vue.boutonHeuristique.setOnAction(e -> {
+        vue.boutonHeuristique.setOnAction(_ -> {
             utiliserIAAssistanceHeuristique();
             activerSelection(vue.boutonHeuristique, vue.boutonChoco);
         });
 
-        vue.boutonTriche.setOnAction(e -> {
+        vue.boutonTriche.setOnAction(_ -> {
             activerTriche();
             activerSelection(vue.boutonTriche, vue.boutonSansTriche);
         });
 
-        vue.boutonSansTriche.setOnAction(e -> {
+        vue.boutonSansTriche.setOnAction(_ -> {
             desactiverTriche();
             activerSelection(vue.boutonSansTriche, vue.boutonTriche);
         });

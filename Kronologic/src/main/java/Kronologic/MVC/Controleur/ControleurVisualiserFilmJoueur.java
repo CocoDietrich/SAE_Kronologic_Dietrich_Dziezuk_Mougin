@@ -10,7 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class ControleurVisualiserFilmJoueur implements EventHandler<ActionEvent> {
-    private ModeleJeu modeleJeu;
+    private final ModeleJeu modeleJeu;
 
     public ControleurVisualiserFilmJoueur(ModeleJeu modele) {
         this.modeleJeu = modele;

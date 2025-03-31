@@ -1,6 +1,5 @@
 package Kronologic.MVC.Modele.SousModeleJeu;
 
-import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Modele.Sujet;
 import Kronologic.MVC.Vue.Observateur;
@@ -15,12 +14,10 @@ import static javafx.scene.layout.GridPane.setColumnSpan;
 
 public class ModeleFilms implements Sujet {
 
-    private Partie partie;
     private final List<Observateur> observateurs;
 
-    public ModeleFilms(Partie partie) {
+    public ModeleFilms() {
         this.observateurs = new ArrayList<>();
-        this.partie = partie;
     }
 
     // TODO : à revoir (comment modifier la vue avec les données appropriées)
@@ -36,7 +33,7 @@ public class ModeleFilms implements Sujet {
 
         // On supprime et recrée la carte pour éviter les doublons
         vueFilmRealite.getChildren().removeIf(node ->
-                node instanceof HBox && "carte".equals(((HBox) node).getId())
+                node instanceof HBox && "carte".equals(node.getId())
         );
 
         HBox nouvelleHbox = vueFilmRealite.afficherCarte(modeleJeu);
@@ -59,7 +56,7 @@ public class ModeleFilms implements Sujet {
 
         // On supprime et recrée la carte pour éviter les doublons
         vueFilmJoueur.getChildren().removeIf(node ->
-                node instanceof HBox && "carte".equals(((HBox) node).getId())
+                node instanceof HBox && "carte".equals(node.getId())
         );
 
         List<HBox> nouvelleHbox = vueFilmJoueur.afficherCarte(modeleJeu);

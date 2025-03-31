@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class ControleurVisualiserRegle implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modele;
+    private final ModeleJeu modele;
 
     public ControleurVisualiserRegle(ModeleJeu modele) {
         this.modele = modele;

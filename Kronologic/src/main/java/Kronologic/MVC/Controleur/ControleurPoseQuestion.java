@@ -5,7 +5,6 @@ import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.Observateur;
-import Kronologic.MVC.Vue.VueDeduction;
 import Kronologic.MVC.Vue.VuePoseQuestion;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,11 +12,10 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.util.List;
-import java.util.Optional;
 
 public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
 
-    private ModeleJeu modeleJeu;
+    private final ModeleJeu modeleJeu;
 
     // Constantes pour les identifiants
     private static final String RETOUR = "Retour";

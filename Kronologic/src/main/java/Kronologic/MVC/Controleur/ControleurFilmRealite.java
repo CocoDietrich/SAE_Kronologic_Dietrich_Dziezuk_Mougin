@@ -5,7 +5,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 
 public class ControleurFilmRealite implements ChangeListener<Number> {
-    private ModeleJeu modeleJeu;
+    private final ModeleJeu modeleJeu;
 
     public ControleurFilmRealite(ModeleJeu modeleJeu) {
         this.modeleJeu = modeleJeu;
