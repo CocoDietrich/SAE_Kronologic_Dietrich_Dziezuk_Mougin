@@ -44,7 +44,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
         String[] resultats = new String[3];
 
         // On récupère tous les lieux
-        for (Lieu lieu : partie.getElements().getLieux()) {
+        for (Lieu lieu : partie.getElements().lieux()) {
             int ScoreTemps = Integer.MIN_VALUE;
             // On teste les questions par rapport aux temps
             // Questions Temps Lieu à poser = 30 (5*6) :
@@ -78,7 +78,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
             // Questions Personnages Lieu à poser = 36 (6*6) :
             // Personnages : A/B/C/D/J/S
             // Lieu : 1/2/3/4/5/6
-            for (Personnage personnage : partie.getElements().getPersonnages()) {
+            for (Personnage personnage : partie.getElements().personnages()) {
                 // On teste avec tous les indices publics
                 // -----------------------------
                 // Questions Personnages Lieu = 28 possibilités d'indices (4*7) :
@@ -119,7 +119,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
         String meilleureValeur = "Vous avez déjà toutes les informations.";
 
         // On récupère tous les lieux
-        for (Lieu lieu : partie.getElements().getLieux()) {
+        for (Lieu lieu : partie.getElements().lieux()) {
             int ScoreTemps = Integer.MAX_VALUE;
             // On teste les questions par rapport aux temps
             // Questions Temps Lieu à poser = 30 (5*6) :
@@ -153,7 +153,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
             // Questions Personnages Lieu à poser = 36 (6*6) :
             // Personnages : A/B/C/D/J/S
             // Lieu : 1/2/3/4/5/6
-            for (Personnage personnage : partie.getElements().getPersonnages()) {
+            for (Personnage personnage : partie.getElements().personnages()) {
                 // On teste avec tous les indices publics
                 // -----------------------------
                 // Questions Personnages Lieu = 28 possibilités d'indices (4*7) :
@@ -191,7 +191,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
         String meilleureValeur = "Vous avez déjà toutes les informations.";
 
         // On récupère tous les lieux
-        for (Lieu lieu : partie.getElements().getLieux()) {
+        for (Lieu lieu : partie.getElements().lieux()) {
             int somme = 0;
             int diviseur = 0;
             // On teste les questions par rapport aux temps
@@ -225,7 +225,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
             // Questions Personnages Lieu à poser = 36 (6*6) :
             // Personnages : A/B/C/D/J/S
             // Lieu : 1/2/3/4/5/6
-            for (Personnage personnage : partie.getElements().getPersonnages()) {
+            for (Personnage personnage : partie.getElements().personnages()) {
                 // On teste avec tous les indices publics
                 // -----------------------------
                 // Questions Personnages Lieu = 28 possibilités d'indices (4*7) :

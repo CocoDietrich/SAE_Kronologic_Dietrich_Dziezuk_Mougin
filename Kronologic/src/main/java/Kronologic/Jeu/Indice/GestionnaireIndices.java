@@ -7,7 +7,7 @@ import Kronologic.Jeu.Elements.Temps;
 import java.util.List;
 
 public class GestionnaireIndices {
-    private List<Indice> listeIndices;
+    private final List<Indice> listeIndices;
 
     public GestionnaireIndices(List<Indice> listeIndices) {
         if (listeIndices == null) {

@@ -9,6 +9,7 @@ public class Lieu {
         private final String nom;
         private final int id;
         private final List<Lieu> listeLieuxAdjacents;
+        private final static int NOMBRE_LIEU = 6;
 
         public Lieu(String n, int i, List<Lieu> l) {
             if (i == 0) {
@@ -16,8 +17,8 @@ public class Lieu {
             } else if (i < 0) {
                 throw new NullPointerException("Le nom du lieu ne peut pas être null");
             }
-            else if (i > 6) {
-                throw new IllegalArgumentException("L'id du lieu ne peut pas être supérieur à 6");
+            else if (i > NOMBRE_LIEU) {
+                throw new IllegalArgumentException("L'id du lieu ne peut pas être supérieur à " + NOMBRE_LIEU);
             }
 
             if (n == null) {
@@ -41,8 +42,8 @@ public class Lieu {
             } else if (i < 0) {
                 throw new NullPointerException("Le nom du lieu ne peut pas être null");
             }
-            else if (i > 6) {
-                throw new IllegalArgumentException("L'id du lieu ne peut pas être supérieur à 6");
+            else if (i > NOMBRE_LIEU) {
+                throw new IllegalArgumentException("L'id du lieu ne peut pas être supérieur à " + NOMBRE_LIEU);
             }
             this.nom = null;
             this.id = i;

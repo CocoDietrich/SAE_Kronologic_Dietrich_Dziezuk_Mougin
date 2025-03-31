@@ -1,12 +1,11 @@
 package Kronologic.Jeu.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GestionnaireNotes {
 
-    private List<Note> notes;
+    private final List<Note> notes;
 
     public GestionnaireNotes() {
         this.notes = new ArrayList<>();

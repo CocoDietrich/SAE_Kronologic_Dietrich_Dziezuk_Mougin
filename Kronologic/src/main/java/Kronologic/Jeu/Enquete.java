@@ -5,15 +5,15 @@ import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 
 public class Enquete {
-    private int idEnquete;
-    private String nomEnquete;
-    private String synopsis;
-    private String enigme;
-    private int loupeOr;
-    private int loupeBronze;
-    private Personnage meurtrier;
-    private Lieu lieuMeurtre;
-    private Temps tempsMeurtre;
+    private final int idEnquete;
+    private final String nomEnquete;
+    private final String synopsis;
+    private final String enigme;
+    private final int loupeOr;
+    private final int loupeBronze;
+    private final Personnage meurtrier;
+    private final Lieu lieuMeurtre;
+    private final Temps tempsMeurtre;
 
     public Enquete(int id, String nom, String synopsis, String enigme, int loupeOr, int loupeBronze, Personnage meurtrier, Lieu lieuMeurtre, Temps tempsMeurtre) {
         if (id < 0) {

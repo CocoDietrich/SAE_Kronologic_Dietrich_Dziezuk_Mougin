@@ -12,7 +12,7 @@ public class ModeleHeuristiqueSolver {
     private final String[] personnages;
     private final boolean[][][] domainesPersonnages = new boolean[6][6][6]; // Temps × Personnages × Lieux
     private final int[][] sallesAdjacentes;
-    private final int[][] nombrePersonnageContrainte = new int[6][6]; // Temps × Lieux × NbPersonnages
+    private final int[][] nombrePersonnageContrainte = new int[6][6]; // Temps × Lieux * NbPersonnages
     private boolean coupableTrouve = false;
     private int coupablePersonnage = -1;
     private int coupableLieu = -1;
@@ -266,7 +266,7 @@ public class ModeleHeuristiqueSolver {
             tempsSuivant = domainesPersonnages[temps][personnage];
         } else if (temps == 6) {
             tempsPrecedent = domainesPersonnages[temps - 2][personnage];
-        } else if (1 <= temps && temps <= 5) {
+        } else if (2 <= temps && temps <= 5) {
             tempsPrecedent = domainesPersonnages[temps - 2][personnage];
             tempsSuivant = domainesPersonnages[temps][personnage];
         }

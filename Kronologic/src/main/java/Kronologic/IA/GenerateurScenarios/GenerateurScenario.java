@@ -20,7 +20,6 @@ public class GenerateurScenario {
 
     private static final int NB_LIEUX = 6;
     private static final int NB_TEMPS = 6;
-    private static final int NB_PERSONNAGES = 6;
 
     private static final Random random = new Random();
 
@@ -33,7 +32,7 @@ public class GenerateurScenario {
             List<String> noms = List.of("Aventurière", "Baronne", "Chauffeur", "Détective", "Journaliste", "Servante");
             List<Personnage> personnages = noms.stream().map(Personnage::new).collect(Collectors.toList());
 
-            List<Realite> positions = genererTrajetsValidés(personnages, lieux, temps);
+            List<Realite> positions = genererTrajetsValides(personnages, lieux, temps);
 
             Personnage detective = personnages.stream().filter(p -> p.getNom().equals("Détective")).findFirst().orElseThrow();
             Optional<Realite> sceneMeurtre = trouverSceneMeurtre(positions, detective);
@@ -90,15 +89,15 @@ public class GenerateurScenario {
         root.addProperty("loupeBronze", e.getLoupeBronze());
 
         Map<String, JsonArray> lieuxData = new LinkedHashMap<>();
-        List<Lieu> lieux = partie.getElements().getLieux();
-        List<Temps> temps = partie.getDeroulement().getListePositions().stream().map(Realite::getTemps).distinct().collect(Collectors.toList());
-        List<Personnage> persos = partie.getElements().getPersonnages();
+        List<Lieu> lieux = partie.getElements().lieux();
+        List<Temps> temps = partie.getDeroulement().getListePositions().stream().map(Realite::getTemps).distinct().toList();
+        List<Personnage> persos = partie.getElements().personnages();
 
         for (Lieu l : lieux) {
             JsonObject bloc = new JsonObject();
             for (Temps t : temps) {
                 List<Realite> prs = partie.getDeroulement().positionsDansLieu(l).stream()
-                        .filter(r -> r.getTemps().getValeur() == t.getValeur()).collect(Collectors.toList());
+                        .filter(r -> r.getTemps().getValeur() == t.getValeur()).toList();
                 JsonArray arr = new JsonArray();
                 JsonObject obj = new JsonObject();
                 obj.addProperty("nombrePersonnages", prs.size());
@@ -109,11 +108,11 @@ public class GenerateurScenario {
             }
             for (Personnage p : persos) {
                 List<Realite> passes = partie.getDeroulement().positionsDuPersonnage(p).stream()
-                        .filter(r -> r.getLieu().equals(l)).collect(Collectors.toList());
+                        .filter(r -> r.getLieu().equals(l)).toList();
                 JsonArray arr = new JsonArray();
                 JsonObject obj = new JsonObject();
                 obj.addProperty("nombrePassages", passes.size());
-                obj.addProperty("tempsPrive", passes.isEmpty() ? 0 : passes.get(0).getTemps().getValeur());
+                obj.addProperty("tempsPrive", passes.isEmpty() ? 0 : passes.getFirst().getTemps().getValeur());
                 obj.addProperty("temps", passes.stream().map(x -> String.valueOf(x.getTemps().getValeur())).collect(Collectors.joining(",")));
                 arr.add(obj);
                 bloc.add(p.getNom(), arr);
@@ -152,13 +151,13 @@ public class GenerateurScenario {
         }
         for (Lieu lieu : lieux) {
             List<Lieu> adj = adjacences.get(lieu.getId()).stream()
-                    .map(id -> lieux.get(id - 1)).collect(Collectors.toList());
+                    .map(id -> lieux.get(id - 1)).toList();
             lieu.getListeLieuxAdjacents().addAll(adj);
         }
         return lieux;
     }
 
-    private static List<Realite> genererTrajetsValidés(List<Personnage> persos, List<Lieu> lieux, List<Temps> temps) {
+    private static List<Realite> genererTrajetsValides(List<Personnage> persos, List<Lieu> lieux, List<Temps> temps) {
         List<Realite> resultats = new ArrayList<>();
         for (Personnage p : persos) {
             List<Lieu> parcours = new ArrayList<>();
@@ -167,7 +166,7 @@ public class GenerateurScenario {
             for (int i = 1; i < temps.size(); i++) {
                 Lieu finalActuel = actuel;
                 List<Lieu> adjacents = actuel.getListeLieuxAdjacents().stream()
-                        .filter(l -> !l.equals(finalActuel)).collect(Collectors.toList());
+                        .filter(l -> !l.equals(finalActuel)).toList();
                 actuel = adjacents.get(random.nextInt(adjacents.size()));
                 parcours.add(actuel);
             }

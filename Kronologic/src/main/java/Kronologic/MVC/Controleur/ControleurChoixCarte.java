@@ -95,10 +95,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 }
 
                 // On supprime le pion actuel de la liste
-
-                System.out.println("0EME REMOVE");
-                System.out.println(pionsMemePersonnage);
-                System.out.println(pionsMemePersonnage.getLast().getUserData().toString());
                 pionsMemePersonnage.removeLast();
 
                 // Si un d'eux est placé dans le même lieu et au même temps, on ne fait rien
@@ -148,7 +144,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
-            for (Lieu lieu : ModeleJeu.getPartie().getElements().getLieux()) {
+            for (Lieu lieu : ModeleJeu.getPartie().getElements().lieux()) {
                 if (lieu.getNom().equals(nomLieu)) {
                     nouveauLieu = lieu;
                 }
@@ -204,7 +200,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
-            for (Lieu lieu : ModeleJeu.getPartie().getElements().getLieux()) {
+            for (Lieu lieu : ModeleJeu.getPartie().getElements().lieux()) {
                 if (lieu.getNom().equals(nomLieu)) {
                     nouveauLieu = lieu;
                 }

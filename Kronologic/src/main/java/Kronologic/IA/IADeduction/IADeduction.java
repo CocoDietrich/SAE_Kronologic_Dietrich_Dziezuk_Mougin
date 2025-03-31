@@ -15,13 +15,13 @@ public abstract class IADeduction {
 
     public IADeduction(Partie partie) {
         //On recupere le premier caractere du nom de tous les personnages
-        List<Personnage> personnages = partie.getElements().getPersonnages();
+        List<Personnage> personnages = partie.getElements().personnages();
         personnagesNoms = personnages.stream()
                 .map(p -> p.getNom().substring(0, 1))
                 .toArray(String[]::new);
 
         //On recupere les salles adjacentes de chaque salle
-        List<Lieu> lieux = partie.getElements().getLieux();
+        List<Lieu> lieux = partie.getElements().lieux();
         sallesAdjacentes = lieux.stream()
                 .map(l -> l.getListeLieuxAdjacents().stream().mapToInt(Lieu::getId).toArray())
                 .toArray(int[][]::new);

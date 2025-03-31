@@ -96,8 +96,8 @@ public class TestPartieConstructeur {
         assertEquals(4, partie.getGestionnaireIndices().getListeIndices().size());
         assertEquals(0, partie.getGestionnaireNotes().getNotes().size());
         assertEquals(0, partie.getGestionnairePions().getPions().size());
-        assertEquals(2, partie.getElements().getPersonnages().size());
-        assertEquals(2, partie.getElements().getLieux().size());
+        assertEquals(2, partie.getElements().personnages().size());
+        assertEquals(2, partie.getElements().lieux().size());
     }
 
     // On teste le constructeur de la classe Partie avec une enquete null

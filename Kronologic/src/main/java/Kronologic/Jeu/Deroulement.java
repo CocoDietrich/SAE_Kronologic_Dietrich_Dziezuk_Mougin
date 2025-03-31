@@ -5,7 +5,7 @@ import Kronologic.Jeu.Elements.*;
 import java.util.ArrayList;
 
 public class Deroulement {
-    private ArrayList<Realite> listePositions;
+    private final ArrayList<Realite> listePositions;
 
     public Deroulement(ArrayList<Realite> listePositions) {
         if (listePositions == null) {

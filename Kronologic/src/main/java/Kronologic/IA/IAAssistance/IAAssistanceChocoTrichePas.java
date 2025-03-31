@@ -19,11 +19,11 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
 
         int strategie = (int) (Math.random() * 3);
 
-        for (Lieu lieu : partie.getElements().getLieux()) {
+        for (Lieu lieu : partie.getElements().lieux()) {
             for (int temps = 2; temps <= 6; temps++) {
                 List<Double> reductions = new ArrayList<>();
                 for (int infoPublic = 0; infoPublic <= 6; infoPublic++) {
-                    for (Personnage p : partie.getElements().getPersonnages()) {
+                    for (Personnage p : partie.getElements().personnages()) {
                         double r = simulerTemps(lieu, new Temps(temps), infoPublic, p.getNom());
                         if (r >= 0) reductions.add(r);
                     }
@@ -38,7 +38,7 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
                 }
             }
 
-            for (Personnage perso : partie.getElements().getPersonnages()) {
+            for (Personnage perso : partie.getElements().personnages()) {
                 List<Double> reductions = new ArrayList<>();
                 for (int infoPublic = 0; infoPublic <= 3; infoPublic++) {
                     for (int temps = 1; temps <= 6; temps++) {

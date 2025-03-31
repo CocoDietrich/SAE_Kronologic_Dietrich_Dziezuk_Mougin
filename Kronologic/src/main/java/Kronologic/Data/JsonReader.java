@@ -18,6 +18,8 @@ import java.util.*;
 
 public class JsonReader {
 
+    private static final int TEMPS_MAX = 6;
+
     public static Partie lirePartieDepuisJson(String cheminFichier) {
         try {
             // Initialiser Gson pour lire le fichier JSON
@@ -53,20 +55,16 @@ public class JsonReader {
                 if (adjacentsIds != null) {
                     for (int adjId : adjacentsIds) {
                         // Récupérer le lieu adjacent par son ID
-                        Lieu lieuAdjacent = lieux.stream()
+                        lieux.stream()
                                 .filter(l -> l.getId() == adjId)
-                                .findFirst()
-                                .orElse(null);
-                        if (lieuAdjacent != null) {
-                            lieu.getListeLieuxAdjacents().add(lieuAdjacent);
-                        }
+                                .findFirst().ifPresent(lieuAdjacent -> lieu.getListeLieuxAdjacents().add(lieuAdjacent));
                     }
                 }
             }
 
             // Charger les temps
             List<Temps> tempsList = new ArrayList<>();
-            for (int i = 1; i <= 6; i++) {
+            for (int i = 1; i <= TEMPS_MAX; i++) {
                 tempsList.add(new Temps(i));
             }
 

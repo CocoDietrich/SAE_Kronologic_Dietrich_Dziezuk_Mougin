@@ -82,7 +82,7 @@ public class TestPartiePoserQuestionTemps {
     // Test de la méthode poserQuestionTemps
     @Test
     public void test_01_poserQuestionTemps() {
-        Lieu scene = elements.getLieux().getFirst();
+        Lieu scene = elements.lieux().getFirst();
         Temps temps = new Temps(1);
         partie.poserQuestionTemps(scene, temps);
         assertEquals(1, partie.getIndicesDecouverts().size());
@@ -100,7 +100,7 @@ public class TestPartiePoserQuestionTemps {
     // Test de la méthode poserQuestionTemps avec un temps null
     @Test
     public void test_03_poserQuestionTempsPersonnageNull() {
-        Lieu scene = elements.getLieux().getFirst();
+        Lieu scene = elements.lieux().getFirst();
         assertThrows(NullPointerException.class, () -> partie.poserQuestionTemps(scene, null));
     }
 
@@ -113,13 +113,13 @@ public class TestPartiePoserQuestionTemps {
     // Test de la méthode poserQuestionTemps avec des indices qui ne sont pas des indices de temps
     @Test
     public void test_05_poserQuestionTempsIndicePersonnage() {
-        IndicePersonnage i1 = new IndicePersonnage(elements.getLieux().getFirst(), 1, elements.getPersonnages().getFirst(), 1);
-        IndicePersonnage i2 = new IndicePersonnage(elements.getLieux().getLast(), 1, elements.getPersonnages().getFirst(), 2);
-        IndicePersonnage i3 = new IndicePersonnage(elements.getLieux().getFirst(), 1, elements.getPersonnages().getLast(), 1);
-        IndicePersonnage i4 = new IndicePersonnage(elements.getLieux().getLast(), 1, elements.getPersonnages().getLast(), 2);
+        IndicePersonnage i1 = new IndicePersonnage(elements.lieux().getFirst(), 1, elements.personnages().getFirst(), 1);
+        IndicePersonnage i2 = new IndicePersonnage(elements.lieux().getLast(), 1, elements.personnages().getFirst(), 2);
+        IndicePersonnage i3 = new IndicePersonnage(elements.lieux().getFirst(), 1, elements.personnages().getLast(), 1);
+        IndicePersonnage i4 = new IndicePersonnage(elements.lieux().getLast(), 1, elements.personnages().getLast(), 2);
         partie = new Partie(enquete, deroulement, new GestionnaireIndices(List.of(i1, i2, i3, i4)), gestionnaireNotes, gestionnairePions, elements);
 
-        assertNull(partie.poserQuestionTemps(elements.getLieux().getFirst(), new Temps(1)));
+        assertNull(partie.poserQuestionTemps(elements.lieux().getFirst(), new Temps(1)));
     }
 
 }

@@ -24,7 +24,7 @@ public class Main {
         System.out.println(gestionnaireIndices.getListeIndices());
 
         // Afficher tous les lieux
-        List<Lieu> lieux = partie.getElements().getLieux();
+        List<Lieu> lieux = partie.getElements().lieux();
         for (Lieu lieu : lieux) {
             System.out.println(lieu.getNom() + " " + lieu.getId());
             for (Lieu lieuAdjacent : lieu.getListeLieuxAdjacents()) {

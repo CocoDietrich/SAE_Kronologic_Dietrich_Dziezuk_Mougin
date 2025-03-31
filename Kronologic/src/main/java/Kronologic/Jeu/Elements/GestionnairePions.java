@@ -5,7 +5,7 @@ import java.util.List;
 
 public class GestionnairePions {
 
-    private List<Pion> pions;
+    private final List<Pion> pions;
 
     public GestionnairePions() {
         this.pions = new ArrayList<>();
@@ -25,12 +25,11 @@ public class GestionnairePions {
         Pion pionASupprimer = null;
         for (Pion p : this.pions) {
             if (p.equals(pion)) {
-                Note note = null;
+                Note note;
                 if (pion.getNote().getPersonnage() == null){
                     note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getNbPersonnages());
                 }
                 else {
-
                     note = new Note(nouveauLieu, nouveauTemps, pion.getNote().getPersonnage());
                 }
                 note.setEstAbsence(pion.getNote().estAbsence());

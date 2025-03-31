@@ -80,14 +80,14 @@ public class IAJoueuse {
 
 
     private Lieu getLieuParNom(String nom) {
-        return partie.getElements().getLieux().stream()
+        return partie.getElements().lieux().stream()
                 .filter(l -> l.getNom().equalsIgnoreCase(nom))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Lieu non trouvé : " + nom));
     }
 
     private Personnage getPersonnageParNom(String nom) {
-        return partie.getElements().getPersonnages().stream()
+        return partie.getElements().personnages().stream()
                 .filter(p -> p.getNom().equalsIgnoreCase(nom))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Personnage non trouvé : " + nom));

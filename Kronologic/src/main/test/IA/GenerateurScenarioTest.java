@@ -16,8 +16,8 @@ public class GenerateurScenarioTest {
     public void testScenarioValide() {
         Partie partie = GenerateurScenario.genererScenario();
         List<Realite> realites = partie.getDeroulement().getListePositions();
-        List<Personnage> persos = partie.getElements().getPersonnages();
-        List<Lieu> lieux = partie.getElements().getLieux();
+        List<Personnage> persos = partie.getElements().personnages();
+        List<Lieu> lieux = partie.getElements().lieux();
         List<Temps> temps = new ArrayList<>();
         for (int i = 1; i <= 6; i++) temps.add(new Temps(i));
 

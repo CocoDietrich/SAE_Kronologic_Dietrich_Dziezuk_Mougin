@@ -52,8 +52,8 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
     }
 
     public void gestionNote(TextCase text, Elements elements, String etat) {
-        List<Lieu> lieux = elements.getLieux();
-        List<Personnage> personnages = elements.getPersonnages();
+        List<Lieu> lieux = elements.lieux();
+        List<Personnage> personnages = elements.personnages();
 
         Lieu lieu = null;
         Personnage personnage = null;
