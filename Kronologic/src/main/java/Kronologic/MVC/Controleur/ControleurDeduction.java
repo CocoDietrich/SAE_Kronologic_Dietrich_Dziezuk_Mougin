@@ -64,9 +64,9 @@ public class ControleurDeduction implements EventHandler<ActionEvent> {
     }
 
     private void validerChoix(VueDeduction vueDeduction) {
-        reactiverBoutons(vueDeduction.lieuButtons);
-        reactiverBoutons(vueDeduction.tempsButtons);
-        reactiverBoutons(vueDeduction.personnageButtons);
+        reactiverBoutons(vueDeduction.getLieuButtons());
+        reactiverBoutons(vueDeduction.getTempsButtons());
+        reactiverBoutons(vueDeduction.getPersonnageButtons());
         modeleJeu.getModeleQuestionDeduction().faireDeduction();
     }
 
@@ -77,9 +77,9 @@ public class ControleurDeduction implements EventHandler<ActionEvent> {
     }
 
     private void annulerChoix(VueDeduction vueDeduction) {
-        reactiverBoutons(vueDeduction.lieuButtons);
-        reactiverBoutons(vueDeduction.tempsButtons);
-        reactiverBoutons(vueDeduction.personnageButtons);
+        reactiverBoutons(vueDeduction.getLieuButtons());
+        reactiverBoutons(vueDeduction.getTempsButtons());
+        reactiverBoutons(vueDeduction.getPersonnageButtons());
         modeleJeu.getModeleQuestionDeduction().setLieuChoisi(null, vueDeduction);
         modeleJeu.getModeleQuestionDeduction().setTempsChoisi(null, vueDeduction);
         modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(null, vueDeduction);
@@ -99,20 +99,20 @@ public class ControleurDeduction implements EventHandler<ActionEvent> {
         String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));
         int indexLieu = Integer.parseInt(id.substring(id.lastIndexOf("_") + 1));
         Lieu lieu = new Lieu(nomLieu, indexLieu, null);
-        desactiverAutresBoutons(lieu, vueDeduction.lieuButtons);
+        desactiverAutresBoutons(lieu, vueDeduction.getLieuButtons());
         modeleJeu.getModeleQuestionDeduction().setLieuChoisi(lieu, vueDeduction);
     }
 
     private void traiterTemps(String id, VueDeduction vueDeduction) {
         int indexTemps = Integer.parseInt(id.substring(5));
         Temps temps = new Temps(indexTemps);
-        desactiverAutresBoutons(temps, vueDeduction.tempsButtons);
+        desactiverAutresBoutons(temps, vueDeduction.getTempsButtons());
         modeleJeu.getModeleQuestionDeduction().setTempsChoisi(temps, vueDeduction);
     }
 
     private void traiterPersonnage(String id, VueDeduction vueDeduction) {
         Personnage personnage = new Personnage(id);
-        desactiverAutresBoutons(personnage, vueDeduction.personnageButtons);
+        desactiverAutresBoutons(personnage, vueDeduction.getPersonnageButtons());
         modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(personnage, vueDeduction);
     }
 

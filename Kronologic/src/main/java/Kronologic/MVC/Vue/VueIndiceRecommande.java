@@ -17,17 +17,23 @@ import javafx.scene.paint.Stop;
 
 public class VueIndiceRecommande {
 
+    private final static String TITRE = "Indice et Correction";
+    private final static String FERMER = "Fermer";
+
+    private final static int LARGEUR = 600;
+    private final static int HAUTEUR = 400;
+
+    private final static String FONT = "Arial";
+
     private final Stage stage;
-    private final Text messageIndice;
-    private final TextArea zoneErreurs;
 
     public VueIndiceRecommande(String indice, String erreurs) {
         this.stage = new Stage();
-        this.stage.setTitle("Indice et Correction");
+        this.stage.setTitle(TITRE);
 
         Text titre = creerTitre();
-        this.messageIndice = creerMessageIndice(indice);
-        this.zoneErreurs = creerChampErreur(erreurs);
+        Text messageIndice = creerMessageIndice(indice);
+        TextArea zoneErreurs = creerChampErreur(erreurs);
 
         VBox encadreMessage = creerContenaireMessage(messageIndice);
         VBox encadreErreurs = creerContenaireErreur(zoneErreurs);
@@ -35,13 +41,13 @@ public class VueIndiceRecommande {
         Button fermer = creerBoutonQuitter();
 
         VBox layout = creerStructure(titre, encadreMessage, encadreErreurs, fermer);
-        Scene scene = new Scene(layout, 600, 400);
+        Scene scene = new Scene(layout, LARGEUR, HAUTEUR);
         stage.setScene(scene);
     }
 
     private Text creerTitre() {
         Text title = new Text("Indice Recommandé");
-        title.setFont(Font.font("Arial", 24));
+        title.setFont(Font.font(FONT, 24));
         title.setFill(Color.GOLD);
         DropShadow shadow = new DropShadow();
         shadow.setColor(Color.BLACK);
@@ -53,7 +59,7 @@ public class VueIndiceRecommande {
 
     private Text creerMessageIndice(String indice) {
         Text message = new Text(indice);
-        message.setFont(Font.font("Arial", 18));
+        message.setFont(Font.font(FONT, 18));
         message.setFill(Color.BLACK);
         message.setWrappingWidth(450);
         return message;
@@ -63,7 +69,8 @@ public class VueIndiceRecommande {
         TextArea textArea = new TextArea(erreurs);
         textArea.setEditable(false);
         textArea.setWrapText(true);
-        textArea.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
+        textArea.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family:" +
+                " 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
         textArea.setPrefHeight(150);
         return textArea;
     }
@@ -72,7 +79,8 @@ public class VueIndiceRecommande {
         VBox container = new VBox(message);
         container.setAlignment(Pos.CENTER);
         container.setPadding(new Insets(20));
-        container.setStyle("-fx-background-color: white; -fx-border-color: #B22222; -fx-border-width: 3px; -fx-border-radius: 10px;");
+        container.setStyle("-fx-background-color: white; -fx-border-color: #B22222;" +
+                " -fx-border-width: 3px; -fx-border-radius: 10px;");
         return container;
     }
 
@@ -84,11 +92,14 @@ public class VueIndiceRecommande {
     }
 
     private Button creerBoutonQuitter() {
-        Button button = new Button("Fermer");
-        button.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #a5001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
-        button.setOnAction(e -> stage.close());
+        Button button = new Button(FERMER);
+        button.setStyle("-fx-background-color: #7b001e; -fx-text-fill: white; -fx-font-size: 16px;" +
+                " -fx-font-weight: bold; -fx-border-radius: 8px;");
+        button.setOnMouseEntered(_ -> button.setStyle("-fx-background-color: #a5001e;" +
+                " -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
+        button.setOnMouseExited(_ -> button.setStyle("-fx-background-color: #7b001e;" +
+                " -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;"));
+        button.setOnAction(_ -> stage.close());
         return button;
     }
 

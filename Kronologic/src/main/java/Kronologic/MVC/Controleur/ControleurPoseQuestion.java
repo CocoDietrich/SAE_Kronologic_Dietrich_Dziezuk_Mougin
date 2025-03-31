@@ -64,9 +64,9 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
     }
 
     private void validerChoix(Stage stage, VuePoseQuestion vuePoseQuestion) {
-        reactiverBoutons(vuePoseQuestion.lieuButtons);
-        reactiverBoutons(vuePoseQuestion.tempsButtons);
-        reactiverBoutons(vuePoseQuestion.personnageButtons);
+        reactiverBoutons(vuePoseQuestion.getLieuButtons());
+        reactiverBoutons(vuePoseQuestion.getTempsButtons());
+        reactiverBoutons(vuePoseQuestion.getPersonnageButtons());
         modeleJeu.getModeleIA().ajoutContraintesQuestion(modeleJeu.getModeleQuestionDeduction().poserQuestion(stage, modeleJeu));
     }
 
@@ -77,9 +77,9 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
     }
 
     private void annulerChoix(VuePoseQuestion vuePoseQuestion) {
-        reactiverBoutons(vuePoseQuestion.lieuButtons);
-        reactiverBoutons(vuePoseQuestion.tempsButtons);
-        reactiverBoutons(vuePoseQuestion.personnageButtons);
+        reactiverBoutons(vuePoseQuestion.getLieuButtons());
+        reactiverBoutons(vuePoseQuestion.getTempsButtons());
+        reactiverBoutons(vuePoseQuestion.getPersonnageButtons());
         modeleJeu.getModeleQuestionDeduction().setLieuChoisi(null, vuePoseQuestion);
         modeleJeu.getModeleQuestionDeduction().setTempsChoisi(null, vuePoseQuestion);
         modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(null, vuePoseQuestion);
@@ -99,20 +99,20 @@ public class ControleurPoseQuestion implements EventHandler<ActionEvent> {
         String nomLieu = id.substring(id.indexOf("_") + 1, id.lastIndexOf("_"));
         int indexLieu = Integer.parseInt(id.substring(id.lastIndexOf("_") + 1));
         Lieu lieu = new Lieu(nomLieu, indexLieu, null);
-        desactiverAutresBoutons(lieu, vuePoseQuestion.lieuButtons, null);
+        desactiverAutresBoutons(lieu, vuePoseQuestion.getLieuButtons(), null);
         modeleJeu.getModeleQuestionDeduction().setLieuChoisi(lieu, vuePoseQuestion);
     }
 
     private void traiterTemps(String id, VuePoseQuestion vuePoseQuestion) {
         int indexTemps = Integer.parseInt(id.substring(5));
         Temps temps = new Temps(indexTemps);
-        desactiverAutresBoutons(temps, vuePoseQuestion.tempsButtons, vuePoseQuestion.personnageButtons);
+        desactiverAutresBoutons(temps, vuePoseQuestion.getTempsButtons(), vuePoseQuestion.getPersonnageButtons());
         modeleJeu.getModeleQuestionDeduction().setTempsChoisi(temps, vuePoseQuestion);
     }
 
     private void traiterPersonnage(String id, VuePoseQuestion vuePoseQuestion) {
         Personnage personnage = new Personnage(id);
-        desactiverAutresBoutons(personnage, vuePoseQuestion.personnageButtons, vuePoseQuestion.tempsButtons);
+        desactiverAutresBoutons(personnage, vuePoseQuestion.getPersonnageButtons(), vuePoseQuestion.getTempsButtons());
         modeleJeu.getModeleQuestionDeduction().setPersonnageChoisi(personnage, vuePoseQuestion);
     }
 

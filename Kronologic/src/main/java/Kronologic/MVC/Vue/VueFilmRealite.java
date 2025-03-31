@@ -77,8 +77,8 @@ public class VueFilmRealite extends GridPane implements Observateur {
         retour.setId("retour");
         retour.setGraphic(imageView);
         retour.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;");
-        retour.setOnMouseEntered(e -> retour.setStyle("-fx-background-color: #800000; -fx-font-size: 24px; -fx-cursor: hand;"));
-        retour.setOnMouseExited(e -> retour.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 24px;"));
+        retour.setOnMouseEntered(_ -> retour.setStyle("-fx-background-color: #800000; -fx-font-size: 24px; -fx-cursor: hand;"));
+        retour.setOnMouseExited(_ -> retour.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 24px;"));
 
         HBox retourBox = new HBox(retour);
         retourBox.setAlignment(Pos.CENTER_LEFT);
@@ -104,9 +104,8 @@ public class VueFilmRealite extends GridPane implements Observateur {
         Label compteur = new Label("Temps : " + slider.getValue());
         compteur.setStyle("-fx-text-fill: #FFCC66");
 
-        slider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            compteur.setText("Temps : " + String.format("%.2f", newValue.doubleValue()));
-        });
+        slider.valueProperty().addListener((_, _, newValue) ->
+                compteur.setText("Temps : " + String.format("%.2f", newValue.doubleValue())));
 
         HBox sliderBox = new HBox(slider, compteur);
         sliderBox.setStyle("-fx-padding: 20; -fx-alignment: center;");

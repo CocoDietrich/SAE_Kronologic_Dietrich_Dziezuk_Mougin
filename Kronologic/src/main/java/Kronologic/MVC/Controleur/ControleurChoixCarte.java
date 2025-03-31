@@ -38,10 +38,11 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         assert vueCarte != null;
 
         Pion pionActuel;
-        if (vueCarte.pions.getLast().getParent() == null && vueCarte.pions.get(vueCarte.pions.size() - 2).getParent() instanceof VueCarte) {
-            pionActuel = vueCarte.pions.get(vueCarte.pions.size() - 2);
+        if (vueCarte.getPions().getLast().getParent() == null
+                && vueCarte.getPions().get(vueCarte.getPions().size() - 2).getParent() instanceof VueCarte) {
+            pionActuel = vueCarte.getPions().get(vueCarte.getPions().size() - 2);
         } else {
-            pionActuel = vueCarte.pions.getLast();
+            pionActuel = vueCarte.getPions().getLast();
         }
         // Si un pion représentant le même personnage ou le pion de nombre est déjà présent dans le même lieu et au même temps
         // On ne peut pas ajouter un autre pion représentant le même personnage ou le pion de nombre
@@ -53,7 +54,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             if (nomPersonnagePionActuel.contains("Pion de Nombres")) {
                 // On récupère les pions de nombres déjà placés
                 ArrayList<Pion> pionsDeNombres = new ArrayList<>();
-                for (Pion p : vueCarte.pions) {
+                for (Pion p : vueCarte.getPions()) {
                     if (p.getUserData() != null) {
                         if (p.getId().contains("Pion de Nombres")) {
                             pionsDeNombres.add(p);
@@ -71,7 +72,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                         String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                         if (lieuTempsPion.equals(lieuTempsPionActuel)) {
                             vueCarte.getChildren().removeLast();
-                            vueCarte.zonesContenantPions.removeLast();
+                            vueCarte.getZonesContenantPions().removeLast();
                             pionsDeNombres.removeLast();
                             return;
                         }
@@ -82,7 +83,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
                 // On récupère les pions de ce personnage déjà placés
                 ArrayList<Pion> pionsMemePersonnage = new ArrayList<>();
-                for (Pion p : vueCarte.pions) {
+                for (Pion p : vueCarte.getPions()) {
                     if (p.getUserData() != null) {
                         if (p.getId().contains(nomPersonnagePionActuel)) {
                             pionsMemePersonnage.add(p);
@@ -101,28 +102,28 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                         if (vueCarte.getChildren().getLast() instanceof Pion) {
                             vueCarte.getChildren().removeLast();
                         }
-                        vueCarte.zonesContenantPions.removeLast();
-                        vueCarte.pions.removeLast();
+                        vueCarte.getZonesContenantPions().removeLast();
+                        vueCarte.getPions().removeLast();
                         if (pionAvant.getUserData() != null) {
-                            vueCarte.pions.remove(pionAvant);
+                            vueCarte.getPions().remove(pionAvant);
                         }
-                        for (Pion pion1 : vueCarte.pions) {
+                        for (Pion pion1 : vueCarte.getPions()) {
                             if (pion1.getUserData() != null && pionActuel.getUserData() != null) {
                                 if (pion1.getUserData().equals(pionActuel.getUserData())) {
-                                    if (pion1.getUserData().equals(vueCarte.pions.getLast().getUserData())){
-                                        vueCarte.pions.removeLast();
+                                    if (pion1.getUserData().equals(vueCarte.getPions().getLast().getUserData())){
+                                        vueCarte.getPions().removeLast();
                                     }
                                     else {
-                                        vueCarte.pions.remove(pion1);
+                                        vueCarte.getPions().remove(pion1);
                                     }
                                     break;
                                 }
                             }
                         }
-                        for (Pion pion2 : vueCarte.pions) {
+                        for (Pion pion2 : vueCarte.getPions()) {
                             if (pion2.getUserData() != null) {
                                 if (pion2.getUserData().equals(pionActuel.getUserData())) {
-                                    vueCarte.pions.remove(pion2);
+                                    vueCarte.getPions().remove(pion2);
                                     break;
                                 }
                             }
@@ -151,7 +152,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             Note note;
             if ((pionActuel.getImage().getUrl().contains("Pion de Nombres"))) {
                 // On crée la note
-                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                if (vueCarte.getHypothese().isSelected() || vueCarte.getAbsence().isSelected()) {
                     int nombre = Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0].split("_")[1]);
                     note = new Note(nouveauLieu, temps, nombre);
                 } else {
@@ -160,7 +161,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 }
             } else {
                 // On crée la note
-                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                if (vueCarte.getHypothese().isSelected() || vueCarte.getAbsence().isSelected()) {
                     Personnage personnage = new Personnage((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0]);
                     note = new Note(nouveauLieu, temps, personnage);
                 } else {
@@ -170,24 +171,24 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
 
             // On vérifie si c'est une hypothèse ou une absence ou une hypothèse d'absence
-            if (vueCarte.hypothese.isSelected()) {
+            if (vueCarte.getHypothese().isSelected()) {
                 note.setEstHypothese(true);
             }
-            if (vueCarte.absence.isSelected()) {
+            if (vueCarte.getAbsence().isSelected()) {
                 note.setEstAbsence(true);
             }
 
-            vueCarte.pions.getLast().setNote(note);
+            vueCarte.getPions().getLast().setNote(note);
             modeleNotes.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
 
         } else if (!Objects.equals(pionAvant.getId(), pionActuel.getId())) {
             // Cas du pion déplacé depuis un lieu vers un autre lieu
             modeleNotes.supprimerPion(pionAvant);
-            vueCarte.pions.removeLast();
-            vueCarte.pions.remove(pionAvant);
-            for (Polygon p : vueCarte.zonesContenantPions) {
+            vueCarte.getPions().removeLast();
+            vueCarte.getPions().remove(pionAvant);
+            for (Polygon p : vueCarte.getZonesContenantPions()) {
                 if (p.getUserData() == pionAvant.getUserData()) {
-                    vueCarte.zonesContenantPions.remove(p);
+                    vueCarte.getZonesContenantPions().remove(p);
                     break;
                 }
             }
@@ -207,7 +208,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             Note note;
             if ((pionActuel.getImage().getUrl().contains("Pion de Nombres"))) {
                 // On crée la note
-                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                if (vueCarte.getHypothese().isSelected() || vueCarte.getAbsence().isSelected()) {
                     int nombre = Integer.parseInt((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0].split("_")[1]);
                     note = new Note(nouveauLieu, temps, nombre);
                 } else {
@@ -216,7 +217,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 }
             } else {
                 // On crée la note
-                if (vueCarte.hypothese.isSelected() || vueCarte.absence.isSelected()) {
+                if (vueCarte.getHypothese().isSelected() || vueCarte.getAbsence().isSelected()) {
                     Personnage personnage = new Personnage((pionActuel.getImage().getUrl().split("/"))[3].split(".png")[0]);
                     note = new Note(nouveauLieu, temps, personnage);
                 } else {
@@ -226,30 +227,30 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             }
 
             // On vérifie si c'est une hypothèse ou une absence ou une hypothèse d'absence
-            if (vueCarte.hypothese.isSelected()) {
+            if (vueCarte.getHypothese().isSelected()) {
                 note.setEstHypothese(true);
             }
-            if (vueCarte.absence.isSelected()) {
+            if (vueCarte.getAbsence().isSelected()) {
                 note.setEstAbsence(true);
             }
 
-            vueCarte.pions.get(vueCarte.pions.size() - 2).setNote(note);
+            vueCarte.getPions().get(vueCarte.getPions().size() - 2).setNote(note);
 
             modeleNotes.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
-            vueCarte.pions.remove(pionAvant);
+            vueCarte.getPions().remove(pionAvant);
 
-            for (Polygon p : vueCarte.zonesContenantPions) {
+            for (Polygon p : vueCarte.getZonesContenantPions()) {
                 if (p.getUserData() == pionAvant.getUserData()) {
-                    vueCarte.zonesContenantPions.remove(p);
+                    vueCarte.getZonesContenantPions().remove(p);
                     break;
                 }
             }
         }
         // On supprime les doublons dans la liste des zones contenant les pions
-        for (int i = 0; i < vueCarte.zonesContenantPions.size(); i++) {
-            for (int j = i + 1; j < vueCarte.zonesContenantPions.size(); j++) {
-                if (vueCarte.zonesContenantPions.get(i).getUserData() == vueCarte.zonesContenantPions.get(j).getUserData()) {
-                    vueCarte.zonesContenantPions.remove(j);
+        for (int i = 0; i < vueCarte.getZonesContenantPions().size(); i++) {
+            for (int j = i + 1; j < vueCarte.getZonesContenantPions().size(); j++) {
+                if (vueCarte.getZonesContenantPions().get(i).getUserData() == vueCarte.getZonesContenantPions().get(j).getUserData()) {
+                    vueCarte.getZonesContenantPions().remove(j);
                 }
             }
         }

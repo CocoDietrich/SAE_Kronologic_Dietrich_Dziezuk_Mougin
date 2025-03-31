@@ -110,62 +110,62 @@ public class InitialisationJeu {
         ControleurImagePions controleurImagePions = new ControleurImagePions(modeleJeu);
 
         // Assignation des controleurs aux vues
-        vueCarte.retour.setOnAction(controleurQuitter);
-        vueTableau.retour.setOnAction(controleurQuitter);
-        vueCarte.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
-        vueTableau.poserQuestion.setOnAction(controleurVisualiserPoseQuestion);
-        vueCarte.changerAffichage.setOnAction(controleurAffichage);
-        vueTableau.changerAffichage.setOnAction(controleurAffichage);
-        vueCarte.regle.setOnAction(controleurVisualiserRegle);
-        vueTableau.regle.setOnAction(controleurVisualiserRegle);
-        vueCarte.demanderIndice.setOnAction(controleurDemanderIndice);
-        vueTableau.demanderIndice.setOnAction(controleurDemanderIndice);
-        vueCarte.deductionIA.setOnAction(controleurVoirDeductionIA);
-        vueTableau.deductionIA.setOnAction(controleurVoirDeductionIA);
-        vueCarte.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
-        vueTableau.filmJoueur.setOnAction(controleurVisualiserFilmJoueur);
-        vueCarte.filmRealite.setOnAction(controleurVisualiserFilmRealite);
-        vueTableau.filmRealite.setOnAction(controleurVisualiserFilmRealite);
-        vueCarte.faireDeduction.setOnAction(controleurVisualiserDeduction);
-        vueTableau.faireDeduction.setOnAction(controleurVisualiserDeduction);
+        vueCarte.getRetour().setOnAction(controleurQuitter);
+        vueTableau.getRetour().setOnAction(controleurQuitter);
+        vueCarte.getPoserQuestion().setOnAction(controleurVisualiserPoseQuestion);
+        vueTableau.getPoserQuestion().setOnAction(controleurVisualiserPoseQuestion);
+        vueCarte.getChangerAffichage().setOnAction(controleurAffichage);
+        vueTableau.getChangerAffichage().setOnAction(controleurAffichage);
+        vueCarte.getRegle().setOnAction(controleurVisualiserRegle);
+        vueTableau.getRegle().setOnAction(controleurVisualiserRegle);
+        vueCarte.getDemanderIndice().setOnAction(controleurDemanderIndice);
+        vueTableau.getDemanderIndice().setOnAction(controleurDemanderIndice);
+        vueCarte.getDeductionIA().setOnAction(controleurVoirDeductionIA);
+        vueTableau.getDeductionIA().setOnAction(controleurVoirDeductionIA);
+        vueCarte.getFilmJoueur().setOnAction(controleurVisualiserFilmJoueur);
+        vueTableau.getFilmJoueur().setOnAction(controleurVisualiserFilmJoueur);
+        vueCarte.getFilmRealite().setOnAction(controleurVisualiserFilmRealite);
+        vueTableau.getFilmRealite().setOnAction(controleurVisualiserFilmRealite);
+        vueCarte.getFaireDeduction().setOnAction(controleurVisualiserDeduction);
+        vueTableau.getFaireDeduction().setOnAction(controleurVisualiserDeduction);
 
-        vueCarte.hypothese.setOnAction(controleurImagePions);
-        vueCarte.absence.setOnAction(controleurImagePions);
-        vueCarte.masquerHypothese.setOnAction(controleurImagePions);
-        vueCarte.afficherPresences.setOnAction(controleurImagePions);
-        vueCarte.afficherAbsences.setOnAction(controleurImagePions);
+        vueCarte.getHypothese().setOnAction(controleurImagePions);
+        vueCarte.getAbsence().setOnAction(controleurImagePions);
+        vueCarte.getMasquerHypothese().setOnAction(controleurImagePions);
+        vueCarte.getAfficherPresences().setOnAction(controleurImagePions);
+        vueCarte.getAfficherAbsences().setOnAction(controleurImagePions);
 
-        vueRegle.retour.setOnAction(controleurQuitterRegleFilm);
-        for (TextCase tc : vueTableau.listeCases) {
+        vueRegle.getRetour().setOnAction(controleurQuitterRegleFilm);
+        for (TextCase tc : vueTableau.getListeCases()) {
             if (!tc.getInfo().split(" - ")[1].equals("1")) {
                 tc.setOnMouseClicked(controleurChoixTableau);
             }
         }
-        vuePoseQuestion.retour.setOnAction(controleurPoseQuestion);
-        vuePoseQuestion.annuler.setOnAction(controleurPoseQuestion);
-        vuePoseQuestion.valider.setOnAction(controleurPoseQuestion);
-        for (Button b : vuePoseQuestion.lieuButtons){
+        vuePoseQuestion.getRetour().setOnAction(controleurPoseQuestion);
+        vuePoseQuestion.getAnnuler().setOnAction(controleurPoseQuestion);
+        vuePoseQuestion.getValider().setOnAction(controleurPoseQuestion);
+        for (Button b : vuePoseQuestion.getLieuButtons()){
             b.setOnAction(controleurPoseQuestion);
         }
-        for (Button b : vuePoseQuestion.tempsButtons){
+        for (Button b : vuePoseQuestion.getTempsButtons()){
             b.setOnAction(controleurPoseQuestion);
         }
-        for (Button b : vuePoseQuestion.personnageButtons){
+        for (Button b : vuePoseQuestion.getPersonnageButtons()){
             b.setOnAction(controleurPoseQuestion);
         }
-        vueDeduction.retour.setOnAction(controleurDeduction);
-        vueDeduction.annuler.setOnAction(controleurDeduction);
-        vueDeduction.valider.setOnAction(controleurDeduction);
-        for (Button b : vueDeduction.lieuButtons){
+        vueDeduction.getRetour().setOnAction(controleurDeduction);
+        vueDeduction.getAnnuler().setOnAction(controleurDeduction);
+        vueDeduction.getValider().setOnAction(controleurDeduction);
+        for (Button b : vueDeduction.getLieuButtons()){
             b.setOnAction(controleurDeduction);
         }
-        for (Button b : vueDeduction.tempsButtons){
+        for (Button b : vueDeduction.getTempsButtons()){
             b.setOnAction(controleurDeduction);
         }
-        for (Button b : vueDeduction.personnageButtons){
+        for (Button b : vueDeduction.getPersonnageButtons()){
             b.setOnAction(controleurDeduction);
         }
-        for (Pion p : vueCarte.pions){
+        for (Pion p : vueCarte.getPions()){
             p.setOnDragDone(controleurChoixCarte);
         }
         vuePopUpDeduction.getQuitter().setOnAction(controleurPopUpDeduction);

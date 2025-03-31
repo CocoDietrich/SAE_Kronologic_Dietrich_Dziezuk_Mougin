@@ -31,25 +31,25 @@ import static Kronologic.MVC.Vue.VueTableau.compterOccurrencesRegex;
 // TODO : à simplifier
 public class VueCarte extends BorderPane implements Observateur {
 
-    public Button retour;
-    public Button regle;
-    public Button faireDeduction;
-    public Button poserQuestion;
-    public Button demanderIndice;
-    public Button changerAffichage;
-    public Button deductionIA;
-    public Button filmJoueur;
-    public Button filmRealite;
-    public TextArea historique;
-    public CheckBox hypothese;
-    public CheckBox absence;
-    public CheckBox masquerHypothese;
-    public CheckBox afficherPresences;
-    public CheckBox afficherAbsences;
-    public List<Polygon> zonesDeJeu = new ArrayList<>();
-    public List<Polygon> zonesContenantPions = new ArrayList<>();
-    public List<Pion> pions = new ArrayList<>();
-    public ModeleJeu modeleJeu;
+    private Button retour;
+    private Button regle;
+    private Button faireDeduction;
+    private Button poserQuestion;
+    private Button demanderIndice;
+    private Button changerAffichage;
+    private Button deductionIA;
+    private Button filmJoueur;
+    private Button filmRealite;
+    private TextArea historique;
+    private CheckBox hypothese;
+    private CheckBox absence;
+    private CheckBox masquerHypothese;
+    private CheckBox afficherPresences;
+    private CheckBox afficherAbsences;
+    private final List<Polygon> zonesDeJeu = new ArrayList<>();
+    private final List<Polygon> zonesContenantPions = new ArrayList<>();
+    private final List<Pion> pions = new ArrayList<>();
+    private final ModeleJeu modeleJeu;
 
     public VueCarte(ModeleJeu modeleJeu) {
         super();
@@ -535,7 +535,7 @@ public class VueCarte extends BorderPane implements Observateur {
                 event.consume();
             });
 
-            pion.setOnDragDone(event -> event.consume());
+            pion.setOnDragDone(Event::consume);
 
             pionsPersonnages.getChildren().add(pion);
             pions.add(pion);
@@ -721,24 +721,20 @@ public class VueCarte extends BorderPane implements Observateur {
         """);
 
         // Effets au survol de la souris
-        regle.setOnMouseEntered(e -> {
-            regle.setStyle(
-                    "-fx-background-color: #E6B85C; " +  // Changement de couleur
-                            "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
-                            "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
-                            "-fx-padding: 20;" +  // Agrandir le bouton
-                            "-fx-cursor: hand;" // Curseur main
-            );
-        });
+        regle.setOnMouseEntered(_ -> regle.setStyle(
+                "-fx-background-color: #E6B85C; " +  // Changement de couleur
+                        "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
+                        "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
+                        "-fx-padding: 20;" +  // Agrandir le bouton
+                        "-fx-cursor: hand;" // Curseur main
+        ));
 
-        regle.setOnMouseExited(e -> {
-            regle.setStyle(
-                    "-fx-background-color: #FFCC66; " +  // Couleur d'origine
-                            "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
-                            "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
-                            "-fx-padding: 20;"  // Taille d'origine du bouton
-            );
-        });
+        regle.setOnMouseExited(_ -> regle.setStyle(
+                "-fx-background-color: #FFCC66; " +  // Couleur d'origine
+                        "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
+                        "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
+                        "-fx-padding: 20;"  // Taille d'origine du bouton
+        ));
 
         // Positionnement dans le coin supérieur droit
         StackPane stackPane = new StackPane(regle);
@@ -763,15 +759,13 @@ public class VueCarte extends BorderPane implements Observateur {
         retour.setGraphic(imageView);
         retour.setStyle("-fx-background-color: transparent;");
 
-        retour.setOnMouseEntered(e -> {
+        retour.setOnMouseEntered(_ -> {
             retour.setStyle("-fx-background-color: #800000; " +
                     "-fx-cursor: hand;"); // Agrandir le bouton
         });
 
-        retour.setOnMouseExited(e -> {
-            retour.setStyle("-fx-background-color: #800000; " +
-                    "-fx-cursor: hand;");
-        });
+        retour.setOnMouseExited(_ -> retour.setStyle("-fx-background-color: #800000; " +
+                "-fx-cursor: hand;"));
 
         // Création de la zone pour le bouton retour (alignée à gauche)
         HBox retourBox = new HBox();
@@ -1081,5 +1075,77 @@ public class VueCarte extends BorderPane implements Observateur {
                 }
             }
         }
+    }
+
+    public Button getRetour() {
+        return retour;
+    }
+
+    public Button getRegle() {
+        return regle;
+    }
+
+    public Button getFaireDeduction() {
+        return faireDeduction;
+    }
+
+    public Button getPoserQuestion() {
+        return poserQuestion;
+    }
+
+    public Button getDemanderIndice() {
+        return demanderIndice;
+    }
+
+    public Button getChangerAffichage() {
+        return changerAffichage;
+    }
+
+    public Button getDeductionIA() {
+        return deductionIA;
+    }
+
+    public Button getFilmJoueur() {
+        return filmJoueur;
+    }
+
+    public Button getFilmRealite() {
+        return filmRealite;
+    }
+
+    public TextArea getHistorique() {
+        return historique;
+    }
+
+    public CheckBox getHypothese() {
+        return hypothese;
+    }
+
+    public CheckBox getAbsence() {
+        return absence;
+    }
+
+    public CheckBox getMasquerHypothese() {
+        return masquerHypothese;
+    }
+
+    public CheckBox getAfficherPresences() {
+        return afficherPresences;
+    }
+
+    public CheckBox getAfficherAbsences() {
+        return afficherAbsences;
+    }
+
+    public List<Polygon> getZonesContenantPions() {
+        return zonesContenantPions;
+    }
+
+    public List<Pion> getPions() {
+        return pions;
+    }
+
+    public ModeleJeu getModeleJeu() {
+        return modeleJeu;
     }
 }

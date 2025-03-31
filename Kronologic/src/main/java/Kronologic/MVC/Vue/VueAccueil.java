@@ -1,6 +1,5 @@
 package Kronologic.MVC.Vue;
 
-import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,25 +11,30 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 public class VueAccueil extends BorderPane implements Observateur {
+
+    private static final String TITRE = "Kronologic";
+    private static final String JOUER = "Jouer";
+    private static final String IAJOUER = "IAJoueuse";
+    private static final String QUITTER = "Quitter";
+
+    private static final String BOUTON_STYLE_NORMAL = "-fx-background-color: #FFCC66; -fx-text-fill: #800000; -fx-background-radius: 20px;";
+    private static final String BOUTON_STYLE_HOVER = "-fx-background-color: #E6B85C; -fx-text-fill: #800000; -fx-background-radius: 20px; -fx-cursor: hand;";
+    private static final String BAKCGROUND_TRANSPARENT = "-fx-background-color: transparent;";
+    private static final String COULEUR_FOND = "#800000";
+    private static final String COULEUR_TITRE = "#FFCC66";
+    private static final String POLICE_ECRITURE = "Arial";
 
     public Button jouer;
     public Button IAJoueuse;
     public Button quitter;
 
-    private static final String BOUTON_STYLE_NORMAL = "-fx-background-color: #FFCC66; -fx-text-fill: #800000; -fx-background-radius: 20px;";
-    private static final String BOUTON_STYLE_HOVER = "-fx-background-color: #E6B85C; -fx-text-fill: #800000; -fx-background-radius: 20px; -fx-cursor: hand;";
-    private static final String COULEUR_FOND = "#800000";
-    private static final String COULEUR_TITRE = "#FFCC66";
-    private static final String POLICE_ECRITURE = "Arial";
-
     public VueAccueil() {
         super();
         this.setStyle("-fx-background-color: " + COULEUR_FOND + ";");
 
-        Text titre = new Text("Kronologic");
+        Text titre = new Text(TITRE);
         titre.setFont(Font.font(POLICE_ECRITURE, 60));
         titre.setFill(Color.web(COULEUR_TITRE));
 
@@ -42,9 +46,9 @@ public class VueAccueil extends BorderPane implements Observateur {
         ));
         this.setTop(titreBox);
 
-        jouer = creerBouton("Jouer");
-        IAJoueuse = creerBouton("IAJoueuse");
-        quitter = creerBouton("Quitter");
+        jouer = creerBouton(JOUER);
+        IAJoueuse = creerBouton(IAJOUER);
+        quitter = creerBouton(QUITTER);
 
         VBox boutonsBox = new VBox(20);
         boutonsBox.setAlignment(Pos.CENTER);
@@ -69,8 +73,8 @@ public class VueAccueil extends BorderPane implements Observateur {
         bouton.setStyle(BOUTON_STYLE_NORMAL);
 
         // Effets au survol de la souris
-        bouton.setOnMouseEntered(e -> bouton.setStyle(BOUTON_STYLE_HOVER));
-        bouton.setOnMouseExited(e -> bouton.setStyle(BOUTON_STYLE_NORMAL));
+        bouton.setOnMouseEntered(_ -> bouton.setStyle(BOUTON_STYLE_HOVER));
+        bouton.setOnMouseExited(_ -> bouton.setStyle(BOUTON_STYLE_NORMAL));
 
         bouton.setMinWidth(Button.USE_COMPUTED_SIZE);
         bouton.setPrefWidth(Button.USE_COMPUTED_SIZE);
@@ -98,14 +102,14 @@ public class VueAccueil extends BorderPane implements Observateur {
         bouton.setId(idBouton);
         bouton.setGraphic(imageView);
 
-        bouton.setStyle("-fx-background-color: transparent;");
-        bouton.setOnMouseEntered(e -> {
-            bouton.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+        bouton.setStyle(BAKCGROUND_TRANSPARENT);
+        bouton.setOnMouseEntered(_ -> {
+            bouton.setStyle(BAKCGROUND_TRANSPARENT  + "-fx-cursor: hand;");
             bouton.setScaleX(1.1);
             bouton.setScaleY(1.1);
         });
-        bouton.setOnMouseExited(e -> {
-            bouton.setStyle("-fx-background-color: transparent;");
+        bouton.setOnMouseExited(_ -> {
+            bouton.setStyle(BAKCGROUND_TRANSPARENT);
             bouton.setScaleX(1);
             bouton.setScaleY(1);
         });
@@ -124,8 +128,6 @@ public class VueAccueil extends BorderPane implements Observateur {
     }
 
     @Override
-    public void actualiser() {
-        // À implémenter si nécessaire
-    }
+    public void actualiser() {}
 
 }

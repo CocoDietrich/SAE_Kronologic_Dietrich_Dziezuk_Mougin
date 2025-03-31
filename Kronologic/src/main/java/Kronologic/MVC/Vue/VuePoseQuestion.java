@@ -21,15 +21,22 @@ import static Kronologic.MVC.Vue.VueAccueil.creerBoutonAvecImage;
 
 public class VuePoseQuestion extends BorderPane implements Observateur {
 
-    public Button valider;
-    public Button retour;
-    public Button annuler;
-    public List<Button> lieuButtons;
-    public List<Button> tempsButtons;
-    public List<Button> personnageButtons;
-    public Lieu lieuChoisi;
-    public Temps tempsChoisi;
-    public Personnage personnageChoisi;
+    private final static String TITRE = "Posez une question :";
+    private final static String RETOUR = "Retour";
+    private final static String ANNULER = "Annuler mes choix";
+    private final static String VALIDER = "Valider";
+
+    private final static String FONT_FAMILY = "Arial";
+
+    private Button valider;
+    private Button retour;
+    private Button annuler;
+    private List<Button> lieuButtons;
+    private List<Button> tempsButtons;
+    private List<Button> personnageButtons;
+    private Lieu lieuChoisi;
+    private Temps tempsChoisi;
+    private Personnage personnageChoisi;
 
     public VuePoseQuestion() {
         super();
@@ -37,8 +44,8 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         this.setStyle("-fx-background-color: #800000;");
 
         // Ajouter le titre
-        Text titre = new Text("Posez une question :");
-        titre.setFont(Font.font("Arial", 28));
+        Text titre = new Text(TITRE);
+        titre.setFont(Font.font(FONT_FAMILY, 28));
         titre.setFill(Color.WHITE);
 
         VBox titreBox = new VBox(titre);
@@ -63,7 +70,7 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         contenu.setAlignment(Pos.CENTER);
 
         // Lieux
-        HBox lieuxBox = creerSectionHorizontal("Choisissez un Lieu :", creerBoutonsLieux());
+        HBox lieuxBox = creerSectionHorizontal(creerBoutonsLieux());
 
         // Temps et personnages
         HBox tempsEtPersos = new HBox(50);
@@ -81,12 +88,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         return contenu;
     }
 
-    private HBox creerSectionHorizontal(String titre, HBox contenuBoutons) {
+    private HBox creerSectionHorizontal(HBox contenuBoutons) {
         VBox sectionBox = new VBox(10);
         sectionBox.setAlignment(Pos.CENTER);
 
-        Text titreSection = new Text(titre);
-        titreSection.setFont(Font.font("Arial", 20));
+        Text titreSection = new Text("Choisissez un Lieu :");
+        titreSection.setFont(Font.font(FONT_FAMILY, 20));
         titreSection.setFill(Color.WHITE);
 
         sectionBox.getChildren().addAll(titreSection, contenuBoutons);
@@ -101,7 +108,7 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         sectionBox.setAlignment(Pos.CENTER);
 
         Text titreSection = new Text(titre);
-        titreSection.setFont(Font.font("Arial", 20));
+        titreSection.setFont(Font.font(FONT_FAMILY, 20));
         titreSection.setFill(Color.WHITE);
 
         sectionBox.getChildren().addAll(titreSection, contenuBoutons);
@@ -200,13 +207,13 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         boutonsBox.setAlignment(Pos.CENTER);
         boutonsBox.setPadding(new Insets(60, 0, 0, 0)); // Réduction de l'espacement supérieur
 
-        retour = creerBouton("Retour");
+        retour = creerBouton(RETOUR);
         retour.setPrefSize(120, 40);
 
-        annuler = creerBouton("Annuler mes choix");
+        annuler = creerBouton(ANNULER);
         annuler.setPrefSize(200, 40);
 
-        valider = creerBouton("Valider");
+        valider = creerBouton(VALIDER);
         valider.setPrefSize(120, 40);
 
         boutonsBox.getChildren().addAll(retour, annuler, valider);
@@ -214,7 +221,53 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
     }
 
     @Override
-    public void actualiser() {
-        // Mettre à jour l'interface si nécessaire
+    public void actualiser() {}
+
+    public Button getValider() {
+        return valider;
+    }
+
+    public Button getRetour() {
+        return retour;
+    }
+
+    public Button getAnnuler() {
+        return annuler;
+    }
+
+    public List<Button> getLieuButtons() {
+        return lieuButtons;
+    }
+
+    public List<Button> getTempsButtons() {
+        return tempsButtons;
+    }
+
+    public List<Button> getPersonnageButtons() {
+        return personnageButtons;
+    }
+
+    public Lieu getLieuChoisi() {
+        return lieuChoisi;
+    }
+
+    public Temps getTempsChoisi() {
+        return tempsChoisi;
+    }
+
+    public Personnage getPersonnageChoisi() {
+        return personnageChoisi;
+    }
+
+    public void setLieuChoisi(Lieu lieuChoisi) {
+        this.lieuChoisi = lieuChoisi;
+    }
+
+    public void setTempsChoisi(Temps tempsChoisi) {
+        this.tempsChoisi = tempsChoisi;
+    }
+
+    public void setPersonnageChoisi(Personnage personnageChoisi) {
+        this.personnageChoisi = personnageChoisi;
     }
 }

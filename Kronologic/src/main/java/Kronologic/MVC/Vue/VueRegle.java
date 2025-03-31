@@ -15,14 +15,16 @@ import javafx.scene.text.Text;
 
 public class VueRegle extends GridPane implements Observateur {
 
-    public Button retour;
-    public Button demanderIndice;
-    public Button poserQuestion;
-    public Button faireDeduction;
-    public Button deductionIA;
-    public Button changerAffichage;
-    public CheckBox afficherPresences;
-    public CheckBox afficherAbsences;
+    private static final String DEMANDER_INDICE = "Demander un indice";
+    private static final String POSER_QUESTION = "Poser une question";
+    private static final String FAIRE_DEDUCTION = "Faire une déduction";
+    private static final String DEDUCTION_IA = "Déduction de l’IA";
+    private static final String CHANGER_AFFICHAGE = "Changer affichage";
+
+    private static final String STYLE_BOUTON = "-fx-background-color: #f5a623; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;";
+    private static final String STYLE_TEXTE = "-fx-font-size: 16px; -fx-fill: white;";
+
+    private Button retour;
 
     public VueRegle() {
         super();
@@ -53,22 +55,25 @@ public class VueRegle extends GridPane implements Observateur {
         VBox boutonsBox = new VBox(30);
         boutonsBox.setAlignment(Pos.TOP_CENTER);
 
-        demanderIndice = new Button("Demander un indice");
-        demanderIndice.setStyle("-fx-background-color: #f5a623; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
-        Text descriptionIndice = new Text("Permet de demander un indice. Cela vous posera automatiquement\nla meilleure question à poser.");
-        descriptionIndice.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+        Button demanderIndice = new Button(DEMANDER_INDICE);
+        demanderIndice.setStyle(STYLE_BOUTON);
+        Text descriptionIndice = new Text("Permet de demander un indice. Cela vous posera automatiquement" +
+                "\nla meilleure question à poser.");
+        descriptionIndice.setStyle(STYLE_TEXTE);
         boutonsBox.getChildren().addAll(demanderIndice, descriptionIndice);
 
-        poserQuestion = new Button("Poser une question");
-        poserQuestion.setStyle("-fx-background-color: #f5a623; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
-        Text descriptionQuestion = new Text("En posant une question, vous allez avoir accès à un indice qui\nva vous permettre d’avancer dans votre raisonnement.");
-        descriptionQuestion.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+        Button poserQuestion = new Button(POSER_QUESTION);
+        poserQuestion.setStyle(STYLE_BOUTON);
+        Text descriptionQuestion = new Text("En posant une question, vous allez avoir accès à un indice qui" +
+                "\nva vous permettre d’avancer dans votre raisonnement.");
+        descriptionQuestion.setStyle(STYLE_TEXTE);
         boutonsBox.getChildren().addAll(poserQuestion, descriptionQuestion);
 
-        faireDeduction = new Button("Faire une déduction");
-        faireDeduction.setStyle("-fx-background-color: #f5a623; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
-        Text descriptionDeduction = new Text("Vous permet d’essayer de trouver la solution. Attention, vous\navez le droit à une seule déduction !");
-        descriptionDeduction.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+        Button faireDeduction = new Button(FAIRE_DEDUCTION);
+        faireDeduction.setStyle(STYLE_BOUTON);
+        Text descriptionDeduction = new Text("Vous permet d’essayer de trouver la solution. Attention, vous" +
+                "\navez le droit à une seule déduction !");
+        descriptionDeduction.setStyle(STYLE_TEXTE);
         boutonsBox.getChildren().addAll(faireDeduction, descriptionDeduction);
 
         return boutonsBox;
@@ -95,11 +100,11 @@ public class VueRegle extends GridPane implements Observateur {
         contenuRegles.setStyle("-fx-fill: white; -fx-font-size: 16px;");
 
         // Checkboxes centrées et alignées
-        afficherPresences = new CheckBox("Afficher les présences");
+        CheckBox afficherPresences = new CheckBox("Afficher les présences");
         afficherPresences.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
         afficherPresences.setSelected(true);
 
-        afficherAbsences = new CheckBox("Afficher les absences");
+        CheckBox afficherAbsences = new CheckBox("Afficher les absences");
         afficherAbsences.setStyle("-fx-font-size: 16px; -fx-text-fill: white;");
         afficherAbsences.setSelected(true);
 
@@ -118,16 +123,16 @@ public class VueRegle extends GridPane implements Observateur {
         VBox actionsBox = new VBox(30);
         actionsBox.setAlignment(Pos.TOP_CENTER);
 
-        deductionIA = new Button("Déduction de l’IA");
-        deductionIA.setStyle("-fx-background-color: #f5a623; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
+        Button deductionIA = new Button(DEDUCTION_IA);
+        deductionIA.setStyle(STYLE_BOUTON);
         Text descriptionIA = new Text("Vous permet d’afficher et de comparer vos déductions avec celle de l’IA.");
-        descriptionIA.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+        descriptionIA.setStyle(STYLE_TEXTE);
         actionsBox.getChildren().addAll(deductionIA, descriptionIA);
 
-        changerAffichage = new Button("Changer affichage");
-        changerAffichage.setStyle("-fx-background-color: #f5a623; -fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;");
+        Button changerAffichage = new Button(CHANGER_AFFICHAGE);
+        changerAffichage.setStyle(STYLE_BOUTON);
         Text descriptionAffichage = new Text("Vous permet de passer de l’affichage sous forme de cartes au tableau.");
-        descriptionAffichage.setStyle("-fx-font-size: 16px; -fx-fill: white;");
+        descriptionAffichage.setStyle(STYLE_TEXTE);
         actionsBox.getChildren().addAll(changerAffichage, descriptionAffichage);
 
         return actionsBox;
@@ -148,8 +153,8 @@ public class VueRegle extends GridPane implements Observateur {
         retour.setId("retour");
         retour.setGraphic(imageView);
         retour.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;");
-        retour.setOnMouseEntered(e -> retour.setStyle("-fx-background-color: #800000; -fx-font-size: 24px; -fx-cursor: hand;"));
-        retour.setOnMouseExited(e -> retour.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 24px;"));
+        retour.setOnMouseEntered(_ -> retour.setStyle("-fx-background-color: #800000; -fx-font-size: 24px; -fx-cursor: hand;"));
+        retour.setOnMouseExited(_ -> retour.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 24px;"));
 
         HBox retourBox = new HBox(retour);
         retourBox.setAlignment(Pos.CENTER_LEFT);
@@ -158,10 +163,10 @@ public class VueRegle extends GridPane implements Observateur {
         return retourBox;
     }
 
-
-
     @Override
-    public void actualiser() {
-        // Méthode pour mettre à jour la vue si nécessaire
+    public void actualiser() {}
+
+    public Button getRetour() {
+        return retour;
     }
 }

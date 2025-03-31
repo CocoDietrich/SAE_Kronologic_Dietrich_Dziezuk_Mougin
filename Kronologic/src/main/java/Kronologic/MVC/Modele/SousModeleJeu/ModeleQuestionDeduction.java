@@ -39,29 +39,29 @@ public class ModeleQuestionDeduction implements Sujet {
     // Méthode permettant de stocker le lieu choisi pour la question posée ou la déduction faite par le joueur
     public void setLieuChoisi(Lieu lieu, Observateur vue) {
         if (vue instanceof VuePoseQuestion vuePoseQuestion) {
-            vuePoseQuestion.lieuChoisi = lieu;
+            vuePoseQuestion.setLieuChoisi(lieu);
         } else if (vue instanceof VueDeduction vueDeduction) {
-            vueDeduction.lieuMeurtre = lieu;
+            vueDeduction.setLieuMeurtre(lieu);
         }
     }
 
     // Méthode permettant de stocker le temps choisi pour la question posée ou la déduction faite par le joueur
     public void setTempsChoisi(Temps temps, Observateur vue) {
         if (vue instanceof VuePoseQuestion vuePoseQuestion) {
-            vuePoseQuestion.tempsChoisi = temps;
-            vuePoseQuestion.personnageChoisi = null;
+            vuePoseQuestion.setTempsChoisi(temps);
+            vuePoseQuestion.setPersonnageChoisi(null);
         } else if (vue instanceof VueDeduction vueDeduction) {
-            vueDeduction.tempsMeurtre = temps;
+            vueDeduction.setTempsMeurtre(temps);
         }
     }
 
     // Méthode permettant de stocker le personnage choisi pour la question posée ou la déduction faite par le joueur
     public void setPersonnageChoisi(Personnage personnage, Observateur vue) {
         if (vue instanceof VuePoseQuestion vuePoseQuestion) {
-            vuePoseQuestion.personnageChoisi = personnage;
-            vuePoseQuestion.tempsChoisi = null;
+            vuePoseQuestion.setPersonnageChoisi(personnage);
+            vuePoseQuestion.setTempsChoisi(null);
         } else if (vue instanceof VueDeduction vueDeduction) {
-            vueDeduction.meurtrier = personnage;
+            vueDeduction.setMeurtrier(personnage);
         }
     }
 
@@ -71,10 +71,10 @@ public class ModeleQuestionDeduction implements Sujet {
 
 
         Indice indice;
-        if (vuePoseQuestion.personnageChoisi != null) {
-            indice = partie.poserQuestionPersonnage(vuePoseQuestion.lieuChoisi, vuePoseQuestion.personnageChoisi);
+        if (vuePoseQuestion.getPersonnageChoisi() != null) {
+            indice = partie.poserQuestionPersonnage(vuePoseQuestion.getLieuChoisi(), vuePoseQuestion.getPersonnageChoisi());
         } else {
-            indice = partie.poserQuestionTemps(vuePoseQuestion.lieuChoisi, vuePoseQuestion.tempsChoisi);
+            indice = partie.poserQuestionTemps(vuePoseQuestion.getLieuChoisi(), vuePoseQuestion.getTempsChoisi());
         }
 
         partie.ajouterIndice(indice);
@@ -97,7 +97,8 @@ public class ModeleQuestionDeduction implements Sujet {
         VueDeduction vueDeduction = getVue(VueDeduction.class);
         if (vueDeduction == null) return;
 
-        boolean resultat = partie.faireDeduction(vueDeduction.lieuMeurtre, vueDeduction.meurtrier, vueDeduction.tempsMeurtre);
+        boolean resultat = partie.faireDeduction(vueDeduction.getLieuMeurtre(),
+                vueDeduction.getMeurtrier(), vueDeduction.getTempsMeurtre());
         VuePopUpDeduction vuePopUpDeduction = getVue(VuePopUpDeduction.class);
 
         if (vuePopUpDeduction != null) {

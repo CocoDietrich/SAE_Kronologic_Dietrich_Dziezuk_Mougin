@@ -17,6 +17,10 @@ import javafx.scene.layout.HBox;
 
 public class VueDeductionIA extends BorderPane implements Observateur {
 
+    private static final String TITRE = "Déductions de l'IA";
+    private static final String IAChocoSolver = "IA ChocoSolver";
+    private static final String IAHeuristique = "IA Heuristique";
+
     private final TextArea affichage;
     private final Button boutonChocoSolver;
     private final Button boutonHeuristique;
@@ -28,8 +32,8 @@ public class VueDeductionIA extends BorderPane implements Observateur {
         Text titre = creerTitre();
         affichage = creerZoneDeTexte();
 
-        boutonChocoSolver = creerBouton("IA ChocoSolver");
-        boutonHeuristique = creerBouton("IA Heuristique");
+        boutonChocoSolver = creerBouton(IAChocoSolver);
+        boutonHeuristique = creerBouton(IAHeuristique);
 
         HBox boutons = creerHBoxBoutons(boutonChocoSolver, boutonHeuristique);
         VBox centre = new VBox(30, titre, affichage, boutons);
@@ -52,7 +56,7 @@ public class VueDeductionIA extends BorderPane implements Observateur {
     }
 
     private Text creerTitre() {
-        Text title = new Text("Déductions de l'IA");
+        Text title = new Text(TITRE);
         title.setFont(Font.font("Arial", 36));
         title.setFill(Color.DARKRED);
         title.setTextAlignment(TextAlignment.CENTER);
@@ -70,16 +74,22 @@ public class VueDeductionIA extends BorderPane implements Observateur {
         TextArea textArea = new TextArea();
         textArea.setEditable(false);  // Lecture seule
         textArea.setWrapText(true);   // Ajuster le texte
-        textArea.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New'; -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
+        textArea.setStyle("-fx-control-inner-background: #FFFDD0; -fx-font-family: 'Courier New';" +
+                " -fx-font-size: 14px; -fx-border-color: #A52A2A; -fx-border-width: 2px;");
         textArea.setPrefHeight(300);
         return textArea;
     }
 
     private Button creerBouton(String buttonText) {
         Button button = new Button(buttonText);
-        button.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #FFA500; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: #8B0000; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
-        button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        button.setStyle("-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px;" +
+                " -fx-border-color: #B22222; -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;");
+        button.setOnMouseEntered(_ -> button.setStyle(
+                "-fx-background-color: #FFA500; -fx-text-fill: white; -fx-font-size: 14px; -fx-border-color: #8B0000;" +
+                        " -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
+        button.setOnMouseExited(_ -> button.setStyle(
+                "-fx-background-color: #FFD700; -fx-text-fill: black; -fx-font-size: 14px; -fx-border-color: #B22222;" +
+                        " -fx-border-width: 2px; -fx-background-radius: 10px; -fx-border-radius: 10px;"));
         return button;
     }
 
@@ -102,7 +112,5 @@ public class VueDeductionIA extends BorderPane implements Observateur {
     }
 
     @Override
-    public void actualiser() {
-        // Mettre à jour l'interface si nécessaire
-    }
+    public void actualiser() {}
 }

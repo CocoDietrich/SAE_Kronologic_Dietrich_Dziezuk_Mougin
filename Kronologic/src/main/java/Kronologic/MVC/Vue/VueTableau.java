@@ -25,18 +25,26 @@ import static Kronologic.MVC.Vue.VueAccueil.creerBouton;
 // TODO : à vérifier
 public class VueTableau extends BorderPane implements Observateur {
 
-    public Button retour;
-    public Button regle;
-    public Button faireDeduction;
-    public Button poserQuestion;
-    public Button demanderIndice;
-    public Button changerAffichage;
-    public Button deductionIA;
-    public Button filmJoueur;
-    public Button filmRealite;
-    public TextArea historique;
-    public List<TextCase> listeCases = new ArrayList<>();
-    public boolean temps1Instance = false;
+    private static final String CHANGER_AFFICHAGE = "Changer affichage";
+    private static final String FAIRE_DEDUCTION = "Faire une déduction";
+    private static final String POSER_QUESTION = "Poser une question";
+    private static final String DEMANDER_INDICE = "Demander un indice";
+    private static final String DEDUCTION_IA = "Déduction IA";
+
+    private final static String FONT_FAMILY = "Arial";
+
+    private Button retour;
+    private Button regle;
+    private Button faireDeduction;
+    private Button poserQuestion;
+    private Button demanderIndice;
+    private Button changerAffichage;
+    private Button deductionIA;
+    private Button filmJoueur;
+    private Button filmRealite;
+    private TextArea historique;
+    private final List<TextCase> listeCases = new ArrayList<>();
+    private boolean temps1Instance = false;
 
     public VueTableau() {
         super();
@@ -109,9 +117,9 @@ public class VueTableau extends BorderPane implements Observateur {
         boutonsGauche.setAlignment(Pos.CENTER);
         boutonsGauche.setSpacing(20);
 
-        changerAffichage = creerBouton("Changer affichage");
-        deductionIA = creerBouton("Déduction de l'IA");
-        demanderIndice = creerBouton("Demander un indice");
+        changerAffichage = creerBouton(CHANGER_AFFICHAGE);
+        deductionIA = creerBouton(DEDUCTION_IA);
+        demanderIndice = creerBouton(DEMANDER_INDICE);
 
         boutonsGauche.getChildren().addAll(changerAffichage, deductionIA, demanderIndice);
 
@@ -123,8 +131,8 @@ public class VueTableau extends BorderPane implements Observateur {
         boutonsDroite.setAlignment(Pos.CENTER);
         boutonsDroite.setSpacing(20);
 
-        faireDeduction = creerBouton("Faire une déduction");
-        poserQuestion = creerBouton("Poser une question");
+        faireDeduction = creerBouton(FAIRE_DEDUCTION);
+        poserQuestion = creerBouton(POSER_QUESTION);
 
         boutonsDroite.getChildren().addAll(faireDeduction, poserQuestion);
 
@@ -147,15 +155,13 @@ public class VueTableau extends BorderPane implements Observateur {
         retour.setGraphic(imageView);
         retour.setStyle("-fx-background-color: transparent;");
 
-        retour.setOnMouseEntered(e -> {
+        retour.setOnMouseEntered(_ -> {
             retour.setStyle("-fx-background-color: #800000; " +
                     "-fx-cursor: hand;"); // Agrandir le bouton
         });
 
-        retour.setOnMouseExited(e -> {
-            retour.setStyle("-fx-background-color: #800000; " +
-                    "-fx-cursor: hand;");
-        });
+        retour.setOnMouseExited(_ -> retour.setStyle("-fx-background-color: #800000; " +
+                "-fx-cursor: hand;"));
 
         // Création de la zone pour le bouton retour (alignée à gauche)
         HBox retourBox = new HBox();
@@ -249,7 +255,7 @@ public class VueTableau extends BorderPane implements Observateur {
 
         for (int i = 0; i < 6; i++) {
             TextCase text = new TextCase(elements.get(i));
-            text.setFont(Font.font("Arial", 10));
+            text.setFont(Font.font(FONT_FAMILY, 10));
             text.setFill(Color.LIGHTGRAY);
             text.setEtat("neutre");
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
@@ -295,23 +301,19 @@ public class VueTableau extends BorderPane implements Observateur {
         """);
 
         // Effets au survol de la souris
-        regle.setOnMouseEntered(e -> {
-            regle.setStyle(
-                    "-fx-background-color: #E6B85C; " +  // Changement de couleur
-                            "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
-                            "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
-                            "-fx-padding: 20;"  // Agrandir le bouton
-            );
-        });
+        regle.setOnMouseEntered(_ -> regle.setStyle(
+                "-fx-background-color: #E6B85C; " +  // Changement de couleur
+                        "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
+                        "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
+                        "-fx-padding: 20;"  // Agrandir le bouton
+        ));
 
-        regle.setOnMouseExited(e -> {
-            regle.setStyle(
-                    "-fx-background-color: #FFCC66; " +  // Couleur d'origine
-                            "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
-                            "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
-                            "-fx-padding: 20;"  // Taille d'origine du bouton
-            );
-        });
+        regle.setOnMouseExited(_ -> regle.setStyle(
+                "-fx-background-color: #FFCC66; " +  // Couleur d'origine
+                        "-fx-text-fill: #800000; " +  // Couleur du texte (si nécessaire)
+                        "-fx-background-radius: 0 0 0 100px; " +  // Quart de cercle haut droit
+                        "-fx-padding: 20;"  // Taille d'origine du bouton
+        ));
 
         // Positionnement dans le coin supérieur droit
         StackPane stackPane = new StackPane(regle);
@@ -373,7 +375,7 @@ public class VueTableau extends BorderPane implements Observateur {
         // On met à jour les cases du tableau
         for (TextCase text : listeCases) {
             List<String> elements = List.of("GF", "GE", "SA", "SC", "FD", "FC");
-            String valeur = "";
+            String valeur;
             if (elements.contains(text.getText())) {
                 valeur = nomLieu(text.getText()); // Pour le tableau de droite
             }
@@ -524,5 +526,49 @@ public class VueTableau extends BorderPane implements Observateur {
         }
 
         temps1Instance = true;
+    }
+
+    public Button getRetour() {
+        return retour;
+    }
+
+    public Button getRegle() {
+        return regle;
+    }
+
+    public Button getFaireDeduction() {
+        return faireDeduction;
+    }
+
+    public Button getPoserQuestion() {
+        return poserQuestion;
+    }
+
+    public Button getDemanderIndice() {
+        return demanderIndice;
+    }
+
+    public Button getChangerAffichage() {
+        return changerAffichage;
+    }
+
+    public Button getDeductionIA() {
+        return deductionIA;
+    }
+
+    public Button getFilmJoueur() {
+        return filmJoueur;
+    }
+
+    public Button getFilmRealite() {
+        return filmRealite;
+    }
+
+    public TextArea getHistorique() {
+        return historique;
+    }
+
+    public List<TextCase> getListeCases() {
+        return listeCases;
     }
 }

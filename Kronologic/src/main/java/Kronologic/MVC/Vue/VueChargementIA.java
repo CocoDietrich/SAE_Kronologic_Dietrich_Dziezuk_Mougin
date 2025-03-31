@@ -10,6 +10,9 @@ import javafx.stage.Stage;
 
 public class VueChargementIA {
 
+    private final static int LARGEUR = 500;
+    private final static int HAUTEUR = 200;
+
     private final Stage stage;
     private final Label message;
     private final ProgressBar barreChargement;
@@ -28,7 +31,7 @@ public class VueChargementIA {
         VBox layout = new VBox(30, message, barreChargement);
         layout.setAlignment(Pos.CENTER);
         layout.setStyle("-fx-background-color: #fff3e0;");
-        layout.setPrefSize(500, 200);
+        layout.setPrefSize(LARGEUR, HAUTEUR);
 
         Scene scene = new Scene(layout);
         stage.setScene(scene);

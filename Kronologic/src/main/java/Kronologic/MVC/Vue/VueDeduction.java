@@ -24,24 +24,33 @@ import static Kronologic.MVC.Vue.VueAccueil.creerBoutonAvecImage;
 
 public class VueDeduction extends BorderPane implements Observateur {
 
-    public Button valider;
-    public Button retour;
-    public Button annuler;
-    public List<Button> lieuButtons;
-    public List<Button> tempsButtons;
-    public List<Button> personnageButtons;
-    public Lieu lieuMeurtre;
-    public Temps tempsMeurtre;
-    public Personnage meurtrier;
+    private static final String TITRE = "Effectuer votre déduction :";
+    private static final String RETOUR = "Retour";
+    private static final String ANNULER = "Annuler mes choix";
+    private static final String VALIDER = "Valider";
+
+    private static final String BACKGROUND_COLOR = "-fx-background-color: #800000;";
+    private static final String FONT_FAMILY = "Arial";
+    private static final int FONT_SIZE_TITLE = 28;
+
+    private Button valider;
+    private Button retour;
+    private Button annuler;
+    private List<Button> lieuButtons;
+    private List<Button> tempsButtons;
+    private List<Button> personnageButtons;
+    private Lieu lieuMeurtre;
+    private Temps tempsMeurtre;
+    private Personnage meurtrier;
 
     public VueDeduction() {
         super();
         this.setPadding(new Insets(20));
-        this.setStyle("-fx-background-color: #800000;");
+        this.setStyle(BACKGROUND_COLOR);
 
         // Titre
-        Text titre = new Text("Effectuer votre déduction :");
-        titre.setFont(Font.font("Arial", 28));
+        Text titre = new Text(TITRE);
+        titre.setFont(Font.font(FONT_FAMILY, FONT_SIZE_TITLE));
         titre.setFill(Color.WHITE);
 
         VBox titreBox = new VBox(titre);
@@ -66,7 +75,7 @@ public class VueDeduction extends BorderPane implements Observateur {
         contenu.setAlignment(Pos.CENTER);
 
         // Section lieux
-        HBox lieuxBox = creerSectionHorizontal("Choisissez le Lieu du meurtre :", creerBoutonsLieux());
+        HBox lieuxBox = creerSectionHorizontal(creerBoutonsLieux());
 
         // Sections temps et personnages
         HBox tempsEtPersos = new HBox(50);
@@ -81,12 +90,12 @@ public class VueDeduction extends BorderPane implements Observateur {
         return contenu;
     }
 
-    private HBox creerSectionHorizontal(String titre, HBox contenuBoutons) {
+    private HBox creerSectionHorizontal(HBox contenuBoutons) {
         VBox sectionBox = new VBox(10);
         sectionBox.setAlignment(Pos.CENTER);
 
-        Text titreSection = new Text(titre);
-        titreSection.setFont(Font.font("Arial", 20));
+        Text titreSection = new Text("Choisissez le Lieu du meurtre :");
+        titreSection.setFont(Font.font(FONT_FAMILY, 20));
         titreSection.setFill(Color.WHITE);
 
         sectionBox.getChildren().addAll(titreSection, contenuBoutons);
@@ -101,7 +110,7 @@ public class VueDeduction extends BorderPane implements Observateur {
         sectionBox.setAlignment(Pos.CENTER);
 
         Text titreSection = new Text(titre);
-        titreSection.setFont(Font.font("Arial", 20));
+        titreSection.setFont(Font.font(FONT_FAMILY, 20));
         titreSection.setFill(Color.WHITE);
 
         sectionBox.getChildren().addAll(titreSection, contenuBoutons);
@@ -200,13 +209,13 @@ public class VueDeduction extends BorderPane implements Observateur {
         boutonsBox.setAlignment(Pos.CENTER);
         boutonsBox.setPadding(new Insets(60, 0, 0, 0));
 
-        retour = creerBouton("Retour");
+        retour = creerBouton(RETOUR);
         retour.setPrefSize(120, 40);
 
-        annuler = creerBouton("Annuler mes choix");
+        annuler = creerBouton(ANNULER);
         annuler.setPrefSize(200, 40);
 
-        valider = creerBouton("Valider");
+        valider = creerBouton(VALIDER);
         valider.setPrefSize(120, 40);
 
         boutonsBox.getChildren().addAll(retour, annuler, valider);
@@ -214,7 +223,53 @@ public class VueDeduction extends BorderPane implements Observateur {
     }
 
     @Override
-    public void actualiser() {
-        // Mettre à jour l'interface si nécessaire
+    public void actualiser() {}
+
+    public Button getValider() {
+        return valider;
+    }
+
+    public Button getRetour() {
+        return retour;
+    }
+
+    public Button getAnnuler() {
+        return annuler;
+    }
+
+    public List<Button> getLieuButtons() {
+        return lieuButtons;
+    }
+
+    public List<Button> getTempsButtons() {
+        return tempsButtons;
+    }
+
+    public List<Button> getPersonnageButtons() {
+        return personnageButtons;
+    }
+
+    public Lieu getLieuMeurtre() {
+        return lieuMeurtre;
+    }
+
+    public Temps getTempsMeurtre() {
+        return tempsMeurtre;
+    }
+
+    public Personnage getMeurtrier() {
+        return meurtrier;
+    }
+
+    public void setLieuMeurtre(Lieu lieuMeurtre) {
+        this.lieuMeurtre = lieuMeurtre;
+    }
+
+    public void setTempsMeurtre(Temps tempsMeurtre) {
+        this.tempsMeurtre = tempsMeurtre;
+    }
+
+    public void setMeurtrier(Personnage meurtrier) {
+        this.meurtrier = meurtrier;
     }
 }

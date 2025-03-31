@@ -36,7 +36,7 @@ public class ModeleNotes implements Sujet {
         ajouterPion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))), 0, 0);
 
 
-        vueCarte.pions.add(pion);
+        vueCarte.getPions().add(pion);
         notifierObservateurs();
     }
 
@@ -53,7 +53,7 @@ public class ModeleNotes implements Sujet {
 
         ajouterPion(n, Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)), 0, 0);
 
-        vueCarte.pions.add(pion);
+        vueCarte.getPions().add(pion);
         notifierObservateurs();
     }
 
@@ -76,7 +76,7 @@ public class ModeleNotes implements Sujet {
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
 
-        for (Pion pion : vueCarte.pions) {
+        for (Pion pion : vueCarte.getPions()) {
             if (pion.getNote() != null
                     && pion.getNote().equals(n)) {
                 pion.getNote().setEstAbsence(absence);
@@ -107,7 +107,7 @@ public class ModeleNotes implements Sujet {
         // On modifie la note
         partie.modifierNote(n, absence, hypothese);
 
-        for (Pion pion : vueCarte.pions) {
+        for (Pion pion : vueCarte.getPions()) {
             if (pion.getNote() != null && pion.getNote().equals(n)) {
                 pion.getNote().setEstAbsence(absence);
                 pion.getNote().setEstHypothese(hypothese);
@@ -135,14 +135,14 @@ public class ModeleNotes implements Sujet {
         VueCarte vueCarte = getVueCarte();
         if (vueCarte == null) return;
 
-        for (Pion pion : vueCarte.pions) {
+        for (Pion pion : vueCarte.getPions()) {
             if (pion.getNote() != null && pion.getNote().equals(n)) {
-                vueCarte.pions.remove(pion);
+                vueCarte.getPions().remove(pion);
                 vueCarte.getChildren().remove(pion);
                 supprimerPion(pion);
-                for (Polygon zone : vueCarte.zonesContenantPions) {
+                for (Polygon zone : vueCarte.getZonesContenantPions()) {
                     if (zone.getUserData().equals(pion.getUserData())) {
-                        vueCarte.zonesContenantPions.remove(zone);
+                        vueCarte.getZonesContenantPions().remove(zone);
                         break;
                     }
                 }
@@ -174,14 +174,14 @@ public class ModeleNotes implements Sujet {
         VueCarte vueCarte = getVueCarte();
         if (vueCarte == null) return;
 
-        for (Pion pion : vueCarte.pions) {
+        for (Pion pion : vueCarte.getPions()) {
             if (pion.getNote() != null && pion.getNote().equals(n)) {
-                vueCarte.pions.remove(pion);
+                vueCarte.getPions().remove(pion);
                 vueCarte.getChildren().remove(pion);
                 supprimerPion(pion);
-                for (Polygon zone : vueCarte.zonesContenantPions) {
+                for (Polygon zone : vueCarte.getZonesContenantPions()) {
                     if (zone.getUserData().equals(pion.getUserData())) {
-                        vueCarte.zonesContenantPions.remove(zone);
+                        vueCarte.getZonesContenantPions().remove(zone);
                         break;
                     }
                 }
