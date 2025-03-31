@@ -2,7 +2,6 @@ package Kronologic.MVC.Modele;
 
 import Kronologic.MVC.InitialisationJeu;
 import Kronologic.MVC.Vue.Observateur;
-import Kronologic.MVC.Vue.VueAccueil;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -20,9 +19,7 @@ public class ModeleAccueil implements Sujet {
         if (s.equals("Jouer")) {
             notifierObservateurs();
         } else if (s.equals("IAJoueuse")) {
-            System.out.println("11111111111111");
             InitialisationJeu ij = new InitialisationJeu(new Stage());
-            System.out.println("22222222222222222");
             ij.initialiserAvecIA();
         }
     }
