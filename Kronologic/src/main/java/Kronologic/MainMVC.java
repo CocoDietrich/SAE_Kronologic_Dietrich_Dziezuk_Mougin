@@ -12,10 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class MainMVC extends Application {
-    public static void main() {
-        launch();
-    }
-
     @Override
     public void start(Stage stage) throws Exception {
         ModeleAccueil modeleAccueil = new ModeleAccueil();
@@ -26,7 +22,7 @@ public class MainMVC extends Application {
         bp.setCenter(vueAccueil);
 
         ControleurInitialisation controleurInitialisation = new ControleurInitialisation(modeleAccueil);
-        ControleurIAAccueil controleurIAAccueil = new ControleurIAAccueil(modeleAccueil);
+        ControleurIAAccueil controleurIAAccueil = new ControleurIAAccueil();
         ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
 
         vueAccueil.jouer.setOnAction(controleurInitialisation);

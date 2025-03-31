@@ -17,6 +17,7 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
 
     private static final String QUITTER = "Quitter";
     private static final String VOIR_FILM = "Voir le film";
+    private static final String RETOUR = "retour";
 
     private final ModeleJeu modele;
 
@@ -31,7 +32,7 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
                 .map(VuePopUpDeduction.class::cast)
                 .findFirst();
 
-        vuePopUpDeduction.ifPresent(vue -> modele.quitter("retour", vue.getStage()));
+        vuePopUpDeduction.ifPresent(vue -> modele.quitter(RETOUR, vue.getStage()));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ControleurPopUpDeduction implements EventHandler<ActionEvent> {
         } else if (VOIR_FILM.equals(texte)) {
             VueFilmRealite vueFilmRealite = new VueFilmRealite(modele);
             ControleurFilmRealite controleurFilmRealite = new ControleurFilmRealite(modele);
-            vueFilmRealite.retour.setOnAction(e -> finDeJeu(stage));
+            vueFilmRealite.retour.setOnAction(_ -> finDeJeu(stage));
             vueFilmRealite.slider.valueProperty().addListener(controleurFilmRealite);
             this.modele.getModeleFilms().enregistrerObservateur(vueFilmRealite);
 

@@ -4,13 +4,16 @@ import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Vue.PopUps.VuePopUpQuitter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.util.Optional;
 
 public class ControleurPopUpQuitter implements EventHandler<ActionEvent> {
+
+    private final static String ANNULER = "annuler";
+    private final static String VALIDER = "valider";
+    private final static String RETOUR = "retour";
 
     private final ModeleJeu modele;
 
@@ -25,12 +28,12 @@ public class ControleurPopUpQuitter implements EventHandler<ActionEvent> {
             return;  // Sécurité : on ignore si ce n'est pas un bouton
         }
 
-        Stage stage = (Stage) ((Node) button).getScene().getWindow();
+        Stage stage = (Stage) button.getScene().getWindow();
         String buttonId = button.getId();
 
-        if ("annuler".equals(buttonId)) {
+        if (ANNULER.equals(buttonId)) {
             stage.close();
-        } else if ("valider".equals(buttonId)) {
+        } else if (VALIDER.equals(buttonId)) {
             // Recherche optimisée de VuePopUpQuitter parmi les observateurs
             Optional<VuePopUpQuitter> vuePopUpQuitter = modele.getObservateurs().stream()
                     .filter(VuePopUpQuitter.class::isInstance)
@@ -39,7 +42,7 @@ public class ControleurPopUpQuitter implements EventHandler<ActionEvent> {
 
             if (vuePopUpQuitter.isPresent()) {
                 Stage stageGlobal = vuePopUpQuitter.get().stageGlobal;
-                modele.quitter("retour", stageGlobal);
+                modele.quitter(RETOUR, stageGlobal);
             } else {
                 System.err.println("Erreur : VuePopUpQuitter non trouvée parmi les observateurs.");
             }

@@ -130,7 +130,7 @@ public class ModeleJeu implements Sujet {
                 bp.setCenter(vueAccueil);
 
                 ControleurInitialisation controleurInitialisation = new ControleurInitialisation(modeleAccueil);
-                ControleurIAAccueil controleurIAAccueil = new ControleurIAAccueil(modeleAccueil);
+                ControleurIAAccueil controleurIAAccueil = new ControleurIAAccueil();
                 ControleurQuitterJeu controleurQuitterJeu = new ControleurQuitterJeu(modeleAccueil);
 
                 vueAccueil.jouer.setOnAction(controleurInitialisation);

@@ -55,7 +55,7 @@ public class InitialisationJeu {
 
         String fichierJson;
 
-        if (resultat.isPresent() && resultat.get() == btnGeneree) {
+        if (resultat.get() == btnGeneree) {
             try {
                 Partie partieGeneree = GenerateurScenario.genererScenario();
                 GenerateurScenario.exporterJson(partieGeneree, "data/enquete_generee.json");
@@ -64,7 +64,7 @@ public class InitialisationJeu {
                 e.printStackTrace();
                 return;
             }
-        } else if (resultat.isPresent() && resultat.get() == btnClassique) {
+        } else if (resultat.get() == btnClassique) {
             fichierJson = "data/enquete_base.json";
         } else {
             return;
@@ -104,7 +104,7 @@ public class InitialisationJeu {
         ControleurQuitterRegleFilm controleurQuitterRegleFilm = new ControleurQuitterRegleFilm(modeleJeu);
         ControleurPopUpDemanderIndice controleurPopUpDemanderIndice = new ControleurPopUpDemanderIndice(modeleJeu);
         ControleurChoixCarte controleurChoixCarte = new ControleurChoixCarte(modeleJeu.getModeleNotes());
-        ControleurPopUpPoseQuestion controleurPopUpPoseQuestion = new ControleurPopUpPoseQuestion(modeleJeu);
+        ControleurPopUpPoseQuestion controleurPopUpPoseQuestion = new ControleurPopUpPoseQuestion();
         ControleurVisualiserFilmJoueur controleurVisualiserFilmJoueur = new ControleurVisualiserFilmJoueur(modeleJeu);
         ControleurVisualiserFilmRealite controleurVisualiserFilmRealite = new ControleurVisualiserFilmRealite(modeleJeu);
         ControleurImagePions controleurImagePions = new ControleurImagePions(modeleJeu);
@@ -222,12 +222,18 @@ public class InitialisationJeu {
 
         ButtonType btnClassique = new ButtonType("Enquête classique");
         ButtonType btnGeneree = new ButtonType("Enquête générée");
-        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree);
+        ButtonType btnAnnuler = ButtonType.CANCEL;
+
+        choixAlert.getButtonTypes().setAll(btnClassique, btnGeneree, btnAnnuler);
 
         Optional<ButtonType> resultat = choixAlert.showAndWait();
+        if (resultat.isEmpty()) {
+            return;
+        }
+
         String fichierJson;
 
-        if (resultat.isPresent() && resultat.get() == btnGeneree) {
+        if (resultat.get() == btnGeneree) {
             try {
                 Partie partieGeneree = GenerateurScenario.genererScenario();
                 GenerateurScenario.exporterJson(partieGeneree, "data/enquete_generee.json");
@@ -236,8 +242,10 @@ public class InitialisationJeu {
                 e.printStackTrace();
                 return;
             }
-        } else {
+        } else if (resultat.get() == btnClassique) {
             fichierJson = "data/enquete_base.json";
+        } else {
+            return;
         }
 
         // Création du modèle et lancement de l'IA Joueuse
