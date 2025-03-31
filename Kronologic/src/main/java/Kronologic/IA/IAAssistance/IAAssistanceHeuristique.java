@@ -24,7 +24,7 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
     protected int simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         IADeductionHeuristique clone = copie();
         int nbInitial = compterDomaines(clone.recupererDomainesPersonnages());
-        clone.poserQuestionTemps(lieu, temps, infoPublic, infoPrive);
+        silencieux(() -> clone.poserQuestionTemps(lieu, temps, infoPublic, infoPrive));
         int nbFinal = compterDomaines(clone.recupererDomainesPersonnages());
         return nbInitial - nbFinal;
     }
@@ -32,7 +32,7 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
     protected int simulerPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
         IADeductionHeuristique clone = copie();
         int nbInitial = compterDomaines(clone.recupererDomainesPersonnages());
-        clone.poserQuestionPersonnage(personnage, lieu, infoPublic, infoPrive);
+        silencieux(() -> clone.poserQuestionPersonnage(personnage, lieu, infoPublic, infoPrive));
         int nbFinal = compterDomaines(clone.recupererDomainesPersonnages());
         return nbInitial - nbFinal;
     }
@@ -44,6 +44,21 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
                 for (boolean b : d2)
                     if (b) count++;
         return count;
+    }
+
+    protected void silencieux(Runnable action) {
+        java.io.PrintStream originalErr = System.err;
+        try {
+            System.setErr(new java.io.PrintStream(new java.io.OutputStream() {
+                @Override
+                public void write(int b) {
+                }
+            }));
+            action.run();
+        } catch (Exception ignored) {
+        } finally {
+            System.setErr(originalErr);
+        }
     }
 
     protected IADeductionHeuristique copie() {
