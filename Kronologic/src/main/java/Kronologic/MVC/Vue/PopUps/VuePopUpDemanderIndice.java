@@ -30,7 +30,7 @@ public class VuePopUpDemanderIndice implements Observateur {
     }
 
     public void afficherPopUp() {
-        stage.setTitle("Quitter la Partie");
+        stage.setTitle("Indice");
 
         // Texte principal
         Text message = new Text("Êtes-vous sûr de vouloir demander un indice ?");

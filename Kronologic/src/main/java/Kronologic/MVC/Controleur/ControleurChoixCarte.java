@@ -27,7 +27,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
     @Override
     public void handle(DragEvent dragEvent) {
-        //System.out.println("--------------------");
+        System.out.println("-----------------------");
         Pion pionAvant = (Pion) dragEvent.getGestureSource();
 
         VueCarte vueCarte = null;
@@ -48,7 +48,9 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         // On ne peut pas ajouter un autre pion représentant le même personnage ou le pion de nombre
 
         if (pionActuel.getId() != null) {
-            String nomPersonnagePionActuel = pionActuel.getId().substring(pionActuel.getId().lastIndexOf("/")+1, pionActuel.getId().lastIndexOf("."));
+            System.out.println("connard");
+            String nomPersonnagePionActuel = pionActuel.getId().substring(pionActuel.getId().lastIndexOf("/")+1,
+                    pionActuel.getId().lastIndexOf("."));
             System.out.println("Nom du personnage du pion actuel : " + nomPersonnagePionActuel);
             // Si c'est un pion de nombres
             if (nomPersonnagePionActuel.contains("Pion de Nombres")) {
@@ -93,6 +95,10 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 }
 
                 // On supprime le pion actuel de la liste
+
+                System.out.println("0EME REMOVE");
+                System.out.println(pionsMemePersonnage);
+                System.out.println(pionsMemePersonnage.getLast().getUserData().toString());
                 pionsMemePersonnage.removeLast();
 
                 // Si un d'eux est placé dans le même lieu et au même temps, on ne fait rien
@@ -100,15 +106,36 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 for (Pion p : pionsMemePersonnage) {
                     String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                     if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                        //System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps.");
+                        System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps.");
                         if (vueCarte.getChildren().getLast() instanceof Pion) {
                             vueCarte.getChildren().removeLast();
                         }
                         vueCarte.zonesContenantPions.removeLast();
                         vueCarte.pions.removeLast();
-                        vueCarte.pions.remove(pionAvant);
-                        vueCarte.pions.remove(pionActuel);
-                        vueCarte.pions.remove(pionActuel);
+                        if (pionAvant.getUserData() != null) {
+                            vueCarte.pions.remove(pionAvant);
+                        }
+                        for (Pion pion1 : vueCarte.pions) {
+                            if (pion1.getUserData() != null && pionActuel.getUserData() != null) {
+                                if (pion1.getUserData().equals(pionActuel.getUserData())) {
+                                    if (pion1.getUserData().equals(vueCarte.pions.getLast().getUserData())){
+                                        vueCarte.pions.removeLast();
+                                    }
+                                    else {
+                                        vueCarte.pions.remove(pion1);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        for (Pion pion2 : vueCarte.pions) {
+                            if (pion2.getUserData() != null) {
+                                if (pion2.getUserData().equals(pionActuel.getUserData())) {
+                                    vueCarte.pions.remove(pion2);
+                                    break;
+                                }
+                            }
+                        }
                         modeleNotes.supprimerPion(pionAvant);
                         return;
                     }
