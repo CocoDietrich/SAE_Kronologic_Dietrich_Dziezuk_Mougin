@@ -27,7 +27,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
 
     @Override
     public void handle(DragEvent dragEvent) {
-        System.out.println("-----------------------");
         Pion pionAvant = (Pion) dragEvent.getGestureSource();
 
         VueCarte vueCarte = null;
@@ -48,10 +47,8 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         // On ne peut pas ajouter un autre pion représentant le même personnage ou le pion de nombre
 
         if (pionActuel.getId() != null) {
-            System.out.println("connard");
             String nomPersonnagePionActuel = pionActuel.getId().substring(pionActuel.getId().lastIndexOf("/")+1,
                     pionActuel.getId().lastIndexOf("."));
-            System.out.println("Nom du personnage du pion actuel : " + nomPersonnagePionActuel);
             // Si c'est un pion de nombres
             if (nomPersonnagePionActuel.contains("Pion de Nombres")) {
                 // On récupère les pions de nombres déjà placés
@@ -73,7 +70,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     if (p.getNote() != null) {
                         String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                         if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                            System.out.println("Pion de nombres déjà placé dans le même lieu et au même temps");
                             vueCarte.getChildren().removeLast();
                             vueCarte.zonesContenantPions.removeLast();
                             pionsDeNombres.removeLast();
@@ -102,7 +98,6 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 for (Pion p : pionsMemePersonnage) {
                     String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                     if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                        System.out.println("Pion de personnage déjà placé dans le même lieu et au même temps.");
                         if (vueCarte.getChildren().getLast() instanceof Pion) {
                             vueCarte.getChildren().removeLast();
                         }
@@ -238,13 +233,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 note.setEstAbsence(true);
             }
 
-            //System.out.println("Note : " + note);
-
             vueCarte.pions.get(vueCarte.pions.size() - 2).setNote(note);
-
-//            System.out.println("Pion avant : " + pionAvant);
-//            System.out.println("Nouveau lieu : " + nouveauLieu);
-//            System.out.println("Temps : " + temps);
 
             modeleNotes.deplacerPion(pionAvant, nouveauLieu, temps, (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
             vueCarte.pions.remove(pionAvant);
@@ -266,9 +255,5 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
         }
 
         modeleNotes.notifierObservateurs();
-        System.out.println("Liste des notes : ");
-        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
-            System.out.println(n);
-        }
     }
 }

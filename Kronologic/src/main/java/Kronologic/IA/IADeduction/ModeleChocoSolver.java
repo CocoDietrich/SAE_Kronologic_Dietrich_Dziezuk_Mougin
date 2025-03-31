@@ -284,9 +284,15 @@ public class ModeleChocoSolver {
     }
 
     public IntVar getCoupablePersonnage() {
-        System.out.println(coupablePersonnage);
-        return coupablePersonnage; }
-    public IntVar getCoupableLieu() { return coupableLieu; }
-    public IntVar getCoupableTemps() { return coupableTemps; }
+        return coupablePersonnage;
+    }
+
+    public IntVar getCoupableLieu() {
+        return coupableLieu;
+    }
+
+    public IntVar getCoupableTemps() {
+        return coupableTemps;
+    }
 
 }

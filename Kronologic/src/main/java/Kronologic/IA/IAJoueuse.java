@@ -20,13 +20,9 @@ public class IAJoueuse {
     }
 
     public String jouerJusquaTrouverCoupable() {
-        int tour = 1;
 
         while (true) {
-            System.out.println("🔁 Tour " + tour);
-
             if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
-                System.out.println("🔍 Vérification de la déduction...");
                 IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
                 if (iaDeduction.solutionTrouvee()) {
                     String nom = partie.getEnquete().getMeurtrier().getNom();
@@ -47,7 +43,6 @@ public class IAJoueuse {
                 Temps temps = new Temps(valeurTemps);
 
                 IndiceTemps indice = (IndiceTemps) partie.poserQuestionTemps(lieu, temps);
-                System.out.printf("📌 Question posée : Lieu=%s, Temps=%d\n", nomLieu, valeurTemps);
 
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -63,7 +58,6 @@ public class IAJoueuse {
                 Personnage personnage = getPersonnageParNom(nomPerso);
 
                 IndicePersonnage indice = (IndicePersonnage) partie.poserQuestionPersonnage(lieu, personnage);
-                System.out.printf("📌 Question posée : Lieu=%s, Personnage=%s\n", nomLieu, nomPerso);
 
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -73,8 +67,6 @@ public class IAJoueuse {
             } else {
                 return "❌ L’IA n’a pas trouvé de solution.";
             }
-
-            tour++;
         }
     }
 

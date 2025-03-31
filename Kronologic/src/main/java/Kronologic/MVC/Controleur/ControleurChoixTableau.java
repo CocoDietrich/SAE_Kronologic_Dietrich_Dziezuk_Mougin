@@ -139,10 +139,5 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
                 break;
         }
         modeleNotes.notifierObservateurs();
-
-        System.out.println("Liste des notes : ");
-        for (Note n : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()) {
-            System.out.println(n);
-        }
     }
 }

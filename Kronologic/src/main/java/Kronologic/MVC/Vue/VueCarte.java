@@ -397,8 +397,6 @@ public class VueCarte extends BorderPane implements Observateur {
                 // Ajout de la zone où on a déposé le pion à la liste des zones contenant des pions
                 zonesContenantPions.add(polygon);
 
-                System.out.println(event.getGestureSource());
-
                 if (db.hasImage()) {
 
                     // Création du pion déplacé
@@ -825,20 +823,17 @@ public class VueCarte extends BorderPane implements Observateur {
         ArrayList<Realite> listePionTemps1 = ModeleJeu.getPartie().getDeroulement().positionsAuTemps(new Temps(1));
 
         // Initialisation des pions immobiles pour le temps 1
-        for (int i = 0; i < listePionTemps1.size(); i++) {
-            ajouterPionImbougeable("Temps " + listePionTemps1.get(i).getTemps().getValeur()
-                            + "-" + listePionTemps1.get(i).getLieu().getNom(),
-                    listePionTemps1.get(i).getPersonnage().getNom());
+        for (Realite realite : listePionTemps1) {
+            ajouterPionImbougeable("Temps " + realite.getTemps().getValeur()
+                            + "-" + realite.getLieu().getNom(),
+                    realite.getPersonnage().getNom());
         }
     }
 
     private void ajouterPionImbougeable(String userDataZone, String personnage) {
-        //System.out.println("Ajout du pion " + personnage + " dans la zone " + userDataZone);
-
         for (Polygon zone : zonesDeJeu) {
             if (((String)zone.getUserData()).contains("SousZone")) {
                 if (((String)zone.getUserData()).contains(userDataZone) && !zonesContenantPions.contains(zone)) {
-                    System.out.println("Zone trouvée : " + zone.getUserData());
                     Pion pion = new Pion(null, "file:img/pions_personnages/" + personnage + ".png");
                     pion.setUserData(zone.getUserData());
                     pion.setId("file:img/pions_personnages/" + personnage + ".png");

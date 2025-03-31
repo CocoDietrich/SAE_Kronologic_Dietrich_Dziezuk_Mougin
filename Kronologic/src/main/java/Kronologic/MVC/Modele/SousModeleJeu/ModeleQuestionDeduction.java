@@ -79,7 +79,6 @@ public class ModeleQuestionDeduction implements Sujet {
 
         partie.ajouterIndice(indice);
         notifierObservateurs();
-        System.out.println("Réponse à la question posée : " + indice);
 
         VuePopUpPoseQuestion vuePopUpPoseQuestion = getVue(VuePopUpPoseQuestion.class);
         if (vuePopUpPoseQuestion != null) {

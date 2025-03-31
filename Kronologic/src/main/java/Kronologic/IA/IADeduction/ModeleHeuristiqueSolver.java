@@ -386,19 +386,11 @@ public class ModeleHeuristiqueSolver {
         }
 
         if (!autrePersonnageAbsent) {
-            afficherCoupable(p, l, t);
+            coupableTrouve = true;
+            coupablePersonnage = p;
+            coupableLieu = l + 1;
+            coupableTemps = t + 1;
         }
-    }
-
-    public void afficherCoupable(int p, int l, int t) {
-        String coupable = String.format("👤 Coupable : %s\n", personnages[p]) +
-                String.format("📍 Lieu du crime : %d\n", l + 1) +
-                String.format("⏳ Temps du crime : %d\n\n", t + 1);
-        System.out.println(coupable);
-        coupableTrouve = true;
-        coupablePersonnage = p;
-        coupableLieu = l + 1;
-        coupableTemps = t + 1;
     }
 
     public int getIndexPersonnage(String personnage) {

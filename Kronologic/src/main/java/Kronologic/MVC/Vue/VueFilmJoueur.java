@@ -367,8 +367,6 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                 // Ajout de la zone où on a déposé le pion à la liste des zones contenant des pions
                 zonesContenantPions.add(polygon);
 
-                System.out.println(event.getGestureSource());
-
                 if (db.hasImage()) {
 
                     // Création du pion déplacé

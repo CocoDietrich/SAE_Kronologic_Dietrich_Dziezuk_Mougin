@@ -36,6 +36,5 @@ public class ControleurVisualiserFilmJoueur implements EventHandler<ActionEvent>
         stage.show();
 
         modeleJeu.getModeleFilms().notifierObservateurs();
-        System.out.println(modeleJeu.getModeleFilms().getObservateurs());
     }
 }

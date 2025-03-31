@@ -74,15 +74,9 @@ public class Enquete {
         if (lieu == null || personnage == null || temps == null) {
             throw new NullPointerException("Le lieu ne peut pas être nul");
         }
-        if (personnage.getNom().equals(meurtrier.getNom())
+        return personnage.getNom().equals(meurtrier.getNom())
                 && lieu.getId() == lieuMeurtre.getId()
-                && temps.getValeur() == tempsMeurtre.getValeur()) {
-            System.out.println("Bravo, votre déduction est correcte !");
-            return true;
-        } else {
-            System.out.println("Désolé, votre déduction est incorrecte.");
-            return false;
-        }
+                && temps.getValeur() == tempsMeurtre.getValeur();
     }
 
     // Getter pour chaque attribut
