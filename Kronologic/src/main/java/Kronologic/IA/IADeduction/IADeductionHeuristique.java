@@ -39,4 +39,8 @@ public class IADeductionHeuristique extends IADeduction {
     public boolean[][][] recupererDomainesPersonnages() {
         return model.getDomainesPersonnages();
     }
+
+    public ModeleHeuristiqueSolver getModel() {
+        return model;
+    }
 }
