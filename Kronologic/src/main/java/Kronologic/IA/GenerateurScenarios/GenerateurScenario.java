@@ -25,7 +25,7 @@ public class GenerateurScenario {
 
     private static final int NB_LIEUX = 6;
     private static final int NB_TEMPS = 6;
-
+    private static int nbScenariosNonConformes = 0;
     private static final Random random = new Random();
 
     /**
@@ -34,6 +34,8 @@ public class GenerateurScenario {
      * @return Un objet Partie contenant le scénario généré.
      */
     public static Partie genererScenario() {
+        // On remet à zéro le compteur de scénarios non conformes
+        nbScenariosNonConformes = 0;
         while (true) {
             List<Lieu> lieux = creerLieux();
             List<Temps> temps = new ArrayList<>();
@@ -46,13 +48,19 @@ public class GenerateurScenario {
 
             Personnage detective = personnages.stream().filter(p -> p.getNom().equals("Détective")).findFirst().orElseThrow();
             Optional<Realite> sceneMeurtre = trouverSceneMeurtre(positions, detective);
-            if (sceneMeurtre.isEmpty()) continue;
+            if (sceneMeurtre.isEmpty()) {
+                nbScenariosNonConformes++;
+                continue;
+            }
 
             Realite crime = sceneMeurtre.get();
             Lieu lieuCrime = crime.getLieu();
             Temps tempsCrime = crime.getTemps();
 
-            if (tempsCrime.getValeur() == 1) continue;
+            if (tempsCrime.getValeur() == 1) {
+                nbScenariosNonConformes++;
+                continue;
+            }
 
             Personnage meurtrier = crime.getPersonnage().getNom().equals("Détective") ?
                     trouverAutrePersonnagePresent(positions, lieuCrime, tempsCrime, detective) : crime.getPersonnage();
@@ -66,7 +74,10 @@ public class GenerateurScenario {
                                 .toList();
                         return prs.size() == 2 && prs.stream().anyMatch(r -> r.getPersonnage().equals(detective));
                     }).count();
-            if (momentsSeulAvecUn != 1) continue;
+            if (momentsSeulAvecUn != 1) {
+                nbScenariosNonConformes++;
+                continue;
+            }
 
             List<Indice> indices = genererIndices(lieux, temps, personnages, positions);
 
@@ -88,7 +99,10 @@ public class GenerateurScenario {
             String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
             if (!resultat.contains(meurtrier.getNom()) ||
                     !resultat.contains(lieuCrime.getNom()) ||
-                    !resultat.contains(String.valueOf(tempsCrime.getValeur()))) continue;
+                    !resultat.contains(String.valueOf(tempsCrime.getValeur()))) {
+                nbScenariosNonConformes++;
+                continue;
+            }
 
             // Vérification unicité de la solution
             Set<String> solutionsPossibles = new HashSet<>();
@@ -108,7 +122,10 @@ public class GenerateurScenario {
                     }
                 }
             }
-            if (solutionsPossibles.size() != 1) continue;
+            if (solutionsPossibles.size() != 1) {
+                nbScenariosNonConformes++;
+                continue;
+            }
 
             return partie;
         }
@@ -300,5 +317,9 @@ public class GenerateurScenario {
             }
         }
         return indices;
+    }
+
+    public static int getNbScenariosNonConformes() {
+        return nbScenariosNonConformes;
     }
 }
