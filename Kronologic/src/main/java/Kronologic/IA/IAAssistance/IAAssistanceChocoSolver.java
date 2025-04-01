@@ -197,7 +197,7 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
                                 note.getPersonnage().getNom(), note.getLieu().getNom(), note.getTemps().getValeur()));
                     }
                 } else if (note.estAbsence() && !note.estHypothese()) { // Absence
-                    if (!domaineIA.isInstantiated() || domaineIA.getValue() == lieuJoueur) {
+                    if (domaineIA.contains(lieuJoueur)) {
                         correction.append(String.format("⚠️ Erreur : La note d'absence de %s en %s au temps %d est fausse. ❌\n",
                                 note.getPersonnage().getNom(), note.getLieu().getNom(), note.getTemps().getValeur()));
                     }
