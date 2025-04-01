@@ -24,7 +24,9 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
         String meilleureValeur = "Vous avez déjà toutes les informations.";
         double meilleurScore = -1;
 
-        int strategie = (int) (Math.random() * 3); // 0 = min, 1 = max, 2 = moyenne
+        int strategie = getModeRecommandation(); // 0 = min, 1 = max, 2 = moyenne
+
+        System.out.println("mode de recommandation : " + strategie);
 
         for (Lieu lieu : partie.getElements().lieux()) {
             for (int temps = 2; temps <= 6; temps++) {

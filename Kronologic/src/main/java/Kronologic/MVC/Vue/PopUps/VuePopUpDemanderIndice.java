@@ -29,6 +29,9 @@ public class VuePopUpDemanderIndice implements Observateur {
     private Button boutonHeuristique;
     private Button boutonTriche;
     private Button boutonSansTriche;
+    private Button boutonMax;
+    private Button boutonMin;
+    private Button boutonMoyenne;
 
     public VuePopUpDemanderIndice() {
         this.stage = new Stage();
@@ -54,28 +57,39 @@ public class VuePopUpDemanderIndice implements Observateur {
         boutonHeuristique = new Button("Heuristique");
         boutonTriche = new Button("Triche");
         boutonSansTriche = new Button("Sans triche");
+        boutonMax = new Button("Max");
+        boutonMin = new Button("Min");
+        boutonMoyenne = new Button("Moyenne");
 
         // Style + ID
         boutonChoco.setId("choixChoco");
         boutonHeuristique.setId("choixHeuristique");
         boutonTriche.setId("choixTriche");
         boutonSansTriche.setId("choixSansTriche");
+        boutonMin.setId("choixMin");
+        boutonMax.setId("choixMax");
+        boutonMoyenne.setId("choixMoyenne");
 
         boutonChoco.setStyle(STYLE_BOUTON);
         boutonHeuristique.setStyle(STYLE_BOUTON);
         boutonTriche.setStyle(STYLE_BOUTON);
         boutonSansTriche.setStyle(STYLE_BOUTON);
+        boutonMin.setStyle(STYLE_BOUTON);
+        boutonMax.setStyle(STYLE_BOUTON);
+        boutonMoyenne.setStyle(STYLE_BOUTON);
 
         HBox choixBox = new HBox(INSETS, boutonChoco, boutonHeuristique);
         choixBox.setAlignment(Pos.CENTER);
         HBox choixTricheBox = new HBox(INSETS, boutonTriche, boutonSansTriche);
         choixTricheBox.setAlignment(Pos.CENTER);
+        HBox choixMaxMinMoyBox = new HBox(INSETS, boutonMin, boutonMax, boutonMoyenne);
+        choixMaxMinMoyBox.setAlignment(Pos.CENTER);
 
         // Layout
         HBox boutonsBox = new HBox(INSETS, annuler, valider);
         boutonsBox.setAlignment(Pos.CENTER);
 
-        VBox layout = new VBox(INSETS, message, choixBox, choixTricheBox, boutonsBox);
+        VBox layout = new VBox(INSETS, message, choixBox, choixTricheBox, choixMaxMinMoyBox, boutonsBox);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(INSETS));
         layout.setStyle("-fx-background-color: #f5a623;");
@@ -114,5 +128,17 @@ public class VuePopUpDemanderIndice implements Observateur {
 
     public Button getBoutonSansTriche() {
         return boutonSansTriche;
+    }
+
+    public Button getBoutonMax() {
+        return boutonMax;
+    }
+
+    public Button getBoutonMin() {
+        return boutonMin;
+    }
+
+    public Button getBoutonMoyenne() {
+        return boutonMoyenne;
     }
 }

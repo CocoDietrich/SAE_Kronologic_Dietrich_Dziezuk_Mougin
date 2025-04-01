@@ -95,14 +95,18 @@ public class ModeleIA implements Sujet {
         this.iaAssistanceChocoActive = false;
     }
 
-    public void activerTriche() {
+    public void activerTriche(int strategie) {
         this.iaAssistanceChoco = new IAAssistanceChocoTriche(iaDeductionChocoSolver, ModeleJeu.getPartie());
+        this.iaAssistanceChoco.setModeRecommandation(strategie);
         this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, ModeleJeu.getPartie());
+        this.iaAssistanceHeuristique.setModeRecommandation(strategie);
     }
 
-    public void desactiverTriche() {
+    public void desactiverTriche(int strategie) {
         this.iaAssistanceChoco = new IAAssistanceChocoTrichePas(iaDeductionChocoSolver, ModeleJeu.getPartie());
+        this.iaAssistanceChoco.setModeRecommandation(strategie);
         this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTrichePas(iaDeductionHeuristique, ModeleJeu.getPartie());
+        this.iaAssistanceHeuristique.setModeRecommandation(strategie);
     }
 
 
@@ -115,6 +119,10 @@ public class ModeleIA implements Sujet {
         assert vue != null;
         vue.afficherPopUp();
 
+        activerSelection(vue.getBoutonMax(), vue.getBoutonTriche());
+        activerSelection(vue.getBoutonMin(), vue.getBoutonTriche());
+        activerSelection(vue.getBoutonMoyenne(), vue.getBoutonTriche());
+
         vue.getBoutonChoco().setOnAction(_ -> {
             utiliserIAAssistanceChoco();
             activerSelection(vue.getBoutonChoco(), vue.getBoutonHeuristique());
@@ -126,13 +134,51 @@ public class ModeleIA implements Sujet {
         });
 
         vue.getBoutonTriche().setOnAction(_ -> {
-            activerTriche();
+            activerTriche(iaAssistanceChoco.getModeRecommandation());
             activerSelection(vue.getBoutonTriche(), vue.getBoutonSansTriche());
+            activerSelection(vue.getBoutonMax(), vue.getBoutonSansTriche());
+            activerSelection(vue.getBoutonMin(), vue.getBoutonSansTriche());
+            activerSelection(vue.getBoutonMoyenne(), vue.getBoutonSansTriche());
         });
 
         vue.getBoutonSansTriche().setOnAction(_ -> {
-            desactiverTriche();
+            desactiverTriche(iaAssistanceChoco.getModeRecommandation());
             activerSelection(vue.getBoutonSansTriche(), vue.getBoutonTriche());
+            switch (iaAssistanceChoco.getModeRecommandation()){
+                case 0 :
+                    activerSelection(vue.getBoutonMin(), vue.getBoutonMax());
+                    activerSelection(vue.getBoutonMin(), vue.getBoutonMoyenne());
+                    break;
+                case 1 :
+                    activerSelection(vue.getBoutonMax(), vue.getBoutonMin());
+                    activerSelection(vue.getBoutonMax(), vue.getBoutonMoyenne());
+                    break;
+                case 2 :
+                    activerSelection(vue.getBoutonMoyenne(), vue.getBoutonMax());
+                    activerSelection(vue.getBoutonMoyenne(), vue.getBoutonMin());
+                    break;
+            }
+        });
+
+        vue.getBoutonMin().setOnAction(_ -> {
+            iaAssistanceChoco.setModeRecommandation(0);
+            iaAssistanceHeuristique.setModeRecommandation(0);
+            activerSelection(vue.getBoutonMin(), vue.getBoutonMax());
+            activerSelection(vue.getBoutonMin(), vue.getBoutonMoyenne());
+        });
+
+        vue.getBoutonMax().setOnAction(_ -> {
+            iaAssistanceChoco.setModeRecommandation(1);
+            iaAssistanceHeuristique.setModeRecommandation(1);
+            activerSelection(vue.getBoutonMax(), vue.getBoutonMin());
+            activerSelection(vue.getBoutonMax(), vue.getBoutonMoyenne());
+        });
+
+        vue.getBoutonMoyenne().setOnAction(_ -> {
+            iaAssistanceChoco.setModeRecommandation(2);
+            iaAssistanceHeuristique.setModeRecommandation(2);
+            activerSelection(vue.getBoutonMoyenne(), vue.getBoutonMax());
+            activerSelection(vue.getBoutonMoyenne(), vue.getBoutonMin());
         });
     }
 
