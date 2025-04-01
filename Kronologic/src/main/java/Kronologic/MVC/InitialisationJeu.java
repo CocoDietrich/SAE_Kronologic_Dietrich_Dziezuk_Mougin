@@ -30,7 +30,6 @@ public class InitialisationJeu {
     private final Stage stage;
     private VuePopUpEnigme vuePopUpEnigme;
     private VueCarte vueCarte;
-    private Partie partie;
 
     public InitialisationJeu(Stage stage) {
         this.stage = stage;
