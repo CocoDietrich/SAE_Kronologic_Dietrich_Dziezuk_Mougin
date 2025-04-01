@@ -1,5 +1,10 @@
 package Kronologic.IA.GenerateurScenarios;
 
+import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
+import Kronologic.IA.IAAssistance.IAAssistanceChocoTriche;
+import Kronologic.IA.IADeduction.IADeduction;
+import Kronologic.IA.IADeduction.IADeductionChocoSolver;
+import Kronologic.IA.IAJoueuse;
 import Kronologic.Jeu.Deroulement;
 import Kronologic.Jeu.Enquete;
 import Kronologic.Jeu.Elements.*;
@@ -47,13 +52,11 @@ public class GenerateurScenario {
             Lieu lieuCrime = crime.getLieu();
             Temps tempsCrime = crime.getTemps();
 
-            // Le meurtre ne peut pas avoir lieu au temps 1
             if (tempsCrime.getValeur() == 1) continue;
 
             Personnage meurtrier = crime.getPersonnage().getNom().equals("Détective") ?
                     trouverAutrePersonnagePresent(positions, lieuCrime, tempsCrime, detective) : crime.getPersonnage();
 
-            // Vérifier que c'est le seul moment où le détective est seul avec une autre personne
             long momentsSeulAvecUn = temps.stream()
                     .filter(t -> {
                         List<Realite> prs = positions.stream()
@@ -63,7 +66,6 @@ public class GenerateurScenario {
                                 .toList();
                         return prs.size() == 2 && prs.stream().anyMatch(r -> r.getPersonnage().equals(detective));
                     }).count();
-
             if (momentsSeulAvecUn != 1) continue;
 
             List<Indice> indices = genererIndices(lieux, temps, personnages, positions);
@@ -74,10 +76,41 @@ public class GenerateurScenario {
                     12, 19, meurtrier, lieuCrime, tempsCrime);
             Deroulement deroulement = new Deroulement(new ArrayList<>(positions));
 
-            return new Partie(enquete, deroulement,
+            Partie partie = new Partie(enquete, deroulement,
                     new GestionnaireIndices(indices),
                     new GestionnaireNotes(), new GestionnairePions(),
                     new Elements(personnages, lieux));
+
+            // Vérification par l'IA joueuse
+            IADeductionChocoSolver iaDeduction = new IADeductionChocoSolver(partie);
+            IAAssistanceChocoSolver iaAssistance = new IAAssistanceChocoTriche(iaDeduction, partie);
+            IAJoueuse iaJoueuse = new IAJoueuse(iaAssistance, partie);
+            String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
+            if (!resultat.contains(meurtrier.getNom()) ||
+                    !resultat.contains(lieuCrime.getNom()) ||
+                    !resultat.contains(String.valueOf(tempsCrime.getValeur()))) continue;
+
+            // Vérification unicité de la solution
+            Set<String> solutionsPossibles = new HashSet<>();
+            for (Personnage p : personnages) {
+                if (p.equals(detective)) continue;
+                for (Lieu l : lieux) {
+                    for (Temps t : temps) {
+                        long count = positions.stream()
+                                .filter(r -> r.getTemps().equals(t) && r.getLieu().equals(l))
+                                .count();
+                        boolean isSeulAvecDetective = count == 2 &&
+                                positions.stream().anyMatch(r -> r.getTemps().equals(t) && r.getLieu().equals(l) && r.getPersonnage().equals(detective)) &&
+                                positions.stream().anyMatch(r -> r.getTemps().equals(t) && r.getLieu().equals(l) && r.getPersonnage().equals(p));
+                        if (isSeulAvecDetective) {
+                            solutionsPossibles.add(p.getNom() + ":" + l.getNom() + ":" + t.getValeur());
+                        }
+                    }
+                }
+            }
+            if (solutionsPossibles.size() != 1) continue;
+
+            return partie;
         }
     }
 
