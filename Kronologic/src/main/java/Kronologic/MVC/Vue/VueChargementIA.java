@@ -3,6 +3,7 @@ package Kronologic.MVC.Vue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
@@ -16,8 +17,12 @@ public class VueChargementIA {
 
     private final static int LARGEUR = 500;
     private final static int HAUTEUR = 200;
+    private final static String STYLE_BOUTON = "-fx-background-color: #7b001e; -fx-text-fill: white; " +
+            "-fx-font-size: 16px; -fx-font-weight: bold; -fx-border-radius: 8px;";
+    private final static String VOIR_FILM = "Voir le film";
 
     private final Stage stage;
+    private Button voirFilm;
 
     public VueChargementIA() {
         this.stage = new Stage();
@@ -55,13 +60,19 @@ public class VueChargementIA {
         popup.initModality(Modality.WINDOW_MODAL);
         popup.setTitle("🧠 Historique des questions IA");
 
+        // Zone de texte pour afficher l'historique
         TextArea zoneTexte = new TextArea(historique);
         zoneTexte.setWrapText(true);
         zoneTexte.setEditable(false);
         zoneTexte.setPrefSize(500, 400);
         zoneTexte.setStyle("-fx-font-size: 14px; -fx-control-inner-background: #fffbe6;");
 
-        VBox layout = new VBox(15, zoneTexte);
+        // Bouton pour visualiser le film
+        this.voirFilm = new Button(VOIR_FILM);
+        this.voirFilm.setStyle(STYLE_BOUTON);
+        this.voirFilm.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(15, zoneTexte, this.voirFilm);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
         layout.setStyle("-fx-background-color: #f5a623;");

@@ -36,7 +36,6 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
                     if (r >= 0) reductions.add(r);
                 }
                 double score = calculerScore(reductions, strategie);
-                System.out.println("Score pour la question " + temps + " et " + lieu.getNom() + " : " + score);
                 if (score > meilleurScore) {
                     meilleurScore = score;
                     meilleureQuestion = "Lieu : " + lieu.getNom();
@@ -53,7 +52,6 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
                     }
                 }
                 double score = calculerScore(reductions, strategie);
-                System.out.println("Score pour la question " + perso.getNom() + " et " + lieu.getNom() + " : " + score);
                 if (score > meilleurScore) {
                     meilleurScore = score;
                     meilleureQuestion = "Lieu : " + lieu.getNom();
@@ -61,6 +59,8 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
                 }
             }
         }
+
+        System.out.println("Choco-Solver - Meilleure score : " + meilleurScore);
 
         return new String[]{meilleureQuestion, meilleureValeur};
     }

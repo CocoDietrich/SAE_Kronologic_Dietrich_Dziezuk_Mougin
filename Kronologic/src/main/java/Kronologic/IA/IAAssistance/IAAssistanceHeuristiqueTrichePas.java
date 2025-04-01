@@ -26,20 +26,15 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
 
         String[] resultats = new String[3];
 
+        meilleurScore = Integer.MIN_VALUE;
+
         switch (strategie) {
-            case 0 -> {
-                meilleurScore = Integer.MAX_VALUE;
-                resultats = recommanderQuestionMin(meilleurScore);
-            }
-            case 1 -> {
-                meilleurScore = Integer.MIN_VALUE;
-                resultats = recommanderQuestionMax(meilleurScore);
-            }
-            case 2 -> {
-                meilleurScore = Integer.MIN_VALUE;
-                resultats = recommanderQuestionMoyenne(meilleurScore);
-            }
+            case 0 -> resultats = recommanderQuestionMin(meilleurScore);
+            case 1 -> resultats = recommanderQuestionMax(meilleurScore);
+            case 2 -> resultats = recommanderQuestionMoyenne(meilleurScore);
         }
+
+        System.out.println("Choco-Solver - Meilleure score : " + resultats[2]);
 
         return resultats;
     }
@@ -80,7 +75,6 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                     meilleureValeur = "Lieu : " + lieu.getNom();
                     meilleurScore = (int) ScoreTemps;
                 }
-                System.out.println("Score pour " + temps + " à " + lieu.getNom() + " : " + ScoreTemps);
             }
 
             double ScorePersonnage = Double.MIN_VALUE;
@@ -109,7 +103,6 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                     meilleureValeur = "Lieu : " + lieu.getNom();
                     meilleurScore = (int) ScorePersonnage;
                 }
-                System.out.println("Score pour " + personnage.getNom() + " à " + lieu.getNom() + " : " + ScorePersonnage);
             }
 
         }
@@ -146,6 +139,9 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                     // On teste avec tous les indices privés
                     for (String indicePrive : new String[]{"A", "B", "C", "D", "J", "S", "Rejouer"}) {
                         double score = simulerTemps(lieu, new Temps(temps), indicePublic, indicePrive);
+                        if (score == 0) {
+                            continue;
+                        }
                         if (score < ScoreTemps) {
                             ScoreTemps = (int) score;
                         }
@@ -174,6 +170,9 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                     // On teste avec tous les indices privés
                     for (int indicePrive = 0; indicePrive <= 6; indicePrive++) {
                         double score = simulerPersonnage(personnage, lieu, indicePublic, indicePrive);
+                        if (score == 0) {
+                            continue;
+                        }
                         if (score < ScorePersonnage) {
                             ScorePersonnage = (int) score;
                         }
