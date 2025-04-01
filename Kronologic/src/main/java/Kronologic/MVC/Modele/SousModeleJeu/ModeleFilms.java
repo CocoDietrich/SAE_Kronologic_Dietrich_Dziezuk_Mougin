@@ -20,52 +20,43 @@ public class ModeleFilms implements Sujet {
         this.observateurs = new ArrayList<>();
     }
 
-    // TODO : à revoir (comment modifier la vue avec les données appropriées)
     public void actualiserFilmRealite(ModeleJeu modeleJeu) {
-        VueFilmRealite vueFilmRealite = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueFilmRealite) {
-                vueFilmRealite = (VueFilmRealite) o;
-                break;
-            }
-        }
-        assert vueFilmRealite != null;
+        VueFilmRealite vue = trouverObservateur(VueFilmRealite.class);
+        if (vue == null) return;
 
-        // On supprime et recrée la carte pour éviter les doublons
-        vueFilmRealite.getChildren().removeIf(node ->
+        vue.getChildren().removeIf(node ->
                 node instanceof HBox && "carte".equals(node.getId())
         );
 
-        HBox nouvelleHbox = vueFilmRealite.afficherCarte(modeleJeu);
-        vueFilmRealite.add(nouvelleHbox, 1, 1);
-
-        // Actualisation finale
-        vueFilmRealite.actualiser();
+        HBox nouvelleHbox = vue.afficherCarte(modeleJeu);
+        vue.add(nouvelleHbox, 1, 1);
+        vue.actualiser();
     }
 
-    // TODO : à revoir (comment modifier la vue avec les données appropriées)
     public void actualiserFilmJoueur(ModeleJeu modeleJeu) {
-        VueFilmJoueur vueFilmJoueur = null;
-        for (Observateur o : observateurs) {
-            if (o instanceof VueFilmJoueur) {
-                vueFilmJoueur = (VueFilmJoueur) o;
-                break;
-            }
-        }
-        assert vueFilmJoueur != null;
+        VueFilmJoueur vue = trouverObservateur(VueFilmJoueur.class);
+        if (vue == null) return;
 
-        // On supprime et recrée la carte pour éviter les doublons
-        vueFilmJoueur.getChildren().removeIf(node ->
+        vue.getChildren().removeIf(node ->
                 node instanceof HBox && "carte".equals(node.getId())
         );
 
-        List<HBox> nouvelleHbox = vueFilmJoueur.afficherCarte(modeleJeu);
-        vueFilmJoueur.add(nouvelleHbox.getFirst(), 0, 1);
-        vueFilmJoueur.add(nouvelleHbox.getLast(), 0, 2);
-        setColumnSpan(nouvelleHbox.getFirst(), 2);
-        setColumnSpan(nouvelleHbox.getLast(), 2);
+        List<HBox> nouvelles = vue.afficherCarte(modeleJeu);
+        if (nouvelles.size() >= 2) {
+            vue.add(nouvelles.getFirst(), 0, 1);
+            vue.add(nouvelles.getLast(), 0, 2);
+            setColumnSpan(nouvelles.getFirst(), 2);
+            setColumnSpan(nouvelles.getLast(), 2);
+        }
 
         notifierObservateurs();
+    }
+
+    private <T extends Observateur> T trouverObservateur(Class<T> type) {
+        for (Observateur o : observateurs) {
+            if (type.isInstance(o)) return type.cast(o);
+        }
+        return null;
     }
 
     @Override

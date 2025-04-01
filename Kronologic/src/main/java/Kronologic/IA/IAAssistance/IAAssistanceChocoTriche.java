@@ -6,10 +6,16 @@ import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Partie;
 
 public class IAAssistanceChocoTriche extends IAAssistanceChocoSolver {
+
     public IAAssistanceChocoTriche(IADeductionChocoSolver deduction, Partie partie) {
         super(deduction, partie);
     }
 
+    /**
+     * Recommande la question optimale à poser au joueur pour l'ia qui triche.
+     *
+     * @return Un tableau contenant le lieu et le type de question recommandée.
+     */
     @Override
     public String[] recommanderQuestionOptimale() {
         double maxReduction = -1;

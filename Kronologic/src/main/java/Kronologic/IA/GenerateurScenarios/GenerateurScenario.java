@@ -23,6 +23,11 @@ public class GenerateurScenario {
 
     private static final Random random = new Random();
 
+    /**
+     * Génère un scénario de jeu valide.
+     *
+     * @return Un objet Partie contenant le scénario généré.
+     */
     public static Partie genererScenario() {
         while (true) {
             List<Lieu> lieux = creerLieux();
@@ -76,6 +81,13 @@ public class GenerateurScenario {
         }
     }
 
+    /**
+     * Exporte le scénario de jeu au format JSON.
+     *
+     * @param partie La partie à exporter.
+     * @param chemin Le chemin du fichier de sortie.
+     * @throws IOException Si une erreur d'entrée/sortie se produit.
+     */
     public static void exporterJson(Partie partie, String chemin) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         JsonObject root = new JsonObject();
@@ -134,6 +146,11 @@ public class GenerateurScenario {
         }
     }
 
+    /**
+     * Crée une liste de lieux avec leurs adjacences.
+     *
+     * @return Une liste de lieux.
+     */
     private static List<Lieu> creerLieux() {
         Map<Integer, List<Integer>> adjacences = Map.of(
                 1, List.of(2, 3),
@@ -157,6 +174,14 @@ public class GenerateurScenario {
         return lieux;
     }
 
+    /**
+     * Génère des trajets valides pour les personnages.
+     *
+     * @param persos La liste des personnages.
+     * @param lieux  La liste des lieux.
+     * @param temps  La liste des temps.
+     * @return Une liste de réalités représentant les trajets.
+     */
     private static List<Realite> genererTrajetsValides(List<Personnage> persos, List<Lieu> lieux, List<Temps> temps) {
         List<Realite> resultats = new ArrayList<>();
         for (Personnage p : persos) {
@@ -177,6 +202,13 @@ public class GenerateurScenario {
         return resultats;
     }
 
+    /**
+     * Trouve la scène de meurtre dans la liste des réalités.
+     *
+     * @param realites  La liste des réalités.
+     * @param detective Le personnage détective.
+     * @return Une option contenant la réalité de la scène de meurtre, ou vide si non trouvée.
+     */
     private static Optional<Realite> trouverSceneMeurtre(List<Realite> realites, Personnage detective) {
         return realites.stream()
                 .filter(r -> r.getPersonnage().equals(detective))
@@ -188,6 +220,15 @@ public class GenerateurScenario {
                 }).findFirst();
     }
 
+    /**
+     * Trouve un autre personnage présent dans le même lieu et temps, différent de celui donné.
+     *
+     * @param realites La liste des réalités.
+     * @param lieu     Le lieu à vérifier.
+     * @param temps    Le temps à vérifier.
+     * @param except   Le personnage à exclure.
+     * @return Le personnage trouvé.
+     */
     private static Personnage trouverAutrePersonnagePresent(List<Realite> realites, Lieu lieu, Temps temps, Personnage except) {
         return realites.stream()
                 .filter(r -> r.getLieu().equals(lieu) && r.getTemps().equals(temps))
@@ -196,6 +237,15 @@ public class GenerateurScenario {
                 .findFirst().orElseThrow();
     }
 
+    /**
+     * Génère des indices basés sur les lieux, temps, personnages et réalités.
+     *
+     * @param lieux    La liste des lieux.
+     * @param temps    La liste des temps.
+     * @param persos   La liste des personnages.
+     * @param realites La liste des réalités.
+     * @return Une liste d'indices générés.
+     */
     private static List<Indice> genererIndices(List<Lieu> lieux, List<Temps> temps, List<Personnage> persos, List<Realite> realites) {
         List<Indice> indices = new ArrayList<>();
         for (Lieu l : lieux) {

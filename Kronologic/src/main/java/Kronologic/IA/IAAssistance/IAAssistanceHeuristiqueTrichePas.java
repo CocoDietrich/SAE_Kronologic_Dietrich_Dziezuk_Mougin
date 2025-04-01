@@ -13,6 +13,11 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
         super(deduction, partie);
     }
 
+    /**
+     * Recommande la question optimale à poser au joueur pour l'IA qui ne triche pas.
+     *
+     * @return Un tableau contenant le lieu et le type de question recommandée.
+     */
     @Override
     public String[] recommanderQuestionOptimale() {
         String meilleureQuestion = "Aucune recommandation";
@@ -60,7 +65,13 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
         return new String[]{meilleureQuestion, meilleureValeur};
     }
 
-
+    /**
+     * Calcule le score basé sur la stratégie choisie.
+     *
+     * @param reductions La liste des réductions.
+     * @param strategie  La stratégie à utiliser (0 = min, 1 = max, 2 = moyenne).
+     * @return Le score calculé.
+     */
     private double calculerScore(List<Double> reductions, int strategie) {
         if (reductions.isEmpty()) return -1;
 

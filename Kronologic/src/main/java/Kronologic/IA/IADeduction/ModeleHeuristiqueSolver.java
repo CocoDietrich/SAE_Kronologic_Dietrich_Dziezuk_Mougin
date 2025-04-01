@@ -55,6 +55,7 @@ public class ModeleHeuristiqueSolver {
         appliquerContraintesDeplacements();
     }
 
+    // Appliquer les contraintes de déplacements
     private void appliquerContraintesDeplacements() {
         for (int iteration = 0; iteration < 2; iteration++) { // 2 passes : avant + arrière
             // Propagation avant (t ➜ t+1)
@@ -123,7 +124,7 @@ public class ModeleHeuristiqueSolver {
         int personnageIndex = getIndexPersonnage(personnage.getNom().substring(0, 1));
         int lieuIndex = lieu.getId() - 1;
 
-        ArrayList<Integer> tempsSurs = trouverNombrePassagesSurs(personnageIndex, lieuIndex);
+        ArrayList<Integer> tempsSurs = trouverSurs(personnageIndex, true, lieuIndex);
 
         if (nbPassages == 0) {
             for (int t = 0; t < 6; t++) {
@@ -172,13 +173,13 @@ public class ModeleHeuristiqueSolver {
         int lieuIndex = lieu.getId() - 1;
         int tempsIndex = temps.getValeur() - 1;
 
-        ArrayList<Integer> personnagesSurs = trouverPersonnagesSurs(lieuIndex, tempsIndex);
 
         if (nbPersonnages == 0) {
             for (int p = 0; p < 6; p++) {
                 domainesPersonnages[tempsIndex][p][lieuIndex] = false;
             }
         } else {
+            ArrayList<Integer> personnagesSurs = trouverSurs(tempsIndex, false, lieuIndex);
             if (personnagesSurs.size() == nbPersonnages) {
                 for (int p = 0; p < 6; p++) {
                     if (!personnagesSurs.contains(p)) {
@@ -191,6 +192,7 @@ public class ModeleHeuristiqueSolver {
         propagerEtEvaluer();
     }
 
+    // Méthode pour propager les contraintes et évaluer les résultats
     private void propagerEtEvaluer() {
         appliquerContraintesDeplacements();
         appliquerContrainteNombrePersonnage();
@@ -204,7 +206,7 @@ public class ModeleHeuristiqueSolver {
             for (int l = 0; l < 6; l++) {
                 if (nombrePersonnageContrainte[t][l] != -1) {
                     for (int p = 0; p < 6; p++) {
-                        ArrayList<Integer> personnagesSurs = trouverPersonnagesSurs(l, t);
+                        ArrayList<Integer> personnagesSurs = trouverSurs(p, false, l);
                         if (personnagesSurs.size() == nombrePersonnageContrainte[t][l]) {
                             if (!personnagesSurs.contains(p)) {
                                 domainesPersonnages[t][p][l] = false;
@@ -216,71 +218,42 @@ public class ModeleHeuristiqueSolver {
         }
     }
 
-    // Méthode qui renvoie les temps où un personnage est sûr de se trouver dans un lieu
-    public ArrayList<Integer> trouverNombrePassagesSurs(int personnage, int lieu) {
-        ArrayList<Integer> tempsSurs = new ArrayList<>();
-        for (int t = 0; t < 6; t++) {
-            if (domainesPersonnages[t][personnage][lieu]) {
-                // S'il s'agit de la seule salle à true, on est sûr
-                boolean seul = true;
-                for (int l = 0; l < 6; l++) {
-                    if (l != lieu && domainesPersonnages[t][personnage][l]) {
-                        seul = false;
-                        break;
-                    }
-                }
-                if (seul) {
-                    tempsSurs.add(t);
+    // Méthode pour trouver les indices des personnages ou des lieux sûrs
+    private ArrayList<Integer> trouverSurs(int dimensionFixe, boolean isPersonnageFixe, int lieu) {
+        ArrayList<Integer> indicesSurs = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            boolean seul = true;
+            for (int l = 0; l < 6; l++) {
+                boolean actif = isPersonnageFixe ? domainesPersonnages[i][dimensionFixe][l] : domainesPersonnages[dimensionFixe][i][l];
+                if (l != lieu && actif) {
+                    seul = false;
+                    break;
                 }
             }
-        }
-        return tempsSurs;
-    }
-
-    // Méthode qui renvoie les personnages dont on est sûrs de la présence dans une salle à un temps donné
-    public ArrayList<Integer> trouverPersonnagesSurs(int lieu, int temps) {
-        ArrayList<Integer> personnagesSurs = new ArrayList<>();
-        for (int p = 0; p < 6; p++) {
-            if (domainesPersonnages[temps][p][lieu]) {
-                // S'il s'agit de la seule salle à true, on est sûr
-                boolean seul = true;
-                for (int l = 0; l < 6; l++) {
-                    if (l != lieu && domainesPersonnages[temps][p][l]) {
-                        seul = false;
-                        break;
-                    }
-                }
-                if (seul) {
-                    personnagesSurs.add(p);
-                }
+            boolean actif = isPersonnageFixe ? domainesPersonnages[i][dimensionFixe][lieu] : domainesPersonnages[dimensionFixe][i][lieu];
+            if (seul && actif) {
+                indicesSurs.add(i);
             }
         }
-        return personnagesSurs;
+        return indicesSurs;
     }
 
+    // Méthode pour afficher uniquement les lieux adjacents
     public void afficherUniquementLieuxAdjacents(int personnage, int lieu, int temps) {
-        // A temps - 2 et temps, on met à false les lieux non adjacents
-        boolean[] tempsPrecedent = new boolean[6];
-        boolean[] tempsSuivant = new boolean[6];
-        if (temps == 1) {
-            tempsSuivant = domainesPersonnages[temps][personnage];
-        } else if (temps == 6) {
-            tempsPrecedent = domainesPersonnages[temps - 2][personnage];
-        } else if (2 <= temps && temps <= 5) {
-            tempsPrecedent = domainesPersonnages[temps - 2][personnage];
-            tempsSuivant = domainesPersonnages[temps][personnage];
-        }
+        boolean[] tempsPrecedent = (temps > 1) ? domainesPersonnages[temps - 2][personnage] : new boolean[6];
+        boolean[] tempsSuivant = (temps < 6) ? domainesPersonnages[temps][personnage] : new boolean[6];
 
         int[] sallesAdj = sallesAdjacentes[lieu];
         for (int l = 0; l < 6; l++) {
             int finalL = l;
             if (Arrays.stream(sallesAdj).noneMatch(x -> x == finalL + 1)) {
-                tempsPrecedent[l] = false;
-                tempsSuivant[l] = false;
+                if (temps > 1) tempsPrecedent[l] = false;
+                if (temps < 6) tempsSuivant[l] = false;
             }
         }
     }
 
+    // Méthode pour essayer de trouver le coupable
     public void essayerDeTrouverCoupable() {
         // On regarde qui peut être le coupable
         for (int t = 1; t < 6; t++) {
@@ -295,7 +268,7 @@ public class ModeleHeuristiqueSolver {
         }
     }
 
-    // Affichage des domaines
+    // Affichage de l'historique des déductions
     public String affichagePropagate() {
         StringBuilder historique = new StringBuilder();
 
@@ -345,6 +318,7 @@ public class ModeleHeuristiqueSolver {
     }
 
 
+    // Méthode pour vérifier si un personnage peut être le coupable
     private void peutEtreCoupable(int p, int l, int t) {
         // Vérifier que le détective et le suspect sont bien présents
         if (!domainesPersonnages[t][p][l] || !domainesPersonnages[t][getIndexPersonnage("D")][l]) {
@@ -393,6 +367,7 @@ public class ModeleHeuristiqueSolver {
         }
     }
 
+    // Méthode pour récupérer l'index d'un personnage
     public int getIndexPersonnage(String personnage) {
         for (int i = 0; i < personnages.length; i++) {
             if (personnages[i].equals(personnage)) {

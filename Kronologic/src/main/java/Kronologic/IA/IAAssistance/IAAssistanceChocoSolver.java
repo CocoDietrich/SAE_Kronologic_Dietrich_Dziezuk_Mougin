@@ -18,6 +18,15 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         this.partie = partie;
     }
 
+    /**
+     * Simule l'ajout d'une contrainte de temps et calcule la réduction du domaine des variables.
+     *
+     * @param lieu        Le lieu à simuler.
+     * @param temps       Le temps à simuler.
+     * @param infoPublic  L'information publique associée.
+     * @param infoPrive   L'information privée associée.
+     * @return La réduction du domaine des variables après simulation.
+     */
     protected double simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         final double[] reduction = {-1};
         silencieux(() -> {
@@ -36,6 +45,15 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         return reduction[0];
     }
 
+    /**
+     * Simule l'ajout d'une contrainte de personnage et calcule la réduction du domaine des variables.
+     *
+     * @param lieu        Le lieu à simuler.
+     * @param personnage  Le personnage à simuler.
+     * @param infoPublic  L'information publique associée.
+     * @param infoPrive   L'information privée associée.
+     * @return La réduction du domaine des variables après simulation.
+     */
     protected double simulerPersonnage(Lieu lieu, Personnage personnage, int infoPublic, int infoPrive) {
         final double[] reduction = {-1};
         silencieux(() -> {
@@ -52,6 +70,10 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         return reduction[0];
     }
 
+    /**
+     * Crée une copie du modèle ChocoSolver.
+     * @return Une nouvelle instance de ModeleChocoSolver avec les mêmes contraintes.
+     */
     protected ModeleChocoSolver copie() {
         ModeleChocoSolver copie = new ModeleChocoSolver(
                 deduction.getPersonnagesNoms(),
@@ -72,6 +94,13 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         return copie;
     }
 
+    /**
+     * Calcule la réduction du domaine des variables après simulation.
+     *
+     * @param copie          La copie du modèle ChocoSolver.
+     * @param domainesAvant  Les domaines avant la simulation.
+     * @return La réduction du domaine des variables.
+     */
     protected int calculerReduction(ModeleChocoSolver copie, Map<IntVar, List<Integer>> domainesAvant) {
         int reduction = 0;
         for (IntVar[] ligne : copie.getPositions()) {
@@ -84,6 +113,12 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         return reduction;
     }
 
+    /**
+     * Capture les domaines des variables du modèle ChocoSolver.
+     *
+     * @param modele Le modèle ChocoSolver.
+     * @return Un dictionnaire contenant les variables et leurs domaines respectifs.
+     */
     protected Map<IntVar, List<Integer>> capturerDomaines(ModeleChocoSolver modele) {
         Map<IntVar, List<Integer>> domaines = new HashMap<>();
         for (IntVar[] ligne : modele.getPositions()) {
@@ -94,6 +129,12 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         return domaines;
     }
 
+    /**
+     * Extrait le domaine d'une variable.
+     *
+     * @param var La variable dont on veut extraire le domaine.
+     * @return Une liste contenant les valeurs du domaine de la variable.
+     */
     protected List<Integer> extraireDomaine(IntVar var) {
         List<Integer> valeurs = new ArrayList<>();
         for (int val = var.getLB(); val <= var.getUB(); val = var.nextValue(val)) {
@@ -102,6 +143,11 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         return valeurs;
     }
 
+    /**
+     * Exécute une action en silence, sans afficher les erreurs.
+     *
+     * @param action L'action à exécuter.
+     */
     protected void silencieux(Runnable action) {
         java.io.PrintStream originalErr = System.err;
         try {
@@ -115,21 +161,27 @@ public abstract class IAAssistanceChocoSolver extends IAAssistance {
         }
     }
 
+    /**
+     * Getter pour le modèle ChocoSolver de l'IA.
+     *
+     * @return Le modèle ChocoSolver de l'IA.
+     */
     public IADeductionChocoSolver getDeductionChocoSolver() {
         return deduction;
     }
 
+    /**
+     * Corrige les déductions du joueur en comparant ses notes avec celles de l'IA.
+     *
+     * @return Un message indiquant les erreurs trouvées dans les déductions du joueur.
+     */
     @Override
     public String corrigerDeductions() {
         StringBuilder correction = new StringBuilder();
 
-        // Récupération des notes du joueur
         List<Note> notesJoueur = partie.getGestionnaireNotes().getNotes();
-
-        // Récupération des positions de l'IA Choco-Solver
         IntVar[][] positionsIA = deduction.getModele().getPositions();
 
-        // Comparaison des hypothèses du joueur avec celles de l'IA
         for (Note note : notesJoueur) {
             // on ne s'occupe pas des pions du temps 1 et des notes de nombre de perso dans une salle
             if (note.getTemps().getValeur() != 1 && note.getPersonnage() != null) {

@@ -20,6 +20,12 @@ public class JsonReader {
 
     private static final int TEMPS_MAX = 6;
 
+    /**
+     * Lit une partie à partir d'un fichier JSON.
+     *
+     * @param cheminFichier Le chemin du fichier JSON.
+     * @return La partie lue à partir du fichier JSON.
+     */
     public static Partie lirePartieDepuisJson(String cheminFichier) {
         try {
             // Initialiser Gson pour lire le fichier JSON
@@ -188,6 +194,12 @@ public class JsonReader {
         }
     }
 
+    /**
+     * Récupère tous les personnages à partir de l'objet JSON.
+     *
+     * @param jsonObject L'objet JSON à partir duquel récupérer les personnages.
+     * @return Un ensemble de noms de personnages.
+     */
     private static Set<String> getAllPersonnagesFromJson(JsonObject jsonObject) {
         Set<String> personnages = new HashSet<>();
         for (String key : jsonObject.keySet()) {
@@ -220,6 +232,12 @@ public class JsonReader {
         return personnages;
     }
 
+    /**
+     * Vérifie si la clé est une clé de métadonnées (non liée à un personnage ou à un lieu).
+     *
+     * @param key La clé à vérifier.
+     * @return true si la clé est une clé de métadonnées, false sinon.
+     */
     private static boolean isMetaKey(String key) {
         return !key.equals("idEnquete") && !key.equals("nomEnquete") && !key.equals("synopsis") &&
                 !key.equals("enigme") && !key.equals("loupeOr") && !key.equals("loupeBronze") &&
