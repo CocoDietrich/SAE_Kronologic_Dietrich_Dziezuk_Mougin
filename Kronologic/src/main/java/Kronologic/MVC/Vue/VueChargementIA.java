@@ -13,7 +13,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class VueChargementIA {
+public class VueChargementIA implements Observateur {
 
     private final static int LARGEUR = 500;
     private final static int HAUTEUR = 200;
@@ -22,10 +22,15 @@ public class VueChargementIA {
     private final static String VOIR_FILM = "Voir le film";
 
     private final Stage stage;
-    private Button voirFilm;
+    private final Button voirFilm;
 
     public VueChargementIA() {
         this.stage = new Stage();
+
+        // Bouton pour visualiser le film
+        this.voirFilm = new Button(VOIR_FILM);
+        this.voirFilm.setStyle(STYLE_BOUTON);
+        this.voirFilm.setAlignment(Pos.CENTER);
 
         Label message = new Label("🤖 L’IA tente de résoudre l’enquête...");
         message.setFont(Font.font("Arial", 20));
@@ -67,11 +72,6 @@ public class VueChargementIA {
         zoneTexte.setPrefSize(500, 400);
         zoneTexte.setStyle("-fx-font-size: 14px; -fx-control-inner-background: #fffbe6;");
 
-        // Bouton pour visualiser le film
-        this.voirFilm = new Button(VOIR_FILM);
-        this.voirFilm.setStyle(STYLE_BOUTON);
-        this.voirFilm.setAlignment(Pos.CENTER);
-
         VBox layout = new VBox(15, zoneTexte, this.voirFilm);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
@@ -80,5 +80,12 @@ public class VueChargementIA {
         Scene scene = new Scene(layout);
         popup.setScene(scene);
         popup.show();
+    }
+
+    public Button getVoirFilm() {return this.voirFilm;}
+
+    @Override
+    public void actualiser() {
+
     }
 }

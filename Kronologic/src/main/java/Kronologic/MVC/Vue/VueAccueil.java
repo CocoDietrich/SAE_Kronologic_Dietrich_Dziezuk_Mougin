@@ -26,9 +26,9 @@ public class VueAccueil extends BorderPane implements Observateur {
     private static final String COULEUR_TITRE = "#FFCC66";
     private static final String POLICE_ECRITURE = "Arial";
 
-    public Button jouer;
-    public Button IAJoueuse;
-    public Button quitter;
+    private final Button jouer;
+    private final Button IAJoueuse;
+    private final Button quitter;
 
     public VueAccueil() {
         super();
@@ -130,4 +130,15 @@ public class VueAccueil extends BorderPane implements Observateur {
     @Override
     public void actualiser() {}
 
+    public Button getJouer() {
+        return jouer;
+    }
+
+    public Button getIAJoueuse() {
+        return IAJoueuse;
+    }
+
+    public Button getQuitter() {
+        return quitter;
+    }
 }

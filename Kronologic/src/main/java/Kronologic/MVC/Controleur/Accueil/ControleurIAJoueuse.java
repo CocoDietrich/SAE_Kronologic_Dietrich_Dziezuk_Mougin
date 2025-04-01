@@ -30,6 +30,8 @@ public class ControleurIAJoueuse implements EventHandler<ActionEvent> {
             Platform.runLater(() -> {
                 vueChargement.fermer();
                 vueChargement.afficherHistoriqueIA(resultat);
+                ControleurFilmIAJoueuse controleurFilmIAJoueuse = new ControleurFilmIAJoueuse(modeleJeu);
+                vueChargement.getVoirFilm().setOnAction(controleurFilmIAJoueuse);
             });
         });
 
