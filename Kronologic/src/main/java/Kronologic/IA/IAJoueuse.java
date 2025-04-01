@@ -55,8 +55,10 @@ public class IAJoueuse {
                         IntVar position = positions[i][t];
                         System.out.println("⏳ Temps : " + temps.getValeur());
 
+                        boolean noteAjoutee = false;
+
+                        // Présence
                         if (position.isInstantiated()) {
-                            // Présence
                             int val = position.getValue();
                             Lieu lieu = partie.getElements().lieux().stream()
                                     .filter(l -> l.getId() == val)
@@ -68,9 +70,34 @@ public class IAJoueuse {
                                 note.setEstHypothese(false);
                                 partie.ajouterNote(note);
                                 System.out.println("✅ Présence : " + note);
+                                noteAjoutee = true;
                             }
-                        } else {
-                            // Hypothèses de présence
+                        }
+
+                        // Absence certaine (si pas de présence)
+                        if (!noteAjoutee) {
+                            for (Lieu lieu : partie.getElements().lieux()) {
+                                boolean estDansLeDomaine = false;
+                                for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
+                                    if (val == lieu.getId()) {
+                                        estDansLeDomaine = true;
+                                        break;
+                                    }
+                                }
+                                if (!estDansLeDomaine) {
+                                    Note note = new Note(lieu, temps, personnage);
+                                    note.setEstAbsence(true);
+                                    note.setEstHypothese(false);
+                                    partie.ajouterNote(note);
+                                    System.out.println("❌ Absence certaine : " + note);
+                                    noteAjoutee = true;
+                                    break; // on n'ajoute qu'une note d'absence
+                                }
+                            }
+                        }
+
+                        // Hypothèse de présence (si pas de présence ni absence)
+                        if (!noteAjoutee) {
                             for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
                                 int finalVal = val;
                                 Lieu lieu = partie.getElements().lieux().stream()
@@ -83,31 +110,8 @@ public class IAJoueuse {
                                     note.setEstHypothese(true);
                                     partie.ajouterNote(note);
                                     System.out.println("🟡 Hypothèse de présence : " + note);
+                                    break; // une seule hypothèse par personnage
                                 }
-                            }
-
-                            // Absences ou hypothèses d'absence
-                            for (Lieu lieu : partie.getElements().lieux()) {
-                                boolean estDansLeDomaine = false;
-                                for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
-                                    if (val == lieu.getId()) {
-                                        estDansLeDomaine = true;
-                                        break;
-                                    }
-                                }
-
-                                Note note = new Note(lieu, temps, personnage);
-                                note.setEstAbsence(true);
-                                if (!estDansLeDomaine) {
-                                    // Absence
-                                    note.setEstHypothese(false);
-                                    System.out.println("❌ Absence certaine : " + note);
-                                } else {
-                                    // Hypothèse d’absence
-                                    note.setEstHypothese(true);
-                                    System.out.println("🟠 Hypothèse d’absence : " + note);
-                                }
-                                partie.ajouterNote(note);
                             }
                         }
                     }
