@@ -11,4 +11,12 @@ public record Elements(List<Personnage> personnages, List<Lieu> lieux) {
             throw new IllegalArgumentException("Les listes de personnages et de lieux ne peuvent pas être vides");
         }
     }
+
+    public List<Lieu> getLieux() {
+        return lieux;
+    }
+
+    public List<Personnage> getPersonnages() {
+        return personnages;
+    }
 }
