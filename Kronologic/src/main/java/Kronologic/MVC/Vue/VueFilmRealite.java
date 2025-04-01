@@ -3,7 +3,8 @@ package Kronologic.MVC.Vue;
 import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Pion;
 import Kronologic.Jeu.Elements.Realite;
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImagePersonnages;
+import Kronologic.Jeu.Enums.ImageTemps;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.geometry.Insets;
@@ -120,12 +121,12 @@ public class VueFilmRealite extends GridPane implements Observateur {
 
         // Images représentant le temps
         List<Image> tempsImages = List.of(
-                Images.Temps.TEMPS1.creerImage(),
-                Images.Temps.TEMPS2.creerImage(),
-                Images.Temps.TEMPS3.creerImage(),
-                Images.Temps.TEMPS4.creerImage(),
-                Images.Temps.TEMPS5.creerImage(),
-                Images.Temps.TEMPS6.creerImage()
+                ImageTemps.TEMPS1.getImage(),
+                ImageTemps.TEMPS2.getImage(),
+                ImageTemps.TEMPS3.getImage(),
+                ImageTemps.TEMPS4.getImage(),
+                ImageTemps.TEMPS5.getImage(),
+                ImageTemps.TEMPS6.getImage()
         );
 
         // Création des conteneurs horizontaux pour les cartes du haut et du bas
@@ -493,12 +494,12 @@ public class VueFilmRealite extends GridPane implements Observateur {
 
         // Liste des chemins d'images des personnages
         List<String> cheminsImgPerso = List.of(
-                Images.Personnages.PERSONNAGE1.getUrl(),
-                Images.Personnages.PERSONNAGE2.getUrl(),
-                Images.Personnages.PERSONNAGE3.getUrl(),
-                Images.Personnages.PERSONNAGE4.getUrl(),
-                Images.Personnages.PERSONNAGE5.getUrl(),
-                Images.Personnages.PERSONNAGE6.getUrl()
+                ImagePersonnages.PERSONNAGE1.getUrl(),
+                ImagePersonnages.PERSONNAGE2.getUrl(),
+                ImagePersonnages.PERSONNAGE3.getUrl(),
+                ImagePersonnages.PERSONNAGE4.getUrl(),
+                ImagePersonnages.PERSONNAGE5.getUrl(),
+                ImagePersonnages.PERSONNAGE6.getUrl()
         );
 
         // On récupère les pions correspondant à la valeur actuelle du slider

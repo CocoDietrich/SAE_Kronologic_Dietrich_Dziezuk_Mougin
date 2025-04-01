@@ -1,7 +1,10 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.Jeu.Elements.*;
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImageLieux;
+import Kronologic.Jeu.Enums.ImageNombres;
+import Kronologic.Jeu.Enums.ImagePersonnages;
+import Kronologic.Jeu.Enums.ImageTemps;
 import Kronologic.MVC.Controleur.ControleurChoixCarte;
 import Kronologic.MVC.Modele.ModeleJeu;
 import javafx.event.Event;
@@ -153,12 +156,12 @@ public class VueCarte extends BorderPane implements Observateur {
 
         // Images représentant le temps
         List<Image> tempsImages = List.of(
-                Images.Temps.TEMPS1.creerImage(),
-                Images.Temps.TEMPS2.creerImage(),
-                Images.Temps.TEMPS3.creerImage(),
-                Images.Temps.TEMPS4.creerImage(),
-                Images.Temps.TEMPS5.creerImage(),
-                Images.Temps.TEMPS6.creerImage()
+                ImageTemps.TEMPS1.getImage(),
+                ImageTemps.TEMPS2.getImage(),
+                ImageTemps.TEMPS3.getImage(),
+                ImageTemps.TEMPS4.getImage(),
+                ImageTemps.TEMPS5.getImage(),
+                ImageTemps.TEMPS6.getImage()
         );
 
         // Création des conteneurs horizontaux pour les cartes du haut et du bas
@@ -510,12 +513,12 @@ public class VueCarte extends BorderPane implements Observateur {
         HBox pionsPersonnages = new HBox(15);
         pionsPersonnages.setAlignment(Pos.CENTER);
         String[] cheminsPions = {
-                Images.Personnages.PERSONNAGE1.getUrl(),
-                Images.Personnages.PERSONNAGE2.getUrl(),
-                Images.Personnages.PERSONNAGE3.getUrl(),
-                Images.Personnages.PERSONNAGE4.getUrl(),
-                Images.Personnages.PERSONNAGE5.getUrl(),
-                Images.Personnages.PERSONNAGE6.getUrl()
+                ImagePersonnages.PERSONNAGE1.getUrl(),
+                ImagePersonnages.PERSONNAGE2.getUrl(),
+                ImagePersonnages.PERSONNAGE3.getUrl(),
+                ImagePersonnages.PERSONNAGE4.getUrl(),
+                ImagePersonnages.PERSONNAGE5.getUrl(),
+                ImagePersonnages.PERSONNAGE6.getUrl()
         };
 
         for (String chemin : cheminsPions) {
@@ -546,13 +549,13 @@ public class VueCarte extends BorderPane implements Observateur {
     private ImageView afficherPionNombre() {
         // Dossier contenant les images des nombres
         String[] imagesPionNombre = {
-                Images.Nombre.NOMBREX.getUrl(),
-                Images.Nombre.NOMBRE0.getUrl(),
-                Images.Nombre.NOMBRE1.getUrl(),
-                Images.Nombre.NOMBRE2.getUrl(),
-                Images.Nombre.NOMBRE3.getUrl(),
-                Images.Nombre.NOMBRE4.getUrl(),
-                Images.Nombre.NOMBRE5.getUrl()
+                ImageNombres.NOMBREX.getUrl(),
+                ImageNombres.NOMBRE0.getUrl(),
+                ImageNombres.NOMBRE1.getUrl(),
+                ImageNombres.NOMBRE2.getUrl(),
+                ImageNombres.NOMBRE3.getUrl(),
+                ImageNombres.NOMBRE4.getUrl(),
+                ImageNombres.NOMBRE5.getUrl()
         };
 
         // Création de l'image par défaut (non modifiée)
@@ -864,8 +867,8 @@ public class VueCarte extends BorderPane implements Observateur {
                     GridPane.setColumnIndex(pion, positionX);
                     GridPane.setRowIndex(pion, positionY);
 
-                    for (int i = 1; i < Images.Lieux.getLieux().size()+1; i++){
-                        if (userDataZone.contains(Images.Lieux.getLieux().get(i))){
+                    for (int i = 1; i < ImageLieux.getLieux().size()+1; i++){
+                        if (userDataZone.contains(ImageLieux.getLieux().get(i))){
                             modeleJeu.getModeleNotes().ajouterPion(new Note(new Lieu(userDataZone.split("-")[1], i, null),
                                             new Temps(Integer.parseInt(userDataZone.replaceAll("[^0-9]", ""))),
                                             new Personnage(personnage)),
