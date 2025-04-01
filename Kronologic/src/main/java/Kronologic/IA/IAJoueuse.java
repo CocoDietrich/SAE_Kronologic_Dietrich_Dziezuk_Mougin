@@ -22,6 +22,9 @@ public class IAJoueuse {
 
     // Méthode pour jouer jusqu'à trouver le coupable
     public String jouerJusquaTrouverCoupable() {
+        int tour = 1;
+        StringBuilder historiqueQuestions = new StringBuilder();
+        historiqueQuestions.append("===== 🕵️‍♂️ Resultats de l'IA 🕵️‍♂️ =====\n");
         while (true) {
             // Vérifier si la solution a été trouvée
             if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
@@ -30,7 +33,8 @@ public class IAJoueuse {
                     String nom = partie.getEnquete().getMeurtrier().getNom();
                     String lieu = partie.getEnquete().getLieuMeurtre().getNom();
                     int temps = partie.getEnquete().getTempsMeurtre().getValeur();
-                    return String.format("👤 Coupable : %s\n📍 Lieu : %s\n⏳ Temps : %d", nom, lieu, temps);
+                    return historiqueQuestions + "\n===== 🎯 Coupable Identifié ! =====\n" +
+                    "Le coupable est 👤 " + nom + " dans le lieu 📍 " + lieu + " au temps ⏳ " + temps + ".";
                 }
             }
 
@@ -69,6 +73,14 @@ public class IAJoueuse {
             } else {
                 return "❌ L’IA n’a pas trouvé de solution.";
             }
+            historiqueQuestions.append("🔁 Tour ")
+                    .append(tour++)
+                    .append(" : Question posée → ")
+                    .append(question[0])
+                    .append(" | ")
+                    .append(question[1])
+                    .append("\n");
+
         }
     }
 

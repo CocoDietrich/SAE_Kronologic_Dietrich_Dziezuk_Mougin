@@ -144,28 +144,28 @@ public class InitialisationJeu {
         vuePoseQuestion.getRetour().setOnAction(controleurPoseQuestion);
         vuePoseQuestion.getAnnuler().setOnAction(controleurPoseQuestion);
         vuePoseQuestion.getValider().setOnAction(controleurPoseQuestion);
-        for (Button b : vuePoseQuestion.getLieuButtons()){
+        for (Button b : vuePoseQuestion.getLieuButtons()) {
             b.setOnAction(controleurPoseQuestion);
         }
-        for (Button b : vuePoseQuestion.getTempsButtons()){
+        for (Button b : vuePoseQuestion.getTempsButtons()) {
             b.setOnAction(controleurPoseQuestion);
         }
-        for (Button b : vuePoseQuestion.getPersonnageButtons()){
+        for (Button b : vuePoseQuestion.getPersonnageButtons()) {
             b.setOnAction(controleurPoseQuestion);
         }
         vueDeduction.getRetour().setOnAction(controleurDeduction);
         vueDeduction.getAnnuler().setOnAction(controleurDeduction);
         vueDeduction.getValider().setOnAction(controleurDeduction);
-        for (Button b : vueDeduction.getLieuButtons()){
+        for (Button b : vueDeduction.getLieuButtons()) {
             b.setOnAction(controleurDeduction);
         }
-        for (Button b : vueDeduction.getTempsButtons()){
+        for (Button b : vueDeduction.getTempsButtons()) {
             b.setOnAction(controleurDeduction);
         }
-        for (Button b : vueDeduction.getPersonnageButtons()){
+        for (Button b : vueDeduction.getPersonnageButtons()) {
             b.setOnAction(controleurDeduction);
         }
-        for (Pion p : vueCarte.getPions()){
+        for (Pion p : vueCarte.getPions()) {
             p.setOnDragDone(controleurChoixCarte);
         }
         vuePopUpDeduction.getQuitter().setOnAction(controleurPopUpDeduction);

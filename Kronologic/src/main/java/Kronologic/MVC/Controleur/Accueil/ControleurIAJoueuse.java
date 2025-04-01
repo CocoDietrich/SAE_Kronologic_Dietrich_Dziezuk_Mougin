@@ -27,10 +27,14 @@ public class ControleurIAJoueuse implements EventHandler<ActionEvent> {
 
             String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
 
-            Platform.runLater(() -> vueChargement.afficherResultat("L’IA a trouvé le coupable :\n" + resultat));
+            Platform.runLater(() -> {
+                vueChargement.fermer();
+                vueChargement.afficherHistoriqueIA(resultat);
+            });
         });
 
         threadIA.setDaemon(true);
         threadIA.start();
     }
+
 }
