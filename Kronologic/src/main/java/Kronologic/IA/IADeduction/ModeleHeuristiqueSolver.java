@@ -124,7 +124,7 @@ public class ModeleHeuristiqueSolver {
         int personnageIndex = getIndexPersonnage(personnage.getNom().substring(0, 1));
         int lieuIndex = lieu.getId() - 1;
 
-        ArrayList<Integer> tempsSurs = trouverSurs(personnageIndex, true, lieuIndex);
+        ArrayList<Integer> tempsSurs = trouverNombrePassagesSurs(personnageIndex, lieuIndex);
 
         if (nbPassages == 0) {
             for (int t = 0; t < 6; t++) {
@@ -179,7 +179,7 @@ public class ModeleHeuristiqueSolver {
                 domainesPersonnages[tempsIndex][p][lieuIndex] = false;
             }
         } else {
-            ArrayList<Integer> personnagesSurs = trouverSurs(tempsIndex, false, lieuIndex);
+            ArrayList<Integer> personnagesSurs = trouverPersonnagesSurs(lieuIndex, tempsIndex);
             if (personnagesSurs.size() == nbPersonnages) {
                 for (int p = 0; p < 6; p++) {
                     if (!personnagesSurs.contains(p)) {
@@ -206,7 +206,7 @@ public class ModeleHeuristiqueSolver {
             for (int l = 0; l < 6; l++) {
                 if (nombrePersonnageContrainte[t][l] != -1) {
                     for (int p = 0; p < 6; p++) {
-                        ArrayList<Integer> personnagesSurs = trouverSurs(p, false, l);
+                        ArrayList<Integer> personnagesSurs = trouverPersonnagesSurs(l, t);
                         if (personnagesSurs.size() == nombrePersonnageContrainte[t][l]) {
                             if (!personnagesSurs.contains(p)) {
                                 domainesPersonnages[t][p][l] = false;
@@ -219,23 +219,46 @@ public class ModeleHeuristiqueSolver {
     }
 
     // Méthode pour trouver les indices des personnages ou des lieux sûrs
-    private ArrayList<Integer> trouverSurs(int dimensionFixe, boolean isPersonnageFixe, int lieu) {
-        ArrayList<Integer> indicesSurs = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            boolean seul = true;
-            for (int l = 0; l < 6; l++) {
-                boolean actif = isPersonnageFixe ? domainesPersonnages[i][dimensionFixe][l] : domainesPersonnages[dimensionFixe][i][l];
-                if (l != lieu && actif) {
-                    seul = false;
-                    break;
+    // Méthode qui renvoie les temps où un personnage est sûr de se trouver dans un lieu
+    public ArrayList<Integer> trouverNombrePassagesSurs(int personnage, int lieu) {
+        ArrayList<Integer> tempsSurs = new ArrayList<>();
+        for (int t = 0; t < 6; t++) {
+            if (domainesPersonnages[t][personnage][lieu]) {
+                // S'il s'agit de la seule salle à true, on est sûr
+                boolean seul = true;
+                for (int l = 0; l < 6; l++) {
+                    if (l != lieu && domainesPersonnages[t][personnage][l]) {
+                        seul = false;
+                        break;
+                    }
+                }
+                if (seul) {
+                    tempsSurs.add(t);
                 }
             }
-            boolean actif = isPersonnageFixe ? domainesPersonnages[i][dimensionFixe][lieu] : domainesPersonnages[dimensionFixe][i][lieu];
-            if (seul && actif) {
-                indicesSurs.add(i);
+        }
+        return tempsSurs;
+    }
+
+    // Méthode qui renvoie les personnages dont on est sûrs de la présence dans une salle à un temps donné
+    public ArrayList<Integer> trouverPersonnagesSurs(int lieu, int temps) {
+        ArrayList<Integer> personnagesSurs = new ArrayList<>();
+        for (int p = 0; p < 6; p++) {
+            if (domainesPersonnages[temps][p][lieu]) {
+                // S'il s'agit de la seule salle à true, on est sûr
+                boolean seul = true;
+                for (int l = 0; l < 6; l++) {
+                    if (l != lieu && domainesPersonnages[temps][p][l]) {
+                        seul = false;
+                        break;
+                    }
+                }
+                if (seul) {
+                    personnagesSurs.add(p);
+                }
             }
         }
-        return indicesSurs;
+        return personnagesSurs;
     }
 
     // Méthode pour afficher uniquement les lieux adjacents
