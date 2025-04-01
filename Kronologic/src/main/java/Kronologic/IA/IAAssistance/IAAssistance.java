@@ -1,6 +1,10 @@
 package Kronologic.IA.IAAssistance;
 
+import Kronologic.Jeu.Partie;
+
 public abstract class IAAssistance {
+    protected Partie partie;
+
     protected int modeRecommandation = 0; // 0 = par défaut (min), 1 = max, 2 = moyenne)
 
     // Méthodes pour recommander des actions au joueur
@@ -12,4 +16,6 @@ public abstract class IAAssistance {
     public void setModeRecommandation(int modeRecommandation) {this.modeRecommandation = modeRecommandation;}
 
     public int getModeRecommandation() {return modeRecommandation;}
+
+    public Partie getPartie() {return partie;}
 }

@@ -4,28 +4,50 @@ import Kronologic.IA.IAAssistance.IAAssistance;
 import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.Jeu.Elements.Lieu;
+import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Indice.IndicePersonnage;
 import Kronologic.Jeu.Indice.IndiceTemps;
-import Kronologic.Jeu.Partie;
+
+import java.util.ArrayList;
 
 public class IAJoueuse {
 
-    private final IAAssistance iaAssistance;
-    private final Partie partie;
+    private final static int NB_TEMPS = 6;
 
-    public IAJoueuse(IAAssistance iaAssistance, Partie partie) {
+    private final IAAssistance iaAssistance;
+
+    public IAJoueuse(IAAssistance iaAssistance) {
         this.iaAssistance = iaAssistance;
-        this.partie = partie;
     }
 
     // Méthode pour jouer jusqu'à trouver le coupable
     public String jouerJusquaTrouverCoupable() {
-        int tour = 1;
         StringBuilder historiqueQuestions = new StringBuilder();
         historiqueQuestions.append("===== 🕵️‍♂️ Resultats de l'IA 🕵️‍♂️ =====\n");
         while (true) {
+            // On crée les notes associées aux domaines de l'IA
+            for (Note n : iaAssistance.getPartie().getGestionnaireNotes().getNotes()) {
+                iaAssistance.getPartie().supprimerNote(n);
+            }
+
+            // Note de présence
+//            for (int i = 1; i < NB_TEMPS; i++) {
+//                for (int j = 0; j < iaAssistance.getPartie().getElements().getLieux().size(); j++) {
+//                    for (int k = 0; k < iaAssistance.getPartie().getElements().getPersonnages().size(); k++) {
+//
+//                        iaAssistance.getPartie().ajouterNote();
+//                    }
+//                }
+//            }
+
+            // Note d'absence
+
+
+            // Note de présence d'hypothèse
+
+
             // Vérifier si la solution a été trouvée
             if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                 IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -48,7 +70,7 @@ public class IAJoueuse {
                 Lieu lieu = getLieuParNom(nomLieu);
                 Temps temps = new Temps(valeurTemps);
 
-                IndiceTemps indice = (IndiceTemps) partie.poserQuestionTemps(lieu, temps);
+                IndiceTemps indice = (IndiceTemps) iaAssistance.getPartie().poserQuestionTemps(lieu, temps);
 
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -63,7 +85,7 @@ public class IAJoueuse {
                 Lieu lieu = getLieuParNom(nomLieu);
                 Personnage personnage = getPersonnageParNom(nomPerso);
 
-                IndicePersonnage indice = (IndicePersonnage) partie.poserQuestionPersonnage(lieu, personnage);
+                IndicePersonnage indice = (IndicePersonnage) iaAssistance.getPartie().poserQuestionPersonnage(lieu, personnage);
 
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -73,8 +95,12 @@ public class IAJoueuse {
             } else {
                 return "❌ L’IA n’a pas trouvé de solution.";
             }
+
+            // On cherche faire des notes en fonction des domaines de l'IA
+
+
             historiqueQuestions.append("🔁 Tour ")
-                    .append(tour++)
+                    .append(iaAssistance.getPartie().getNbQuestion())
                     .append(" : Question posée → ")
                     .append(question[0])
                     .append(" | ")
@@ -87,7 +113,7 @@ public class IAJoueuse {
 
     // Méthode pour obtenir le lieu par son nom
     private Lieu getLieuParNom(String nom) {
-        return partie.getElements().lieux().stream()
+        return iaAssistance.getPartie().getElements().lieux().stream()
                 .filter(l -> l.getNom().equalsIgnoreCase(nom))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Lieu non trouvé : " + nom));
@@ -95,7 +121,7 @@ public class IAJoueuse {
 
     // Méthode pour obtenir le personnage par son nom
     private Personnage getPersonnageParNom(String nom) {
-        return partie.getElements().personnages().stream()
+        return iaAssistance.getPartie().getElements().personnages().stream()
                 .filter(p -> p.getNom().equalsIgnoreCase(nom))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Personnage non trouvé : " + nom));
