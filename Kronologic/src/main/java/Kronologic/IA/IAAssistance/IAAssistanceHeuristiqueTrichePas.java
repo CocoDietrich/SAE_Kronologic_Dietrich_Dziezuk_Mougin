@@ -72,7 +72,6 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                         if (score > ScoreTemps) {
                             ScoreTemps = score;
                         }
-                        System.out.println("Score pour " + temps + " à " + lieu.getNom() + " : " + score);
                     }
                 }
                 // On a fini de tester tous les indices
@@ -81,6 +80,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                     meilleureValeur = "Lieu : " + lieu.getNom();
                     meilleurScore = (int) ScoreTemps;
                 }
+                System.out.println("Score pour " + temps + " à " + lieu.getNom() + " : " + ScoreTemps);
             }
 
             double ScorePersonnage = Double.MIN_VALUE;
@@ -102,7 +102,6 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                             ScorePersonnage = score;
                         }
                     }
-                    System.out.println("Score pour " + personnage.getNom() + " à " + lieu.getNom() + " : " + ScorePersonnage);
                 }
                 // On a fini de tester tous les indices
                 if (ScorePersonnage > meilleurScore) {
@@ -110,6 +109,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
                     meilleureValeur = "Lieu : " + lieu.getNom();
                     meilleurScore = (int) ScorePersonnage;
                 }
+                System.out.println("Score pour " + personnage.getNom() + " à " + lieu.getNom() + " : " + ScorePersonnage);
             }
 
         }

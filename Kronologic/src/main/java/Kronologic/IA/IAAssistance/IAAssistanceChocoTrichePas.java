@@ -24,8 +24,6 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
 
         int strategie = getModeRecommandation(); // 0 = min, 1 = max, 2 = moyenne
 
-        System.out.println("mode de recommandation : " + strategie);
-
         for (Lieu lieu : partie.getElements().lieux()) {
             for (int temps = 2; temps <= 6; temps++) {
                 List<Double> reductions = new ArrayList<>();
@@ -38,6 +36,7 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
                     if (r >= 0) reductions.add(r);
                 }
                 double score = calculerScore(reductions, strategie);
+                System.out.println("Score pour la question " + temps + " et " + lieu.getNom() + " : " + score);
                 if (score > meilleurScore) {
                     meilleurScore = score;
                     meilleureQuestion = "Lieu : " + lieu.getNom();
@@ -54,6 +53,7 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
                     }
                 }
                 double score = calculerScore(reductions, strategie);
+                System.out.println("Score pour la question " + perso.getNom() + " et " + lieu.getNom() + " : " + score);
                 if (score > meilleurScore) {
                     meilleurScore = score;
                     meilleureQuestion = "Lieu : " + lieu.getNom();

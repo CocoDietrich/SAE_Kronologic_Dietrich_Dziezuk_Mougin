@@ -146,7 +146,7 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
                                 nomPerso, nomLieu, nbtemps));
                     }
                 } else if (note.estAbsence() && !note.estHypothese()) { // Absence
-                    if (nbPossibles != 1 || domaine[lieuJoueur]) {
+                    if (domaine[lieuJoueur]) {
                         correction.append(String.format("⚠️ Erreur : La note d'absence de %s en %s au temps %d est fausse. ❌\n",
                                 nomPerso, nomLieu, nbtemps));
                     }

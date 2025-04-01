@@ -304,5 +304,4 @@ public class ModeleChocoSolver {
     public IntVar getCoupableTemps() {
         return coupableTemps;
     }
-
 }

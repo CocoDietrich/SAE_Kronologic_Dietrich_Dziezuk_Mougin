@@ -30,9 +30,9 @@ public class IAJoueuse {
             if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                 IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
                 if (iaDeduction.solutionTrouvee()) {
-                    String nom = partie.getEnquete().getMeurtrier().getNom();
-                    String lieu = partie.getEnquete().getLieuMeurtre().getNom();
-                    int temps = partie.getEnquete().getTempsMeurtre().getValeur();
+                    String nom = iaDeduction.getModele().getPersonnageNom(iaDeduction.getModele().getCoupablePersonnage().getValue());
+                    String lieu = String.valueOf(iaDeduction.getModele().getCoupableLieu().getValue());
+                    int temps = iaDeduction.getModele().getCoupableTemps().getValue();
                     return historiqueQuestions + "\n===== 🎯 Coupable Identifié ! =====\n" +
                     "Le coupable est 👤 " + nom + " dans le lieu 📍 " + lieu + " au temps ⏳ " + temps + ".";
                 }
