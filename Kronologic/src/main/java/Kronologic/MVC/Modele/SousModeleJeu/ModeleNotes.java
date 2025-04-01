@@ -240,4 +240,8 @@ public class ModeleNotes implements Sujet {
     public List<Observateur> getObservateurs() {
         return observateurs;
     }
+
+    public Partie getPartie() {
+        return partie;
+    }
 }
