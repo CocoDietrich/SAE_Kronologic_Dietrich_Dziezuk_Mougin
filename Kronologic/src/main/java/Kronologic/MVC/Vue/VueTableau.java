@@ -356,12 +356,12 @@ public class VueTableau extends BorderPane implements Observateur {
         }
 
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (!ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
+        if (!ModeleJeu.Partie().getIndicesDecouverts().isEmpty()) {
             if (historique.getText().isEmpty()) {
-                historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
-            } else if (ModeleJeu.getPartie().getNbQuestion() != compterOccurrencesRegex(historique.getText(), "Tour")) {
-                historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion()
-                        + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
+                historique.setText("Tour 1 :\n" + ModeleJeu.Partie().getIndicesDecouverts().getLast() + "\n");
+            } else if (ModeleJeu.Partie().getNbQuestion() != compterOccurrencesRegex(historique.getText(), "Tour")) {
+                historique.setText("Tour " + ModeleJeu.Partie().getNbQuestion()
+                        + " :\n" + ModeleJeu.Partie().getIndicesDecouverts().getLast()
                         + "\n" + historique.getText());
             }
         }
@@ -397,7 +397,7 @@ public class VueTableau extends BorderPane implements Observateur {
                 personnage = text.getInfo().split(" - ")[2];
             }
 
-            for (Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
+            for (Note note : ModeleJeu.Partie().getGestionnaireNotes().getNotes()){
                 if (note.estHypothese()){
                     continue;
                 }
@@ -513,7 +513,7 @@ public class VueTableau extends BorderPane implements Observateur {
         }
 
         // On met à jour à chaque fois
-        for(Note note : ModeleJeu.getPartie().getGestionnaireNotes().getNotes()){
+        for(Note note : ModeleJeu.Partie().getGestionnaireNotes().getNotes()){
             if (note.getTemps().getValeur() == 1) {
                 occurences.replace(note.getLieu().getNom(), occurences.get(note.getLieu().getNom()) + 1);
             }
@@ -521,7 +521,7 @@ public class VueTableau extends BorderPane implements Observateur {
 
         // On crée les notes
         for (int i = 0; i < occurences.size(); i++){
-            ModeleJeu.getPartie().getGestionnaireNotes()
+            ModeleJeu.Partie().getGestionnaireNotes()
                     .ajouterNote(new Note(new Lieu(lieux.get(i), i+1, List.of()),
                             new Temps(1),
                             occurences.get(lieux.get(i))));

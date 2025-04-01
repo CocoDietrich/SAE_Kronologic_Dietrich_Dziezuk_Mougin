@@ -503,7 +503,7 @@ public class VueFilmRealite extends GridPane implements Observateur {
         );
 
         // On récupère les pions correspondant à la valeur actuelle du slider
-        List<Realite> positions = ModeleJeu.getPartie().getDeroulement().getListePositions();
+        List<Realite> positions = ModeleJeu.Partie().getDeroulement().getListePositions();
 
         // On affiche le tour actuel dans le terminal
         // On en profite pour créer les pions du tour actuel

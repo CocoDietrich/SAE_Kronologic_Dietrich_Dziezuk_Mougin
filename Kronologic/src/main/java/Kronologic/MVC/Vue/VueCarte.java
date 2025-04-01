@@ -817,7 +817,7 @@ public class VueCarte extends BorderPane implements Observateur {
     }
 
     public void initialiserPionsImbougeables() {
-        ArrayList<Realite> listePionTemps1 = ModeleJeu.getPartie().getDeroulement().positionsAuTemps(new Temps(1));
+        ArrayList<Realite> listePionTemps1 = ModeleJeu.Partie().getDeroulement().positionsAuTemps(new Temps(1));
 
         // Initialisation des pions immobiles pour le temps 1
         for (Realite realite : listePionTemps1) {
@@ -890,12 +890,12 @@ public class VueCarte extends BorderPane implements Observateur {
     @Override
     public void actualiser() {
         // On actualise l'historique des indices en ajoutant le dernier indice découvert
-        if (!ModeleJeu.getPartie().getIndicesDecouverts().isEmpty()) {
+        if (!ModeleJeu.Partie().getIndicesDecouverts().isEmpty()) {
             if (historique.getText().isEmpty()) {
-                historique.setText("Tour 1 :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast() + "\n");
-            } else if (ModeleJeu.getPartie().getNbQuestion() != compterOccurrencesRegex(historique.getText(), "Tour")) {
-                historique.setText("Tour " + ModeleJeu.getPartie().getNbQuestion()
-                        + " :\n" + ModeleJeu.getPartie().getIndicesDecouverts().getLast()
+                historique.setText("Tour 1 :\n" + ModeleJeu.Partie().getIndicesDecouverts().getLast() + "\n");
+            } else if (ModeleJeu.Partie().getNbQuestion() != compterOccurrencesRegex(historique.getText(), "Tour")) {
+                historique.setText("Tour " + ModeleJeu.Partie().getNbQuestion()
+                        + " :\n" + ModeleJeu.Partie().getIndicesDecouverts().getLast()
                         + "\n" + historique.getText());
             }
         }

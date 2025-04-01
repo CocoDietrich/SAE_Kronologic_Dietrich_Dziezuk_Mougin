@@ -23,7 +23,7 @@ public class ControleurIAJoueuse implements EventHandler<ActionEvent> {
 
         Thread threadIA = new Thread(() -> {
             IAAssistance iaActive = modeleJeu.getModeleIA().getIaAssistanceActive();
-            IAJoueuse iaJoueuse = new IAJoueuse(iaActive, ModeleJeu.getPartie());
+            IAJoueuse iaJoueuse = new IAJoueuse(iaActive, ModeleJeu.Partie());
 
             String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
 

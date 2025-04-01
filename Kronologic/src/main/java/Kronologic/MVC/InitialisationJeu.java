@@ -30,6 +30,7 @@ public class InitialisationJeu {
     private final Stage stage;
     private VuePopUpEnigme vuePopUpEnigme;
     private VueCarte vueCarte;
+    private Partie partie;
 
     public InitialisationJeu(Stage stage) {
         this.stage = stage;
@@ -214,7 +215,7 @@ public class InitialisationJeu {
         stage.show();
 
         // Affichage de la pop-up d'énigme
-        vuePopUpEnigme.afficherPopUp(ModeleJeu.getPartie().getEnquete());
+        vuePopUpEnigme.afficherPopUp(ModeleJeu.Partie().getEnquete());
     }
 
     public void initialiserAvecIA() {

@@ -25,7 +25,10 @@ public class ModeleIA implements Sujet {
     private final List<Observateur> observateurs;
     private boolean iaAssistanceChocoActive = true;
 
+    private Partie partie;
+
     public ModeleIA(Partie partie) {
+        this.partie = partie;
         this.observateurs = new ArrayList<>();
         this.iaDeductionChocoSolver = new IADeductionChocoSolver(partie);
         this.iaDeductionHeuristique = new IADeductionHeuristique(partie);
@@ -96,16 +99,16 @@ public class ModeleIA implements Sujet {
     }
 
     public void activerTriche(int strategie) {
-        this.iaAssistanceChoco = new IAAssistanceChocoTriche(iaDeductionChocoSolver, ModeleJeu.getPartie());
+        this.iaAssistanceChoco = new IAAssistanceChocoTriche(iaDeductionChocoSolver, partie);
         this.iaAssistanceChoco.setModeRecommandation(strategie);
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, ModeleJeu.getPartie());
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTriche(iaDeductionHeuristique, partie);
         this.iaAssistanceHeuristique.setModeRecommandation(strategie);
     }
 
     public void desactiverTriche(int strategie) {
-        this.iaAssistanceChoco = new IAAssistanceChocoTrichePas(iaDeductionChocoSolver, ModeleJeu.getPartie());
+        this.iaAssistanceChoco = new IAAssistanceChocoTrichePas(iaDeductionChocoSolver, partie);
         this.iaAssistanceChoco.setModeRecommandation(strategie);
-        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTrichePas(iaDeductionHeuristique, ModeleJeu.getPartie());
+        this.iaAssistanceHeuristique = new IAAssistanceHeuristiqueTrichePas(iaDeductionHeuristique, partie);
         this.iaAssistanceHeuristique.setModeRecommandation(strategie);
     }
 

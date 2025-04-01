@@ -508,7 +508,7 @@ public class VueFilmJoueur extends GridPane implements Observateur {
     @Override
     public void actualiser() {
         // On met à jour le slider
-        slider.setMax(ModeleJeu.getPartie().getNbQuestion());
+        slider.setMax(ModeleJeu.Partie().getNbQuestion());
 
         if (slider.getValue() % 1 != 0) {
             return;
@@ -538,7 +538,7 @@ public class VueFilmJoueur extends GridPane implements Observateur {
         );
 
         // On récupère les pions correspondant à la valeur actuelle du slider (tour actuel)
-        List<Note> notesTour = ModeleJeu.getPartie().getHistorique().get((int) Math.round(slider.getValue()));
+        List<Note> notesTour = ModeleJeu.Partie().getHistorique().get((int) Math.round(slider.getValue()));
 
         // On place les notes
         for (Note note : notesTour){

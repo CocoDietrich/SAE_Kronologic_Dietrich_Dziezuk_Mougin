@@ -140,7 +140,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
-            for (Lieu lieu : ModeleJeu.getPartie().getElements().lieux()) {
+            for (Lieu lieu : modeleNotes.getPartie().getElements().lieux()) {
                 if (lieu.getNom().equals(nomLieu)) {
                     nouveauLieu = lieu;
                 }
@@ -207,7 +207,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
             // On récupère le lieu et le temps ciblé
             String nomLieu = ((String) pionActuel.getUserData()).split("-")[1];
             Lieu nouveauLieu = null;
-            for (Lieu lieu : ModeleJeu.getPartie().getElements().lieux()) {
+            for (Lieu lieu : modeleNotes.getPartie().getElements().lieux()) {
                 if (lieu.getNom().equals(nomLieu)) {
                     nouveauLieu = lieu;
                 }

@@ -105,7 +105,7 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
         String etat = text.getEtat();
 
         // On récupère les éléments du jeu
-        Partie partie = ModeleJeu.getPartie();
+        Partie partie = modeleNotes.getPartie();
         Elements elements = partie.getElements();
 
         // Basculer entre les états : neutre -> sélectionné -> absence -> neutre

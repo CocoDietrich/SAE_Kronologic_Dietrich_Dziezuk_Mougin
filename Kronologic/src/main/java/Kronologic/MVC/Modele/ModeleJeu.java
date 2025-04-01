@@ -170,10 +170,9 @@ public class ModeleJeu implements Sujet {
         return observateurs;
     }
 
-    // TODO : A corriger
-    public static Partie getPartie() {
-        return partie;
-    }
+    public static Partie Partie() {return partie;}
+
+    public Partie getPartie(){return partie;}
 
     public boolean estVueCarte() {
         return estVueCarte;
