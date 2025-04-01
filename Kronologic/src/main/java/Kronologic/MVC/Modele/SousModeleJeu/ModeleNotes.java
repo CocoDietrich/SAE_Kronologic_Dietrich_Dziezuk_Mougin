@@ -1,7 +1,8 @@
 package Kronologic.MVC.Modele.SousModeleJeu;
 
 import Kronologic.Jeu.Elements.*;
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImageNombres;
+import Kronologic.Jeu.Enums.ImagePersonnages;
 import Kronologic.Jeu.Partie;
 import Kronologic.MVC.Modele.Sujet;
 import Kronologic.MVC.Vue.Observateur;
@@ -30,10 +31,10 @@ public class ModeleNotes implements Sujet {
         if (vueCarte == null) return;
 
         Pion pion = new Pion(n,
-                Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))).getUrl());
+                Objects.requireNonNull(ImagePersonnages.get(ImagePersonnages.getPersonnages().indexOf(p.getNom()))).getUrl());
         pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
 
-        ajouterPion(n, Objects.requireNonNull(Images.Personnages.get(Images.Personnages.getPersonnages().indexOf(p.getNom()))), 0, 0);
+        ajouterPion(n, Objects.requireNonNull(ImagePersonnages.get(ImagePersonnages.getPersonnages().indexOf(p.getNom()))), 0, 0);
 
 
         vueCarte.getPions().add(pion);
@@ -48,10 +49,10 @@ public class ModeleNotes implements Sujet {
 
         // On ajoute la note à la liste des notes
         Pion pion = new Pion(n,
-                Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)).getUrl());
+                Objects.requireNonNull(ImageNombres.get(ImageNombres.getNombres().indexOf(nbPersonnages)+1)).getUrl());
         pion.setUserData(t.getValeur() + "-" + l.getNom() + "-");
 
-        ajouterPion(n, Objects.requireNonNull(Images.Nombre.get(Images.Nombre.getNombres().indexOf(nbPersonnages)+1)), 0, 0);
+        ajouterPion(n, Objects.requireNonNull(ImageNombres.get(ImageNombres.getNombres().indexOf(nbPersonnages)+1)), 0, 0);
 
         vueCarte.getPions().add(pion);
         notifierObservateurs();
@@ -238,5 +239,9 @@ public class ModeleNotes implements Sujet {
 
     public List<Observateur> getObservateurs() {
         return observateurs;
+    }
+
+    public Partie getPartie() {
+        return partie;
     }
 }

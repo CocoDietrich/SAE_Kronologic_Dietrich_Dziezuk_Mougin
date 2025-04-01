@@ -3,7 +3,9 @@ package Kronologic.MVC.Vue;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImageLieux;
+import Kronologic.Jeu.Enums.ImagePersonnages;
+import Kronologic.Jeu.Enums.ImageTemps;
 import javafx.beans.binding.DoubleBinding;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -120,12 +122,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         lieuxBox.setAlignment(Pos.CENTER);
 
         List<String> lieuxImagesPaths = List.of(
-                Images.Lieux.LIEU1.getUrl(),
-                Images.Lieux.LIEU2.getUrl(),
-                Images.Lieux.LIEU3.getUrl(),
-                Images.Lieux.LIEU4.getUrl(),
-                Images.Lieux.LIEU5.getUrl(),
-                Images.Lieux.LIEU6.getUrl()
+                ImageLieux.LIEU1.getUrl(),
+                ImageLieux.LIEU2.getUrl(),
+                ImageLieux.LIEU3.getUrl(),
+                ImageLieux.LIEU4.getUrl(),
+                ImageLieux.LIEU5.getUrl(),
+                ImageLieux.LIEU6.getUrl()
         );
 
         lieuButtons = new ArrayList<>();
@@ -149,12 +151,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         tempsGrid.setVgap(10);
 
         List<String> tempsImagesPaths = List.of(
-                Images.Temps.TEMPS1.getUrl(),
-                Images.Temps.TEMPS2.getUrl(),
-                Images.Temps.TEMPS3.getUrl(),
-                Images.Temps.TEMPS4.getUrl(),
-                Images.Temps.TEMPS5.getUrl(),
-                Images.Temps.TEMPS6.getUrl()
+                ImageTemps.TEMPS1.getUrl(),
+                ImageTemps.TEMPS2.getUrl(),
+                ImageTemps.TEMPS3.getUrl(),
+                ImageTemps.TEMPS4.getUrl(),
+                ImageTemps.TEMPS5.getUrl(),
+                ImageTemps.TEMPS6.getUrl()
         );
 
         tempsButtons = new ArrayList<>();
@@ -179,12 +181,12 @@ public class VuePoseQuestion extends BorderPane implements Observateur {
         persosGrid.setVgap(10);
 
         List<String> personnagesImagesPaths = List.of(
-                Images.Personnages.PERSONNAGE1.getUrl(),
-                Images.Personnages.PERSONNAGE2.getUrl(),
-                Images.Personnages.PERSONNAGE3.getUrl(),
-                Images.Personnages.PERSONNAGE4.getUrl(),
-                Images.Personnages.PERSONNAGE5.getUrl(),
-                Images.Personnages.PERSONNAGE6.getUrl()
+                ImagePersonnages.PERSONNAGE1.getUrl(),
+                ImagePersonnages.PERSONNAGE2.getUrl(),
+                ImagePersonnages.PERSONNAGE3.getUrl(),
+                ImagePersonnages.PERSONNAGE4.getUrl(),
+                ImagePersonnages.PERSONNAGE5.getUrl(),
+                ImagePersonnages.PERSONNAGE6.getUrl()
         );
 
         personnageButtons = new ArrayList<>();

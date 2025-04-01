@@ -1,7 +1,9 @@
 package Kronologic.MVC.Vue;
 
 import Kronologic.Jeu.Elements.*;
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImageLieux;
+import Kronologic.Jeu.Enums.ImagePersonnages;
+import Kronologic.Jeu.Enums.ImageTemps;
 import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.TextCase;
 import javafx.geometry.Insets;
@@ -190,7 +192,7 @@ public class VueTableau extends BorderPane implements Observateur {
 
         // On affiche les lieux en colonne
         for (int i = 0; i < 6; i++) {
-            Image image = Images.Lieux.get(i);
+            Image image = ImageLieux.get(i);
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(30);
@@ -208,7 +210,7 @@ public class VueTableau extends BorderPane implements Observateur {
         tableau.setVgap(12);
 
         for (int i = 0; i < 6; i++) {
-            Image image = Images.Personnages.get(i);
+            Image image = ImagePersonnages.get(i);
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(30);
@@ -227,7 +229,7 @@ public class VueTableau extends BorderPane implements Observateur {
 
         // Partie Horizontal
         for (int i = 0; i < 6; i++) {
-            Image image = Images.Temps.get(i);
+            Image image = ImageTemps.get(i);
             ImageView imageView = new ImageView(image);
             imageView.setPreserveRatio(true);
             imageView.setFitWidth(30);
@@ -261,10 +263,10 @@ public class VueTableau extends BorderPane implements Observateur {
             text.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
             text.setStyle("-fx-cursor: hand;");
             if (elements.contains("0")){
-                text.setInfo("Nombre - " + temps + " - " + Images.Lieux.toString(lieuOuPersonnage));
+                text.setInfo("Nombre - " + temps + " - " + ImageLieux.getLieux().get(lieuOuPersonnage+1));
             }
             else {
-                text.setInfo("Lieu - " + temps + " - " + Images.Personnages.toString(lieuOuPersonnage));
+                text.setInfo("Lieu - " + temps + " - " + ImagePersonnages.getPersonnages().get(lieuOuPersonnage));
             }
             if (i % 3 == 0) {
                 caseNumero.add(text, 0, (int) Math.floor((float) i / 3));
@@ -388,7 +390,7 @@ public class VueTableau extends BorderPane implements Observateur {
             String lieu = ""; // Pour le tableau de gauche
             String personnage = ""; // Pour le tableau de droite
 
-            if (Images.Lieux.getLieux().containsValue(text.getInfo().split(" - ")[2])) {
+            if (ImageLieux.getLieux().containsValue(text.getInfo().split(" - ")[2])) {
                 lieu = text.getInfo().split(" - ")[2];
             }
             else {
@@ -499,7 +501,7 @@ public class VueTableau extends BorderPane implements Observateur {
 
         // On ajoute les lieux
         for (int i = 0; i < 6; i++){
-            lieux.add(Images.Lieux.getLieux().get(i + 1));
+            lieux.add(ImageLieux.getLieux().get(i + 1));
         }
 
         // On compte le nombre d'occurence dans chaque lieu et on met à jour la liste

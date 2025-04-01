@@ -3,7 +3,7 @@ package Kronologic.IA.GenerateurScenarios;
 import Kronologic.Jeu.Deroulement;
 import Kronologic.Jeu.Enquete;
 import Kronologic.Jeu.Elements.*;
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImageLieux;
 import Kronologic.Jeu.Indice.*;
 import Kronologic.Jeu.Partie;
 import com.google.gson.Gson;
@@ -163,7 +163,7 @@ public class GenerateurScenario {
 
         List<Lieu> lieux = new ArrayList<>();
         for (int i = 1; i <= NB_LIEUX; i++) {
-            String nom = Images.Lieux.toString(i - 1);
+            String nom = ImageLieux.getLieux().get(i - 1);
             lieux.add(new Lieu(nom, i, new ArrayList<>()));
         }
         for (Lieu lieu : lieux) {

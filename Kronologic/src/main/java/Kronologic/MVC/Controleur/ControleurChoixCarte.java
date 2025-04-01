@@ -145,6 +145,7 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     nouveauLieu = lieu;
                 }
             }
+
             // Récupérer Temps
             String nomTemps = ((String) pionActuel.getUserData()).split("-")[0];
             Temps temps = new Temps(Integer.parseInt(String.valueOf(nomTemps.charAt(nomTemps.length() - 1))));
@@ -178,9 +179,19 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                 note.setEstAbsence(true);
             }
 
-            vueCarte.getPions().getLast().setNote(note);
-            modeleNotes.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
-
+            // On vérifie que le pion actuel correspond bien aux hypothèse et absence
+            if (pionActuel.getNote() != null) {
+                if (pionActuel.getNote().estAbsence() == note.estAbsence()
+                        && pionActuel.getNote().estHypothese() == note.estHypothese()) {
+                    // On ajoute le pion à la liste des pions
+                    vueCarte.getPions().getLast().setNote(note);
+                    modeleNotes.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
+                }
+            }
+            else {
+                vueCarte.getPions().getLast().setNote(note);
+                modeleNotes.ajouterPion(note, pionActuel.getImage(), (int) pionActuel.getLayoutX(), (int) pionActuel.getLayoutY());
+            }
         } else if (!Objects.equals(pionAvant.getId(), pionActuel.getId())) {
             // Cas du pion déplacé depuis un lieu vers un autre lieu
             modeleNotes.supprimerPion(pionAvant);

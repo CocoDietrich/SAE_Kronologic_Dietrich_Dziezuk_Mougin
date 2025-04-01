@@ -1,6 +1,6 @@
 package Kronologic.Jeu.Elements;
 
-import Kronologic.Jeu.Images;
+import Kronologic.Jeu.Enums.ImageLieux;
 
 import java.util.List;
 
@@ -25,9 +25,9 @@ public class Lieu {
                 throw new NullPointerException("Le nom du lieu ne peut pas être vide");
             } else if (n.isEmpty()) {
                 throw new NullPointerException("Le nom du lieu ne peut pas être vide");
-            } else if (!Images.Lieux.getLieux().containsValue(n)) {
+            } else if (!ImageLieux.getLieux().containsValue(n)) {
                 throw new IllegalArgumentException("Le lieu ne possède pas le bon nom");
-            } else if (!Images.Lieux.getLieux().get(i).equals(n)) {
+            } else if (!ImageLieux.getLieux().get(i).equals(n)) {
                 throw new IllegalArgumentException("Le lieu ne possède pas la bonne combinaison nom et id");
             }
 
