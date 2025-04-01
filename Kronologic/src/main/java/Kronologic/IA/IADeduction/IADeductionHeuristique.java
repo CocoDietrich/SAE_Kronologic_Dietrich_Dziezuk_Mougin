@@ -15,6 +15,7 @@ public class IADeductionHeuristique extends IADeduction {
         this.model = new ModeleHeuristiqueSolver(getPersonnagesNoms(), getSallesAdjacentes(), getPositionsInitiales());
     }
 
+    // Méthode pour poser une question sur le temps
     @Override
     public void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         if (!infoPrive.equals("Rejouer")) {
@@ -23,6 +24,7 @@ public class IADeductionHeuristique extends IADeduction {
         model.ajouterContrainteTemps(lieu, temps, infoPublic);
     }
 
+    // Méthode pour poser une question sur un personnage
     @Override
     public void poserQuestionPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
         if (infoPrive != 0) {
@@ -31,15 +33,18 @@ public class IADeductionHeuristique extends IADeduction {
         model.ajouterContrainteNombreDePassages(personnage, lieu, infoPublic);
     }
 
+    // Méthode pour afficher l'historique des déductions
     @Override
     public String afficherHistoriqueDeduction() {
         return model.affichagePropagate();
     }
 
+    // Méthode pour récupérer les domaines des personnages
     public boolean[][][] recupererDomainesPersonnages() {
         return model.getDomainesPersonnages();
     }
 
+    // Méthode pour récupérer le modèle
     public ModeleHeuristiqueSolver getModel() {
         return model;
     }

@@ -11,6 +11,7 @@ import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
 
 public class IAJoueuse {
+
     private final IAAssistance iaAssistance;
     private final Partie partie;
 
@@ -19,9 +20,10 @@ public class IAJoueuse {
         this.partie = partie;
     }
 
+    // Méthode pour jouer jusqu'à trouver le coupable
     public String jouerJusquaTrouverCoupable() {
-
         while (true) {
+            // Vérifier si la solution a été trouvée
             if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                 IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
                 if (iaDeduction.solutionTrouvee()) {
@@ -71,6 +73,7 @@ public class IAJoueuse {
     }
 
 
+    // Méthode pour obtenir le lieu par son nom
     private Lieu getLieuParNom(String nom) {
         return partie.getElements().lieux().stream()
                 .filter(l -> l.getNom().equalsIgnoreCase(nom))
@@ -78,6 +81,7 @@ public class IAJoueuse {
                 .orElseThrow(() -> new IllegalArgumentException("Lieu non trouvé : " + nom));
     }
 
+    // Méthode pour obtenir le personnage par son nom
     private Personnage getPersonnageParNom(String nom) {
         return partie.getElements().personnages().stream()
                 .filter(p -> p.getNom().equalsIgnoreCase(nom))

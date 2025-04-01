@@ -32,7 +32,11 @@ public class ModeleChocoSolver {
         propagerContraintes();
     }
 
-    // Définir les variables
+    /*
+     * Définir les variables du modèle
+     * Chaque personnage a une variable pour chaque temps (1 à 6)
+     * Le coupable est représenté par un personnage, un lieu et un temps
+     */
     private void definirVariables() {
         for (int i = 0; i < personnages.length; i++) {
             for (int t = 0; t < 6; t++) {
@@ -127,6 +131,7 @@ public class ModeleChocoSolver {
         propagerContraintes();
     }
 
+    // Définir la contrainte du coupable
     public void definirContrainteCoupable() {
         Tuples tableCoupable = new Tuples(true);
 
@@ -186,6 +191,7 @@ public class ModeleChocoSolver {
         model.table(new IntVar[]{coupablePersonnage, coupableTemps, coupableLieu}, tableCoupable).post();
     }
 
+    // Propager les contraintes
     private void propagerContraintes() {
         try {
             model.getSolver().propagate();
@@ -194,6 +200,7 @@ public class ModeleChocoSolver {
         }
     }
 
+    // Récupérer l'index d'un personnage à partir de son nom
     public int getIndexPersonnage(String personnage) {
         for (int i = 0; i < personnages.length; i++) {
             if (personnages[i].equals(personnage)) {
@@ -203,6 +210,7 @@ public class ModeleChocoSolver {
         return -1;
     }
 
+    // Afficher l'historique des déductions
     public String affichagePropagate() {
         StringBuilder historique = new StringBuilder();
 
@@ -239,6 +247,7 @@ public class ModeleChocoSolver {
     }
 
 
+    // Afficher les suspects
     public StringBuilder suspects() {
         StringBuilder historique = new StringBuilder();
 
@@ -275,6 +284,7 @@ public class ModeleChocoSolver {
         return personnages;
     }
 
+    // Récupérer le modèle ChocoSolver
     public Model getModel() {
         return model;
     }

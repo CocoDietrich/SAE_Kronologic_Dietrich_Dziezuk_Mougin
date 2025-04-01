@@ -21,6 +21,15 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
         this.partie = partie;
     }
 
+    /**
+     * Simule l'ajout d'une contrainte de temps et calcule la réduction du domaine des variables.
+     *
+     * @param lieu        Le lieu à simuler.
+     * @param temps       Le temps à simuler.
+     * @param infoPublic  L'information publique associée.
+     * @param infoPrive   L'information privée associée.
+     * @return La réduction du domaine des variables après simulation.
+     */
     protected int simulerTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive) {
         IADeductionHeuristique clone = copie();
         int nbInitial = compterDomaines(clone.recupererDomainesPersonnages());
@@ -29,6 +38,15 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
         return nbInitial - nbFinal;
     }
 
+    /**
+     * Simule l'ajout d'une contrainte de personnage et calcule la réduction du domaine des variables.
+     *
+     * @param personnage  Le personnage à simuler.
+     * @param lieu        Le lieu à simuler.
+     * @param infoPublic  L'information publique associée.
+     * @param infoPrive   L'information privée associée.
+     * @return La réduction du domaine des variables après simulation.
+     */
     protected int simulerPersonnage(Personnage personnage, Lieu lieu, int infoPublic, int infoPrive) {
         IADeductionHeuristique clone = copie();
         int nbInitial = compterDomaines(clone.recupererDomainesPersonnages());
@@ -37,6 +55,12 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
         return nbInitial - nbFinal;
     }
 
+    /**
+     * Compte le nombre de domaines restants dans les variables.
+     *
+     * @param domaines Les domaines des variables.
+     * @return Le nombre de domaines restants.
+     */
     private int compterDomaines(boolean[][][] domaines) {
         int count = 0;
         for (boolean[][] d1 : domaines)
@@ -46,6 +70,11 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
         return count;
     }
 
+    /**
+     * Exécute une action en silence, sans afficher les erreurs.
+     *
+     * @param action L'action à exécuter.
+     */
     protected void silencieux(Runnable action) {
         java.io.PrintStream originalErr = System.err;
         try {
@@ -61,6 +90,11 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
         }
     }
 
+    /**
+     * Crée une copie de l'instance actuelle de IADeductionHeuristique.
+     *
+     * @return Une nouvelle instance de IADeductionHeuristique.
+     */
     protected IADeductionHeuristique copie() {
         IADeductionHeuristique copie = new IADeductionHeuristique(partie);
         for (Indice indice : partie.getIndicesDecouverts()) {
@@ -73,6 +107,11 @@ public abstract class IAAssistanceHeuristique extends IAAssistance {
         return copie;
     }
 
+    /**
+     * Corrige les déductions du joueur en fonction des informations de l'IA de déduction.
+     *
+     * @return Un message indiquant les erreurs de déduction.
+     */
     @Override
     public String corrigerDeductions() {
         StringBuilder correction = new StringBuilder();

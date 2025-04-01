@@ -38,14 +38,17 @@ public abstract class IADeduction {
     // Méthode pour afficher l'historique des déductions
     public abstract String afficherHistoriqueDeduction();
 
+    // Méthode pour récupérer le nom des personnages
     public String[] getPersonnagesNoms() {
         return personnagesNoms;
     }
 
+    // Méthode pour récupérer les salles adjacentes
     public int[][] getSallesAdjacentes() {
         return sallesAdjacentes;
     }
 
+    // Méthode pour récupérer les positions initiales des personnages
     public List<Realite> getPositionsInitiales() {
         return positionsInitiales;
     }
