@@ -84,7 +84,7 @@ public class GenerateurScenario {
             // Vérification par l'IA joueuse
             IADeductionChocoSolver iaDeduction = new IADeductionChocoSolver(partie);
             IAAssistanceChocoSolver iaAssistance = new IAAssistanceChocoTriche(iaDeduction, partie);
-            IAJoueuse iaJoueuse = new IAJoueuse(iaAssistance);
+            IAJoueuse iaJoueuse = new IAJoueuse(iaAssistance, partie);
             String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
             if (!resultat.contains(meurtrier.getNom()) ||
                     !resultat.contains(lieuCrime.getNom()) ||
