@@ -196,7 +196,7 @@ public class GenerateurScenario {
 
         List<Lieu> lieux = new ArrayList<>();
         for (int i = 1; i <= NB_LIEUX; i++) {
-            String nom = ImageLieux.getLieux().get(i - 1);
+            String nom = ImageLieux.getLieux().get(i);
             lieux.add(new Lieu(nom, i, new ArrayList<>()));
         }
         for (Lieu lieu : lieux) {
