@@ -22,7 +22,7 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
     public String[] recommanderQuestionOptimale() {
         int meilleurScore;
 
-        int strategie = 1; // 0 = min, 1 = max, 2 = moyenne
+        int strategie = getModeRecommandation(); // 0 = min, 1 = max, 2 = moyenne
 
         String[] resultats = new String[3];
 
