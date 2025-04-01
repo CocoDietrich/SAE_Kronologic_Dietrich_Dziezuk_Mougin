@@ -3,13 +3,19 @@ package Kronologic.IA;
 import Kronologic.IA.IAAssistance.IAAssistance;
 import Kronologic.IA.IAAssistance.IAAssistanceChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionChocoSolver;
+import Kronologic.IA.IADeduction.ModeleChocoSolver;
 import Kronologic.Jeu.Elements.Lieu;
 import Kronologic.Jeu.Elements.Note;
 import Kronologic.Jeu.Elements.Personnage;
 import Kronologic.Jeu.Elements.Temps;
+import Kronologic.Jeu.Enums.ImagePersonnages;
 import Kronologic.Jeu.Indice.IndicePersonnage;
 import Kronologic.Jeu.Indice.IndiceTemps;
 import Kronologic.Jeu.Partie;
+import org.chocosolver.solver.variables.IntVar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class IAJoueuse {
 
@@ -27,24 +33,87 @@ public class IAJoueuse {
         historiqueQuestions.append("===== 🕵️‍♂️ Resultats de l'IA 🕵️‍♂️ =====\n");
         while (true) {
             // On crée les notes associées aux domaines de l'IA
-            for (Note n : partie.getGestionnaireNotes().getNotes()) {
+            // Crée une copie pour éviter ConcurrentModificationException
+            List<Note> notesASupprimer = new ArrayList<>(partie.getGestionnaireNotes().getNotes());
+            for (Note n : notesASupprimer) {
                 partie.supprimerNote(n);
             }
 
-            // Note de présence
-            //            for (int i = 1; i < NB_TEMPS; i++) {
-            //                for (int j = 0; j < iaAssistance.getPartie().getElements().getLieux().size(); j++) {
-            //                    for (int k = 0; k < iaAssistance.getPartie().getElements().getPersonnages().size(); k++) {
-            //
-            //                        iaAssistance.getPartie().ajouterNote();
-            //                    }
-            //                }
-            //            }
 
-            // Note d'absence
+            if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
+                IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
+                ModeleChocoSolver modele = iaDeduction.getModele();
+                IntVar[][] positions = modele.getPositions();
+                String[] noms = modele.getPersonnages();
 
+                for (int i = 0; i < noms.length; i++) {
+                    Personnage personnage = new Personnage(ImagePersonnages.getPersonnages().get(i));
+                    System.out.println("🔎 Personnage : " + personnage.getNom());
 
-            // Note de présence d'hypothèse
+                    for (int t = 0; t < 6; t++) {
+                        Temps temps = new Temps(t + 1);
+                        IntVar position = positions[i][t];
+                        System.out.println("⏳ Temps : " + temps.getValeur());
+
+                        if (position.isInstantiated()) {
+                            // Présence
+                            int val = position.getValue();
+                            Lieu lieu = partie.getElements().lieux().stream()
+                                    .filter(l -> l.getId() == val)
+                                    .findFirst()
+                                    .orElse(null);
+                            if (lieu != null) {
+                                Note note = new Note(lieu, temps, personnage);
+                                note.setEstAbsence(false);
+                                note.setEstHypothese(false);
+                                partie.ajouterNote(note);
+                                System.out.println("✅ Présence : " + note);
+                            }
+                        } else {
+                            // Hypothèses de présence
+                            for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
+                                int finalVal = val;
+                                Lieu lieu = partie.getElements().lieux().stream()
+                                        .filter(l -> l.getId() == finalVal)
+                                        .findFirst()
+                                        .orElse(null);
+                                if (lieu != null) {
+                                    Note note = new Note(lieu, temps, personnage);
+                                    note.setEstAbsence(false);
+                                    note.setEstHypothese(true);
+                                    partie.ajouterNote(note);
+                                    System.out.println("🟡 Hypothèse de présence : " + note);
+                                }
+                            }
+
+                            // Absences ou hypothèses d'absence
+                            for (Lieu lieu : partie.getElements().lieux()) {
+                                boolean estDansLeDomaine = false;
+                                for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
+                                    if (val == lieu.getId()) {
+                                        estDansLeDomaine = true;
+                                        break;
+                                    }
+                                }
+
+                                Note note = new Note(lieu, temps, personnage);
+                                note.setEstAbsence(true);
+                                if (!estDansLeDomaine) {
+                                    // Absence
+                                    note.setEstHypothese(false);
+                                    System.out.println("❌ Absence certaine : " + note);
+                                } else {
+                                    // Hypothèse d’absence
+                                    note.setEstHypothese(true);
+                                    System.out.println("🟠 Hypothèse d’absence : " + note);
+                                }
+                                partie.ajouterNote(note);
+                            }
+                        }
+                    }
+                }
+            }
+
 
             // Vérifier si la solution a été trouvée
             if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {

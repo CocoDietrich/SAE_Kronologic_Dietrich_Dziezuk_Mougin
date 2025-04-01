@@ -4,9 +4,6 @@ import Kronologic.IA.IADeduction.IADeductionHeuristique;
 import Kronologic.Jeu.Elements.*;
 import Kronologic.Jeu.Partie;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
 
     public IAAssistanceHeuristiqueTrichePas(IADeductionHeuristique deduction, Partie partie) {
