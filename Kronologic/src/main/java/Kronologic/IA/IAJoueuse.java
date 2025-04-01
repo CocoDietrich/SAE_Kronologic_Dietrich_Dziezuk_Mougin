@@ -27,9 +27,8 @@ public class IAJoueuse {
         historiqueQuestions.append("===== 🕵️‍♂️ Resultats de l'IA 🕵️‍♂️ =====\n");
         while (true) {
             // On crée les notes associées aux domaines de l'IA
-            for (
-                    Note n : iaAssistance.getPartie().getGestionnaireNotes().getNotes()) {
-                iaAssistance.getPartie().supprimerNote(n);
+            for (Note n : partie.getGestionnaireNotes().getNotes()) {
+                partie.supprimerNote(n);
             }
 
             // Note de présence
