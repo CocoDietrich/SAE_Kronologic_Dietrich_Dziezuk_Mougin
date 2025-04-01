@@ -96,7 +96,7 @@ public class GenerateurScenario {
             IADeductionChocoSolver iaDeduction = new IADeductionChocoSolver(partie);
             IAAssistanceChocoSolver iaAssistance = new IAAssistanceChocoTriche(iaDeduction, partie);
             IAJoueuse iaJoueuse = new IAJoueuse(iaAssistance, partie);
-            String resultat = iaJoueuse.jouerJusquaTrouverCoupable();
+            String resultat = iaJoueuse.jouerJusquaTrouverCoupable(false);
             if (!resultat.contains(meurtrier.getNom()) ||
                     !resultat.contains(lieuCrime.getNom()) ||
                     !resultat.contains(String.valueOf(tempsCrime.getValeur()))) {
