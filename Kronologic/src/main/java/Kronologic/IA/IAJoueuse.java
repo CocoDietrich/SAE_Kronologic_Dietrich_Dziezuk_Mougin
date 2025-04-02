@@ -33,14 +33,11 @@ public class IAJoueuse {
         historiqueQuestions.append("===== 🕵️‍♂️ Resultats de l'IA 🕵️‍♂️ =====\n");
         while (true) {
             if (noteNecessaire) {
-                // On crée les notes associées aux domaines de l'IA
-                // Crée une copie pour éviter ConcurrentModificationException
                 List<Note> notesASupprimer = new ArrayList<>(partie.getGestionnaireNotes().getNotes());
                 for (Note n : notesASupprimer) {
-                    if (n.getTemps().getValeur() != 1) {
-                        partie.supprimerNote(n);
-                    }
+                    partie.supprimerNote(n);
                 }
+
 
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -52,7 +49,6 @@ public class IAJoueuse {
                         Personnage personnage = new Personnage(ImagePersonnages.getPersonnages().get(i));
 
                         for (int t = 0; t < 6; t++) {
-                            if (t == 0) continue; // Temps 1 : on ne le modifie pas
                             Temps temps = new Temps(t + 1);
                             IntVar position = positions[i][t];
 
@@ -60,18 +56,23 @@ public class IAJoueuse {
                                 Note note = new Note(lieu, temps, personnage);
 
                                 if (position.isInstantiated() && position.getValue() == lieu.getId()) {
+                                    // Présence confirmée
                                     note.setEstAbsence(false);
-                                    note.setEstHypothese(false); // Présence
-                                    partie.ajouterNote(note);
+                                    note.setEstHypothese(false);
+                                } else if (t == 0) {
+                                    // Temps 1, aucune hypothèse, ignorer le reste
+                                    continue;
                                 } else if (!position.contains(lieu.getId())) {
+                                    // Absence certaine
                                     note.setEstAbsence(true);
-                                    note.setEstHypothese(false); // Absence
-                                    partie.ajouterNote(note);
+                                    note.setEstHypothese(false);
                                 } else {
+                                    // Hypothèse
                                     note.setEstAbsence(false);
-                                    note.setEstHypothese(true); // Hypothèse
-                                    partie.ajouterNote(note);
+                                    note.setEstHypothese(true);
                                 }
+
+                                partie.ajouterNote(note);
                             }
                         }
                     }
