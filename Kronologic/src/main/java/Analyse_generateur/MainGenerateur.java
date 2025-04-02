@@ -1,7 +1,6 @@
 package Analyse_generateur;
 
 import Kronologic.IA.GenerateurScenarios.GenerateurScenario;
-import Kronologic.Jeu.Partie;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,7 +9,7 @@ import java.util.List;
 
 public class MainGenerateur {
 
-    public static void main(String[] args) {
+    public static void main() {
         int nombreScenarios = 100;
         List<Long> durees = new ArrayList<>();
         List<Integer> nonConformes = new ArrayList<>();

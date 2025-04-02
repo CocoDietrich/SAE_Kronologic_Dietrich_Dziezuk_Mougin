@@ -60,7 +60,6 @@ public class IAAssistanceChocoTrichePas extends IAAssistanceChocoSolver {
             }
         }
 
-        System.out.println("Choco-Solver - Meilleure score : " + meilleurScore);
 
         return new String[]{meilleureQuestion, meilleureValeur};
     }
