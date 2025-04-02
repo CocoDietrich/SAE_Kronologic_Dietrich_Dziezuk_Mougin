@@ -9,44 +9,44 @@
     {
       "Temps 1": [
         {
-          "nombrePersonnages": 2,
-          "personnagePrive": "Baronne",
-          "personnages": "Baronne,Journaliste"
-        }
-      ],
-      "Temps 2": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Temps 3": [
-        {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Journaliste",
-          "personnages": "Journaliste"
-        }
-      ],
-      "Temps 4": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Temps 5": [
-        {
           "nombrePersonnages": 1,
           "personnagePrive": "Servante",
           "personnages": "Servante"
         }
       ],
-      "Temps 6": [
+      "Temps 2": [
+        {
+          "nombrePersonnages": 1,
+          "personnagePrive": "Détective",
+          "personnages": "Détective"
+        }
+      ],
+      "Temps 3": [
         {
           "nombrePersonnages": 0,
           "personnagePrive": "Rejouer",
           "personnages": ""
+        }
+      ],
+      "Temps 4": [
+        {
+          "nombrePersonnages": 2,
+          "personnagePrive": "Servante",
+          "personnages": "Journaliste,Servante"
+        }
+      ],
+      "Temps 5": [
+        {
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
+        }
+      ],
+      "Temps 6": [
+        {
+          "nombrePersonnages": 1,
+          "personnagePrive": "Journaliste",
+          "personnages": "Journaliste"
         }
       ],
       "Aventurière": [
@@ -58,9 +58,9 @@
       ],
       "Baronne": [
         {
-          "nombrePassages": 1,
-          "tempsPrive": 1,
-          "temps": "1"
+          "nombrePassages": 0,
+          "tempsPrive": 0,
+          "temps": ""
         }
       ],
       "Chauffeur": [
@@ -72,23 +72,23 @@
       ],
       "Détective": [
         {
-          "nombrePassages": 0,
-          "tempsPrive": 0,
-          "temps": ""
+          "nombrePassages": 1,
+          "tempsPrive": 2,
+          "temps": "2"
         }
       ],
       "Journaliste": [
         {
           "nombrePassages": 2,
-          "tempsPrive": 1,
-          "temps": "1,3"
+          "tempsPrive": 4,
+          "temps": "4,6"
         }
       ],
       "Servante": [
         {
-          "nombrePassages": 1,
-          "tempsPrive": 5,
-          "temps": "5"
+          "nombrePassages": 2,
+          "tempsPrive": 1,
+          "temps": "1,4"
         }
       ]
     }
@@ -98,22 +98,22 @@
       "Temps 1": [
         {
           "nombrePersonnages": 1,
-          "personnagePrive": "Servante",
-          "personnages": "Servante"
+          "personnagePrive": "Détective",
+          "personnages": "Détective"
         }
       ],
       "Temps 2": [
         {
           "nombrePersonnages": 1,
-          "personnagePrive": "Journaliste",
-          "personnages": "Journaliste"
+          "personnagePrive": "Servante",
+          "personnages": "Servante"
         }
       ],
       "Temps 3": [
         {
           "nombrePersonnages": 1,
-          "personnagePrive": "Baronne",
-          "personnages": "Baronne"
+          "personnagePrive": "Détective",
+          "personnages": "Détective"
         }
       ],
       "Temps 4": [
@@ -125,16 +125,16 @@
       ],
       "Temps 5": [
         {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
+          "nombrePersonnages": 2,
+          "personnagePrive": "Journaliste",
+          "personnages": "Détective,Journaliste"
         }
       ],
       "Temps 6": [
         {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Servante",
-          "personnages": "Servante"
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
         }
       ],
       "Aventurière": [
@@ -146,9 +146,9 @@
       ],
       "Baronne": [
         {
-          "nombrePassages": 1,
-          "tempsPrive": 3,
-          "temps": "3"
+          "nombrePassages": 0,
+          "tempsPrive": 0,
+          "temps": ""
         }
       ],
       "Chauffeur": [
@@ -160,23 +160,23 @@
       ],
       "Détective": [
         {
-          "nombrePassages": 0,
-          "tempsPrive": 0,
-          "temps": ""
+          "nombrePassages": 3,
+          "tempsPrive": 1,
+          "temps": "1,3,5"
         }
       ],
       "Journaliste": [
         {
           "nombrePassages": 1,
-          "tempsPrive": 2,
-          "temps": "2"
+          "tempsPrive": 5,
+          "temps": "5"
         }
       ],
       "Servante": [
         {
-          "nombrePassages": 2,
-          "tempsPrive": 1,
-          "temps": "1,6"
+          "nombrePassages": 1,
+          "tempsPrive": 2,
+          "temps": "2"
         }
       ]
     }
@@ -192,220 +192,44 @@
       ],
       "Temps 2": [
         {
-          "nombrePersonnages": 2,
-          "personnagePrive": "Baronne",
-          "personnages": "Baronne,Servante"
+          "nombrePersonnages": 1,
+          "personnagePrive": "Chauffeur",
+          "personnages": "Chauffeur"
         }
       ],
       "Temps 3": [
         {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
+          "nombrePersonnages": 2,
+          "personnagePrive": "Journaliste",
+          "personnages": "Journaliste,Servante"
         }
       ],
       "Temps 4": [
         {
-          "nombrePersonnages": 5,
-          "personnagePrive": "Servante",
-          "personnages": "Aventurière,Baronne,Chauffeur,Journaliste,Servante"
+          "nombrePersonnages": 1,
+          "personnagePrive": "Détective",
+          "personnages": "Détective"
         }
       ],
       "Temps 5": [
         {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
+          "nombrePersonnages": 1,
+          "personnagePrive": "Servante",
+          "personnages": "Servante"
         }
       ],
       "Temps 6": [
         {
-          "nombrePersonnages": 2,
-          "personnagePrive": "Chauffeur",
-          "personnages": "Aventurière,Chauffeur"
+          "nombrePersonnages": 3,
+          "personnagePrive": "Détective",
+          "personnages": "Baronne,Chauffeur,Détective"
         }
       ],
       "Aventurière": [
-        {
-          "nombrePassages": 2,
-          "tempsPrive": 4,
-          "temps": "4,6"
-        }
-      ],
-      "Baronne": [
-        {
-          "nombrePassages": 2,
-          "tempsPrive": 2,
-          "temps": "2,4"
-        }
-      ],
-      "Chauffeur": [
-        {
-          "nombrePassages": 2,
-          "tempsPrive": 4,
-          "temps": "4,6"
-        }
-      ],
-      "Détective": [
         {
           "nombrePassages": 0,
           "tempsPrive": 0,
           "temps": ""
-        }
-      ],
-      "Journaliste": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 4,
-          "temps": "4"
-        }
-      ],
-      "Servante": [
-        {
-          "nombrePassages": 2,
-          "tempsPrive": 2,
-          "temps": "2,4"
-        }
-      ]
-    }
-  ],
-  "Scène": [
-    {
-      "Temps 1": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Temps 2": [
-        {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Détective",
-          "personnages": "Détective"
-        }
-      ],
-      "Temps 3": [
-        {
-          "nombrePersonnages": 3,
-          "personnagePrive": "Chauffeur",
-          "personnages": "Aventurière,Chauffeur,Servante"
-        }
-      ],
-      "Temps 4": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Temps 5": [
-        {
-          "nombrePersonnages": 4,
-          "personnagePrive": "Journaliste",
-          "personnages": "Aventurière,Baronne,Chauffeur,Journaliste"
-        }
-      ],
-      "Temps 6": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Aventurière": [
-        {
-          "nombrePassages": 2,
-          "tempsPrive": 3,
-          "temps": "3,5"
-        }
-      ],
-      "Baronne": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 5,
-          "temps": "5"
-        }
-      ],
-      "Chauffeur": [
-        {
-          "nombrePassages": 2,
-          "tempsPrive": 3,
-          "temps": "3,5"
-        }
-      ],
-      "Détective": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 2,
-          "temps": "2"
-        }
-      ],
-      "Journaliste": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 5,
-          "temps": "5"
-        }
-      ],
-      "Servante": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 3,
-          "temps": "3"
-        }
-      ]
-    }
-  ],
-  "Foyer de la danse": [
-    {
-      "Temps 1": [
-        {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Détective",
-          "personnages": "Détective"
-        }
-      ],
-      "Temps 2": [
-        {
-          "nombrePersonnages": 2,
-          "personnagePrive": "Chauffeur",
-          "personnages": "Aventurière,Chauffeur"
-        }
-      ],
-      "Temps 3": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Temps 4": [
-        {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Détective",
-          "personnages": "Détective"
-        }
-      ],
-      "Temps 5": [
-        {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
-        }
-      ],
-      "Temps 6": [
-        {
-          "nombrePersonnages": 2,
-          "personnagePrive": "Détective",
-          "personnages": "Baronne,Détective"
-        }
-      ],
-      "Aventurière": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 2,
-          "temps": "2"
         }
       ],
       "Baronne": [
@@ -417,23 +241,199 @@
       ],
       "Chauffeur": [
         {
+          "nombrePassages": 2,
+          "tempsPrive": 2,
+          "temps": "2,6"
+        }
+      ],
+      "Détective": [
+        {
+          "nombrePassages": 2,
+          "tempsPrive": 4,
+          "temps": "4,6"
+        }
+      ],
+      "Journaliste": [
+        {
+          "nombrePassages": 1,
+          "tempsPrive": 3,
+          "temps": "3"
+        }
+      ],
+      "Servante": [
+        {
+          "nombrePassages": 2,
+          "tempsPrive": 3,
+          "temps": "3,5"
+        }
+      ]
+    }
+  ],
+  "Scène": [
+    {
+      "Temps 1": [
+        {
+          "nombrePersonnages": 1,
+          "personnagePrive": "Chauffeur",
+          "personnages": "Chauffeur"
+        }
+      ],
+      "Temps 2": [
+        {
+          "nombrePersonnages": 2,
+          "personnagePrive": "Aventurière",
+          "personnages": "Aventurière,Journaliste"
+        }
+      ],
+      "Temps 3": [
+        {
+          "nombrePersonnages": 2,
+          "personnagePrive": "Chauffeur",
+          "personnages": "Baronne,Chauffeur"
+        }
+      ],
+      "Temps 4": [
+        {
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
+        }
+      ],
+      "Temps 5": [
+        {
+          "nombrePersonnages": 2,
+          "personnagePrive": "Chauffeur",
+          "personnages": "Baronne,Chauffeur"
+        }
+      ],
+      "Temps 6": [
+        {
+          "nombrePersonnages": 2,
+          "personnagePrive": "Servante",
+          "personnages": "Aventurière,Servante"
+        }
+      ],
+      "Aventurière": [
+        {
+          "nombrePassages": 2,
+          "tempsPrive": 2,
+          "temps": "2,6"
+        }
+      ],
+      "Baronne": [
+        {
+          "nombrePassages": 2,
+          "tempsPrive": 3,
+          "temps": "3,5"
+        }
+      ],
+      "Chauffeur": [
+        {
+          "nombrePassages": 3,
+          "tempsPrive": 1,
+          "temps": "1,3,5"
+        }
+      ],
+      "Détective": [
+        {
+          "nombrePassages": 0,
+          "tempsPrive": 0,
+          "temps": ""
+        }
+      ],
+      "Journaliste": [
+        {
           "nombrePassages": 1,
           "tempsPrive": 2,
           "temps": "2"
         }
       ],
-      "Détective": [
+      "Servante": [
+        {
+          "nombrePassages": 1,
+          "tempsPrive": 6,
+          "temps": "6"
+        }
+      ]
+    }
+  ],
+  "Foyer de la danse": [
+    {
+      "Temps 1": [
+        {
+          "nombrePersonnages": 3,
+          "personnagePrive": "Baronne",
+          "personnages": "Aventurière,Baronne,Journaliste"
+        }
+      ],
+      "Temps 2": [
+        {
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
+        }
+      ],
+      "Temps 3": [
+        {
+          "nombrePersonnages": 1,
+          "personnagePrive": "Aventurière",
+          "personnages": "Aventurière"
+        }
+      ],
+      "Temps 4": [
+        {
+          "nombrePersonnages": 2,
+          "personnagePrive": "Chauffeur",
+          "personnages": "Baronne,Chauffeur"
+        }
+      ],
+      "Temps 5": [
+        {
+          "nombrePersonnages": 1,
+          "personnagePrive": "Aventurière",
+          "personnages": "Aventurière"
+        }
+      ],
+      "Temps 6": [
+        {
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
+        }
+      ],
+      "Aventurière": [
         {
           "nombrePassages": 3,
           "tempsPrive": 1,
-          "temps": "1,4,6"
+          "temps": "1,3,5"
         }
       ],
-      "Journaliste": [
+      "Baronne": [
+        {
+          "nombrePassages": 2,
+          "tempsPrive": 1,
+          "temps": "1,4"
+        }
+      ],
+      "Chauffeur": [
+        {
+          "nombrePassages": 1,
+          "tempsPrive": 4,
+          "temps": "4"
+        }
+      ],
+      "Détective": [
         {
           "nombrePassages": 0,
           "tempsPrive": 0,
           "temps": ""
+        }
+      ],
+      "Journaliste": [
+        {
+          "nombrePassages": 1,
+          "tempsPrive": 1,
+          "temps": "1"
         }
       ],
       "Servante": [
@@ -449,79 +449,79 @@
     {
       "Temps 1": [
         {
-          "nombrePersonnages": 2,
-          "personnagePrive": "Aventurière",
-          "personnages": "Aventurière,Chauffeur"
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
         }
       ],
       "Temps 2": [
         {
-          "nombrePersonnages": 0,
-          "personnagePrive": "Rejouer",
-          "personnages": ""
+          "nombrePersonnages": 1,
+          "personnagePrive": "Baronne",
+          "personnages": "Baronne"
         }
       ],
       "Temps 3": [
         {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Détective",
-          "personnages": "Détective"
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
         }
       ],
       "Temps 4": [
+        {
+          "nombrePersonnages": 1,
+          "personnagePrive": "Aventurière",
+          "personnages": "Aventurière"
+        }
+      ],
+      "Temps 5": [
         {
           "nombrePersonnages": 0,
           "personnagePrive": "Rejouer",
           "personnages": ""
         }
       ],
-      "Temps 5": [
-        {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Détective",
-          "personnages": "Détective"
-        }
-      ],
       "Temps 6": [
         {
-          "nombrePersonnages": 1,
-          "personnagePrive": "Journaliste",
-          "personnages": "Journaliste"
+          "nombrePersonnages": 0,
+          "personnagePrive": "Rejouer",
+          "personnages": ""
         }
       ],
       "Aventurière": [
         {
           "nombrePassages": 1,
-          "tempsPrive": 1,
-          "temps": "1"
+          "tempsPrive": 4,
+          "temps": "4"
         }
       ],
       "Baronne": [
+        {
+          "nombrePassages": 1,
+          "tempsPrive": 2,
+          "temps": "2"
+        }
+      ],
+      "Chauffeur": [
         {
           "nombrePassages": 0,
           "tempsPrive": 0,
           "temps": ""
         }
       ],
-      "Chauffeur": [
-        {
-          "nombrePassages": 1,
-          "tempsPrive": 1,
-          "temps": "1"
-        }
-      ],
       "Détective": [
         {
-          "nombrePassages": 2,
-          "tempsPrive": 3,
-          "temps": "3,5"
+          "nombrePassages": 0,
+          "tempsPrive": 0,
+          "temps": ""
         }
       ],
       "Journaliste": [
         {
-          "nombrePassages": 1,
-          "tempsPrive": 6,
-          "temps": "6"
+          "nombrePassages": 0,
+          "tempsPrive": 0,
+          "temps": ""
         }
       ],
       "Servante": [
@@ -534,8 +534,8 @@
     }
   ],
   "solution": {
-    "nomPerso": "Baronne",
-    "idLieu": 5,
-    "temps": 6
+    "nomPerso": "Journaliste",
+    "idLieu": 2,
+    "temps": 5
   }
 }

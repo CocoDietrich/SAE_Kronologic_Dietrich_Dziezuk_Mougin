@@ -107,6 +107,7 @@ public class IAJoueuse {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
                     iaDeduction.poserQuestionTemps(lieu, temps, indice.getInfoPublic(), indice.getInfoPrive());
                 }
+                System.out.println(iaAssistance.getIADeduction().affichagePropagate());
 
             } else if (question[0].startsWith("Lieu :") && question[1].startsWith("Personnage :")) {
                 // Question personnage

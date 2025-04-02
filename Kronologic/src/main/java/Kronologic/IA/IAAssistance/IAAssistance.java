@@ -1,5 +1,6 @@
 package Kronologic.IA.IAAssistance;
 
+import Kronologic.IA.IADeduction.ModeleChocoSolver;
 import Kronologic.Jeu.Partie;
 
 public abstract class IAAssistance {
@@ -18,4 +19,11 @@ public abstract class IAAssistance {
     public int getModeRecommandation() {return modeRecommandation;}
 
     public Partie getPartie() {return partie;}
+
+    public ModeleChocoSolver getIADeduction() {
+        if (this instanceof IAAssistanceChocoSolver) {
+            return ((IAAssistanceChocoSolver) this).getDeductionChocoSolver().getModele();
+        }
+        return null;
+    }
 }
