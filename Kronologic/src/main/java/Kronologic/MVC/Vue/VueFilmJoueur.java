@@ -559,11 +559,16 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                     int positionX = 0;
                     int positionY = 0;
                     int index = Integer.parseInt(((String) zone.getUserData()).split("-SousZone")[1]);
-                    // Cas des 4 premières zones
-                    // [1, 2]
-                    // [3, 4]
-                    // [5, 6]
-                    if (Math.round(slider.getValue()) < 5) {
+                    // Déterminer le type de grille selon le nom du lieu
+                    String nomLieu = note.getLieu().getNom().toLowerCase();
+
+                    boolean estGrille2x3 = nomLieu.contains("grand foyer")
+                            || nomLieu.contains("grand escalier")
+                            || nomLieu.contains("salle")
+                            || nomLieu.contains("scène");
+
+                    if (estGrille2x3) {
+                        // Disposition verticale [2x3]
                         switch (index) {
                             case 2 -> positionX = 1;
                             case 3 -> positionY = 1;
@@ -577,11 +582,8 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                                 positionY = 2;
                             }
                         }
-                    }
-                    // Cas des 2 dernières zones
-                    // [1, 2, 3]
-                    // [4, 5, 6]
-                    else {
+                    } else {
+                        // Disposition horizontale [3x2]
                         switch (index) {
                             case 2 -> positionX = 1;
                             case 3 -> positionX = 2;
@@ -596,6 +598,7 @@ public class VueFilmJoueur extends GridPane implements Observateur {
                             }
                         }
                     }
+
 
                     // On cherche le chemin de l'image du pion
                     String cheminImgPion = "";
