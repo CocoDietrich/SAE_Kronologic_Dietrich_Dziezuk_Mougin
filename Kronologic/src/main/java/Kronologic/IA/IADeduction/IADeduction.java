@@ -18,6 +18,8 @@ public abstract class IADeduction {
         List<Personnage> personnages = partie.getElements().personnages();
         personnagesNoms = personnages.stream()
                 .map(p -> p.getNom().substring(0, 1))
+                .distinct()
+                .sorted()
                 .toArray(String[]::new);
 
         //On recupere les salles adjacentes de chaque salle
@@ -29,6 +31,7 @@ public abstract class IADeduction {
         //On recupere les positions de tous les personnages au temps 1
         positionsInitiales = partie.getDeroulement().positionsAuTemps(new Temps(1));
     }
+
     // Méthode pour poser une question sur le temps
     public abstract void poserQuestionTemps(Lieu lieu, Temps temps, int infoPublic, String infoPrive);
 

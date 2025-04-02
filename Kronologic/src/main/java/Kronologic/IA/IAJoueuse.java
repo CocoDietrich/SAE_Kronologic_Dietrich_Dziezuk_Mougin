@@ -37,9 +37,10 @@ public class IAJoueuse {
                 // Crée une copie pour éviter ConcurrentModificationException
                 List<Note> notesASupprimer = new ArrayList<>(partie.getGestionnaireNotes().getNotes());
                 for (Note n : notesASupprimer) {
-                    partie.supprimerNote(n);
+                    if (n.getTemps().getValeur() != 1) {
+                        partie.supprimerNote(n);
+                    }
                 }
-
 
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
@@ -49,70 +50,27 @@ public class IAJoueuse {
 
                     for (int i = 0; i < noms.length; i++) {
                         Personnage personnage = new Personnage(ImagePersonnages.getPersonnages().get(i));
-                        System.out.println("🔎 Personnage : " + personnage.getNom());
 
                         for (int t = 0; t < 6; t++) {
+                            if (t == 0) continue; // Temps 1 : on ne le modifie pas
                             Temps temps = new Temps(t + 1);
                             IntVar position = positions[i][t];
-                            System.out.println("⏳ Temps : " + temps.getValeur());
 
-                            boolean noteAjoutee = false;
+                            for (Lieu lieu : partie.getElements().lieux()) {
+                                Note note = new Note(lieu, temps, personnage);
 
-                            // Présence
-                            if (position.isInstantiated()) {
-                                int val = position.getValue();
-                                Lieu lieu = partie.getElements().lieux().stream()
-                                        .filter(l -> l.getId() == val)
-                                        .findFirst()
-                                        .orElse(null);
-                                if (lieu != null) {
-                                    Note note = new Note(lieu, temps, personnage);
+                                if (position.isInstantiated() && position.getValue() == lieu.getId()) {
                                     note.setEstAbsence(false);
-                                    note.setEstHypothese(false);
+                                    note.setEstHypothese(false); // Présence
                                     partie.ajouterNote(note);
-                                    System.out.println("✅ Présence : " + note);
-                                    noteAjoutee = true;
-                                }
-                            }
-
-                            // Absence certaine (si pas de présence)
-                            if (!noteAjoutee) {
-                                for (Lieu lieu : partie.getElements().lieux()) {
-                                    boolean estDansLeDomaine = false;
-                                    for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
-                                        if (val == lieu.getId()) {
-                                            estDansLeDomaine = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!estDansLeDomaine) {
-                                        Note note = new Note(lieu, temps, personnage);
-                                        note.setEstAbsence(true);
-                                        note.setEstHypothese(false);
-                                        partie.ajouterNote(note);
-                                        System.out.println("❌ Absence certaine : " + note);
-                                        noteAjoutee = true;
-                                        break; // on n'ajoute qu'une note d'absence
-                                    }
-                                }
-                            }
-
-                            // Hypothèse de présence (si pas de présence ni absence)
-                            if (!noteAjoutee) {
-                                for (int val = position.getLB(); val <= position.getUB(); val = position.nextValue(val)) {
-                                    int finalVal = val;
-                                    Lieu lieu = partie.getElements().lieux().stream()
-                                            .filter(l -> l.getId() == finalVal)
-                                            .findFirst()
-                                            .orElse(null);
-                                    if (lieu != null) {
-                                        Note note = new Note(lieu, temps, personnage);
-                                        note.setEstAbsence(false);
-                                        note.setEstHypothese(true);
-                                        partie.ajouterNote(note);
-                                        System.out.println("🟡 Hypothèse de présence : " + note);
-                                        break; // une seule hypothèse par personnage
-                                    }
+                                } else if (!position.contains(lieu.getId())) {
+                                    note.setEstAbsence(true);
+                                    note.setEstHypothese(false); // Absence
+                                    partie.ajouterNote(note);
+                                } else {
+                                    note.setEstAbsence(false);
+                                    note.setEstHypothese(true); // Hypothèse
+                                    partie.ajouterNote(note);
                                 }
                             }
                         }
