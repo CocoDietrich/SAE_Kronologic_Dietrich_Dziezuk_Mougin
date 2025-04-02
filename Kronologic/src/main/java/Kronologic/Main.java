@@ -1,28 +1,34 @@
 package Kronologic;
 
 import Kronologic.Data.JsonReader;
-import Kronologic.Jeu.Elements.Lieu;
-import Kronologic.Jeu.Indice.GestionnaireIndices;
+import Kronologic.IA.IAAssistance.*;
+import Kronologic.IA.IADeduction.IADeductionChocoSolver;
+import Kronologic.IA.IADeduction.IADeductionHeuristique;
+import Kronologic.Jeu.Elements.Temps;
 import Kronologic.Jeu.Partie;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args){
         Partie partie = JsonReader.lirePartieDepuisJson("data/enquete_base.json");
         assert partie != null;
 
-        GestionnaireIndices gestionnaireIndices = partie.getGestionnaireIndices();
-        // Afficher tous les indices
-        System.out.println(gestionnaireIndices.getListeIndices());
+        //IADeductionChocoSolver iaDeduction = new IADeductionChocoSolver(partie);
+        IADeductionHeuristique iaDeduction = new IADeductionHeuristique(partie);
 
-        // Afficher tous les lieux
-        List<Lieu> lieux = partie.getElements().lieux();
-        for (Lieu lieu : lieux) {
-            System.out.println(lieu.getNom() + " " + lieu.getId());
-            for (Lieu lieuAdjacent : lieu.getListeLieuxAdjacents()) {
-                System.out.println("  " + lieuAdjacent.getNom() + " " + lieuAdjacent.getId());
-            }
+        //IAAssistanceChocoSolver iaAssistance = new IAAssistanceChocoTriche(iaDeduction, partie);
+        //IAAssistanceChocoSolver iaAssistance = new IAAssistanceChocoTrichePas(iaDeduction, partie);
+
+        //IAAssistanceHeuristique iaAssistance = new IAAssistanceHeuristiqueTriche(iaDeduction, partie);
+        IAAssistanceHeuristique iaAssistance = new IAAssistanceHeuristiqueTrichePas(iaDeduction, partie);
+
+        iaAssistance.setModeRecommandation(2);
+
+        partie.poserQuestionTemps(partie.getElements().getLieux().getFirst(), new Temps(4));
+
+        for (int i = 0; i < 10; i++) {
+            iaAssistance.recommanderQuestionOptimale();
         }
     }
 }
