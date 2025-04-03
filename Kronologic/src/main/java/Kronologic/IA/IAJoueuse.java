@@ -38,7 +38,6 @@ public class IAJoueuse {
                     partie.supprimerNote(n);
                 }
 
-
                 if (iaAssistance instanceof IAAssistanceChocoSolver chocoIA) {
                     IADeductionChocoSolver iaDeduction = chocoIA.getDeductionChocoSolver();
                     ModeleChocoSolver modele = iaDeduction.getModele();
