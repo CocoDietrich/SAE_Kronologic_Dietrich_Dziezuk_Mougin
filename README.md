@@ -1,3 +1,8 @@
+#Dietrich Corentin - Dziezuk Mathieu - Mougin Enzo
+
+##Librairies/bibliothèques utilisées :
+###Choco-Solver / JavaFX
+
 # README - Projet Kronologic
 
 ## Dépendances du projet
