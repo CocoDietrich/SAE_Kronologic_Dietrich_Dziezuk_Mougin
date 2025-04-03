@@ -100,44 +100,34 @@ public class ControleurChoixTableau implements EventHandler<MouseEvent> {
     @Override
     public void handle(MouseEvent mouseEvent) {
         TextCase text = (TextCase) mouseEvent.getSource();
-
-        // Récupérer l'état actuel
-        String etat = text.getEtat();
-
-        // On récupère les éléments du jeu
         Partie partie = modeleNotes.getPartie();
         Elements elements = partie.getElements();
 
-        // Basculer entre les états : neutre -> sélectionné -> absence -> neutre
-        switch (etat) {
-            case ETAT_NEUTRE:
-                // État sélectionné : texte noir et gras
+        String nouvelEtat;
+
+        switch (text.getEtat()) {
+            case ETAT_NEUTRE -> {
                 text.setFill(Color.BLACK);
-                text.setStyle("-fx-font-weight: bold; " +
-                        "-fx-strikethrough: false;" +
-                        "-fx-cursor: hand;");
-                text.setEtat(ETAT_PRESENT);
-                gestionNote(text, elements, text.getEtat());
-                break;
-            case ETAT_PRESENT:
-                // État absence : texte gris et barré
+                text.setStyle("-fx-font-weight: bold; -fx-strikethrough: false; -fx-cursor: hand;");
+                nouvelEtat = ETAT_PRESENT;
+            }
+            case ETAT_PRESENT -> {
                 text.setFill(Color.GRAY);
-                text.setStyle("-fx-font-weight: normal; " +
-                        "-fx-strikethrough: true;" +
-                        "-fx-cursor: hand;");
-                text.setEtat(ETAT_ABSENT);
-                gestionNote(text, elements, text.getEtat());
-                break;
-            case ETAT_ABSENT:
-                // Retour à l'état neutre
+                text.setStyle("-fx-font-weight: normal; -fx-strikethrough: true; -fx-cursor: hand;");
+                nouvelEtat = ETAT_ABSENT;
+            }
+            case ETAT_ABSENT -> {
                 text.setFill(Color.LIGHTGRAY);
-                text.setStyle("-fx-font-weight: normal; " +
-                        "-fx-strikethrough: false;" +
-                        "-fx-cursor: hand;");
-                text.setEtat(ETAT_PRESENT);
-                gestionNote(text, elements, text.getEtat());
-                break;
+                text.setStyle("-fx-font-weight: normal; -fx-strikethrough: false; -fx-cursor: hand;");
+                nouvelEtat = ETAT_NEUTRE;
+            }
+            default -> {
+                return;
+            }
         }
+
+        text.setEtat(nouvelEtat);
+        gestionNote(text, elements, nouvelEtat);
         modeleNotes.notifierObservateurs();
     }
 }
