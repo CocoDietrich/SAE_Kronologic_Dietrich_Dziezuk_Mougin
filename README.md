@@ -5,18 +5,16 @@
 ## Basé sur le jeu de société Kronologic
 ### Créé par Fabien Gridel et Yoann Levet / Edité par SuperMeeple
 
-## Librairies/bibliothèques utilisées :
-### Choco-Solver / JavaFX
-
-## Dépendances du projet
-
-#### Bibliothèques Utilisées
+## Bibliothèques Utilisées
 
 - JavaFX : Pour la gestion de l’interface graphique.
 
 - PlantUML : Utilisé pour la génération des diagrammes UML.
 
 - Choco-Solver : Cette bibliothèque servira à développer les IA dans la suite du projet. Durant cette première itération, elle n'a été utilisée uniquement adin qu'on la comprenne et qu'on la prenne en main grâce à la réalisation des prototypes.
+
+
+# Déroulement du projet
 
 ## Itération 1
 
