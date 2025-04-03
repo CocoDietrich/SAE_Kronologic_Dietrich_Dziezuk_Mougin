@@ -18,7 +18,9 @@ public abstract class IAAssistance {
 
     public int getModeRecommandation() {return modeRecommandation;}
 
-    public Partie getPartie() {return partie;}
+    public Partie getPartie() {
+        return partie;
+    }
 
     public ModeleChocoSolver getIADeduction() {
         if (this instanceof IAAssistanceChocoSolver) {
