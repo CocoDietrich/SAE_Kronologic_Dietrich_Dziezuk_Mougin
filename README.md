@@ -1,9 +1,12 @@
-#Dietrich Corentin - Dziezuk Mathieu - Mougin Enzo
-
-##Librairies/bibliothèques utilisées :
-###Choco-Solver / JavaFX
-
 # README - Projet Kronologic
+
+# Dietrich Corentin - Dziezuk Mathieu - Mougin Enzo
+
+### Basé sur le jeu de société Kronologic
+#### Créé par Fabien Gridel et Yoann Levet / Edité par SuperMeeple
+
+## Librairies/bibliothèques utilisées :
+### Choco-Solver / JavaFX
 
 ## Dépendances du projet
 
