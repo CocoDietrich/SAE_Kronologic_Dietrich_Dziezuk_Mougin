@@ -191,7 +191,7 @@ Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponi
  - Développement de l'IA de déduction heuristique
  - Implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver (commencement)
 
-## Itération 5
+## Itération 6
 
 ### 1. Répartition des Tâches
 
@@ -216,3 +216,31 @@ Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponi
  - Début de l'implémentation de l'IA joueuse
  - Génération de scénarios pour renouveler l'expérience de jeu
  - Commencement de l'implémentation de l'IA d'assistance heuristique
+
+## Itération 7
+
+### 1. Répartition des Tâches
+
+#### Mathieu :
+- Finalisation de l'implémentation de l'IA joueuse
+- Fixage des bugs liés à l'interface graphique
+          
+#### Enzo :
+- Comparaison des différentes IA d'assistance
+- Finalisation de l'implémentation de l'IA d'assistance heuristique
+
+#### Corentin :
+- Analyses portant sur le générateur de scénarios
+- Réédaction du document final
+
+#### Tout le groupe :
+- Création de la vidéo de démonstration
+- Soutenance finale
+
+### 2. Fonctionnalités Développées
+
+ - Finalisation du développement de l'IA joueuse
+ - Analyses portant sur le générateur de scénarios
+ - Finalisation de l'implémentation de l'IA d'assistance heuristique
+ - Comparaison des différentes IA d'assistance
+ - Création d'une vidéo de démonstration globale de l'application
