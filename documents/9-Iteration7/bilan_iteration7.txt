@@ -1,0 +1,28 @@
+Bilan de l'Itération 6 :
+
+1. État Actuel de la Version
+
+Fonctionnalités Développées :
+
+ - Finalisation du développement de l'IA joueuse
+ - Analyses portant sur le générateur de scénarios
+ - Finalisation de l'implémentation de l'IA d'assistance heuristique
+ - Comparaison des différentes IA d'assistance
+ - Création d'une vidéo de démonstration globale de l'application
+
+
+ 2. Problèmes Rencontrés et Bugs Restants
+
+ - Bugs mineurs liés à l'interfac graphique : EN testant toutes les possibilités, notamment liées aux pions, nous nous
+   sommes rendus compte que certaines actions entrainaient des erreurs, ce que nous avons corrigé.
+
+ - IA d'assistance heuristique : Nous avons réussi à régler les problèmes de performances et de complexité de l'algorithme
+   d'IA d'assistance heuristique.
+
+
+ 3. Conclusion et Perspectives
+
+ L'itération 7 nous a permis de terminer le projet en ayant réalisé l'ensemble des fonctionnalités prévues. Nous nous
+ sommes moins concentré sur la partie programmation et plus sur la partie analyse, débuggage et rédaction des documents
+ finaux. Nous avons également pris le temps de réaliser une vidéo de démonstration de l'application, ce qui nous a permis
+    de mettre en avant les différentes fonctionnalités et de montrer le fonctionnement de l'application.

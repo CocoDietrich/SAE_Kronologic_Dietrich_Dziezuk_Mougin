@@ -1,0 +1,38 @@
+Fonctionnalités développées au cours de l'itération 7 :
+
+- Finalisation du développement de l'IA joueuse
+
+- Analyses portant sur le générateur de scénarios
+
+- Finalisation de l'implémentation de l'IA d'assistance heuristique
+
+- Comparaison des différentes IA d'assistance
+
+- Création d'une vidéo de démonstration globale de l'application
+
+(Les fonctionnalités réalisées par les IA restent les mêmes, je ne les remts pas ici car elles sont déjà expliquées
+dans les fichiers des itérations précédentes.)
+
+(C'est la même chose pour les cas d'utilisation.)
+
+Rôle des membres du groupe :
+
+Mathieu :
+
+- Finalisation de l'implémentation de l'IA joueuse
+- Fixage des bugs liés à l'interface graphique
+
+Enzo :
+
+- Comparaison des différentes IA d'assistance
+- Finalisation de l'implémentation de l'IA d'assistance heuristique
+
+Corentin :
+
+- Analyses portant sur le générateur de scénarios
+- Réédaction du document final
+
+Tout le groupe :
+
+- Création de la vidéo de démonstration
+- Soutenance finale
