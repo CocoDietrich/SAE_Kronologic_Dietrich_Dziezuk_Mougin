@@ -13,7 +13,7 @@
 
 - Choco-Solver : Cette bibliothèque servira à développer les IA dans la suite du projet. Durant cette première itération, elle n'a été utilisée uniquement adin qu'on la comprenne et qu'on la prenne en main grâce à la réalisation des prototypes.
 
-## Lien vers la vidéo d'explication de l'application : [Vidéo de demonstration](documents/9-Iteration7/demo_kronologic.mp4)
+## [Lien vers la vidéo d'explication de l'application](documents/9-Iteration7/demo_kronologic.mp4)
 
 
 # Déroulement du projet
