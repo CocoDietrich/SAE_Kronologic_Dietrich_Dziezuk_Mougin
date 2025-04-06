@@ -50,6 +50,8 @@ public class ControleurFilmIAJoueuse implements EventHandler<ActionEvent> {
         vueFilmJoueur.slider.valueProperty().addListener(controleurFilmJoueur);
         this.modeleJeu.getModeleFilms().enregistrerObservateur(vueFilmJoueur);
 
+        vueFilmJoueur.actualiser();
+
         BorderPane bp = new BorderPane(vueFilmJoueur);
 
         Scene scene = new Scene(bp);

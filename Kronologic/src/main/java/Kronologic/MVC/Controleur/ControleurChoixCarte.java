@@ -71,9 +71,10 @@ public class ControleurChoixCarte implements EventHandler<DragEvent> {
                     if (p.getNote() != null) {
                         String lieuTempsPion = p.getUserData().toString().substring(0, p.getUserData().toString().lastIndexOf("-"));
                         if (lieuTempsPion.equals(lieuTempsPionActuel)) {
-                            vueCarte.getChildren().removeLast();
-                            vueCarte.getZonesContenantPions().removeLast();
-                            pionsDeNombres.removeLast();
+                            vueCarte.getChildren().remove(pionActuel);
+                            vueCarte.getPions().remove(pionActuel);
+                            vueCarte.getZonesContenantPions().removeIf(z -> z.getUserData().equals(pionActuel.getUserData()));
+                            modeleNotes.supprimerPion(pionActuel);
                             return;
                         }
                     }

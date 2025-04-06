@@ -31,8 +31,6 @@ public class IAAssistanceHeuristiqueTrichePas extends IAAssistanceHeuristique {
             case 2 -> resultats = recommanderQuestionMoyenne(meilleurScore);
         }
 
-        System.out.println("Choco-Solver - Meilleure score : " + resultats[2]);
-
         return resultats;
     }
 

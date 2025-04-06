@@ -1,14 +1,22 @@
 # README - Projet Kronologic
 
-## Dépendances du projet
+# Dietrich Corentin - Dziezuk Mathieu - Mougin Enzo
 
-#### Bibliothèques Utilisées
+## Basé sur le jeu de société Kronologic
+### Créé par Fabien Gridel et Yoann Levet / Edité par SuperMeeple
+
+## Bibliothèques Utilisées
 
 - JavaFX : Pour la gestion de l’interface graphique.
 
 - PlantUML : Utilisé pour la génération des diagrammes UML.
 
 - Choco-Solver : Cette bibliothèque servira à développer les IA dans la suite du projet. Durant cette première itération, elle n'a été utilisée uniquement adin qu'on la comprenne et qu'on la prenne en main grâce à la réalisation des prototypes.
+
+## [Lien vers la vidéo d'explication de l'application](documents/9-Iteration7/demo_kronologic.mp4)
+
+
+# Déroulement du projet
 
 ## Itération 1
 
@@ -185,7 +193,7 @@ Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponi
  - Développement de l'IA de déduction heuristique
  - Implémentation de l'IA d’assistance au joueur en utilisant Choco-Solver (commencement)
 
-## Itération 5
+## Itération 6
 
 ### 1. Répartition des Tâches
 
@@ -210,3 +218,31 @@ Lancez la classe MainMVC afin d'avoir accès aux fonctionnalités déjà disponi
  - Début de l'implémentation de l'IA joueuse
  - Génération de scénarios pour renouveler l'expérience de jeu
  - Commencement de l'implémentation de l'IA d'assistance heuristique
+
+## Itération 7
+
+### 1. Répartition des Tâches
+
+#### Mathieu :
+- Finalisation de l'implémentation de l'IA joueuse
+- Fixage des bugs liés à l'interface graphique
+          
+#### Enzo :
+- Comparaison des différentes IA d'assistance
+- Finalisation de l'implémentation de l'IA d'assistance heuristique
+
+#### Corentin :
+- Analyses portant sur le générateur de scénarios
+- Réédaction du document final
+
+#### Tout le groupe :
+- Création de la vidéo de démonstration
+- Soutenance finale
+
+### 2. Fonctionnalités Développées
+
+ - Finalisation du développement de l'IA joueuse
+ - Analyses portant sur le générateur de scénarios
+ - Finalisation de l'implémentation de l'IA d'assistance heuristique
+ - Comparaison des différentes IA d'assistance
+ - Création d'une vidéo de démonstration globale de l'application

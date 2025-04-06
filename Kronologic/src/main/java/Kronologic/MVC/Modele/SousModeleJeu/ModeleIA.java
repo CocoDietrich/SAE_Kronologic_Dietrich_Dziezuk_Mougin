@@ -5,7 +5,6 @@ import Kronologic.IA.IADeduction.IADeductionChocoSolver;
 import Kronologic.IA.IADeduction.IADeductionHeuristique;
 import Kronologic.Jeu.Indice.*;
 import Kronologic.Jeu.Partie;
-import Kronologic.MVC.Modele.ModeleJeu;
 import Kronologic.MVC.Modele.Sujet;
 import Kronologic.MVC.Vue.Observateur;
 import Kronologic.MVC.Vue.PopUps.VuePopUpDemanderIndice;
@@ -25,7 +24,7 @@ public class ModeleIA implements Sujet {
     private final List<Observateur> observateurs;
     private boolean iaAssistanceChocoActive = true;
 
-    private Partie partie;
+    private final Partie partie;
 
     public ModeleIA(Partie partie) {
         this.partie = partie;
